@@ -1,0 +1,7 @@
+[Added Associations]
+image/jpeg=org.gnome.eog.desktop;
+image/png=org.gnome.eog.desktop;
+video/mp4=vlc.desktop;
+
+[Default Applications]
+video/mp4=vlc.desktop
