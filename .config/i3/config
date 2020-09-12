@@ -213,7 +213,7 @@ smart_gaps on
 # colors
 set_from_resource $foreground i3wm.color7 #ffffff
 set_from_resource $background i3wm.color0 #000000
-set_from_resource $primary i3wm.color6 #00FF00
+set_from_resource $primary i3wm.color9 #00FF00
 set_from_resource $secondary i3wm.color3 #0000FF
 set $text #FFFFFF
 set $alert #900000
@@ -254,7 +254,7 @@ bar {
 	status_command i3blocks -c "$HOME/.config/i3/i3blocks.conf"
 	colors {
 		# colorclass		#border		#back.		#text
-		focused_workspace 	$foreground	$primary	$text
+		focused_workspace 	$primary	$primary	$text
 		active_workspace	$background	$background	$text
 		inactive_workspace	$background	$background	$text
 	}

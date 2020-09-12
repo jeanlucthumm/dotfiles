@@ -24,9 +24,11 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 ### Alias
 alias so="source $ZDOTDIR/.zshrc"
 alias zshconfig="vim $HOME/.config/zsh/std.zsh"
+
+### Default overrides
 alias pacman="yay"
-alias data="python bin/dataset_builder.py --dest Code/data/i3-eye &; disown"
-alias kdata="pkill -f dataset_builder.py"
+alias vim="nvim"
+alias cat="bat"
 
 if [[ $TERM == xterm-kitty ]]; then
 	alias icat="kitty +kitten icat"
