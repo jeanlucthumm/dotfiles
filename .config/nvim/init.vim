@@ -1,3 +1,7 @@
+if filereadable(stdpath('config').'/google.vim')
+  exe 'source' stdpath('config').'/google.vim'
+endif
+
 call plug#begin(stdpath('data').'/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -38,9 +42,11 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 set number
-set signcolumn=number
+"set signcolumn=number
 set termguicolors
 set splitright
 
 set background=dark
 colorscheme solarized8
+
+filetype plugin indent on
