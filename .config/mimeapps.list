@@ -2,6 +2,7 @@
 image/jpeg=org.gnome.eog.desktop;
 image/png=org.gnome.eog.desktop;
 video/mp4=vlc.desktop;
+text/plain=org.gnome.gedit.desktop;
 
 [Default Applications]
 video/mp4=vlc.desktop

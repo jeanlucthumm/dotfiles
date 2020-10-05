@@ -42,7 +42,9 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 set number
-"set signcolumn=number
+if has('nvim-0.5.0')
+  set signcolumn=number
+endif
 set termguicolors
 set splitright
 

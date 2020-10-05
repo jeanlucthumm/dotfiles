@@ -26,6 +26,8 @@ settings:
       <Shift+Return>: <Return>
   colors.completion.category.bg:
     global: black
+  content.media_capture:
+    https://webgazer.cs.brown.edu: true
   content.notifications:
     https://www.reddit.com: false
     https://www.youtube.com: false
