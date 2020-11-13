@@ -10,6 +10,8 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'lifepillar/vim-solarized8'
 Plug 'sickill/vim-monokai'
+Plug 'scrooloose/nerdtree'
+Plug 'ctrlpvim/ctrlp.vim'
 
 call plug#end()
 
@@ -17,8 +19,9 @@ call plug#end()
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gy <Plug>(coc-type-definition)
 
-" use tab and space for autocompletion
+" Use tab and space for autocompletion
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
@@ -29,14 +32,23 @@ inoremap <silent><expr> <Tab>
       \ coc#refresh()
 inoremap <silent><expr> <C-Space> coc#refresh()
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <CR> pumvisible() ? "\<C-n>" : "\<C-g>u\<CR>"
 
+" init.vim
 nmap <Leader>v :exe 'tabedit' stdpath('config').'/init.vim'<CR>
 nmap <Leader>s :exe 'source' stdpath('config').'/init.vim'<CR>
 
 nmap <C-h> :tabp<CR>
 nmap <C-l> :tabn<CR>
 nmap <C-e> :Buffers<CR>
+nmap <C-A-n> :Files<CR>
+
+nmap <A-1> :NERDTreeToggle<CR>
+
+augroup rust_group
+  au!
+  au FileType rust nmap <C-A-l> :RustFmt<CR>
+augroup END
 
 set tabstop=2
 set shiftwidth=2
@@ -47,8 +59,9 @@ if has('nvim-0.5.0')
 endif
 set termguicolors
 set splitright
+set hidden
 
-set background=dark
+set background=light
 colorscheme solarized8
 
 filetype plugin indent on
