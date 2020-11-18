@@ -26,6 +26,7 @@ alias so="source $ZDOTDIR/.zshrc"
 alias zshconfig="vim $HOME/.config/zsh/std.zsh"
 alias dim="xrandr --output DP-2 --brightness 0.5"
 alias undim="xrandr --output DP-2 --brightness 1.0"
+alias capt="maim -s -u $HOME/media/capt.png"
 
 ### Default overrides
 alias pacman="yay"
