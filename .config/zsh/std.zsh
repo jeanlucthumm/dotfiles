@@ -59,3 +59,17 @@ function cdv () {
 		cd "$CODE/$1"
 	fi
 }
+
+# Useful way to come back to something you're working on later
+function work () {
+  local path_file="$HOME/.config/work_path.txt"
+  if [[ $# == 0 ]]; then
+    if [[ -f $path_file ]]; then
+      cd $(cat "$path_file")
+    else 
+      echo "No work path set"
+    fi
+  else
+    echo $(pwd) >| "$path_file"
+  fi
+}
