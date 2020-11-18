@@ -203,7 +203,7 @@ bindsym $mod+p exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3% && 
 bindsym $mod+o exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3% && pkill -SIGRTMIN+10 i3blocks
 
 # window customization
-default_border pixel 0
+default_border pixel 3
 gaps inner 10
 gaps outer 5
 smart_borders no_gaps
@@ -224,20 +224,12 @@ set_from_resource $color4 i3wm.color4 #000000
 set_from_resource $color5 i3wm.color5 #000000
 
 # class                 border  	backgr. 	text 	indicator 	child_border
-client.focused          $foreground	$background	$text	$foreground	$foreground
-client.focused_inactive $primary	$background	$text	$primary	$primary
-client.unfocused        $secondary	$background	$text	$secondary	$secondary
-client.urgent           $alert		$background	$text	$alert		$alert
-client.placeholder      $color1     $background	$text	$color1		$color1
-client.background       $background
-
-# class                 border  backgr. text    indicator child_border
-#client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
-#client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
-#client.unfocused        #000000 #000000 #888888 #292d2e   #000000
-#client.urgent           #2f343a #900000 #ffffff #900000   #900000
-#client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
-#client.background       #ffffff
+client.focused          #000000 #000000 #000000 #000000 #073642
+client.focused_inactive #000000	#000000 #000000 #000000 #000000
+client.unfocused        #000000	#000000 #000000 #000000 #93a1a1
+client.urgent           #000000	#000000 #000000 #000000 #000000
+client.placeholder      #000000 #000000 #000000 #000000 #000000
+client.background       #000000 #000000 #000000 #000000 #000000
 
 # shortcuts
 bindsym $mod+c exec --no-startup-id /usr/bin/chromium
@@ -262,7 +254,7 @@ bar {
 
 # start up programs
 exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
-exec --no-startup-id /usr/bin/feh --bg-scale "$HOME/media/wallpapers/wide-space.jpg"
+exec --no-startup-id /usr/bin/feh --bg-scale "$HOME/.config/default_wallpaper"
 exec --no-startup-id /usr/bin/unclutter --timeout 5
 exec --no-startup-id "$HOME/bin/mouse-profile.sh"
 exec --no-startup-id /usr/bin/picom --experimental-backends --backend glx

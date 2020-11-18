@@ -9,9 +9,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf.vim'
 
 Plug 'lifepillar/vim-solarized8'
-Plug 'sickill/vim-monokai'
 Plug 'scrooloose/nerdtree'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tpope/vim-commentary'
 
 call plug#end()
 
@@ -44,6 +43,11 @@ nmap <C-e> :Buffers<CR>
 nmap <C-A-n> :Files<CR>
 
 nmap <A-1> :NERDTreeToggle<CR>
+
+augroup running_group
+  au!
+  au FileType rust nmap <F22> :RustRun<CR>
+augroup END
 
 augroup rust_group
   au!
