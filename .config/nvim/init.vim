@@ -7,10 +7,11 @@ call plug#begin(stdpath('data').'/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf.vim'
-
 Plug 'lifepillar/vim-solarized8'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
@@ -19,6 +20,9 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gy <Plug>(coc-type-definition)
+
+nnoremap <silent> K :call CocAction('doHover')<CR>
+
 
 " Use tab and space for autocompletion
 function! s:check_back_space() abort
@@ -40,17 +44,16 @@ nmap <Leader>s :exe 'source' stdpath('config').'/init.vim'<CR>
 nmap <C-h> :tabp<CR>
 nmap <C-l> :tabn<CR>
 nmap <C-e> :Buffers<CR>
-nmap <C-A-n> :Files<CR>
+nmap <C-A-e> :Files<CR>
 
 nmap <A-1> :NERDTreeToggle<CR>
 
-augroup running_group
-  au!
-  au FileType rust nmap <F22> :RustRun<CR>
-augroup END
-
 augroup rust_group
   au!
+  au FileType rust nmap <F10> :RustRun<CR>
+  au FileType rust nmap <F11> :RustTest<CR>
+  "<F23> == <S-F11> in kitty
+  au FileType rust nmap <F23> :RustTest!<CR>
   au FileType rust nmap <C-A-l> :RustFmt<CR>
 augroup END
 
@@ -67,5 +70,6 @@ set hidden
 
 set background=light
 colorscheme solarized8
+let g:airline_theme='solarized'
 
 filetype plugin indent on
