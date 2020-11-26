@@ -6,6 +6,7 @@ call plug#begin(stdpath('data').'/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'lifepillar/vim-solarized8'
 Plug 'scrooloose/nerdtree'

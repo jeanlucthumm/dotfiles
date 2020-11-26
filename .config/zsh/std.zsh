@@ -1,6 +1,10 @@
 #!/bin/bash
 ### Setup
-OS=$(cat /etc/os-release | awk -F '=' '/^ID=.*/ {print $2}')
+if [[ $(uname -s) == "Darwin" ]]; then
+  OS="mac"
+elif [[ $(uname -s) == "Linux" ]]; then
+  OS=$(cat /etc/os-release | awk -F '=' '/^ID=.*/ {print $2}')
+fi
 
 ### Vars
 export ZDOTDIR="$HOME/.config/zsh"
@@ -20,6 +24,12 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+# Oh My ZSH
+export ZSH=$HOME/.config/zsh/oh-my-zsh
+ZSH_THEME="minimal"
+plugins=(git fzf)
+source $ZSH/oh-my-zsh.sh
 
 
 ### Alias
