@@ -1,0 +1,5 @@
+# Install packages for CoC
+npm --prefix $HOME/.config/coc install $HOME/.config/coc
+
+# Oh-my-zsh
+ZSH=.config/zsh/oh-my-zsh KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
