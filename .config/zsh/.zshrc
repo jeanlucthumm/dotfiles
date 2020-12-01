@@ -36,5 +36,4 @@ prompt minimal
 source $ZDOTDIR/import.zsh
 importIfExists $ZDOTDIR/std.zsh
 importIfExists $ZDOTDIR/google.zsh
-importIfExists $ZDOTDIR/.zprezto/init.zsh
 importIfExists /usr/share/nvm/init-nvm.sh
