@@ -31,6 +31,9 @@ ZSH_THEME="minimal"
 plugins=(git fzf)
 source $ZSH/oh-my-zsh.sh
 
+# Rust
+source "$HOME/.cargo/env"
+
 
 ### Alias
 alias so="source $ZDOTDIR/.zshrc"

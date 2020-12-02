@@ -13,6 +13,8 @@ Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'mhinz/vim-startify'
+Plug 'jiangmiao/auto-pairs'
 
 call plug#end()
 
@@ -21,7 +23,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gy <Plug>(coc-type-definition)
-
+nmap <silent> <F2> <Plug>(coc-diagnostic-next)
+nmap <silent> <Leader>r <Plug>(coc-rename)
 nnoremap <silent> K :call CocAction('doHover')<CR>
 
 
@@ -39,19 +42,20 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <CR> pumvisible() ? "\<C-n>" : "\<C-g>u\<CR>"
 
 " init.vim
-nmap <Leader>v :exe 'tabedit' stdpath('config').'/init.vim'<CR>
-nmap <Leader>s :exe 'source' stdpath('config').'/init.vim'<CR>
+nmap <Leader>ve :exe 'tabedit' stdpath('config').'/init.vim'<CR>
+nmap <Leader>sv :exe 'source' stdpath('config').'/init.vim'<CR>
+" yes I'm lazy
+nmap <Leader><Leader> :w<CR>
 
 nmap <C-h> :tabp<CR>
 nmap <C-l> :tabn<CR>
 nmap <C-e> :Buffers<CR>
 nmap <C-A-e> :Files<CR>
-
 nmap <A-1> :NERDTreeToggle<CR>
 
 augroup rust_group
   au!
-  au FileType rust nmap <F10> :RustRun<CR>
+  au FileType rust nmap <F10> :w<CR>:!cargo run<CR>
   au FileType rust nmap <F11> :RustTest<CR>
   "<F23> == <S-F11> in kitty
   au FileType rust nmap <F23> :RustTest!<CR>
