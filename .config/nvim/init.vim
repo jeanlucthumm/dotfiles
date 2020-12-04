@@ -18,6 +18,9 @@ Plug 'jiangmiao/auto-pairs'
 
 call plug#end()
 
+nnoremap <Space> <Nop>
+let mapleader = "\<Space>"
+
 " CoC set up
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -43,7 +46,7 @@ inoremap <expr> <CR> pumvisible() ? "\<C-n>" : "\<C-g>u\<CR>"
 
 " init.vim
 nmap <Leader>ve :exe 'tabedit' stdpath('config').'/init.vim'<CR>
-nmap <Leader>sv :exe 'source' stdpath('config').'/init.vim'<CR>
+nmap <Leader>vs :exe 'source' stdpath('config').'/init.vim'<CR>
 " yes I'm lazy
 nmap <Leader><Leader> :w<CR>
 
@@ -59,7 +62,7 @@ augroup rust_group
   au FileType rust nmap <F11> :RustTest<CR>
   "<F23> == <S-F11> in kitty
   au FileType rust nmap <F23> :RustTest!<CR>
-  au FileType rust nmap <C-A-l> :RustFmt<CR>
+  au FileType rust nmap <Leader>f :RustFmt<CR>
 augroup END
 
 set tabstop=2
