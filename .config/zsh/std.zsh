@@ -7,37 +7,24 @@ elif [[ $(uname -s) == "Linux" ]]; then
 fi
 
 ### Vars
-export ZDOTDIR="$HOME/.config/zsh"
-export TERMINAL="kitty"
-export GITHUB="https://www.github.com/jeanlucthumm/"
-export CODE="$HOME/Code"
-export PATH="$HOME/.node_modules/bin:$PATH"
-export npm_config_prefix="$HOME/.node_modules"
-export EDITOR="/bin/vim"
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
-export BAT_THEME="Solarized (light)"
-
-# React Native
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+CONFIG=${XDG_CONFIG_HOME:-$HOME/.config}
+GITHUB="https://www.github.com/jeanlucthumm/"
+CODE="$HOME/Code"
 
 # Oh My ZSH
-export ZSH=$HOME/.config/zsh/oh-my-zsh
-ZSH_THEME="minimal"
+export ZSH=$CONFIG/zsh/oh-my-zsh
+ZSH_THEME="robbyrussell"
+HYPHEN_INSENSITIVE="true"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
 plugins=(git fzf)
 source $ZSH/oh-my-zsh.sh
 
-# Rust
 source "$HOME/.cargo/env"
-
 
 ### Alias
 alias so="source $ZDOTDIR/.zshrc"
-alias zshconfig="vim $HOME/.config/zsh/std.zsh"
+alias zshconfig="$EDITOR $CONFIG/zsh/std.zsh"
 alias dim="xrandr --output DP-2 --brightness 0.5"
 alias undim="xrandr --output DP-2 --brightness 1.0"
 alias capt="maim -s -u $HOME/media/capt.png"
@@ -53,8 +40,8 @@ if [[ $TERM == xterm-kitty ]]; then
   alias newterm='kitty --detach --directory $(pwd)'
 fi
 if pgrep -x "i3" > /dev/null; then
-  alias i3config="vim $HOME/.config/i3/config"
-  alias picomconfig="vim $HOME/.config/picom.conf"
+  alias i3config="vim $CONFIG/i3/config"
+  alias picomconfig="vim $CONFIG/picom.conf"
 fi
 
 
@@ -78,7 +65,7 @@ function cdv () {
 
 # Useful way to come back to something you're working on later
 function work () {
-  local path_file="$HOME/.config/work_path.txt"
+  local path_file="$CONFIG/work_path.txt"
   if [[ $# == 0 ]]; then
     if [[ -f $path_file ]]; then
       cd $(cat "$path_file")
