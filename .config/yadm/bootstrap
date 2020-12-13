@@ -1,4 +1,4 @@
-required=(npm curl)
+required=(npm curl nvim)
 
 check_programs() {
   local missing=()
