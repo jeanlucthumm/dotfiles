@@ -40,8 +40,8 @@ if [[ $TERM == xterm-kitty ]]; then
   alias newterm='kitty --detach --directory $(pwd)'
 fi
 if pgrep -x "i3" > /dev/null; then
-  alias i3config="vim $CONFIG/i3/config"
-  alias picomconfig="vim $CONFIG/picom.conf"
+  alias i3config="$EDITOR $CONFIG/i3/config"
+  alias picomconfig="$EDITOR $CONFIG/picom.conf"
 fi
 
 
