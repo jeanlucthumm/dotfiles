@@ -20,7 +20,7 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git fzf)
 source $ZSH/oh-my-zsh.sh
 
-source "$HOME/.cargo/env"
+importIfExists "$HOME/.cargo/env"
 
 ### Alias
 alias so="source $ZDOTDIR/.zshrc"
@@ -42,6 +42,9 @@ fi
 if pgrep -x "i3" > /dev/null; then
   alias i3config="$EDITOR $CONFIG/i3/config"
   alias picomconfig="$EDITOR $CONFIG/picom.conf"
+fi
+if pgrep -x "sway" &> /dev/null; then
+  alias i3config="$EDITOR $CONFIG/sway/config"
 fi
 
 

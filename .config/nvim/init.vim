@@ -15,6 +15,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
 Plug 'jiangmiao/auto-pairs'
+Plug 'timonv/vim-cargo'
+Plug 'neomake/neomake'
 
 call plug#end()
 
