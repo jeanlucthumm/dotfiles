@@ -44,6 +44,9 @@ bindsym $mod+q kill
 # installed.
 bindsym $mod+d exec rofi -show drun -width 20
 
+#screenshotting
+bindsym $mod+Shift+s exec maim -s -u | xclip -selection clipboard -t image/png -i
+
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down

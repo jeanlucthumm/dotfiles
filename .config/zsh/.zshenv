@@ -5,6 +5,7 @@ export EDITOR="/bin/nvim"
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 export BAT_THEME="Solarized (light)"
+export LC_ALL=en_US.UTF-8
 
 # React Native
 export ANDROID_HOME=$HOME/Android/Sdk
