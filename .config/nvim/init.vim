@@ -15,8 +15,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
 Plug 'jiangmiao/auto-pairs'
-Plug 'timonv/vim-cargo'
 Plug 'neomake/neomake'
+Plug '907th/vim-auto-save'
 
 call plug#end()
 
@@ -60,7 +60,7 @@ nmap <A-1> :NERDTreeToggle<CR>
 
 augroup rust_group
   au!
-  au FileType rust nmap <F10> :w<CR>:!cargo run<CR>
+  au FileType rust nmap <F10> :w<CR>:Neomake! cargo<CR>
   au FileType rust nmap <F11> :RustTest<CR>
   "<F23> == <S-F11> in kitty
   au FileType rust nmap <F23> :RustTest!<CR>
@@ -81,5 +81,7 @@ set hidden
 set background=light
 colorscheme solarized8
 let g:airline_theme='solarized'
+let g:neomake_open_list=2
+let g:auto_save=1
 
 filetype plugin indent on
