@@ -45,6 +45,7 @@ settings:
   url.searchengines:
     global:
       DEFAULT: https://www.google.com/search?hl=en&q={}
+      r: https://doc.rust-lang.org/std/index.html?search={}
   url.start_pages:
     global: https://www.google.com
   window.title_format:
