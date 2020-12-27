@@ -1,13 +1,18 @@
+if $TERM != 'xterm-kitty'
+  finish
+endif
+
 if filereadable(stdpath('config').'/google.vim')
   exe 'source' stdpath('config').'/google.vim'
 endif
 
 call plug#begin(stdpath('data').'/plugged')
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': 'yarn install --frozen-lockfile'}
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'antoinemadec/coc-fzf'
 Plug 'lifepillar/vim-solarized8'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
@@ -28,9 +33,12 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gy <Plug>(coc-type-definition)
+nmap <Leader>a v<Plug>(coc-codeaction-selected)<C-C>
 nmap <silent> <F2> <Plug>(coc-diagnostic-next)
 nmap <silent> <Leader>r <Plug>(coc-rename)
 nnoremap <silent> K :call CocAction('doHover')<CR>
+nmap <Leader>o :CocFzfList outline<CR>
+nmap <Leader>O :CocFzfList symbols<CR>
 
 
 " Use tab and space for autocompletion
@@ -58,15 +66,6 @@ nmap <C-e> :Buffers<CR>
 nmap <C-A-e> :Files<CR>
 nmap <A-1> :NERDTreeToggle<CR>
 
-augroup rust_group
-  au!
-  au FileType rust nmap <F10> :w<CR>:Neomake! cargo<CR>
-  au FileType rust nmap <F11> :RustTest<CR>
-  "<F23> == <S-F11> in kitty
-  au FileType rust nmap <F23> :RustTest!<CR>
-  au FileType rust nmap <Leader>f :RustFmt<CR>
-augroup END
-
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -82,6 +81,16 @@ set background=light
 colorscheme solarized8
 let g:airline_theme='solarized'
 let g:neomake_open_list=2
-let g:auto_save=1
+let g:auto_save=0
+
+augroup rust_group
+  au!
+  au FileType rust nmap <F10> :w<CR>:Neomake! cargo<CR>
+  au FileType rust nmap <F11> :RustTest<CR>
+  "<F23> == <S-F11> in kitty
+  au FileType rust nmap <F23> :RustTest!<CR>
+  au FileType rust nmap <Leader>f :RustFmt<CR>
+  au FileType rust let g:auto_save=1
+augroup END
 
 filetype plugin indent on
