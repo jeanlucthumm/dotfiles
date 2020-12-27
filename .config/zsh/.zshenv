@@ -1,5 +1,5 @@
 export TERMINAL="kitty"
-export PATH="$HOME/.node_modules/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.node_modules/bin:$PATH"
 export npm_config_prefix="$HOME/.node_modules"
 export EDITOR="/bin/nvim"
 export CC=/usr/bin/clang
@@ -18,3 +18,4 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_DOWNLOAD_DIR="$HOME/Downloads"
