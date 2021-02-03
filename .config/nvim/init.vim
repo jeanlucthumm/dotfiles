@@ -9,22 +9,24 @@ endif
 call plug#begin(stdpath('data').'/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': 'yarn install --frozen-lockfile'}
+Plug 'antoinemadec/coc-fzf'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'antoinemadec/coc-fzf'
 Plug 'lifepillar/vim-solarized8'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-dispatch'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'mhinz/vim-startify'
 Plug 'jiangmiao/auto-pairs'
 Plug 'neomake/neomake'
 Plug '907th/vim-auto-save'
-Plug 'airblade/vim-rooter'
+" Plug 'airblade/vim-rooter'
 Plug 'airblade/vim-gitgutter'
+Plug 'vim-test/vim-test'
+Plug 'dbgx/lldb.nvim'
 
 call plug#end()
 
@@ -43,6 +45,7 @@ nnoremap <silent> K :call CocAction('doHover')<CR>
 nmap <Leader>o :CocFzfList outline<CR>
 nmap <Leader>O :CocFzfList symbols<CR>
 nmap <Leader>d :CocFzfList diagnostics<CR>
+
 
 
 " Use tab and space for autocompletion
@@ -67,13 +70,19 @@ nmap <Leader>vs :exe 'source' stdpath('config').'/init.vim'<CR>
 " yes I'm lazy
 nmap <Leader><Leader> :write<CR>
 nmap <Leader>q :qall<CR>
+" quickfix
+nmap <Leader>cl :cclose<CR>
+nmap <Leader>cc :cc<CR>
+nmap <Leader>co :copen<CR>
 
 nmap <C-h> :tabp<CR>
 nmap <C-l> :tabn<CR>
+nmap <S-h> <C-w>h
+nmap <S-l> <C-w>l
 tnoremap <C-h> <C-\><C-n>:tabp<CR>
 tnoremap <C-l> <C-\><C-n>:tabn<CR>
-nmap <C-e> :Buffers<CR>
-nmap <C-A-e> :Files<CR>
+nmap <C-A-e> :Buffers<CR>
+nmap <C-e> :Files<CR>
 nmap <A-1> :NERDTreeToggle<CR>
 nmap gt :tabe<CR>:term<CR>i
 
@@ -87,22 +96,33 @@ endif
 set termguicolors
 set splitright
 set hidden
+set updatetime=1000
 " preserve undo history
 "set undodir='~/.vimdid'
 "set undofile
 let g:airline_theme='solarized'
 let g:neomake_open_list=2
 let g:auto_save=0
+let g:auto_save_events=["InsertLeave", "TextChanged", "CursorHold"]
+let test#strategy = 'neomake'
 
 set background=light
 colorscheme solarized8
 highlight CocUnderline cterm=NONE gui=NONE guibg=#fde2e2
 
+augroup std_group
+  au!
+  " Resize panes to equal splits when resizing window
+  au VimResized * wincmd =
+augroup END
+
 augroup rust_group
   au!
   au FileType rust nmap <F10> :w<CR>:Neomake! cargo<CR>
-  " Run unit test under cursor
-  au FileType rust nmap <F11> :RustTest<CR>
+  au FileType rust map t <Nop>
+  au FileType rust nnoremap tn :TestNearest<CR>
+  au FileType rust nnoremap tl :TestLast<CR>
+  au FileType rust nnoremap tf :TestFile<CR>
   " <F23> == <S-F11> in kitty
   au FileType rust nmap <F23> :RustTest!<CR>
   au FileType rust nmap <Leader>f :RustFmt<CR>
@@ -110,4 +130,17 @@ augroup rust_group
   au CursorHold *.rs silent call CocActionAsync('highlight')
 augroup END
 
+" On startup, vim will look for a .session.vim file in the current
+" directory and load it if one exists. Use :mks .session.vim to save a new one.
+function! SourceSession()
+  if filereadable('.session.vim')
+    exe 'source' '.session.vim'
+  endif
+endfunction
+
 filetype plugin indent on
+
+augroup vim_group
+  au!
+  au VimEnter * nested call SourceSession()
+augroup END
