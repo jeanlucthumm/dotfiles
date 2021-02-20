@@ -2,7 +2,7 @@ if $TERM != 'xterm-kitty'
   finish 
 endif
 
-if filereadable(stdpath('config').'/google.vim')
+if filereadable(stdpath('config').'/google.vim') 
   exe 'source' stdpath('config').'/google.vim'
 endif
 
@@ -23,10 +23,11 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'jiangmiao/auto-pairs'
 Plug 'neomake/neomake'
 Plug '907th/vim-auto-save'
-" Plug 'airblade/vim-rooter'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-test/vim-test'
-Plug 'dbgx/lldb.nvim'
+Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
+Plug 'moll/vim-bbye'
+Plug 'andrejlevkovitch/vim-lua-format'
 
 call plug#end()
 
@@ -104,16 +105,26 @@ let g:airline_theme='solarized'
 let g:neomake_open_list=2
 let g:auto_save=0
 let g:auto_save_events=["InsertLeave", "TextChanged", "CursorHold"]
+let g:nvimgdb_disable_start_keymaps=1
 let test#strategy = 'neomake'
 
 set background=light
 colorscheme solarized8
 highlight CocUnderline cterm=NONE gui=NONE guibg=#fde2e2
 
+" On startup, vim will look for a .session.vim file in the current
+" directory and load it if one exists. Use :mks .session.vim to save a new one.
+function! SourceSession()
+  if filereadable('.session.vim')
+    exe 'source' '.session.vim'
+  endif
+endfunction
+
 augroup std_group
   au!
   " Resize panes to equal splits when resizing window
   au VimResized * wincmd =
+  au VimEnter * nested call SourceSession()
 augroup END
 
 augroup rust_group
@@ -130,17 +141,18 @@ augroup rust_group
   au CursorHold *.rs silent call CocActionAsync('highlight')
 augroup END
 
-" On startup, vim will look for a .session.vim file in the current
-" directory and load it if one exists. Use :mks .session.vim to save a new one.
-function! SourceSession()
-  if filereadable('.session.vim')
-    exe 'source' '.session.vim'
-  endif
-endfunction
+augroup lua_group
+  au!
+  au FileType lua nmap <F10> :Neomake<CR>
+  au FileType lua nmap <Leader>f :call LuaFormat()<CR>
+  au FileType lua let g:auto_save=1
+  au CursorHold *.lua silent call CocActionAsync('highlight')
+  au FileType lua nmap <Leader>cl :lclose<CR>
+  au FileType lua nmap <Leader>cc :ll<CR>
+  au FileType lua nmap <Leader>co :lopen<CR>
+  au FileType lua nmap <F11> :!lua %<CR>
+augroup END
+
 
 filetype plugin indent on
 
-augroup vim_group
-  au!
-  au VimEnter * nested call SourceSession()
-augroup END
