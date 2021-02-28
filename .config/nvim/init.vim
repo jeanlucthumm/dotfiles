@@ -28,7 +28,6 @@ Plug 'vim-test/vim-test'
 Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
 Plug 'moll/vim-bbye'
 Plug 'andrejlevkovitch/vim-lua-format'
-
 call plug#end()
 
 nnoremap <Space> <Nop>
@@ -46,7 +45,6 @@ nnoremap <silent> K :call CocAction('doHover')<CR>
 nmap <Leader>o :CocFzfList outline<CR>
 nmap <Leader>O :CocFzfList symbols<CR>
 nmap <Leader>d :CocFzfList diagnostics<CR>
-
 
 
 " Use tab and space for autocompletion
@@ -82,8 +80,8 @@ nmap <S-h> <C-w>h
 nmap <S-l> <C-w>l
 tnoremap <C-h> <C-\><C-n>:tabp<CR>
 tnoremap <C-l> <C-\><C-n>:tabn<CR>
-nmap <C-A-e> :Buffers<CR>
-nmap <C-e> :Files<CR>
+nmap <C-e> :Buffers<CR>
+nmap <C-A-e> :Files<CR>
 nmap <A-1> :NERDTreeToggle<CR>
 nmap gt :tabe<CR>:term<CR>i
 
@@ -97,7 +95,8 @@ endif
 set termguicolors
 set splitright
 set hidden
-set updatetime=1000
+set mouse=a
+set updatetime=500
 " preserve undo history
 "set undodir='~/.vimdid'
 "set undofile
@@ -111,6 +110,12 @@ let test#strategy = 'neomake'
 set background=light
 colorscheme solarized8
 highlight CocUnderline cterm=NONE gui=NONE guibg=#fde2e2
+highlight CocRustChainingHint ctermfg=12 guifg=#bfbfbf
+highlight CocRustTypeHint ctermfg=12 guifg=#bfbfbf
+
+
+"highlight CocHintFloat ctermfg=12 guifg=#15aabf
+"highlight CocHintVirtualText ctermfg=12 guifg=#15aabf
 
 " On startup, vim will look for a .session.vim file in the current
 " directory and load it if one exists. Use :mks .session.vim to save a new one.
