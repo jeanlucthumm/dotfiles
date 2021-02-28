@@ -1,7 +1,3 @@
-if $TERM != 'xterm-kitty'
-  finish 
-endif
-
 if filereadable(stdpath('config').'/google.vim') 
   exe 'source' stdpath('config').'/google.vim'
 endif
@@ -13,7 +9,6 @@ Plug 'antoinemadec/coc-fzf'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'lifepillar/vim-solarized8'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -28,12 +23,18 @@ Plug 'vim-test/vim-test'
 Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
 Plug 'moll/vim-bbye'
 Plug 'andrejlevkovitch/vim-lua-format'
+Plug 'pseewald/vim-anyfold'
+
+Plug 'jeanlucthumm/vim-solarized8'
+Plug 'morhetz/gruvbox'
+
 call plug#end()
 
 nnoremap <Space> <Nop>
 let mapleader = "\<Space>"
 
 " CoC set up
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
@@ -45,6 +46,7 @@ nnoremap <silent> K :call CocAction('doHover')<CR>
 nmap <Leader>o :CocFzfList outline<CR>
 nmap <Leader>O :CocFzfList symbols<CR>
 nmap <Leader>d :CocFzfList diagnostics<CR>
+
 
 
 " Use tab and space for autocompletion
@@ -100,22 +102,29 @@ set updatetime=500
 " preserve undo history
 "set undodir='~/.vimdid'
 "set undofile
-let g:airline_theme='solarized'
 let g:neomake_open_list=2
 let g:auto_save=0
 let g:auto_save_events=["InsertLeave", "TextChanged", "CursorHold"]
 let g:nvimgdb_disable_start_keymaps=1
 let test#strategy = 'neomake'
 
-set background=light
-colorscheme solarized8
-highlight CocUnderline cterm=NONE gui=NONE guibg=#fde2e2
-highlight CocRustChainingHint ctermfg=12 guifg=#bfbfbf
-highlight CocRustTypeHint ctermfg=12 guifg=#bfbfbf
+function! SolarizedTheme()
+  let g:airline_theme='solarized'
+  colorscheme solarized8
+endfunction
+
+function! GruvboxTheme()
+  let g:gruvbox_italic=1
+  let g:gruvbox_bold=1
+  let g:airline_theme='gruvbox'
+  let $BAT_THEME='gruvbox'
+  colorscheme gruvbox
+endfunction
+
+set background=dark
+call GruvboxTheme()
 
 
-"highlight CocHintFloat ctermfg=12 guifg=#15aabf
-"highlight CocHintVirtualText ctermfg=12 guifg=#15aabf
 
 " On startup, vim will look for a .session.vim file in the current
 " directory and load it if one exists. Use :mks .session.vim to save a new one.
