@@ -110,6 +110,7 @@ let test#strategy = 'neomake'
 
 function! SolarizedTheme()
   let g:airline_theme='solarized'
+  hi! link rustCommentLineDoc Comment
   colorscheme solarized8
 endfunction
 
@@ -124,6 +125,13 @@ endfunction
 set background=dark
 call GruvboxTheme()
 
+" Gives the highlight groups under the cursor
+function! HighlightGroups()
+  for id in synstack(line("."), col("."))
+    echo synIDattr(id, "name")
+  endfor
+endfunction
+command! -nargs=0 HighlightGroups call HighlightGroups()
 
 
 " On startup, vim will look for a .session.vim file in the current
