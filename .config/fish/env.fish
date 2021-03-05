@@ -1,4 +1,4 @@
-set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/bin $HOME/.cargo/bin
+set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/Code/bin $HOME/.cargo/bin
 
 # XDG
 set -x XDG_CONFIG_HOME $HOME/.config 
