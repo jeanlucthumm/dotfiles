@@ -28,6 +28,7 @@ alias undim="xrandr --output DVI-I-1 --brightness 1.0"
 alias cdf='cd (fd -t d . ~ | fzf)'
 alias cdv="cd $CODE"
 alias clip="xclip -selection clipboard"
+alias sysyadm="sudo yadm -Y /etc/yadm"
 
 if [ $TERM = xterm-kitty ]
   alias icat="kitty +kitten icat"
