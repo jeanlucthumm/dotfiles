@@ -12,7 +12,7 @@
 # USER VARS
 
 set $mod Mod4
-set $wallpaper_dir /home/jeanluc/media/wallpapers
+set $wallpaper "$HOME/.config/default_wallpaper"
 
 # =============================================================================
 # COSMETIC
@@ -20,11 +20,10 @@ set $wallpaper_dir /home/jeanluc/media/wallpapers
 font pango:DejaVu Sans Mono 8
 
 # window customization
-default_border pixel 3
-gaps inner 10
+default_border pixel 2
+gaps inner 20
 gaps outer 5
 smart_borders no_gaps
-smart_gaps on
 
 # colors
 set_from_resource $foreground i3wm.color7 #ffffff
@@ -53,7 +52,8 @@ client.background       #000000 #000000 #000000 #000000 #000000
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-bindsym $mod+q kill # kill focused window
+# kill focused window
+bindsym $mod+q kill 
 
 # change focus
 bindsym $mod+h focus left
@@ -83,7 +83,7 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
+#bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
@@ -109,7 +109,7 @@ set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "misc"
+set $ws9 "9"
 set $ws10 "10"
 
 # switch to workspace (without renaming)
@@ -150,31 +150,28 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-# resize window (you can also use the mouse for that)
+# resize window
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym j resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym h resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym j resize shrink height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "resize"
+
+# scratchpad rules
+for_window [title="^scratchpad$"] move scratchpad
+for_window [class="Spotify"] move scratchpad
+for_window [class="WorkFlowy"] move scratchpad
 
 # =============================================================================
 # SYSTEM
@@ -186,59 +183,69 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-msg exit"
 
-bar {
-	status_command i3blocks -c "$HOME/.config/i3/i3blocks.conf"
-	colors {
-		# colorclass		#border		#back.		#text
-		focused_workspace 	$primary	$primary	$text
-		active_workspace	$primary	$primary	$text
-		inactive_workspace	$background	$background	$text
-	}
-}
-
 # =============================================================================
 # FUNCTIONAL
 
-# Hacks and customization (todo)
-set $custom_script "$HOME/.config/i3/custom.sh"
+# Random shit
 mode "custom" {
-	bindsym $mod+p exec --no-startup-id /usr/bin/picom --experimental-backends --backend glx
-	bindsym $mod+x exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
-	bindsym $mod+r exec --no-startup-id /usr/bin/systemctl --user restart redshift
-  bindsym $mod+l exec --no-startup-id bash "$HOME/.config/i3/rust-dev.layout.sh"
+    bindsym $mod+p exec --no-startup-id /usr/bin/picom --experimental-backends --backend glx
+    bindsym $mod+x exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
+    bindsym $mod+r exec --no-startup-id /usr/bin/systemctl --user restart redshift
+    bindsym $mod+l exec --no-startup-id bash "$HOME/.config/i3/rust-dev.layout.sh"
 
-	bindsym $mod+Return mode "default"
-	bindsym $mod+Escape mode "default"
+    bindsym $mod+Return mode "default"
+    bindsym $mod+Escape mode "default"
 }
-
 bindsym $mod+m mode "custom"
 
-# scratchpad
-bindsym $mod+Shift+minus move scratchpad
-bindsym $mod+Shift+Return [title="^scratchpad$"] scratchpad show
-for_window [title="^scratchpad$"] move scratchpad
+# Frequently used programs that are kept in scratchspace
+mode "scratch" {
+    bindsym $mod+t [class="Spotify"] scratchpad show; mode "default"
+    bindsym $mod+r [title="^scratchpad$"] scratchpad show; mode "default"
+    bindsym $mod+f [class="WorkFlowy"] scratchpad show; mode "default"
+    bindsym $mod+Return mode "default"
+}
+bindsym $mod+s mode "scratch"
 
-# volume. signal 10 tells i3blocks to refresh the volume
+# Overall system control like poweroff and locking
+mode "power" {
+    bindsym s exec --no-startup-id systemctl suspend; mode "default"
+    bindsym r exec --no-startup-id systemctl reboot; mode "default"
+    bindsym p exec --no-startup-id systemctl poweroff; mode "default"
+    bindsym h exec --no-startup-id systemctl hibernate; mode "default"
+    bindsym l exec --no-startup-id betterlockscreen -l dimblur; mode "default"
+    bindsym Return mode "default"
+}
+bindsym $mod+Shift+t mode "power"
+
+# volume & music. signal 10 tells i3blocks to refresh the volume
 bindsym $mod+p exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3% && pkill -SIGRTMIN+10 i3blocks
 bindsym $mod+o exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3% && pkill -SIGRTMIN+10 i3blocks
+bindsym $mod+Shift+p exec --no-startup-id spotifycli --next
+bindsym $mod+Shift+o exec --no-startup-id spotfiycli --prev
 
-#screenshotting
+# screenshotting to clipboard
 bindsym $mod+Shift+s exec maim -s -u | xclip -selection clipboard -t image/png -i
 
-bindsym $mod+d exec rofi -show drun -width 20
+bindsym $mod+d exec rofi -show drun -width 20 -dpi 144
 bindsym $mod+Return exec kitty
 bindsym $mod+Shift+n exec i3-input -F 'rename workspace to "%s"'
 bindsym $mod+c exec /usr/bin/chromium
 bindsym $mod+x exec /usr/bin/qutebrowser
-bindsym $mod+Shift+t exec --no-startup-id systemctl suspend
 
 # =============================================================================
 # STARTUP
 
+# system
 exec --no-startup-id "$HOME/.config/screenlayout/single.sh"
+exec --no-startup-id /usr/bin/picom --experimental-backends --backend glx
+exec --no-startup-id /usr/bin/feh --bg-scale $wallpaper
+exec --no-startup-id "$HOME/.config/polybar/launch.sh"
 exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
-exec --no-startup-id /usr/bin/feh --bg-scale "$HOME/.config/default_wallpaper"
 exec --no-startup-id /usr/bin/unclutter --timeout 5
 exec --no-startup-id "$HOME/bin/mouse-profile.sh"
-exec --no-startup-id /usr/bin/picom --experimental-backends --backend glx
+
+# scratchpad
 exec --no-startup-id /usr/bin/kitty --title "scratchpad"
+exec --no-startup-id /usr/bin/spotify
+exec --no-startup-id /usr/bin/dex /usr/share/applications/workflowy.desktop
