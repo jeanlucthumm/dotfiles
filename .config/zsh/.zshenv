@@ -1,11 +1,13 @@
+export PATH="$HOME/.local/bin:$HOME/.node_modules/bin:$HOME/bin:$PATH"
+
 export TERMINAL="kitty"
-export PATH="$HOME/.local/bin:$HOME/.node_modules/bin:$PATH"
 export npm_config_prefix="$HOME/.node_modules"
 export EDITOR="/bin/nvim"
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 export BAT_THEME="Solarized (light)"
 export LC_ALL=en_US.UTF-8
+export GDK_SCALE=1.2
 
 # React Native
 export ANDROID_HOME=$HOME/Android/Sdk
