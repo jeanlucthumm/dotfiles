@@ -13,7 +13,6 @@ set -x CC /usr/bin/clang
 set -x CXX /usr/bin/clang++
 set -x BAT_THEME "gruvbox-dark"
 set -x LC_ALL en_US.UTF-8
-set -x SSH_AUTH_SOCK $XDG_RUNTIME_DIR/ssh-agent.socket
 
 # React Native
 set -x ANDROID_HOME $HOME/Android/Sdk
