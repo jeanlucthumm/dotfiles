@@ -2,12 +2,13 @@
 #
 # Bootstrap script for yadm
 
+source $HOME/.config/fish/env.fish
 
 # Required programs for bootstrap to suceed.
 set REQUIRED yarn curl nvim
 # File containing a list of steps already executed.
 # This avoid doing the same thing twice if we call bootstrap multiple times
-set STEP_FILE $HOME/.config/yadm/steps.txt
+set STEP_FILE $CONFIG/yadm/steps.txt
 
 
 set LOG "-->"
