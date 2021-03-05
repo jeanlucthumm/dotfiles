@@ -46,6 +46,7 @@ nnoremap <silent> K :call CocAction('doHover')<CR>
 nmap <Leader>o :CocFzfList outline<CR>
 nmap <Leader>O :CocFzfList symbols<CR>
 nmap <Leader>d :CocFzfList diagnostics<CR>
+nmap <Leader>f :call CocAction('format')<CR>
 
 
 
@@ -106,6 +107,8 @@ let g:neomake_open_list=2
 let g:auto_save=0
 let g:auto_save_events=["InsertLeave", "TextChanged", "CursorHold"]
 let g:nvimgdb_disable_start_keymaps=1
+" so that pynvim uses the right python
+let g:python3_host_prog="~/Code/venv/neovim/bin/python"
 let test#strategy = 'neomake'
 
 function! SolarizedTheme()
@@ -122,6 +125,7 @@ function! GruvboxTheme()
   colorscheme gruvbox
 endfunction
 
+hi! link pythonSpaceError Normal
 set background=dark
 call GruvboxTheme()
 

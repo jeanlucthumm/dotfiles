@@ -1,0 +1,33 @@
+{
+  "rust-analyzer.cargo.loadOutDirsFromCheck": true,
+  "rust-analyzer.procMacro.enable": true,
+  "diagnostic.refreshOnInsertMode": true,
+  "python.jediPath": "~/Code/venv/jedi/lib/python3.9/site-packages/",
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "~/Code/venv/black/bin/black",
+  /* "python.linting.pylintPath": "~/Code/venv/pylint/bin/pylint", */
+  "suggest.timeout": 5000,
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": [
+        "c",
+        "cpp",
+        "objc",
+        "objcpp"
+      ],
+      "rootPatterns": [
+        ".ccls",
+        "compile_commands.json",
+        ".vim/",
+        ".git/",
+        ".hg/"
+      ],
+      "initializationOptions": {
+        "cache": {
+          "directory": "/tmp/ccls"
+        }
+      }
+    }
+  }
+}
