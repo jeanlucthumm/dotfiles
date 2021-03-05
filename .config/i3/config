@@ -243,7 +243,7 @@ exec --no-startup-id /usr/bin/feh --bg-scale $wallpaper
 exec --no-startup-id "$HOME/.config/polybar/launch.sh"
 exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
 exec --no-startup-id /usr/bin/unclutter --timeout 5
-exec --no-startup-id "$HOME/bin/mouse-profile.sh"
+exec --no-startup-id "$HOME/Code/bin/mouse-profile.sh"
 
 # scratchpad
 exec --no-startup-id /usr/bin/kitty --title "scratchpad"
