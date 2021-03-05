@@ -52,7 +52,11 @@
 *color14:               S_base1
 
 !! white dark/light
-*color7:                S_base2
-*color15:               S_base3
+/* *color7:                S_base2 */
+/* *color15:               S_base3 */
+*color7:                S_base02
+*color15:               S_base02
 
-Xcursor.size: 10
+Xcursor.theme: volantes_cursors
+Xcursor.size: 32
+Xft.dpi: 144
