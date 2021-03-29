@@ -4,8 +4,13 @@ source $HOME/.config/fish/env.fish
 ### External
 
 function importIfExists
-  if test -e $argv[1]
-    source $argv[1]
+  set -l file_name $argv[1]
+  if test -e $file_name
+    if string match "*.fish" $file_name &> /dev/null
+      source $file_name
+    else
+      bass $file_name
+    end
   end
 end
 
