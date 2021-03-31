@@ -46,3 +46,8 @@ end
 if pgrep -x "sway" &> /dev/null
   alias i3config="$EDITOR $CONFIG/sway/config"
 end
+
+
+### ===========================================================================
+### Google at the end so I can override stuff
+importIfExists $CONFIG/fish/google.fish
