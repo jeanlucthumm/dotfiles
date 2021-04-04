@@ -5,7 +5,7 @@
 source $HOME/.config/fish/env.fish
 
 # Required programs for bootstrap to suceed.
-set REQUIRED yarn curl nvim
+set REQUIRED yarn curl nvim fish
 # File containing a list of steps already executed.
 # This avoid doing the same thing twice if we call bootstrap multiple times
 set STEP_FILE $CONFIG/yadm/steps.txt
@@ -48,4 +48,13 @@ if not contains "NVIM" $STEPS
   nvim +'PlugInstall --sync' +qa
 
   echo "NVIM" >> $STEP_FILE
+end
+
+if not contains "FISH" $STEPS
+  echo $LOG "Setting up fish"
+
+  curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+  fisher update
+
+  echo "FISH" >> $STEP_FILE
 end
