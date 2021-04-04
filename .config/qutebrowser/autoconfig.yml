@@ -40,6 +40,10 @@ settings:
     global: null
   fonts.default_size:
     global: 8pt
+  qt.highdpi:
+    global: false
+  qt.low_end_device_mode:
+    global: auto
   url.default_page:
     global: https://www.google.com/
   url.searchengines:
@@ -50,3 +54,5 @@ settings:
     global: https://www.google.com
   window.title_format:
     global: '{perc}{current_title}{title_sep}qutebrowser'
+  zoom.default:
+    global: 125%

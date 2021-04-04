@@ -25,8 +25,8 @@ importIfExists "$HOME/.cargo/env"
 ### Alias
 alias so="source $ZDOTDIR/.zshrc"
 alias zshconfig="$EDITOR $CONFIG/zsh/std.zsh"
-alias dim="xrandr --output DP-2 --brightness 0.5"
-alias undim="xrandr --output DP-2 --brightness 1.0"
+alias dim="xrandr --output DVI-I-1 --brightness 0.5"
+alias undim="xrandr --output DVI-I-1 --brightness 1.0"
 alias capt="maim -s -u $HOME/media/capt.png"
 alias cdf='cd $(fd -t d . ~ | fzf)'
 
@@ -34,6 +34,7 @@ alias cdf='cd $(fd -t d . ~ | fzf)'
 alias pacman="yay"
 alias vim="nvim"
 alias cat="bat"
+alias ls="exa"
 
 if [[ $TERM == xterm-kitty ]]; then
   alias icat="kitty +kitten icat"
