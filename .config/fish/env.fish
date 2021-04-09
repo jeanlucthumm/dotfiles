@@ -23,5 +23,6 @@ set -x PATH $PATH $ANDROID_HOME/platform-tools
 
 
 set CONFIG $XDG_CONFIG_HOME
+set CONF $CONFIG
 set CODE $HOME/Code
 set GITHUB "https://www.github.com/jeanlucthumm"
