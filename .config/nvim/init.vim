@@ -126,8 +126,8 @@ function! GruvboxTheme()
 endfunction
 
 hi! link pythonSpaceError Normal
-set background=dark
-call GruvboxTheme()
+set background=light
+call SolarizedTheme()
 
 " Gives the highlight groups under the cursor
 function! HighlightGroups()
