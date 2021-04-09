@@ -46,6 +46,8 @@ client.urgent           #000000	#000000 #000000 #000000 #000000
 client.placeholder      #000000 #000000 #000000 #000000 #000000
 client.background       #000000 #000000 #000000 #000000 #000000
 
+for_window [class="Org.gnome.Nautilus"] border pixel 2
+
 # =============================================================================
 # LAYOUT
 
@@ -173,6 +175,9 @@ for_window [title="^scratchpad$"] move scratchpad
 for_window [class="Spotify"] move scratchpad
 for_window [class="WorkFlowy"] move scratchpad
 
+# floating rules
+for_window [class="Org.gnome.Nautilus"] floating enable
+
 # =============================================================================
 # SYSTEM
 
@@ -233,6 +238,7 @@ bindsym $mod+Shift+n exec i3-input -F 'rename workspace to "%s"'
 bindsym $mod+c exec /usr/bin/chromium
 bindsym $mod+x exec /usr/bin/qutebrowser
 bindsym $mod+b exec polybar-msg cmd toggle
+bindsym $mod+n exec nautilus
 
 # =============================================================================
 # STARTUP
