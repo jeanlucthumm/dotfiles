@@ -11,7 +11,7 @@ set -x npm_config_prefix $HOME/.node_modules
 set -x EDITOR /bin/nvim 
 set -x CC /usr/bin/clang
 set -x CXX /usr/bin/clang++
-set -x BAT_THEME "gruvbox-dark"
+set -x BAT_THEME "Solarized (light)"
 set -x LC_ALL en_US.UTF-8
 
 # React Native
