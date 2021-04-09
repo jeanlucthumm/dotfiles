@@ -15,7 +15,7 @@ set LOG "-->"
 
 function check_programs
   for prog in $argv
-    if not command -v $prog &> /dev/null
+    if not command -v $prog > /dev/null
       set missing $missing $prog
     end
   end

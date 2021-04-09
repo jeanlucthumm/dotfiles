@@ -6,7 +6,7 @@ source $HOME/.config/fish/env.fish
 function importIfExists
   set -l file_name $argv[1]
   if test -e $file_name
-    if string match "*.fish" $file_name &> /dev/null
+    if string match "*.fish" $file_name > /dev/null
       source $file_name
     else
       bass $file_name
@@ -39,11 +39,11 @@ if [ $TERM = xterm-kitty ]
   alias icat="kitty +kitten icat"
   alias newterm='kitty --detach --directory (pwd)'
 end
-if pgrep -x "i3" &> /dev/null
+if pgrep -x "i3" > /dev/null
   alias i3config="$EDITOR $CONFIG/i3/config"
   alias picomconfig="$EDITOR $CONFIG/picom.conf"
 end
-if pgrep -x "sway" &> /dev/null
+if pgrep -x "sway" > /dev/null
   alias i3config="$EDITOR $CONFIG/sway/config"
 end
 
