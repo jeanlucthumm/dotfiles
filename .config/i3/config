@@ -232,13 +232,14 @@ bindsym $mod+Return exec kitty
 bindsym $mod+Shift+n exec i3-input -F 'rename workspace to "%s"'
 bindsym $mod+c exec /usr/bin/chromium
 bindsym $mod+x exec /usr/bin/qutebrowser
+bindsym $mod+b exec polybar-msg cmd toggle
 
 # =============================================================================
 # STARTUP
 
 # system
 exec --no-startup-id "$HOME/.config/screenlayout/single.sh"
-exec --no-startup-id /usr/bin/picom --experimental-backends --backend glx
+exec --no-startup-id /usr/bin/picom
 exec --no-startup-id /usr/bin/feh --bg-scale $wallpaper
 exec --no-startup-id "$HOME/.config/polybar/launch.sh"
 exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
