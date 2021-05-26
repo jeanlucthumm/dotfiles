@@ -24,6 +24,7 @@ Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
 Plug 'moll/vim-bbye'
 Plug 'andrejlevkovitch/vim-lua-format'
 Plug 'pseewald/vim-anyfold'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'jeanlucthumm/vim-solarized8'
 Plug 'morhetz/gruvbox'
@@ -87,6 +88,7 @@ nmap <C-e> :Buffers<CR>
 nmap <C-A-e> :Files<CR>
 nmap <A-1> :NERDTreeToggle<CR>
 nmap gt :tabe<CR>:term<CR>i
+nmap <F4> :Bdelete<CR>
 
 set tabstop=2
 set shiftwidth=2
@@ -177,6 +179,11 @@ augroup lua_group
   au FileType lua nmap <Leader>cc :ll<CR>
   au FileType lua nmap <Leader>co :lopen<CR>
   au FileType lua nmap <F11> :!lua %<CR>
+augroup END
+
+augroup python_group
+  au!
+  au FileType python let g:auto_save=1
 augroup END
 
 
