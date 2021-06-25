@@ -1,4 +1,13 @@
+set -l OS (uname)
+
 set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/Code/bin $HOME/.cargo/bin
+
+if [ $OS = "Linux" ]
+  set -g BIN /usr/bin/
+else if [ $OS = "Darwin" ]
+  set -g BIN /usr/local/bin/
+end
+
 
 # XDG
 set -x XDG_CONFIG_HOME $HOME/.config 
@@ -8,11 +17,16 @@ set -x XDG_DOWNLOAD_DIR $HOME/Downloads
 
 set -x TERMINAL kitty 
 set -x npm_config_prefix $HOME/.node_modules 
-set -x EDITOR /bin/nvim 
-set -x CC /usr/bin/clang
-set -x CXX /usr/bin/clang++
-set -x BAT_THEME "Solarized (light)"
+set -x EDITOR $BIN/nvim
+set -x CC $BIN/clang
+set -x CXX $BIN/clang++
 set -x LC_ALL en_US.UTF-8
+
+if [ $ITERM_PROFILE = "Default" ]
+  set -x BAT_THEME "Solarized (dark)"
+else
+  set -x BAT_THEME "Solarized (light)"
+end
 
 # React Native
 set -x ANDROID_HOME $HOME/Android/Sdk
