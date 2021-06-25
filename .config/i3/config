@@ -13,6 +13,7 @@
 
 set $mod Mod4
 set $wallpaper "$HOME/.config/default_wallpaper"
+set $browser "/usr/bin/firefox"
 
 # =============================================================================
 # COSMETIC
@@ -153,16 +154,17 @@ bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # resize window
+set $res_inc 5
 mode "resize" {
-    bindsym h resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym j resize shrink height 10 px or 10 ppt
-    bindsym l resize grow width 10 px or 10 ppt
+    bindsym h resize shrink width $res_inc px or $res_inc ppt
+    bindsym k resize grow height $res_inc px or $res_inc ppt
+    bindsym j resize shrink height $res_inc px or $res_inc ppt
+    bindsym l resize grow width $res_inc px or $res_inc ppt
 
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width $res_inc px or $res_inc ppt
+    bindsym Down resize grow height $res_inc px or $res_inc ppt
+    bindsym Up resize shrink height $res_inc px or $res_inc ppt
+    bindsym Right resize grow width $res_inc px or $res_inc ppt
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -235,7 +237,7 @@ bindsym $mod+Shift+s exec maim -s -u | xclip -selection clipboard -t image/png -
 bindsym $mod+d exec rofi -show drun -width 20 -dpi 144
 bindsym $mod+Return exec kitty
 bindsym $mod+Shift+n exec i3-input -F 'rename workspace to "%s"'
-bindsym $mod+c exec /usr/bin/chromium
+bindsym $mod+c exec $browser
 bindsym $mod+x exec /usr/bin/qutebrowser
 bindsym $mod+b exec polybar-msg cmd toggle
 bindsym $mod+n exec nautilus
