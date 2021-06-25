@@ -34,8 +34,13 @@ settings:
     https://webgazer.cs.brown.edu: true
   content.notifications:
     https://gitter.im: true
+    https://tomato-timer.com: true
     https://www.reddit.com: false
     https://www.youtube.com: false
+  content.user_stylesheets:
+    global: null
+  content.webgl:
+    global: true
   fonts.contextmenu:
     global: null
   fonts.default_size:
