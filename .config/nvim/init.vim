@@ -25,6 +25,7 @@ Plug 'moll/vim-bbye'
 Plug 'andrejlevkovitch/vim-lua-format'
 Plug 'pseewald/vim-anyfold'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'MattesGroeger/vim-bookmarks'
 
 Plug 'jeanlucthumm/vim-solarized8'
 Plug 'morhetz/gruvbox'
@@ -184,6 +185,7 @@ augroup END
 augroup python_group
   au!
   au FileType python let g:auto_save=1
+  au FileType python nmap <F10> :!python '%'<CR>
 augroup END
 
 
