@@ -50,11 +50,15 @@ end
 alias vim="nvim"
 alias cat="bat"
 alias ls="exa"
+alias docker="sudo docker"
 
 alias so="source $CONFIG/fish/config.fish"
 alias fishconfig="$EDITOR $CONFIG/fish/config.fish"
 alias cdf='cd (fd -t d . ~ | fzf)'
-alias cdv="cd $CODE"
+alias clip="xclip -selection clipboard"
+alias sysyadm="sudo yadm -Y /etc/yadm"
+alias scli="scli -s"
+alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
 alias venv="source .venv/bin/activate.fish"
 
 
@@ -69,6 +73,14 @@ function work
     cd (cat $dir_file)
   else
     echo "No work path set."
+  end
+end
+
+function cdv
+  if count $argv &> /dev/null
+    cd $CODE/$argv[1]
+  else
+    cd $CODE
   end
 end
 
