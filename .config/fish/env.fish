@@ -4,8 +4,20 @@ set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/Code/bin $HOME/
 
 if [ $OS = "Linux" ]
   set -g BIN /usr/bin/
+
+  if [ "$KITTY_THEME" = "solarized-light" ]
+    set -x BAT_THEME "Solarized (light)"
+  else
+    set -x BAT_THEME "Solarized (dark)"
+  end
 else if [ $OS = "Darwin" ]
   set -g BIN /usr/local/bin/
+
+  if [ "$ITERM_PROFILE" = "Default" ]
+    set -x BAT_THEME "Solarized (dark)"
+  else
+    set -x BAT_THEME "Solarized (light)"
+  end
 end
 
 
@@ -22,11 +34,6 @@ set -x CC $BIN/clang
 set -x CXX $BIN/clang++
 set -x LC_ALL en_US.UTF-8
 
-if [ $ITERM_PROFILE = "Default" ]
-  set -x BAT_THEME "Solarized (dark)"
-else
-  set -x BAT_THEME "Solarized (light)"
-end
 
 # React Native
 set -x ANDROID_HOME $HOME/Android/Sdk
