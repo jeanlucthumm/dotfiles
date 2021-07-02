@@ -79,6 +79,10 @@ nmap <Leader>cl :cclose<CR>
 nmap <Leader>cc :cc<CR>
 nmap <Leader>co :copen<CR>
 
+nmap <Leader>bb :BookmarkToggle<CR>
+nmap <Leader>ba :BookmarkAnnotate<CR>
+nmap <Leader>bo :BookmarkShowAll<CR>
+
 nmap <C-h> :tabp<CR>
 nmap <C-l> :tabn<CR>
 nmap <S-h> <C-w>h
@@ -185,7 +189,12 @@ augroup END
 augroup python_group
   au!
   au FileType python let g:auto_save=1
-  au FileType python nmap <F10> :!python '%'<CR>
+  au FileType python nmap <F5> :!python '%'<CR>
+augroup END
+
+augroup dart_group
+  au!
+  au FileType dart let g:auto_save=1
 augroup END
 
 

@@ -78,7 +78,11 @@ end
 
 function cdv
   if count $argv &> /dev/null
-    cd (fd -1a -t d "$argv[1]" "$CODE")
+    if test -e "$CODE/$argv[1]"
+      cd "$CODE/$argv[1]"
+    else
+      cd (fd -1a "$argv[1]" "$CODE")
+    end
   else
     cd $CODE
   end
