@@ -173,7 +173,6 @@ augroup rust_group
   au FileType rust nnoremap tf :TestFile<CR>
   " <F23> == <S-F11> in kitty
   au FileType rust nmap <F23> :RustTest!<CR>
-  au FileType rust nmap <Leader>f :RustFmt<CR>
   au FileType rust let g:auto_save=1
   au CursorHold *.rs silent call CocActionAsync('highlight')
 augroup END
