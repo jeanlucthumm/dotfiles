@@ -41,14 +41,14 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gy <Plug>(coc-type-definition)
-nmap <Leader>a v<Plug>(coc-codeaction-selected)<C-C>
+nmap <silent> <Leader>a v<Plug>(coc-codeaction-selected)<C-C>
 nmap <silent> <F2> <Plug>(coc-diagnostic-next)
 nmap <silent> <Leader>r <Plug>(coc-rename)
 nnoremap <silent> K :call CocAction('doHover')<CR>
-nmap <Leader>o :CocFzfList outline<CR>
-nmap <Leader>O :CocFzfList symbols<CR>
-nmap <Leader>d :CocFzfList diagnostics<CR>
-nmap <Leader>f :call CocAction('format')<CR>
+nmap <silent> <Leader>o :CocFzfList outline<CR>
+nmap <silent> <Leader>O :CocFzfList symbols<CR>
+nmap <silent> <Leader>d :CocFzfList diagnostics<CR>
+nmap <silent> <Leader>f :call CocAction('format')<CR>
 
 
 
@@ -72,7 +72,7 @@ inoremap <expr> <CR>
 nmap <Leader>ve :exe 'tabedit' stdpath('config').'/init.vim'<CR>
 nmap <Leader>vs :exe 'source' stdpath('config').'/init.vim'<CR>
 " yes I'm lazy
-nmap <Leader><Leader> :write<CR>
+nmap <silent> <Leader><Leader> :write<CR>
 nmap <Leader>q :qall<CR>
 " quickfix
 nmap <Leader>cl :cclose<CR>
@@ -89,8 +89,8 @@ nmap <S-h> <C-w>h
 nmap <S-l> <C-w>l
 tnoremap <C-h> <C-\><C-n>:tabp<CR>
 tnoremap <C-l> <C-\><C-n>:tabn<CR>
-nmap <C-e> :Buffers<CR>
-nmap <C-A-e> :Files<CR>
+nmap <silent> <C-e> :Buffers<CR>
+nmap <silent> <C-A-e> :Files<CR>
 nmap <A-1> :NERDTreeToggle<CR>
 nmap gt :tabe<CR>:term<CR>i
 nmap <F4> :Bdelete<CR>
@@ -118,6 +118,10 @@ let g:nvimgdb_disable_start_keymaps=1
 let g:python3_host_prog="~/Code/venv/neovim/bin/python"
 let test#strategy = 'neomake'
 
+" Neovide
+set guifont=Fira\ Code:h11
+let g:neovide_cursor_animation_length=0.05
+
 function! SolarizedTheme()
   let g:airline_theme='solarized'
   hi! link rustCommentLineDoc Comment
@@ -136,7 +140,7 @@ hi! link pythonSpaceError Normal
 set background=light
 call SolarizedTheme()
 
-" Gives the highlight groups under the cursor
+" Gives the ighlight groups under the cursor
 function! HighlightGroups()
   for id in synstack(line("."), col("."))
     echo synIDattr(id, "name")
@@ -169,7 +173,6 @@ augroup rust_group
   au FileType rust nnoremap tf :TestFile<CR>
   " <F23> == <S-F11> in kitty
   au FileType rust nmap <F23> :RustTest!<CR>
-  au FileType rust nmap <Leader>f :RustFmt<CR>
   au FileType rust let g:auto_save=1
   au CursorHold *.rs silent call CocActionAsync('highlight')
 augroup END
