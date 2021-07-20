@@ -88,6 +88,20 @@ function cdv
   end
 end
 
+if [ $OS = "Darwin" ]
+
+  function posture
+    while true
+      if not sleep (math "5 * 60")
+        or not osascript -e 'display notification "Posture"'
+        return
+      end
+    end
+  end
+
+end  # Darwin
+
+
 ### ===========================================================================
 ### Google at the end so I can override stuff
 importIfExists $CONFIG/fish/google.fish
