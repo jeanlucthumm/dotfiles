@@ -88,6 +88,18 @@ function cdv
   end
 end
 
+if [ $OS = "Linux" ]
+  function posture
+    echo "Started posture loop..."
+    while true
+      if not sleep 5m
+        or not notify-send "Posture"
+        return
+      end
+    end
+  end
+end
+
 ### ===========================================================================
 ### Google at the end so I can override stuff
 importIfExists $CONFIG/fish/google.fish
