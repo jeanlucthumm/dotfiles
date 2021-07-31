@@ -7,6 +7,7 @@ if [ $OS = "Linux" ]
 
   set -x CC $BIN/clang
   set -x CXX $BIN/clang++
+  set -x ANDROID_HOME $CODE/android-sdk
 
   if [ "$KITTY_THEME" = "solarized-light" ]
     set -x BAT_THEME "Solarized (light)"
@@ -18,6 +19,7 @@ else if [ $OS = "Darwin" ]
 
   set -x CC /usr/local/opt/llvm/bin/clang
   set -x CXX /usr/local/opt/llvm/bin/clang++
+  set -x ANDROID_HOME /Users/$USER/Library/Android/sdk
 
   if [ "$ITERM_PROFILE" = "Default" ]
     set -x BAT_THEME "Solarized (dark)"
@@ -38,7 +40,6 @@ set -x TERMINAL kitty
 set -x npm_config_prefix $HOME/.node_modules 
 set -x EDITOR $BIN/nvim
 set -x LC_ALL en_US.UTF-8
-set -x ANDROID_HOME $CODE/android-sdk
 
 set CONFIG $XDG_CONFIG_HOME
 set CONF $CONFIG
