@@ -1,0 +1,12 @@
+[user]
+	email = jeanlucthumm@gmail.com
+	name = Jean-Luc Thumm
+[core]
+	pager = delta -s --line-numbers-zero-style black
+	excludesfile = /home/jeanluc/.config/.gitignore
+[init]
+	defaultBranch = master
+[merge]
+	tool = meld
+[mergetool "meld"]
+	cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
