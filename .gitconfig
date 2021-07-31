@@ -3,7 +3,7 @@
 	name = Jean-Luc Thumm
 [core]
 	pager = delta -s --line-numbers-zero-style black
-	excludesfile = /home/jeanluc/.config/.gitignore
+	excludesfile = ~/.config/.gitignore
 [init]
 	defaultBranch = master
 [merge]
