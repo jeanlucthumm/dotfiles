@@ -26,9 +26,12 @@ Plug 'andrejlevkovitch/vim-lua-format'
 Plug 'pseewald/vim-anyfold'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'MattesGroeger/vim-bookmarks'
+Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
 
 Plug 'jeanlucthumm/vim-solarized8'
 Plug 'morhetz/gruvbox'
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -92,6 +95,7 @@ tnoremap <C-l> <C-\><C-n>:tabn<CR>
 nmap <silent> <C-e> :Buffers<CR>
 nmap <silent> <C-A-e> :Files<CR>
 nmap <A-1> :NERDTreeToggle<CR>
+nmap <A-f> :NERDTreeFind<CR>
 nmap gt :tabe<CR>:term<CR>i
 nmap <F4> :Bdelete<CR>
 
@@ -117,10 +121,9 @@ let g:nvimgdb_disable_start_keymaps=1
 " so that pynvim uses the right python
 let g:python3_host_prog="~/Code/venv/neovim/bin/python"
 let test#strategy = 'neomake'
-
-" Neovide
-set guifont=Fira\ Code:h11
 let g:neovide_cursor_animation_length=0.05
+
+set guifont=Fira_Code_Retina_Nerd_Font_Complete:h11
 
 function! SolarizedTheme()
   let g:airline_theme='solarized'
