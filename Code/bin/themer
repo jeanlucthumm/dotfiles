@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import os
 from pathlib import Path
 import re
@@ -5,6 +7,11 @@ import subprocess
 import sys
 
 ERR_UNKNOWN_THEME = "Unknown theme"
+
+AVAILABLE_THEMES = [
+    "solarized-light",
+    "solarized-dark",
+]
 
 HOME = Path(os.environ["HOME"])
 
@@ -69,16 +76,13 @@ def handle_wallpaper(theme: str):
     subprocess.run(["feh", "--bg-scale", str(path)])
 
 
-HANDLERS = {
-    "kitty": handle_kitty,
-    "gtk": handle_gtk,
-    "wallpaper": handle_wallpaper
-}
+HANDLERS = {"kitty": handle_kitty, "gtk": handle_gtk, "wallpaper": handle_wallpaper}
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("bad usage")
+        print("Usage: themer theme\n")
+        print("Available themes: \n" + "\n".join(["\t" + x for x in AVAILABLE_THEMES]))
         exit(127)
     bad_handlers = []
     for key, handler in HANDLERS.items():
