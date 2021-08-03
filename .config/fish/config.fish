@@ -113,5 +113,11 @@ else if [ $OS = "Darwin" ]
 end
 
 ### ===========================================================================
+### Keybindings
+
+bind \ch backward-word
+bind \cl forward-word
+
+### ===========================================================================
 ### Google at the end so I can override stuff
 importIfExists $CONFIG/fish/google.fish
