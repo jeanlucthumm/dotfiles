@@ -251,6 +251,7 @@ exec --no-startup-id "$HOME/.config/polybar/launch.sh"
 exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
 exec --no-startup-id /usr/bin/unclutter --timeout 5
 exec --no-startup-id "$HOME/Code/bin/mouse-profile.sh"
+exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 
 # scratchpad
 exec --no-startup-id /usr/bin/kitty --title "scratchpad"
