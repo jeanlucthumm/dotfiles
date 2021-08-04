@@ -79,11 +79,14 @@ def handle_wallpaper(theme: str):
 HANDLERS = {"kitty": handle_kitty, "gtk": handle_gtk, "wallpaper": handle_wallpaper}
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) != 2:
         print("Usage: themer theme\n")
         print("Available themes: \n" + "\n".join(["\t" + x for x in AVAILABLE_THEMES]))
         exit(127)
+    if sys.argv[1] == "--list":
+        print(" ".join(AVAILABLE_THEMES))
+        return
     bad_handlers = []
     for key, handler in HANDLERS.items():
         try:
@@ -94,3 +97,7 @@ if __name__ == "__main__":
         print(
             f"The following handlers do not support theme {sys.argv[1]}:", bad_handlers
         )
+
+
+if __name__ == "__main__":
+    main()

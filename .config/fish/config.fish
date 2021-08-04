@@ -113,10 +113,14 @@ else if [ $OS = "Darwin" ]
 end
 
 ### ===========================================================================
-### Keybindings
+### Shell
 
 bind \ch backward-word
 bind \cl forward-word
+
+if [ $OS = "Linux" ]
+  complete -c themer -x -a (themer --list)
+end
 
 ### ===========================================================================
 ### Google at the end so I can override stuff
