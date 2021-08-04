@@ -20,7 +20,6 @@ Plug 'neomake/neomake'
 Plug '907th/vim-auto-save'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-test/vim-test'
-Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
 Plug 'moll/vim-bbye'
 Plug 'andrejlevkovitch/vim-lua-format'
 Plug 'pseewald/vim-anyfold'
@@ -117,11 +116,12 @@ set updatetime=500
 let g:neomake_open_list=2
 let g:auto_save=0
 let g:auto_save_events=["InsertLeave", "TextChanged", "CursorHold"]
-let g:nvimgdb_disable_start_keymaps=1
-" so that pynvim uses the right python
-let g:python3_host_prog="~/Code/venv/neovim/bin/python"
 let test#strategy = 'neomake'
 let g:neovide_cursor_animation_length=0.05
+
+let g:bookmark_no_default_key_mappings=1
+
+
 
 set guifont=Fira_Code_Retina_Nerd_Font_Complete:h11
 
@@ -140,8 +140,22 @@ function! GruvboxTheme()
 endfunction
 
 hi! link pythonSpaceError Normal
-set background=light
-call SolarizedTheme()
+
+if $TERM == "xterm-kitty"
+  if $KITTY_THEME == "solarized-light"
+    set background=light
+    call SolarizedTheme()
+  elseif $KITTY_THEME == "solarized-dark"
+    set background=dark
+    call SolarizedTheme()
+  else
+    set background=light
+    call SolarizedTheme()
+  endif
+else
+  set background=light
+  call SolarizedTheme()
+endif
 
 " Gives the ighlight groups under the cursor
 function! HighlightGroups()
@@ -183,12 +197,12 @@ augroup END
 augroup lua_group
   au!
   au FileType lua nmap <F10> :Neomake<CR>
-  au FileType lua nmap <Leader>f :call LuaFormat()<CR>
   au FileType lua let g:auto_save=1
   au CursorHold *.lua silent call CocActionAsync('highlight')
   au FileType lua nmap <Leader>cl :lclose<CR>
   au FileType lua nmap <Leader>cc :ll<CR>
   au FileType lua nmap <Leader>co :lopen<CR>
+  au FileType lua nmap <Leader>f :call LuaFormat()<CR>
   au FileType lua nmap <F11> :!lua %<CR>
 augroup END
 
@@ -202,7 +216,6 @@ augroup dart_group
   au!
   au FileType dart let g:auto_save=1
 augroup END
-
 
 filetype plugin indent on
 
