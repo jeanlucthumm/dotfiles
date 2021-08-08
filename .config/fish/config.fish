@@ -31,6 +31,7 @@ if [ $OS = "Linux" ]
   alias sysyadm="sudo yadm -Y /etc/yadm"
   alias scli="scli -s"
   alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
+  alias cp="xcp"
 
   if [ $TERM = xterm-kitty ]
     alias icat="kitty +kitten icat"
