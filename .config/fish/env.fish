@@ -12,26 +12,21 @@ if [ $OS = "Linux" ]
   set -x CXX $BIN/clang++
   set -x ANDROID_HOME $CODE/android-sdk
 
-
-  if [ "$KITTY_THEME" = "solarized-light" ]
-    set -x BAT_THEME "Solarized (light)"
-  else
-    set -x BAT_THEME "Solarized (dark)"
-  end
-
 else if [ $OS = "Darwin" ]
 
   set -x CC /usr/local/opt/llvm/bin/clang
   set -x CXX /usr/local/opt/llvm/bin/clang++
   set -x ANDROID_HOME /Users/$USER/Library/Android/sdk
 
-  if [ "$ITERM_PROFILE" = "Default" ]
-    set -x BAT_THEME "Solarized (dark)"
-  else
-    set -x BAT_THEME "Solarized (light)"
-  end
-
 end
+
+if [ "$KITTY_THEME" = "solarized-light" -o "$ITERM_PROFILE" = "Default" ]
+  set -x BAT_THEME "Solarized (light)"
+else
+  set -x BAT_THEME "Solarized (dark)"
+end
+
+
 
 # XDG
 set -x XDG_CONFIG_HOME $HOME/.config 
