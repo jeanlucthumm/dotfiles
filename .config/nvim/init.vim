@@ -34,6 +34,8 @@ Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
+luafile $XDG_CONFIG_HOME/nvim/lua/dap_config.lua
+
 nnoremap <Space> <Nop>
 let mapleader = "\<Space>"
 
@@ -91,6 +93,7 @@ nmap <S-h> <C-w>h
 nmap <S-l> <C-w>l
 tnoremap <C-h> <C-\><C-n>:tabp<CR>
 tnoremap <C-l> <C-\><C-n>:tabn<CR>
+tmap <C-w><C-w> <C-\><C-n><C-w><C-w>
 nmap <silent> <C-e> :Buffers<CR>
 nmap <silent> <C-A-e> :Files<CR>
 nmap <A-1> :NERDTreeToggle<CR>
@@ -183,7 +186,9 @@ augroup END
 
 augroup rust_group
   au!
+  au FileType rust nmap <F8> :lua require'dap'.toggle_breakpoint()<CR>
   au FileType rust nmap <F10> :w<CR>:Neomake! cargo<CR>
+  au FileType rust nmap <F11> :lua require'dap'.continue()<CR>
   au FileType rust map t <Nop>
   au FileType rust nnoremap tn :TestNearest<CR>
   au FileType rust nnoremap tl :TestLast<CR>
@@ -218,4 +223,3 @@ augroup dart_group
 augroup END
 
 filetype plugin indent on
-
