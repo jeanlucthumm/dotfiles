@@ -27,6 +27,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'jeanlucthumm/vim-solarized8'
 Plug 'morhetz/gruvbox'
@@ -89,6 +90,7 @@ nmap <Leader>bo :BookmarkShowAll<CR>
 
 nmap <C-h> :tabp<CR>
 nmap <C-l> :tabn<CR>
+nmap <C-p> :Commands<CR>
 nmap <S-h> <C-w>h
 nmap <S-l> <C-w>l
 tnoremap <C-h> <C-\><C-n>:tabp<CR>
