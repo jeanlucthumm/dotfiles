@@ -28,6 +28,7 @@ Plug 'MattesGroeger/vim-bookmarks'
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'akinsho/nvim-bufferline.lua'
 
 Plug 'jeanlucthumm/vim-solarized8'
 Plug 'morhetz/gruvbox'
@@ -125,8 +126,6 @@ let test#strategy = 'neomake'
 let g:neovide_cursor_animation_length=0.05
 
 let g:bookmark_no_default_key_mappings=1
-
-
 
 set guifont=Fira_Code_Retina_Nerd_Font_Complete:h11
 
