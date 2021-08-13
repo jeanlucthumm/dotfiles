@@ -41,30 +41,21 @@ def handle_kitty(theme: str):
 
 def handle_gtk(theme: str):
     if theme == "solarized-light":
-        name = "Orchis-light"
         # name = "NumixSolarizedLightBlue"
-        icon = "Tela"
         # icon = "WhiteSur-dark"
-        dark = "0"
+        name = "Orchis-light"
+        icon = "Tela"
     elif theme == "solarized-dark":
         name = "NumixSolarizedDarkBlue"
         icon = "WhiteSur-dark"
-        dark = "1"
     else:
         raise ThemeError(ERR_UNKNOWN_THEME)
 
-    for version in ["gtk-3.0", "gtk-4.0"]:
-        path = str(HOME / f".config/{version}/settings.ini")
-        search_and_replace(path, "^gtk-theme-name.*$", f"gtk-theme-name={name}")
-        search_and_replace(
-            path, "^gtk-icon-theme-name.*$", f"gtk-icon-theme-name={icon}"
-        )
-        search_and_replace(
-            path,
-            "^gtk-application-prefer-dark-theme.*$",
-            f"gtk-application-prefer-dark-theme={dark}",
-        )
+    path = str(CONFIG / "xsettingsd")
+    search_and_replace(path, "^Net/ThemeName.*$", f"Net/ThemeName \"{name}\"")
+    search_and_replace(path, "^Net/IconThemeName.*$", f"Net/IconThemeName \"{icon}\"")
 
+    subprocess.run(["killall", "-HUP", "xsettingsd"])
 
 def handle_wallpaper(theme: str):
     if theme == "solarized-light":

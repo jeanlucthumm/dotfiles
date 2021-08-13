@@ -246,6 +246,7 @@ bindsym $mod+\ exec dunstctl close-all
 # system
 exec --no-startup-id "$HOME/.config/screenlayout/single.sh"
 exec --no-startup-id /usr/bin/picom
+exec --no-startup-id /usr/bin/xsettingsd -c "$HOME/.config/xsettingsd" &
 exec --no-startup-id /usr/bin/feh --bg-scale $wallpaper
 exec --no-startup-id "$HOME/.config/polybar/launch.sh"
 exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
