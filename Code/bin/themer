@@ -14,6 +14,7 @@ AVAILABLE_THEMES = [
 ]
 
 HOME = Path(os.environ["HOME"])
+CONFIG = Path(os.environ["XDG_CONFIG_HOME"] or HOME / ".config")
 
 
 class ThemeError(ValueError):
@@ -32,9 +33,10 @@ def search_and_replace(path: str, search: str, replace: str):
 def handle_kitty(theme: str):
     if theme not in ["solarized-light", "solarized-dark"]:
         raise ThemeError(ERR_UNKNOWN_THEME)
-    path = str(HOME / ".config/kitty/kitty.conf")
+    path = str(CONFIG / "kitty/kitty.conf")
     search_and_replace(path, "^include.*$", f"include theme-{theme}.conf")
     search_and_replace(path, "^env.*$", f"env KITTY_THEME={theme}")
+    subprocess.run(["kitty", "@", "set-colors", "-a", "-c", path])
 
 
 def handle_gtk(theme: str):
