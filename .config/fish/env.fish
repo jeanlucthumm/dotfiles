@@ -20,7 +20,7 @@ else if [ $OS = "Darwin" ]
 
 end
 
-if [ "$KITTY_THEME" = "solarized-light" -o "$ITERM_PROFILE" = "Default" ]
+if [ "$KITTY_THEME" = "solarized-light" -o "$ITERM_PROFILE" = "Default Light" ]
   set -x BAT_THEME "Solarized (light)"
 else
   set -x BAT_THEME "Solarized (dark)"
