@@ -18,6 +18,7 @@ require "paq" {
     "hrsh7th/nvim-compe",
     {"nvim-treesitter/nvim-treesitter", run = function() cmd("TSUpdate") end},
     "glepnir/lspsaga.nvim",
+    "theHamsta/nvim-dap-virtual-text",
 
     -- Theme
     "kyazdani42/nvim-web-devicons",
@@ -64,7 +65,8 @@ g.auto_save_events = {"InsertLeave", "TextChanged", "CursorHold"}
 g.neovide_cursor_animation_length = 0.05
 g.bookmark_no_default_key_mappings = 1
 g.symbols_outline = {show_symbol_details = false}
-g.mapleader = " "; -- sets <Leader> to <space>
+g.mapleader = " " -- sets <Leader> to <space>
+g.dap_virtual_text = true
 vim.v["test#strategy"] = "neomake"
 
 ---- Plugin configuration
@@ -157,7 +159,58 @@ require'lspinstall'.post_install_hook = function()
     vim.cmd("bufdo e") -- triggers FileType autocmd to start server
 end
 
+-- DAP Config
+local dap = require "dap"
+dap.adapters.lldb = {
+    type = "executable",
+    command = "/usr/bin/lldb-vscode",
+    name = "lldb"
+}
+dap.configurations.cpp = {
+    {
+        name = "Launch",
+        type = "lldb",
+        request = "launch",
+        program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/',
+                                'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = {},
+
+        -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
+        --
+        --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+        --
+        -- Otherwise you might get the following error:
+        --
+        --    Error on launch: Failed to attach to the target process
+        --
+        -- But you should be aware of the implications:
+        -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
+        runInTerminal = false
+    }
+}
+-- TODO: continue() supports multiple configs, it just prompts
+dap.configurations.rust = {
+    {
+        name = "Launch Debug",
+        type = "lldb",
+        request = "launch",
+        program = '${workspaceFolder}/target/debug/${workspaceFolderBasename}',
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = {},
+        runInTerminal = false
+    }
+}
+
+fn.sign_define('DapBreakpoint',
+               {text = '🛑', texthl = '', linehl = '', numhl = ''})
+
 -- Smaller plugin setup
+require"dapui".setup {}
 require"compe".setup {
     enabled = true,
     autocomplete = true,
@@ -220,7 +273,7 @@ opt.guifont = "Fira_Code_Retina_Nerd_Font_Complete:h11"
 opt.completeopt = "menuone,noselect"
 if vim.fn.has("nvim-0.5.0") == 1 then opt.signcolumn = "number" end
 
----- Keymap
+---- Keymap (note that some keys are defined in the LSP section)
 local function map(mode, lhs, rhs, opts)
     local options = {noremap = true}
     if opts then options = vim.tbl_extend("force", options, opts) end
@@ -254,9 +307,9 @@ ncmap("<Leader>bo", "Telescope vim_bookmarks all")
 -- <C-*> and <A-*>
 ncmap("<C-h>", "BufferLineCyclePrev")
 ncmap("<C-l>", "BufferLineCycleNext")
-map("t", "<C-h>", "<C-\\><C-n><Cmd>tabp<CR>")
-map("t", "<C-l>", "<C-\\><C-l><Cmd>tabn<CR>")
-map("t", "<C-w><C-w>", "<C-\\><C-l><C-w><C-w>")
+map("t", "<C-h>", "<C-\\><C-n><Cmd>BufferLineCyclePrev<CR>")
+map("t", "<C-l>", "<C-\\><C-l><Cmd><CR>")
+map("t", "<C-w><C-w>", "<C-\\><C-l><C-w>BufferLineCycleNext<C-w>")
 ncmap("<C-p>", "Telescope commands")
 ncmap("<C-e>", "Buffers") -- regular fzf is faster
 ncmap("<C-A-e>", "Telescope find_files")
@@ -264,6 +317,10 @@ ncmap("<A-1>", "NvimTreeToggle")
 ncmap("<A-f>", "NvimTreeFindFile")
 -- <F*>
 ncmap("<F4>", "Bdelete")
+ncmap("<F7>", "lua require'dap'.step_into()")
+ncmap("<F6>", "lua require'dap'.step_over()")
+ncmap("<F8>", "lua require'dap'.toggle_breakpoint()")
+ncmap("<F12>", "lua require'dap'.continue()")
 -- Auto completion
 imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
 imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
@@ -320,6 +377,26 @@ autoTheme()
 vim.cmd("hi! link pythonSpaceError Normal")
 
 -- Filetype overrides
-if vim.bo.filetype == "lua" then nmap("<Leader>f", ":call LuaFormat()<CR>") end
+api.nvim_exec([[
+augroup lua_group
+  au!
+  au FileType lua nmap <F10> :Neomake<CR>
+  au FileType lua nmap <Leader>cl :lclose<CR>
+  au FileType lua nmap <Leader>cc :ll<CR>
+  au FileType lua nmap <Leader>co :lopen<CR>
+  au FileType lua nmap <Leader>f :call LuaFormat()<CR>
+augroup END
+]], false)
+
+api.nvim_exec([[
+augroup rust_group
+  au!
+  au FileType rust nmap <F10> :w<CR>:Neomake! cargo<CR>
+  au FileType rust map t <Nop>
+  au FileType rust nnoremap tn :TestNearest<CR>
+  au FileType rust nnoremap tl :TestLast<CR>
+  au FileType rust nnoremap tf :TestFile<CR>
+augroup END
+]], false)
 
 ---- Commands
