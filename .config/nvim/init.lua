@@ -8,7 +8,6 @@ local fn = vim.fn
 ---- Plugins
 require "paq" {
     "savq/paq-nvim",
-    "sheerun/vim-polyglot",
 
     -- LSP & DAP
     "neovim/nvim-lspconfig",
@@ -17,32 +16,38 @@ require "paq" {
     "rcarriga/nvim-dap-ui",
     "hrsh7th/nvim-compe",
 
+    -- Theme
+    "kyazdani42/nvim-web-devicons",
+    "jeanlucthumm/vim-solarized8",
+    "morhetz/gruvbox",
+    "sheerun/vim-polyglot",
+
+    -- UI
     {
         "junegunn/fzf",
         run = function() vim.api.nvim_call_function("fzf#install", {}) end
     },
    "junegunn/fzf.vim",
-    "scrooloose/nerdtree",
-    "tpope/vim-commentary",
-
-    "tpope/vim-fugitive",
-    "tpope/vim-dispatch",
+    "kyazdani42/nvim-tree.lua",
     "vim-airline/vim-airline",
     "vim-airline/vim-airline-themes",
-    "jiangmiao/auto-pairs",
-    "neomake/neomake",
-    "907th/vim-auto-save",
+    {"iamcco/markdown-preview.nvim", run = "cd app && yarn install"},
     "airblade/vim-gitgutter",
-    "vim-test/vim-test",
+
+    -- Editor
+    "tpope/vim-commentary",
+    "tpope/vim-fugitive",
+    "tpope/vim-dispatch",
+    "jiangmiao/auto-pairs",
     "moll/vim-bbye",
     "andrejlevkovitch/vim-lua-format",
     "pseewald/vim-anyfold",
-    {"iamcco/markdown-preview.nvim", run = "cd app && yarn install"},
-    "MattesGroeger/vim-bookmarks",
 
-    "jeanlucthumm/vim-solarized8",
-    "morhetz/gruvbox",
-    "ryanoasis/vim-devicons"
+    -- Functional
+    "MattesGroeger/vim-bookmarks",
+    "neomake/neomake",
+    "vim-test/vim-test",
+    "907th/vim-auto-save",
 }
 
 ---- Plugin configuration
@@ -181,8 +186,8 @@ local function map(mode, lhs, rhs, opts)
     if opts then options = vim.tbl_extend("force", options, opts) end
     api.nvim_set_keymap(mode, lhs, rhs, options)
 end
-local function nmap(lhs, rhs, opts) map("n", lhs, rhs, opts) end
-local function imap(lhs, rhs, opts) map("i", lhs, rhs, opts) end
+local function nmap(...) map("n", ...) end
+local function imap(...) map("i", ...) end
 
 -- g
 nmap("gt", ":tabe<CR>:term<CR>i")
@@ -194,8 +199,8 @@ nmap("<Leader>q", ":q<CR>")
 nmap("<Leader>q", ":qall<CR>")
 nmap("<Leader><Leader>", ":write<CR>")
 -- <Leader>v    nvim config
-nmap("<Leader>ve", ":exe 'tabedit' stdpath('config').'/init2.lua'<CR>")
-nmap("<Leader>vs", ":exe 'source' stdpath('config').'/init2.lua'<CR>")
+nmap("<Leader>ve", ":exe 'tabedit' stdpath('config').'/init.lua'<CR>")
+nmap("<Leader>vs", ":exe 'source' stdpath('config').'/init.lua'<CR>")
 -- <Leader>c    quickfix
 nmap("<Leader>cl", ":cclose<CR>")
 nmap("<Leader>cc", ":cc<CR>")
@@ -222,7 +227,7 @@ imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
 imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
 local cr_expr =
     "pumvisible() ? (empty(v:completed_item)?'<C-n>':'<C-g>u<CR>') : " ..
-        "'<C-g>u<CR>'"
+        "'<C-g>u<CR>'" -- <C-g>u starts a new item on 
 imap("<CR>", cr_expr, {expr = true})
 
 ---- Theme
