@@ -102,7 +102,7 @@ local function on_attach(client, bufnr)
       augroup END
       ]], false)
     end
-    if client.resolved_capabilities.document_format then
+    if client.resolved_capabilities.document_formatting then
         bnmap("<Leader>f", "vim.lsp.buf.formatting()", opts)
     end
     if client.resolved_capabilities.code_lens then
@@ -112,7 +112,6 @@ local function on_attach(client, bufnr)
     end
 end
 
--- LSP Lua config
 local lua_config = {
     Lua = {
         runtime = {
