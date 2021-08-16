@@ -212,8 +212,8 @@ map("t", "<C-w><C-w>", "<C-\\><C-l><C-w><C-w>")
 nmap("<C-p>", ":Commands<CR>")
 nmap("<C-e>", ":Buffers<CR>")
 nmap("<C-A-e>", ":Files<CR>")
-nmap("<A-1>", ":NERDTreeToggle")
-nmap("<A-f>", ":NERDTreeFind")
+nmap("<A-1>", ":NvimTreeToggle")
+nmap("<A-f>", ":NvimTreeFindFile")
 -- <F*>
 nmap("<F4>", ":Bdelete<CR>")
 -- Auto completion
