@@ -4,32 +4,41 @@ local g = vim.g
 local api = vim.api
 local env = vim.env
 local fn = vim.fn
+local cmd = vim.cmd
 
 ---- Plugins
 require "paq" {
     "savq/paq-nvim",
 
-    -- LSP & DAP
+    -- LSP & DAP & nvim
     "neovim/nvim-lspconfig",
     "kabouzeid/nvim-lspinstall",
     "mfussenegger/nvim-dap",
     "rcarriga/nvim-dap-ui",
     "hrsh7th/nvim-compe",
+    {"nvim-treesitter/nvim-treesitter", run = function() cmd("TSUpdate") end},
+    "glepnir/lspsaga.nvim",
 
     -- Theme
     "kyazdani42/nvim-web-devicons",
     "jeanlucthumm/vim-solarized8",
     "morhetz/gruvbox",
-    "sheerun/vim-polyglot",
+    "marko-cerovac/material.nvim",
 
     -- UI
     {"junegunn/fzf", run = function() fn["fzf#install"]() end},
     "junegunn/fzf.vim",
+    "ojroques/nvim-lspfuzzy",
     "kyazdani42/nvim-tree.lua",
-    "vim-airline/vim-airline",
-    "vim-airline/vim-airline-themes",
     {"iamcco/markdown-preview.nvim", run = "cd app && yarn install"},
     "airblade/vim-gitgutter",
+    "nvim-lua/plenary.nvim",
+    "nvim-telescope/telescope.nvim",
+    "simrat39/symbols-outline.nvim",
+    "tom-anders/telescope-vim-bookmarks.nvim",
+    "simrat39/symbols-outline.nvim",
+    "hoob3rt/lualine.nvim",
+    "akinsho/nvim-bufferline.lua",
 
     -- Editor
     "tpope/vim-commentary",
@@ -39,6 +48,7 @@ require "paq" {
     "moll/vim-bbye",
     "andrejlevkovitch/vim-lua-format",
     "pseewald/vim-anyfold",
+    "onsails/lspkind-nvim",
 
     -- Functional
     "MattesGroeger/vim-bookmarks",
@@ -47,9 +57,18 @@ require "paq" {
     "907th/vim-auto-save"
 }
 
+---- Global options
+g.neomake_open_list = 2
+g.auto_save = 0
+g.auto_save_events = {"InsertLeave", "TextChanged", "CursorHold"}
+g.neovide_cursor_animation_length = 0.05
+g.bookmark_no_default_key_mappings = 1
+g.symbols_outline = {show_symbol_details = false}
+g.mapleader = " "; -- sets <Leader> to <space>
+vim.v["test#strategy"] = "neomake"
+
 ---- Plugin configuration
 -- LSP keybindings
-g.mapleader = " "; -- sets <Leader> to <space>
 local function on_attach(client, bufnr)
     -- Sets up LSP keybindings when LSP attaches to the buffer
     local function bnmap(lhs, rhs, ...)
@@ -138,7 +157,7 @@ require'lspinstall'.post_install_hook = function()
     vim.cmd("bufdo e") -- triggers FileType autocmd to start server
 end
 
--- Compe provides autocompletion
+-- Smaller plugin setup
 require"compe".setup {
     enabled = true,
     autocomplete = true,
@@ -147,17 +166,52 @@ require"compe".setup {
         buffer = true,
         nvim_lsp = true,
         nvim_lua = true,
-        calc = true,
-        spell = true
+        calc = true
+    }
+}
+require"nvim-treesitter.configs".setup {
+    ensure_installed = "maintained",
+    highlight = {enable = true}
+}
+require"lspfuzzy".setup {}
+require"lspkind".init {}
+require"telescope".setup {
+    defaults = {
+        mappings = {
+            i = {
+                ["<C-k>"] = "move_selection_previous",
+                ["<C-j>"] = "move_selection_next"
+            },
+            n = {["<C-c>"] = "close"}
+        }
+    }
+}
+require"telescope".load_extension("vim_bookmarks")
+require"lualine".setup {
+    options = {theme = "material-nvim", extensions = {"quickfix", "nvim-tree"}}
+}
+require"bufferline".setup {
+    options = {
+        tab_size = 20,
+        separator_style = "slant",
+        offsets = {
+            {
+                filetype = "NvimTree",
+                text = "File Explorer",
+                highlight = "Directory",
+                text_align = "left"
+            }
+        }
+
     }
 }
 
 ---- Neovim options
 opt.tabstop = 2
 opt.shiftwidth = 2
+opt.termguicolors = true
 opt.expandtab = true
 opt.number = true
-opt.termguicolors = true
 opt.splitright = true
 opt.hidden = true
 opt.mouse = "a"
@@ -166,14 +220,6 @@ opt.guifont = "Fira_Code_Retina_Nerd_Font_Complete:h11"
 opt.completeopt = "menuone,noselect"
 if vim.fn.has("nvim-0.5.0") == 1 then opt.signcolumn = "number" end
 
----- Global options
-g.neomake_open_list = 2
-g.auto_save = 0
-g.auto_save_events = {"InsertLeave", "TextChanged", "CursorHold"}
-g.neovide_cursor_animation_length = 0.05
-g.bookmark_no_default_key_mappings = 1
-vim.v["test#strategy"] = "neomake"
-
 ---- Keymap
 local function map(mode, lhs, rhs, opts)
     local options = {noremap = true}
@@ -181,63 +227,70 @@ local function map(mode, lhs, rhs, opts)
     api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 local function nmap(...) map("n", ...) end
+local function ncmap(lhs, rhs, ...) nmap(lhs, "<Cmd>" .. rhs .. "<CR>", ...) end
 local function imap(...) map("i", ...) end
 
 -- g
 nmap("gt", ":tabe<CR>:term<CR>i")
 -- <Leader>
-nmap("<Leader>q", ":q<CR>")
--- nmap("<Leader>o", ":CocFzfList outline<CR>")
--- nmap("<Leader>O", ":CocFzfList symbols<CR>")
--- nmap("<Leader>d", ":CocFzfList diagnostics<CR>")
-nmap("<Leader>q", ":qall<CR>")
-nmap("<Leader><Leader>", ":write<CR>")
+ncmap("<Leader>q", "qall")
+ncmap("<Leader>o", "Telescope lsp_document_symbols")
+ncmap("<Leader>O", "Telescope dynamic_workspace_symbols")
+ncmap("<Leader>d", "Telescope lsp_document_diagnostics")
+ncmap("<Leader>D", "Telescope lsp_workspace_diagnostics")
+ncmap("<Leader>s", "SymbolsOutline")
+ncmap("<Leader><Leader>", "write")
 -- <Leader>v    nvim config
-nmap("<Leader>ve", ":exe 'tabedit' stdpath('config').'/init.lua'<CR>")
+ncmap("<Leader>ve", "exe 'tabedit' stdpath('config').'/init.lua'")
 nmap("<Leader>vs", ":exe 'source' stdpath('config').'/init.lua'<CR>")
 -- <Leader>c    quickfix
-nmap("<Leader>cl", ":cclose<CR>")
-nmap("<Leader>cc", ":cc<CR>")
-nmap("<Leader>co", ":copen<CR>")
+ncmap("<Leader>cl", "cclose")
+ncmap("<Leader>cc", "cc")
+ncmap("<Leader>co", "copen")
 -- <Leader>b    bookmarks
-nmap("<Leader>bb", ":BookmarkToggle<CR>")
-nmap("<Leader>ba", ":BookmarkAnnotate<CR>")
-nmap("<Leader>bo", ":BookmarkShowAll<CR>")
--- <C-*>
-nmap("<C-h>", ":tabp<CR>")
-nmap("<C-l>", ":tabn<CR>")
-map("t", "<C-h>", "<C-\\><C-n>:tabp<CR>")
-map("t", "<C-l>", "<C-\\><C-l>:tabn<CR>")
+ncmap("<Leader>bb", "BookmarkToggle")
+ncmap("<Leader>ba", "BookmarkAnnotate")
+ncmap("<Leader>bo", "Telescope vim_bookmarks all")
+-- <C-*> and <A-*>
+ncmap("<C-h>", "BufferLineCyclePrev")
+ncmap("<C-l>", "BufferLineCycleNext")
+map("t", "<C-h>", "<C-\\><C-n><Cmd>tabp<CR>")
+map("t", "<C-l>", "<C-\\><C-l><Cmd>tabn<CR>")
 map("t", "<C-w><C-w>", "<C-\\><C-l><C-w><C-w>")
-nmap("<C-p>", ":Commands<CR>")
-nmap("<C-e>", ":Buffers<CR>")
-nmap("<C-A-e>", ":Files<CR>")
-nmap("<A-1>", ":NvimTreeToggle")
-nmap("<A-f>", ":NvimTreeFindFile")
+ncmap("<C-p>", "Telescope commands")
+ncmap("<C-e>", "Buffers") -- regular fzf is faster
+ncmap("<C-A-e>", "Telescope find_files")
+ncmap("<A-1>", "NvimTreeToggle")
+ncmap("<A-f>", "NvimTreeFindFile")
 -- <F*>
-nmap("<F4>", ":Bdelete<CR>")
+ncmap("<F4>", "Bdelete")
 -- Auto completion
 imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
 imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
 local cr_expr =
     "pumvisible() ? (empty(v:completed_item)?'<C-n>':'<C-g>u<CR>') : " ..
-        "'<C-g>u<CR>'" -- <C-g>u starts a new item on 
+        "'<C-g>u<CR>'" -- <C-g>u starts a new item in the edit history
 imap("<CR>", cr_expr, {expr = true})
 
 ---- Theme
 function SolarizedTheme()
-    g.airline_theme = "solarized"
     -- Docstrings should be the same color as regular comments
     vim.cmd("hi! link rustCommentLineDoc Comment")
     vim.cmd("colorscheme solarized8")
+    -- g.airline_theme = "solarized"
 end
 
 function GruvboxTheme()
     g.gruvbox_italic = 1
     g.gruvbox_bold = 1
-    g.airline_thee = "gruvbox"
+    -- g.airline_theme = "gruvbox"
     vim.v["$BAT_THEME"] = "gruvbox"
-    vim.cmd("colorscheme gruvbox")
+    cmd("colorscheme gruvbox")
+end
+
+function MaterialTheme(style)
+    g.material_style = style -- prefer "deep ocean"
+    cmd("colorscheme material")
 end
 
 local function fallbackTheme()
@@ -245,23 +298,28 @@ local function fallbackTheme()
     SolarizedTheme()
 end
 
-vim.cmd("hi! link pythonSpaceError Normal")
-
-if env.TERM == "xterm-kitty" then
-    if env.KITTY_THEME == "solarized-light" then
-        opt.background = "light"
-        SolarizedTheme()
-    elseif env.KITTY_THEME == "solarized-dark" then
-        opt.background = "dark"
-        SolarizedTheme()
+local function autoTheme()
+    if env.TERM == "xterm-kitty" then
+        if env.KITTY_THEME == "solarized-light" then
+            opt.background = "light"
+            SolarizedTheme()
+        elseif env.KITTY_THEME == "solarized-dark" then
+            opt.background = "dark"
+            -- SolarizedTheme()
+            MaterialTheme("deep ocean")
+        else
+            fallbackTheme()
+        end
     else
         fallbackTheme()
     end
-else
-    fallbackTheme()
 end
 
+autoTheme()
+
+vim.cmd("hi! link pythonSpaceError Normal")
+
 -- Filetype overrides
-if vim.bo.filetype == "lua" then nmap("<Leader>f", "<Cmd> call LuaFormat()<CR>") end
+if vim.bo.filetype == "lua" then nmap("<Leader>f", ":call LuaFormat()<CR>") end
 
 ---- Commands
