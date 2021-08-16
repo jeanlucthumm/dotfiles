@@ -25,8 +25,8 @@ set -l OS (uname)
 if [ $OS = "Linux" ]
   alias pacman="yay"
 
-  alias dim="xrandr --output DVI-I-1 --brightness 0.5"
-  alias undim="xrandr --output DVI-I-1 --brightness 1.0"
+  alias dim="xrandr --output DP-1 --brightness 0.5"
+  alias undim="xrandr --output DP-1 --brightness 1.0"
   alias clip="xclip -selection clipboard"
   alias sysyadm="sudo yadm -Y /etc/yadm"
   alias scli="scli -s"
