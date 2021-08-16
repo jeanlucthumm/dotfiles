@@ -23,11 +23,8 @@ require "paq" {
     "sheerun/vim-polyglot",
 
     -- UI
-    {
-        "junegunn/fzf",
-        run = function() vim.api.nvim_call_function("fzf#install", {}) end
-    },
-   "junegunn/fzf.vim",
+    {"junegunn/fzf", run = function() fn["fzf#install"]() end},
+    "junegunn/fzf.vim",
     "kyazdani42/nvim-tree.lua",
     "vim-airline/vim-airline",
     "vim-airline/vim-airline-themes",
@@ -47,7 +44,7 @@ require "paq" {
     "MattesGroeger/vim-bookmarks",
     "neomake/neomake",
     "vim-test/vim-test",
-    "907th/vim-auto-save",
+    "907th/vim-auto-save"
 }
 
 ---- Plugin configuration
@@ -56,13 +53,14 @@ g.mapleader = " "; -- sets <Leader> to <space>
 local function on_attach(client, bufnr)
     -- Sets up LSP keybindings when LSP attaches to the buffer
     local function bnmap(lhs, rhs, ...)
-        api.nvim_buf_set_keymap(bufnr, "n", lhs, "<Cmd>lua "..rhs.."<CR>", ...)
+        api.nvim_buf_set_keymap(bufnr, "n", lhs, "<Cmd>lua " .. rhs .. "<CR>",
+                                ...)
     end
 
     api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     -- Mappings
-    local opts = { noremap=true, silent=true }
+    local opts = {noremap = true, silent = true}
     bnmap("gd", "vim.lsp.buf.definition()", opts)
     bnmap("gr", "vim.lsp.buf.references()", opts)
     bnmap("K", "vim.lsp.buf.hover()", opts)
@@ -74,8 +72,8 @@ local function on_attach(client, bufnr)
 
     -- Capability specific commands
     if client.resolved_capabilities.document_highlight then
-      -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
-      api.nvim_exec([[
+        -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
+        api.nvim_exec([[
       augroup lsp_document_highlight
       autocmd! * <buffer>
       autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
@@ -96,23 +94,23 @@ end
 -- LSP Lua config
 local lua_config = {
     Lua = {
-    runtime = {
-      -- LuaJIT in the case of Neovim
-      version = 'LuaJIT',
-      path = vim.split(package.path, ';'),
-    },
-    diagnostics = {
-      -- Get the language server to recognize the `vim` global
-      globals = {'vim'},
-    },
-    workspace = {
-      -- Make the server aware of Neovim runtime files
-      library = {
-        [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-        [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-      },
-    },
-  }
+        runtime = {
+            -- LuaJIT in the case of Neovim
+            version = 'LuaJIT',
+            path = vim.split(package.path, ';')
+        },
+        diagnostics = {
+            -- Get the language server to recognize the `vim` global
+            globals = {'vim'}
+        },
+        workspace = {
+            -- Make the server aware of Neovim runtime files
+            library = {
+                [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
+            }
+        }
+    }
 }
 
 -- LSP global setup
@@ -123,39 +121,35 @@ local function setup_lsp_servers()
     local servers = require'lspinstall'.installed_servers()
     for _, server in pairs(servers) do
         local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities.textDocument.completion.completionItem.snippetSupport = true
-        local config = {
-            capabilities = capabilities,
-            on_attach = on_attach,
-        }
+        capabilities.textDocument.completion.completionItem.snippetSupport =
+            true
+        local config = {capabilities = capabilities, on_attach = on_attach}
 
         -- Language specific config
-        if server == "lua" then
-            config.settings = lua_config
-        end
+        if server == "lua" then config.settings = lua_config end
 
         require"lspconfig"[server].setup(config)
     end
 end
 setup_lsp_servers()
-require'lspinstall'.post_install_hook = function ()
+require'lspinstall'.post_install_hook = function()
     -- Automatically reloads after :LspInstall
     setup_lsp_servers()
     vim.cmd("bufdo e") -- triggers FileType autocmd to start server
 end
 
--- Compe setup
+-- Compe provides autocompletion
 require"compe".setup {
-  enabled = true,
-  autocomplete = true,
-  source = {
-    path = true,
-    buffer = true,
-    nvim_lsp = true,
-    nvim_lua = true,
-    calc = true,
-    spell = true,
-  }
+    enabled = true,
+    autocomplete = true,
+    source = {
+        path = true,
+        buffer = true,
+        nvim_lsp = true,
+        nvim_lua = true,
+        calc = true,
+        spell = true
+    }
 }
 
 ---- Neovim options
@@ -266,5 +260,8 @@ if env.TERM == "xterm-kitty" then
 else
     fallbackTheme()
 end
+
+-- Filetype overrides
+if vim.bo.filetype == "lua" then nmap("<Leader>f", "<Cmd> call LuaFormat()<CR>") end
 
 ---- Commands
