@@ -298,12 +298,12 @@ require"bufferline".setup {
     }
 }
 -- Lualine is configured in the theme section
-require"rust-tools".setup{}
-require"nvim-autopairs".setup{}
-require"nvim-autopairs.completion.compe".setup{
-  map_cr = true, -- overide <CR> mapping in insert mode
-  map_complete = true, -- auto insert '(' after select function or method
-  auto_select = true, -- pick the first item in suggestion automatically?
+require"rust-tools".setup {}
+require"nvim-autopairs".setup {}
+require"nvim-autopairs.completion.compe".setup {
+    map_cr = true, -- overide <CR> mapping in insert mode
+    map_complete = true, -- auto insert '(' after select function or method
+    auto_select = true -- pick the first item in suggestion automatically?
 }
 
 ---- Neovim options
@@ -329,14 +329,14 @@ function SolarizedTheme(background)
     opt.background = background
 end
 function SolarizedLuaTheme(background)
-  opt.background = background
-  if background == "dark" then
-    lualine_theme = "solarized_dark"
-  else
-    lualine_theme = "solarized_light"
-  end
-  g.solarized_italics = 0
-  cmd("colorscheme solarized")
+    opt.background = background
+    if background == "dark" then
+        lualine_theme = "solarized_dark"
+    else
+        lualine_theme = "solarized_light"
+    end
+    g.solarized_italics = 0
+    cmd("colorscheme solarized")
 end
 function GruvboxTheme(background)
     g.gruvbox_italic = 1
@@ -459,3 +459,13 @@ augroup END
 ]], false)
 
 ---- Commands
+function HighlightGroups()
+    -- Gives you all highlight groups under the cursor
+    local stack = fn.synstack(fn.line("."), fn.col("."))
+    if next(stack) == nil then
+        print("Syntax stack is empty")
+        return
+    end
+    for _, val in ipairs(stack) do print(fn.synIDattr(val, "name")) end
+end
+cmd("command! -nargs=0 HighlightGroups lua HighlightGroups()")
