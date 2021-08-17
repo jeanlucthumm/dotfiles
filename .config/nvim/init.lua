@@ -352,7 +352,7 @@ function MaterialTheme(style) -- prefer "deep ocean"
 end
 function RosePineTheme(style) -- prefer "dawn" light, "moon" dark
     g.rose_pine_variant = style
-    g.rose_pine_enable_italics = false -- TODO conditional enable based on font
+    g.rose_pine_enable_italics = false
     lualine_theme = "rose-pine"
     cmd("colorscheme rose-pine")
 end
