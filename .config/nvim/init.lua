@@ -19,12 +19,15 @@ require "paq" {
     {"nvim-treesitter/nvim-treesitter", run = function() cmd("TSUpdate") end},
     "glepnir/lspsaga.nvim",
     "theHamsta/nvim-dap-virtual-text",
+    "simrat39/rust-tools.nvim",
 
     -- Theme
     "kyazdani42/nvim-web-devicons",
     "jeanlucthumm/vim-solarized8",
     "morhetz/gruvbox",
     "marko-cerovac/material.nvim",
+    "rose-pine/neovim",
+    "ishan9299/nvim-solarized-lua",
 
     -- UI
     {"junegunn/fzf", run = function() fn["fzf#install"]() end},
@@ -40,6 +43,7 @@ require "paq" {
     "simrat39/symbols-outline.nvim",
     "hoob3rt/lualine.nvim",
     "akinsho/nvim-bufferline.lua",
+    "mhinz/vim-startify",
 
     -- Editor
     "tpope/vim-commentary",
@@ -167,7 +171,7 @@ dap.adapters.lldb = {
 }
 dap.configurations.cpp = {
     {
-        name = "Launch",
+        name = "default",
         type = "lldb",
         request = "launch",
         program = function()
@@ -191,16 +195,55 @@ dap.configurations.cpp = {
         runInTerminal = false
     }
 }
--- TODO: continue() supports multiple configs, it just prompts
 dap.configurations.rust = {
     {
-        name = "Launch Debug",
+        name = "default",
         type = "lldb",
         request = "launch",
         program = '${workspaceFolder}/target/debug/${workspaceFolderBasename}',
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
         args = {},
+        runInTerminal = false
+    },
+    {
+        name = "rustc stage1 debug",
+        type = "lldb",
+        request = "launch",
+        program = "/home/jeanluc/Code/rust/build/x86_64-unknown-linux-gnu/stage1/bin/rustc",
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = function()
+            local path = fn.input("Target rust project: ",
+                                  "/home/jeanluc/Code/", "file")
+            local target = path:match(".+/(.+)/$") -- extract dir name
+            return {
+                "--crate-name",
+                target,
+                "--edition=2018",
+                path .. "/src/main.rs",
+                "--error-format=json",
+                "--json=diagnostic-rendered-ansi",
+                "--crate-type",
+                "bin",
+                "--emit=dep-info,link",
+                "-C",
+                "embed-bitcode=no",
+                "-C",
+                "debuginfo=2",
+                -- These hashcodes are for mangling, and I copied this one from a cargo project
+                "-C",
+                "metadata=3a8a540162ab7ee9",
+                "-C",
+                "extra-filename=-3a8a540162ab7ee9",
+                "--out-dir",
+                path .. "target/debug/deps",
+                "-C",
+                "incremental=" .. path .. "target/debug/incremental",
+                "-L",
+                "dependency=" .. path .. "target/debug/deps"
+            }
+        end,
         runInTerminal = false
     }
 }
@@ -209,7 +252,7 @@ fn.sign_define('DapBreakpoint',
                {text = '🛑', texthl = '', linehl = '', numhl = ''})
 
 -- Smaller plugin setup
-require"dapui".setup {}
+-- require"dapui".setup {}
 require"compe".setup {
     enabled = true,
     autocomplete = true,
@@ -239,9 +282,6 @@ require"telescope".setup {
     }
 }
 require"telescope".load_extension("vim_bookmarks")
-require"lualine".setup {
-    options = {theme = "material-nvim", extensions = {"quickfix", "nvim-tree"}}
-}
 require"bufferline".setup {
     options = {
         tab_size = 20,
@@ -257,6 +297,8 @@ require"bufferline".setup {
 
     }
 }
+-- Lualine is configured in the theme section
+require"rust-tools".setup(opts)
 
 ---- Neovim options
 opt.tabstop = 2
@@ -268,9 +310,72 @@ opt.splitright = true
 opt.hidden = true
 opt.mouse = "a"
 opt.updatetime = 500
-opt.guifont = "Fira_Code_Retina_Nerd_Font_Complete:h11"
+opt.guifont = "JetBrains_Mono_Medium_Nerd_Font_Complete:h11"
 opt.completeopt = "menuone,noselect"
 if vim.fn.has("nvim-0.5.0") == 1 then opt.signcolumn = "number" end
+
+---- Theme
+local lualine_theme = "solarized_light"
+function SolarizedTheme(background)
+    -- Docstrings should be the same color as regular comments
+    vim.cmd("hi! link rustCommentLineDoc Comment")
+    vim.cmd("colorscheme solarized8")
+    opt.background = background
+end
+function SolarizedLuaTheme(background)
+  opt.background = background
+  if background == "dark" then
+    lualine_theme = "solarized_dark"
+  else
+    lualine_theme = "solarized_light"
+  end
+  g.solarized_italics = 0
+  cmd("colorscheme solarized")
+end
+function GruvboxTheme(background)
+    g.gruvbox_italic = 1
+    g.gruvbox_bold = 1
+    opt.background = background
+    vim.v["$BAT_THEME"] = "gruvbox"
+    cmd("colorscheme gruvbox")
+end
+function MaterialTheme(style) -- prefer "deep ocean"
+    g.material_style = style
+    lualine_theme = "material-nvim"
+    cmd("colorscheme material")
+end
+function RosePineTheme(style) -- prefer "dawn" light, "moon" dark
+    g.rose_pine_variant = style
+    g.rose_pine_enable_italics = false -- TODO conditional enable based on font
+    lualine_theme = "rose-pine"
+    cmd("colorscheme rose-pine")
+end
+local function fallbackTheme()
+    opt.background = "light"
+    lualine_theme = "solarized_light"
+    SolarizedTheme()
+end
+local function autoTheme()
+    if env.TERM == "xterm-kitty" then
+        if env.KITTY_THEME == "solarized-light" then
+            -- MaterialTheme("lighter")
+            RosePineTheme("dawn")
+            -- SolarizedLuaTheme("light")
+        elseif env.KITTY_THEME == "solarized-dark" then
+            MaterialTheme("deep ocean")
+        else
+            fallbackTheme()
+        end
+    else
+        fallbackTheme()
+    end
+end
+autoTheme()
+vim.cmd("hi! link pythonSpaceError Normal")
+
+require"lualine".setup {
+    options = {theme = lualine_theme, extensions = {"quickfix", "nvim-tree"}}
+}
 
 ---- Keymap (note that some keys are defined in the LSP section)
 local function map(mode, lhs, rhs, opts)
@@ -327,53 +432,6 @@ local cr_expr =
     "pumvisible() ? (empty(v:completed_item)?'<C-n>':'<C-g>u<CR>') : " ..
         "'<C-g>u<CR>'" -- <C-g>u starts a new item in the edit history
 imap("<CR>", cr_expr, {expr = true})
-
----- Theme
-function SolarizedTheme()
-    -- Docstrings should be the same color as regular comments
-    vim.cmd("hi! link rustCommentLineDoc Comment")
-    vim.cmd("colorscheme solarized8")
-    -- g.airline_theme = "solarized"
-end
-
-function GruvboxTheme()
-    g.gruvbox_italic = 1
-    g.gruvbox_bold = 1
-    -- g.airline_theme = "gruvbox"
-    vim.v["$BAT_THEME"] = "gruvbox"
-    cmd("colorscheme gruvbox")
-end
-
-function MaterialTheme(style)
-    g.material_style = style -- prefer "deep ocean"
-    cmd("colorscheme material")
-end
-
-local function fallbackTheme()
-    opt.background = "light"
-    SolarizedTheme()
-end
-
-local function autoTheme()
-    if env.TERM == "xterm-kitty" then
-        if env.KITTY_THEME == "solarized-light" then
-            opt.background = "light"
-            SolarizedTheme()
-        elseif env.KITTY_THEME == "solarized-dark" then
-            opt.background = "dark"
-            -- SolarizedTheme()
-            MaterialTheme("deep ocean")
-        else
-            fallbackTheme()
-        end
-    else
-        fallbackTheme()
-    end
-end
-
-autoTheme()
-
-vim.cmd("hi! link pythonSpaceError Normal")
 
 -- Filetype overrides
 api.nvim_exec([[
