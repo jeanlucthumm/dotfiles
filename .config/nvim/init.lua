@@ -49,11 +49,11 @@ require "paq" {
     "tpope/vim-commentary",
     "tpope/vim-fugitive",
     "tpope/vim-dispatch",
-    "jiangmiao/auto-pairs",
     "moll/vim-bbye",
     "andrejlevkovitch/vim-lua-format",
     "pseewald/vim-anyfold",
     "onsails/lspkind-nvim",
+    "windwp/nvim-autopairs",
 
     -- Functional
     "MattesGroeger/vim-bookmarks",
@@ -298,7 +298,13 @@ require"bufferline".setup {
     }
 }
 -- Lualine is configured in the theme section
-require"rust-tools".setup(opts)
+require"rust-tools".setup{}
+require"nvim-autopairs".setup{}
+require"nvim-autopairs.completion.compe".setup{
+  map_cr = true, -- overide <CR> mapping in insert mode
+  map_complete = true, -- auto insert '(' after select function or method
+  auto_select = true, -- pick the first item in suggestion automatically?
+}
 
 ---- Neovim options
 opt.tabstop = 2
@@ -428,10 +434,6 @@ ncmap("<F12>", "lua require'dap'.continue()")
 -- Auto completion
 imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
 imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
-local cr_expr =
-    "pumvisible() ? (empty(v:completed_item)?'<C-n>':'<C-g>u<CR>') : " ..
-        "'<C-g>u<CR>'" -- <C-g>u starts a new item in the edit history
-imap("<CR>", cr_expr, {expr = true})
 
 -- Filetype overrides
 api.nvim_exec([[
