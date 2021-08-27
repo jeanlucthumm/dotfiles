@@ -76,6 +76,11 @@ g.startify_session_autoload = 1 -- automatically source session if Session.vim i
 g.gitgutter_map_keys = 0 -- disable default keybindings for gitgutter
 vim.v["test#strategy"] = "neomake"
 
+-- Util
+function PrintTable(table)
+    for key, value in pairs(table) do print(key, value) end
+end
+
 ---- Plugin configuration
 -- LSP keybindings
 local function on_attach(client, bufnr)
@@ -97,6 +102,7 @@ local function on_attach(client, bufnr)
     bnmap("<Leader>kl", "vim.lsp.diagnostic.show_line_diagnostic()", opts)
     bnmap("<Leader>kp", "vim.lsp.diagnostic.goto_prev()", opts)
     bnmap("<Leader>kn", "vim.lsp.diagnostic.goto_next()", opts)
+    bnmap("<Leader>wl", "PrintTable(vim.lsp.buf.list_workspace_folders())", opts)
 
     -- Capability specific commands
     if client.resolved_capabilities.document_highlight then
