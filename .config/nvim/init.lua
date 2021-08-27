@@ -95,7 +95,6 @@ local function on_attach(client, bufnr)
     -- Mappings
     local opts = {noremap = true, silent = true}
     bnmap("gd", "vim.lsp.buf.definition()", opts)
-    bnmap("gr", "vim.lsp.buf.references()", opts)
     bnmap("K", "vim.lsp.buf.hover()", opts)
     bnmap("<Leader>r", "vim.lsp.buf.rename()", opts)
     bnmap("<Leader>ks", "vim.lsp.buf.signature_help()", opts)
@@ -397,12 +396,14 @@ local function imap(...) map("i", ...) end
 
 -- g
 nmap("gt", ":tabe<CR>:term<CR>i")
+ncmap("gr", "Telescope lsp_references")
 -- <Leader>
 ncmap("<Leader>q", "qall")
 ncmap("<Leader>o", "Telescope lsp_document_symbols")
-ncmap("<Leader>O", "Telescope dynamic_workspace_symbols")
+ncmap("<Leader>O", "Telescope lsp_dynamic_workspace_symbols")
 ncmap("<Leader>d", "Telescope lsp_document_diagnostics")
 ncmap("<Leader>D", "Telescope lsp_workspace_diagnostics")
+ncmap("<Leader>a", "Telescope lsp_code_actions")
 ncmap("<Leader>s", "SymbolsOutline")
 ncmap("<Leader><Leader>", "write")
 -- <Leader>v    nvim config
@@ -430,7 +431,8 @@ map("t", "<C-h>", "<C-\\><C-n><Cmd>BufferLineCyclePrev<CR>")
 map("t", "<C-l>", "<C-\\><C-l><Cmd><CR>")
 map("t", "<C-w><C-w>", "<C-\\><C-l><C-w>BufferLineCycleNext<C-w>")
 ncmap("<C-p>", "Telescope commands")
-ncmap("<C-e>", "Buffers") -- regular fzf is faster
+ncmap("<C-e>", "Telescope buffers")
+ncmap("<C-q>", "Telescope quickfix")
 ncmap("<C-A-e>", "Telescope find_files")
 ncmap("<A-1>", "NvimTreeToggle")
 ncmap("<A-f>", "NvimTreeFindFile")
