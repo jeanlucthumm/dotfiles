@@ -73,6 +73,7 @@ g.mapleader = " " -- sets <Leader> to <space>
 g.dap_virtual_text = true
 g.startify_change_to_dir = 0 -- do not change cwd when opening files
 g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
+g.gitgutter_map_keys = 0 -- disable default keybindings for gitgutter
 vim.v["test#strategy"] = "neomake"
 
 ---- Plugin configuration
@@ -409,6 +410,13 @@ ncmap("<Leader>co", "copen")
 ncmap("<Leader>bb", "BookmarkToggle")
 ncmap("<Leader>ba", "BookmarkAnnotate")
 ncmap("<Leader>bo", "Telescope vim_bookmarks all")
+-- <Leader>h    hunks
+ncmap("<Leader>hp", "GitGutterPrevHunk")
+ncmap("<Leader>hn", "GitGutterNextHunk")
+ncmap("<Leader>hs", "GitGutterStageHunk")
+ncmap("<Leader>hu", "GitGutterUndoHunk")
+ncmap("<Leader>hq", "GitGutterQuickFix")
+ncmap("<Leader>hQ", "GitGutterQuickFixCurrentFile")
 -- <C-*> and <A-*>
 ncmap("<C-h>", "BufferLineCyclePrev")
 ncmap("<C-l>", "BufferLineCycleNext")
