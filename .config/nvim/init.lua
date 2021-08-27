@@ -71,6 +71,8 @@ g.bookmark_no_default_key_mappings = 1
 g.symbols_outline = {show_symbol_details = false}
 g.mapleader = " " -- sets <Leader> to <space>
 g.dap_virtual_text = true
+g.startify_change_to_dir = 0 -- do not change cwd when opening files
+g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
 vim.v["test#strategy"] = "neomake"
 
 ---- Plugin configuration
