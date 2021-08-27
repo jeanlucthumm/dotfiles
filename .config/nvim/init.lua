@@ -260,7 +260,7 @@ fn.sign_define('DapBreakpoint',
                {text = '🛑', texthl = '', linehl = '', numhl = ''})
 
 -- Smaller plugin setup
--- require"dapui".setup {}
+require"dapui".setup {}
 require"compe".setup {
     enabled = true,
     autocomplete = true,
