@@ -9,6 +9,7 @@ local cmd = vim.cmd
 ---- Plugins
 require "paq" {
     "savq/paq-nvim",
+    "nvim-lua/plenary.nvim",
 
     -- LSP & DAP & nvim
     "neovim/nvim-lspconfig",
@@ -20,6 +21,7 @@ require "paq" {
     "glepnir/lspsaga.nvim",
     "theHamsta/nvim-dap-virtual-text",
     "simrat39/rust-tools.nvim",
+    "akinsho/flutter-tools.nvim",
 
     -- Theme
     "kyazdani42/nvim-web-devicons",
@@ -36,7 +38,6 @@ require "paq" {
     "kyazdani42/nvim-tree.lua",
     {"iamcco/markdown-preview.nvim", run = "cd app && yarn install"},
     "airblade/vim-gitgutter",
-    "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope.nvim",
     "simrat39/symbols-outline.nvim",
     "tom-anders/telescope-vim-bookmarks.nvim",
@@ -281,21 +282,7 @@ require"telescope".setup {
     }
 }
 require"telescope".load_extension("vim_bookmarks")
-require"bufferline".setup {
-    options = {
-        tab_size = 20,
-        separator_style = "slant",
-        offsets = {
-            {
-                filetype = "NvimTree",
-                text = "File Explorer",
-                highlight = "Directory",
-                text_align = "left"
-            }
-        }
-
-    }
-}
+require"telescope".load_extension("flutter")
 -- Lualine is configured in the theme section
 require"rust-tools".setup {}
 require"nvim-autopairs".setup {}
@@ -303,6 +290,13 @@ require"nvim-autopairs.completion.compe".setup {
     map_cr = true, -- overide <CR> mapping in insert mode
     map_complete = true, -- auto insert '(' after select function or method
     auto_select = true -- pick the first item in suggestion automatically?
+}
+require"flutter-tools".setup {
+    decorations = {statusline = {device = true}},
+    debugger = {enabled = true},
+    widget_guides = {enabled = true},
+    outline = {auto_open = true},
+    lsp = {on_attach = on_attach, settings = {lineLength = 100}}
 }
 
 ---- Neovim options
