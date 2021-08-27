@@ -41,8 +41,7 @@ require "paq" {
     "simrat39/symbols-outline.nvim",
     "tom-anders/telescope-vim-bookmarks.nvim",
     "simrat39/symbols-outline.nvim",
-    "hoob3rt/lualine.nvim",
-    "akinsho/nvim-bufferline.lua",
+    "shadmansaleh/lualine.nvim",
     "mhinz/vim-startify",
 
     -- Editor
