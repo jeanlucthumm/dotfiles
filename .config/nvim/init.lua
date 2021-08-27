@@ -30,7 +30,7 @@ require "paq" {
     "ishan9299/nvim-solarized-lua",
 
     -- UI
-    {"junegunn/fzf", run = function() fn["fzf#install"]() end},
+    "junegunn/fzf",
     "junegunn/fzf.vim",
     "ojroques/nvim-lspfuzzy",
     "kyazdani42/nvim-tree.lua",
