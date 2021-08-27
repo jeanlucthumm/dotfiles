@@ -466,6 +466,7 @@ augroup rust_group
   au FileType rust nnoremap tn :TestNearest<CR>
   au FileType rust nnoremap tl :TestLast<CR>
   au FileType rust nnoremap tf :TestFile<CR>
+  au FileType rust let g:auto_save=1
 augroup END
 ]], false)
 
