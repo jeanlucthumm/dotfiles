@@ -5,7 +5,7 @@
 source $HOME/.config/fish/env.fish
 
 # Required programs for bootstrap to suceed.
-set REQUIRED yarn curl nvim fish
+set REQUIRED yarn nvim fish git
 # File containing a list of steps already executed.
 # This avoid doing the same thing twice if we call bootstrap multiple times
 set STEP_FILE $CONFIG/yadm/steps.txt
@@ -43,9 +43,10 @@ end
 if not contains "NVIM" $STEPS
   echo $LOG "Setting up neovim"
 
-  sh -c 'curl -fLo $XDG_DATA_HOME/nvim/site/autoload/plug.vim --create-dirs \
-         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  nvim +'PlugInstall --sync' +qa
+  git clone --depth=1 "https://github.com/savq/paq-nvim.git" \
+    $XDG_DATA_HOME/nvim/site/pack/paqs/start/paq-nvim
+
+  nvim +PaqInstall +qa!
 
   echo "NVIM" >> $STEP_FILE
 end
