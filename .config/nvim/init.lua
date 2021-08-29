@@ -274,7 +274,8 @@ require"compe".setup {
 }
 require"nvim-treesitter.configs".setup {
     ensure_installed = "maintained",
-    highlight = {enable = true}
+    highlight = {enable = true},
+    indent = {enable = true}
 }
 require"lspfuzzy".setup {}
 require"lspkind".init {}
