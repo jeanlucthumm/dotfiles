@@ -359,9 +359,8 @@ function RosePineTheme(style) -- prefer "dawn" light, "moon" dark
     cmd("colorscheme rose-pine")
 end
 local function fallbackTheme()
-    opt.background = "light"
     lualine_theme = "solarized_light"
-    SolarizedTheme()
+    SolarizedTheme("light")
 end
 local function autoTheme()
     if env.TERM == "xterm-kitty" then
