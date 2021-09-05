@@ -1,5 +1,4 @@
-set -l OS (uname)
-
+set -x OS (uname)
 set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/Code/bin $HOME/.cargo/bin
 
 set CODE $HOME/Code
