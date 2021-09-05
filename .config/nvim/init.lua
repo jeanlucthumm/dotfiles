@@ -54,6 +54,7 @@ require "paq" {
     "pseewald/vim-anyfold",
     "onsails/lspkind-nvim",
     "windwp/nvim-autopairs",
+    "bmundt6/workflowish",
 
     -- Functional
     "MattesGroeger/vim-bookmarks",
