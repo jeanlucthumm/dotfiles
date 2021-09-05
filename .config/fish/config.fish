@@ -1,5 +1,3 @@
-source $HOME/.config/fish/env.fish
-
 ### ===========================================================================
 ### External
 
@@ -15,7 +13,6 @@ function importIfExists
 end
 
 importIfExists $HOME/.cargo/env
-importIfExists $CONFIG/fish/google.fish
 
 ### ===========================================================================
 ### Alias
