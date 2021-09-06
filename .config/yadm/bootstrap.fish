@@ -2,42 +2,57 @@
 #
 # Bootstrap script for yadm
 
-source $HOME/.config/fish/env.fish
-
-# Required programs for bootstrap to suceed.
-set REQUIRED yarn nvim fish git
 # File containing a list of steps already executed.
 # This avoid doing the same thing twice if we call bootstrap multiple times
 set STEP_FILE $CONFIG/yadm/steps.txt
 
-
 set LOG "-->"
-
-function check_programs
-  for prog in $argv
-    if not command -v $prog > /dev/null
-      set missing $missing $prog
-    end
-  end
-  if test (count $missing) -ne 0
-    echo "Bootstrap needs the following programs to succeed:"
-    for m in $missing
-      echo $m
-    end
-    return 1
-  end
-  return 0
-end
-
-if not check_programs $REQUIRED
-  exit
-end
 
 # Read all finished steps into $STEPS
 if test -e $STEP_FILE
-  cat $STEP_FILE | read -za STEPS
+  /usr/bin/cat $STEP_FILE | read -za STEPS
 else
   touch $STEP_FILE
+end
+
+if not contains "YAY" $STEPS
+  and [ "$DISTRO" = "Arch" ]
+  echo $LOG "Setting up yay"
+
+  /usr/bin/pacman -S --needed git base-devel
+  git clone https://aur.archlinux.org/yay.git
+  cd yay
+  makepkg -si
+  cd ..
+  rm -rf yay
+
+  echo "YAY" >> $STEP_FILE
+end
+
+
+if not contains "INIT" $STEPS
+  echo $LOG "Setting up initial programs"
+
+  echo "Select installation type: "
+  echo \t1. Minimal
+  echo \t2. Arch + GUI
+  read -l -P "(1/2): " resp
+
+  switch $resp
+    case 1
+      /usr/bin/cat "$CONF/yadm/term_progs.txt" | read -za PROGS
+    case 2
+      /usr/bin/cat "$CONF/progs.txt" | read -za PROGS
+    case '*'
+      echo "Uknown option: $resp"
+      exit 1
+  end
+
+  if not generic_install $PROGS
+    exit 1
+  end
+
+  echo "INIT" >> $STEP_FILE
 end
 
 if not contains "NVIM" $STEPS
