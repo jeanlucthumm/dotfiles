@@ -20,6 +20,7 @@ meld
 namcap
 nerd-fonts-fira-code
 nerd-fonts-jetbrains-mono
+neovim-nightly-bin
 nmap
 noto-fonts
 npm
