@@ -69,7 +69,7 @@ if not contains "NVIM" $STEPS
   git clone --depth=1 "https://github.com/savq/paq-nvim.git" \
     $XDG_DATA_HOME/nvim/site/pack/paqs/start/paq-nvim
 
-  nvim +PaqInstall +qa!
+  nvim +PaqInstall
 
   echo "NVIM" >> $STEP_FILE
 end
