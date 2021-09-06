@@ -20,33 +20,32 @@ if not contains "YAY" $STEPS
   echo $LOG "Setting up yay"
 
   sudo /usr/bin/pacman -S --needed git base-devel
-  git clone https://aur.archlinux.org/yay.git
-  cd yay
-  makepkg -si
-  cd ..
-  rm -rf yay
+  and git clone https://aur.archlinux.org/yay.git
+  and cd yay
+  and makepkg -si
+  and cd ..
+  and rm -rf yay
 
-  echo "YAY" >> $STEP_FILE
+  and echo "YAY" >> $STEP_FILE
 end
 
 if not contains "RUST" $STEPS
   echo $LOG "Setting up Rust"
 
   sudo /usr/bin/pacman -S --needed rustup
-  rustup default stable
+  and rustup default stable
 
-  echo "RUST" >> $STEP_FILE
+  and echo "RUST" >> $STEP_FILE
 end
 
 if not contains "INIT" $STEPS
   echo $LOG "Setting up initial programs"
-
   echo "Select installation type: "
   echo \t1. Minimal
   echo \t2. Arch + GUI
   read -l -P "(1/2): " resp
 
-  switch $resp
+  and switch $resp
     case 1
       /usr/bin/cat "$CONF/yadm/term_progs.txt" | read -za PROGS
     case 2
@@ -56,11 +55,10 @@ if not contains "INIT" $STEPS
       exit 1
   end
 
-  if not generic_install $PROGS
-    exit 1
-  end
+  and echo $PROGS
+  and generic_install $PROGS
 
-  echo "INIT" >> $STEP_FILE
+  and echo "INIT" >> $STEP_FILE
 end
 
 if not contains "NVIM" $STEPS
@@ -69,16 +67,16 @@ if not contains "NVIM" $STEPS
   git clone --depth=1 "https://github.com/savq/paq-nvim.git" \
     $XDG_DATA_HOME/nvim/site/pack/paqs/start/paq-nvim
 
-  nvim +PaqInstall
+  and nvim +PaqInstall
 
-  echo "NVIM" >> $STEP_FILE
+  and echo "NVIM" >> $STEP_FILE
 end
 
 if not contains "FISH" $STEPS
   echo $LOG "Setting up fish"
 
   curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
-  fisher update
+  and fisher update
 
-  echo "FISH" >> $STEP_FILE
+  and echo "FISH" >> $STEP_FILE
 end
