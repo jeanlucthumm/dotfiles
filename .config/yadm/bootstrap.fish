@@ -29,6 +29,14 @@ if not contains "YAY" $STEPS
   echo "YAY" >> $STEP_FILE
 end
 
+if not contains "RUST" $STEPS
+  echo $LOG "Setting up Rust"
+
+  sudo /usr/bin/pacman -S --needed rustup
+  rustup default stable
+
+  echo "RUST" >> $STEP_FILE
+end
 
 if not contains "INIT" $STEPS
   echo $LOG "Setting up initial programs"
