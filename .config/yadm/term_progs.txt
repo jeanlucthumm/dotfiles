@@ -24,10 +24,9 @@ nmap
 noto-fonts
 npm
 ntfs-3g
-openssh
-p7zip
+openssh p7zip
 pmount
-python-pituprru
+python-pip
 rustup
 sqlitebrowser
 tmux
