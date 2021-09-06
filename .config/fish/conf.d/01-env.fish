@@ -4,7 +4,6 @@ if [ -f "/etc/arch-release" ]
 end
 
 set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/Code/bin $HOME/.cargo/bin
-
 set CODE $HOME/Code
 
 if [ $OS = "Linux" ]
@@ -23,13 +22,24 @@ else if [ $OS = "Darwin" ]
 
 end
 
-if [ "$KITTY_THEME" = "solarized-light" -o "$ITERM_PROFILE" = "Default Light" ]
-  set -x BAT_THEME "Solarized (light)"
-else
-  set -x BAT_THEME "Solarized (dark)"
+function get_theme
+  if [ -n "$KITTY_THEME" ]
+    echo $KITTY_THEME
+  else if [ -n "$ALACRITTY_THEME" ]
+    echo $ALACRITTY_THEME
+  else if [ "$ITERM_PROFILE" = "Default Light" ]
+    echo "solarized-light"
+  else
+    echo "solarized-light"
+  end
 end
 
-
+switch (get_theme)
+  case "solarized-light"
+    set -x BAT_THEME "Solarized (light)"
+  case "solarized-dark"
+    set -x BAT_THEME "Solarized (dark)"
+end
 
 # XDG
 set -x XDG_CONFIG_HOME $HOME/.config 
