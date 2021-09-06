@@ -19,7 +19,7 @@ if not contains "YAY" $STEPS
   and [ "$DISTRO" = "Arch" ]
   echo $LOG "Setting up yay"
 
-  /usr/bin/pacman -S --needed git base-devel
+  sudo /usr/bin/pacman -S --needed git base-devel
   git clone https://aur.archlinux.org/yay.git
   cd yay
   makepkg -si
