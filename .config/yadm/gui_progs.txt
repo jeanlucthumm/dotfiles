@@ -25,7 +25,7 @@ firefox
 fish
 flutter
 fzf
-git-delta-bin
+git-delta-git
 github-cli
 gnome-font-viewer
 gnome-keyring
@@ -48,7 +48,7 @@ neovim-nightly-bin
 nerd-fonts-fira-code
 nerd-fonts-jetbrains-mono
 nmap
-noto-fonts-all
+noto-fonts
 npm
 ntfs-3g
 numix-icon-theme-git
