@@ -7,6 +7,7 @@ local fn = vim.fn
 local cmd = vim.cmd
 
 ---- Plugins
+-- LuaFormatter off
 require "paq" {
     "savq/paq-nvim",
     "nvim-lua/plenary.nvim",
@@ -62,6 +63,7 @@ require "paq" {
     "vim-test/vim-test",
     "907th/vim-auto-save"
 }
+-- LuaFormatter on
 
 ---- Global options
 g.neomake_open_list = 2
