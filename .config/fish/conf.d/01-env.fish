@@ -16,6 +16,8 @@ if [ $OS = "Linux" ]
 
 else if [ $OS = "Darwin" ]
 
+  set -g BIN /usr/local/bin
+
   set -x CC /usr/local/opt/llvm/bin/clang
   set -x CXX /usr/local/opt/llvm/bin/clang++
   set -x ANDROID_HOME /Users/$USER/Library/Android/sdk
