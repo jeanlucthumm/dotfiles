@@ -53,7 +53,6 @@ alias docker="sudo docker"
 alias so="source $CONFIG/fish/config.fish"
 alias fishconfig="$EDITOR $CONFIG/fish/config.fish"
 alias cdf='cd (fd -t d . ~ | fzf)'
-alias clip="xclip -selection clipboard"
 alias sysyadm="sudo yadm -Y /etc/yadm"
 alias scli="scli -s"
 alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
