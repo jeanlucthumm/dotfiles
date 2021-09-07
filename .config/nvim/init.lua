@@ -56,6 +56,7 @@ require "paq" {
     "onsails/lspkind-nvim",
     "windwp/nvim-autopairs",
     "bmundt6/workflowish",
+    "psliwka/vim-smoothie",
 
     -- Functional
     "MattesGroeger/vim-bookmarks",
