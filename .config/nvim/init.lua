@@ -66,6 +66,9 @@ require "paq" {
 }
 -- LuaFormatter on
 
+-- For plugin development. Link plugin dir to dev
+cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
+
 ---- Global options
 g.neomake_open_list = 2
 g.auto_save = 0
