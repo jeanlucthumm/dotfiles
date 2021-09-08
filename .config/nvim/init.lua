@@ -380,6 +380,10 @@ local function autoTheme()
         else
             fallbackTheme()
         end
+    elseif env.THEME == "solarized-light" then
+        -- SolarizedLuaTheme("light")
+        SolarizedTheme("light")
+        -- RosePineTheme("dawn")
     else
         fallbackTheme()
     end
