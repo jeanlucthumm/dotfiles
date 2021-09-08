@@ -462,6 +462,8 @@ augroup lua_group
   au FileType lua nmap <Leader>cc :ll<CR>
   au FileType lua nmap <Leader>co :lopen<CR>
   au FileType lua nmap <Leader>f :call LuaFormat()<CR>
+  au FileType lua set tabstop=4
+  au FileType lua set shiftwidth=4
 augroup END
 ]], false)
 
