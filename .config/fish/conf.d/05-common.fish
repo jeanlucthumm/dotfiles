@@ -1,5 +1,5 @@
 function generic_install
-  if [ "$OS" = "Linux" -a -f "/etc/arch-release" ]
+  if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
     pacman -S --needed $argv
   else if [ "$OS" = "Darwin" ]
     brew install $argv
@@ -13,5 +13,13 @@ function clip --description "copy to clipboard"
     xclip -selection clipboard
   else if [ "$OS" = "Darwin" ]
     pbcopy
+  end
+end
+
+function notify --description "send desktop notification"
+  if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
+    notify-send "$argv[1]"
+  else if [ "$OS" = "Darwin" ]
+    osascript -e "display notification \"$argv[1]\""
   end
 end
