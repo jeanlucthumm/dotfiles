@@ -405,6 +405,8 @@ local function nmap(...) map("n", ...) end
 local function ncmap(lhs, rhs, ...) nmap(lhs, "<Cmd>" .. rhs .. "<CR>", ...) end
 local function imap(...) map("i", ...) end
 
+-- visual
+map("v", "<Leader>y", "\"*y") -- copy to system clipboard
 -- g
 nmap("gt", ":tabe<CR>:term<CR>i")
 ncmap("gr", "Telescope lsp_references")
