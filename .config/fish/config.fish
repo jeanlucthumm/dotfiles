@@ -97,6 +97,6 @@ end
 bind \ch backward-word
 bind \cl forward-word
 
-if [ $OS = "Linux" ]
+if [ $OS = "Linux" -a "$DISTRO" = "Arch" ]
   complete -c themer -x -a (themer --list)
 end
