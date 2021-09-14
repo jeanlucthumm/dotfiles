@@ -19,7 +19,7 @@ importIfExists $HOME/.cargo/env
 
 set -l OS (uname)
 
-if [ "$OS" == "Linux" -a "$DISTRO" == "Arch" ]
+if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   alias pacman="yay"
 
   alias dim="xrandr --output DP-1 --brightness 0.5"
