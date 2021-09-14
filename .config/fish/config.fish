@@ -82,28 +82,13 @@ function cdv
   end
 end
 
-if [ $OS = "Linux" ]
-
-  function posture
-    while true
-      if not sleep 5m
-        or not notify-send "Posture"
-        return
-      end
+function posture
+  while true
+    if not sleep 5m
+      or not notify "Posture"
+      return
     end
   end
-
-else if [ $OS = "Darwin" ]
-
-  function posture
-    while true
-      if not sleep (math "5 * 60")
-        or not osascript -e 'display notification "Posture"'
-        return
-      end
-    end
-  end
-
 end
 
 ### ===========================================================================
