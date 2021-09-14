@@ -100,3 +100,8 @@ bind \cl forward-word
 if [ $OS = "Linux" -a "$DISTRO" = "Arch" ]
   complete -c themer -x -a (themer --list)
 end
+
+### ===========================================================================
+### Google
+
+importIfExists $CONF/fish/google.fish
