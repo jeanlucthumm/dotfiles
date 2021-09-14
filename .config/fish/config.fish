@@ -19,7 +19,7 @@ importIfExists $HOME/.cargo/env
 
 set -l OS (uname)
 
-if [ $OS = "Linux" ]
+if [ "$OS" == "Linux" -a "$DISTRO" == "Arch" ]
   alias pacman="yay"
 
   alias dim="xrandr --output DP-1 --brightness 0.5"
@@ -53,9 +53,6 @@ alias docker="sudo docker"
 alias so="source $CONFIG/fish/config.fish"
 alias fishconfig="$EDITOR $CONFIG/fish/config.fish"
 alias cdf='cd (fd -t d . ~ | fzf)'
-alias sysyadm="sudo yadm -Y /etc/yadm"
-alias scli="scli -s"
-alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
 alias venv="source .venv/bin/activate.fish"
 
 
