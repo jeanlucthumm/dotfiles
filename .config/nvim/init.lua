@@ -51,7 +51,7 @@ require "paq" {
     "tpope/vim-fugitive",
     "tpope/vim-dispatch",
     "moll/vim-bbye",
-    "andrejlevkovitch/vim-lua-format",
+    "jeanlucthumm/nvim-lua-format",
     "pseewald/vim-anyfold",
     "onsails/lspkind-nvim",
     "windwp/nvim-autopairs",
@@ -314,6 +314,7 @@ require"flutter-tools".setup {
     outline = {auto_open = true},
     lsp = {on_attach = on_attach, settings = {lineLength = 100}}
 }
+require"nvim-lua-format".setup {}
 
 ---- Neovim options
 opt.tabstop = 2
@@ -467,7 +468,7 @@ augroup lua_group
   au FileType lua nmap <Leader>cl :lclose<CR>
   au FileType lua nmap <Leader>cc :ll<CR>
   au FileType lua nmap <Leader>co :lopen<CR>
-  au FileType lua nmap <Leader>f :call LuaFormat()<CR>
+  au FileType lua nmap <Leader>f :lua require'nvim-lua-format'.format()<CR>
   au FileType lua set tabstop=4
   au FileType lua set shiftwidth=4
 augroup END
