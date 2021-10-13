@@ -298,6 +298,8 @@ require"nvim-lua-format".setup {
     }
 }
 
+require"nvim-lua-format".setup {save_if_unsaved = true}
+
 ---- Neovim options
 opt.tabstop = 2
 opt.shiftwidth = 2
