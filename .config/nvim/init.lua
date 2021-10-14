@@ -75,9 +75,7 @@ g.auto_save = 0
 g.auto_save_events = {"InsertLeave", "TextChanged", "CursorHold"}
 g.neovide_cursor_animation_length = 0.05
 g.bookmark_no_default_key_mappings = 1
-g.symbols_outline = {
-    show_symbol_details = false
-}
+g.symbols_outline = {show_symbol_details = false}
 g.mapleader = " " -- sets <Leader> to <space>
 g.dap_virtual_text = true
 g.startify_change_to_dir = 0 -- do not change cwd when opening files
@@ -185,7 +183,8 @@ dap.configurations.rust = {
         stopOnEntry = false,
         args = {},
         runInTerminal = false
-    }, {
+    },
+    {
         name = "rustc stage1 debug",
         type = "lldb",
         request = "launch",
@@ -198,16 +197,29 @@ dap.configurations.rust = {
                                   "/home/jeanluc/Code/", "file")
             local target = path:match(".+/(.+)/$") -- extract dir name
             return {
-                "--crate-name", target, "--edition=2018",
-                path .. "/src/main.rs", "--error-format=json",
-                "--json=diagnostic-rendered-ansi", "--crate-type", "bin",
-                "--emit=dep-info,link", "-C", "embed-bitcode=no", "-C",
+                "--crate-name",
+                target,
+                "--edition=2018",
+                path .. "/src/main.rs",
+                "--error-format=json",
+                "--json=diagnostic-rendered-ansi",
+                "--crate-type",
+                "bin",
+                "--emit=dep-info,link",
+                "-C",
+                "embed-bitcode=no",
+                "-C",
                 "debuginfo=2",
                 -- These hashcodes are for mangling, and I copied this one from a cargo project
-                "-C", "metadata=3a8a540162ab7ee9", "-C",
-                "extra-filename=-3a8a540162ab7ee9", "--out-dir",
-                path .. "target/debug/deps", "-C",
-                "incremental=" .. path .. "target/debug/incremental", "-L",
+                "-C",
+                "metadata=3a8a540162ab7ee9",
+                "-C",
+                "extra-filename=-3a8a540162ab7ee9",
+                "--out-dir",
+                path .. "target/debug/deps",
+                "-C",
+                "incremental=" .. path .. "target/debug/incremental",
+                "-L",
                 "dependency=" .. path .. "target/debug/deps"
             }
         end,
@@ -215,12 +227,8 @@ dap.configurations.rust = {
     }
 }
 
-fn.sign_define('DapBreakpoint', {
-    text = '🛑',
-    texthl = '',
-    linehl = '',
-    numhl = ''
-})
+fn.sign_define('DapBreakpoint',
+               {text = '🛑', texthl = '', linehl = '', numhl = ''})
 
 -- Smaller plugin setup
 require"dapui".setup {}
@@ -237,12 +245,8 @@ require"compe".setup {
 }
 require"nvim-treesitter.configs".setup {
     ensure_installed = "maintained",
-    highlight = {
-        enable = true
-    },
-    indent = {
-        enable = true
-    }
+    highlight = {enable = true},
+    indent = {enable = true}
 }
 require"lspfuzzy".setup {}
 require"lspkind".init {}
@@ -253,9 +257,7 @@ require"telescope".setup {
                 ["<C-k>"] = "move_selection_previous",
                 ["<C-j>"] = "move_selection_next"
             },
-            n = {
-                ["<C-c>"] = "close"
-            }
+            n = {["<C-c>"] = "close"}
         }
     }
 }
@@ -270,32 +272,15 @@ require"nvim-autopairs.completion.compe".setup {
     auto_select = true -- pick the first item in suggestion automatically?
 }
 require"flutter-tools".setup {
-    decorations = {
-        statusline = {
-            device = true
-        }
-    },
-    debugger = {
-        enabled = true
-    },
-    widget_guides = {
-        enabled = true
-    },
-    outline = {
-        auto_open = true
-    },
-    lsp = {
-        on_attach = require'common'.on_attach,
-        settings = {
-            lineLength = 100
-        }
-    }
+    decorations = {statusline = {device = true}},
+    debugger = {enabled = true},
+    widget_guides = {enabled = true},
+    outline = {auto_open = true},
+    lsp = {on_attach = require'common'.on_attach, settings = {lineLength = 100}}
 }
 require"nvim-lua-format".setup {
     save_if_unsaved = true,
-    default = {
-        chop_down_table = true
-    }
+    default = {chop_down_table = true}
 }
 
 require"nvim-lua-format".setup {save_if_unsaved = true}
@@ -377,17 +362,12 @@ autoTheme()
 vim.cmd("hi! link pythonSpaceError Normal")
 
 require"lualine".setup {
-    options = {
-        theme = lualine_theme,
-        extensions = {"quickfix", "nvim-tree"}
-    }
+    options = {theme = lualine_theme, extensions = {"quickfix", "nvim-tree"}}
 }
 
 ---- Keymap (note that some keys are defined in the LSP section)
 local function map(mode, lhs, rhs, opts)
-    local options = {
-        noremap = true
-    }
+    local options = {noremap = true}
     if opts then options = vim.tbl_extend("force", options, opts) end
     api.nvim_set_keymap(mode, lhs, rhs, options)
 end
@@ -446,12 +426,8 @@ ncmap("<F6>", "lua require'dap'.step_over()")
 ncmap("<F8>", "lua require'dap'.toggle_breakpoint()")
 ncmap("<F12>", "lua require'dap'.continue()")
 -- Auto completion
-imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {
-    expr = true
-})
-imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {
-    expr = true
-})
+imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
+imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
 
 -- Filetype overrides
 api.nvim_exec([[
