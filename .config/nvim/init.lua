@@ -361,8 +361,12 @@ end
 autoTheme()
 vim.cmd("hi! link pythonSpaceError Normal")
 
+local function lsp_status_component() return require'lsp-status'.status() end
 require"lualine".setup {
-    options = {theme = lualine_theme, extensions = {"quickfix", "nvim-tree"}}
+    options = {theme = lualine_theme, extensions = {"quickfix", "nvim-tree"}},
+    sections = {
+        lualine_x = {lsp_status_component, 'encoding', 'fileformat', 'filetype'}
+    }
 }
 
 ---- Keymap (note that some keys are defined in the LSP section)
