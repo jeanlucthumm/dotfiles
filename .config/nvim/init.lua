@@ -491,4 +491,4 @@ function HighlightGroups()
 end
 cmd("command! -nargs=0 HighlightGroups lua HighlightGroups()")
 
-require("google")
+pcall(require, 'google')
