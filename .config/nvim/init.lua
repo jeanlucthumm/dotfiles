@@ -15,6 +15,7 @@ require "paq" {
     -- LSP & DAP & nvim
     "neovim/nvim-lspconfig",
     "kabouzeid/nvim-lspinstall",
+    "nvim-lua/lsp-status.nvim",
     "mfussenegger/nvim-dap",
     "rcarriga/nvim-dap-ui",
     "hrsh7th/nvim-compe",
