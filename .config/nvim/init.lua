@@ -392,6 +392,7 @@ map("v", "<Leader>y", "\"*y") -- copy to system clipboard
 -- g
 nmap("gt", ":tabe<CR>:term<CR>i")
 ncmap("gr", "Telescope lsp_references")
+ncmap("gio", "Telescope oldfiles")
 -- <Leader>
 ncmap("<Leader>q", "qall")
 ncmap("<Leader>o", "Telescope lsp_document_symbols")
@@ -400,6 +401,7 @@ ncmap("<Leader>d", "Telescope lsp_document_diagnostics")
 ncmap("<Leader>D", "Telescope lsp_workspace_diagnostics")
 ncmap("<Leader>a", "Telescope lsp_code_actions")
 ncmap("<Leader>s", "SymbolsOutline")
+ncmap("<Leader>t", "NvimTreeFocus")
 ncmap("<Leader><Leader>", "write")
 -- <Leader>v    nvim config
 ncmap("<Leader>ve", "exe 'tabedit' stdpath('config').'/init.lua'")
