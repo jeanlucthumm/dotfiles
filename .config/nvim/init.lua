@@ -32,6 +32,7 @@ require "paq" {
     "marko-cerovac/material.nvim",
     "rose-pine/neovim",
     "ishan9299/nvim-solarized-lua",
+    "folke/tokyonight.nvim",
 
     -- UI
     "junegunn/fzf",
@@ -335,6 +336,11 @@ function RosePineTheme(style) -- prefer "dawn" light, "moon" dark
     g.rose_pine_disable_italics = true
     lualine_theme = "rose-pine"
     cmd("colorscheme rose-pine")
+end
+function TokyoNight(background)
+  opt.background = background
+  lualine_theme = "tokyonight"
+  cmd("colorscheme tokyonight")
 end
 local function fallbackTheme()
     lualine_theme = "solarized_light"
