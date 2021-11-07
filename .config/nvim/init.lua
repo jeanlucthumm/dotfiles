@@ -59,6 +59,7 @@ require "paq" {
     "windwp/nvim-autopairs",
     "bmundt6/workflowish",
     "psliwka/vim-smoothie",
+    "rhysd/conflict-marker.vim",
 
     -- Functional
     "MattesGroeger/vim-bookmarks",
