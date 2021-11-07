@@ -1,5 +1,8 @@
 local api = vim.api
 
+local lsp_status = require'lsp-status'
+lsp_status.register_progress()
+
 local M = {}
 
 function M.on_attach(client, bufnr)
@@ -8,6 +11,9 @@ function M.on_attach(client, bufnr)
         api.nvim_buf_set_keymap(bufnr, "n", lhs, "<Cmd>lua " .. rhs .. "<CR>",
                                 ...)
     end
+
+    -- LSP Status
+    lsp_status.on_attach(client)
 
     api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
