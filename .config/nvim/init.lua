@@ -285,8 +285,11 @@ require"nvim-lua-format".setup {
     save_if_unsaved = true,
     default = {chop_down_table = true}
 }
-
-require"nvim-lua-format".setup {save_if_unsaved = true}
+require"nvim-tree".setup {
+    update_focused_file = {
+        enable = true,
+    }
+}
 
 ---- Neovim options
 opt.tabstop = 2
