@@ -366,7 +366,11 @@ local function autoTheme()
         SolarizedTheme("light")
         -- RosePineTheme("dawn")
     else
-        fallbackTheme()
+        TokyoNight("light")
+        -- MaterialTheme("lighter")
+        -- MaterialTheme("deep ocean")
+        -- RosePineTheme("dawn")
+        -- fallbackTheme()
     end
 end
 autoTheme()
