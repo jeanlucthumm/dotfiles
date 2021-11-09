@@ -18,24 +18,24 @@ require'packer'.startup(function(use)
     use 'nvim-lua/lsp-status.nvim'
     use {'mfussenegger/nvim-dap', config = function() require 'dap_config' end}
     use {
-        "rcarriga/nvim-dap-ui",
+        'rcarriga/nvim-dap-ui',
         config = function() require'dapui'.setup {} end
     }
     use {
-        "nvim-treesitter/nvim-treesitter",
-        run = ":TSUpdate",
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate',
         config = function()
-            require"nvim-treesitter.configs".setup {
-                ensure_installed = "maintained",
+            require'nvim-treesitter.configs'.setup {
+                ensure_installed = 'maintained',
                 highlight = {enable = true},
                 indent = {enable = true}
             }
         end
     }
     use {
-        "hrsh7th/nvim-compe",
+        'hrsh7th/nvim-compe',
         config = function()
-            require"compe".setup {
+            require'compe'.setup {
                 enabled = true,
                 autocomplete = true,
                 source = {
@@ -48,16 +48,16 @@ require'packer'.startup(function(use)
             }
         end
     }
-    use "glepnir/lspsaga.nvim"
-    use "theHamsta/nvim-dap-virtual-text"
+    use 'glepnir/lspsaga.nvim'
+    use 'theHamsta/nvim-dap-virtual-text'
     use {
-        "simrat39/rust-tools.nvim",
-        config = function() require"rust-tools".setup {} end
+        'simrat39/rust-tools.nvim',
+        config = function() require'rust-tools'.setup {} end
     }
     use {
-        "akinsho/flutter-tools.nvim",
+        'akinsho/flutter-tools.nvim',
         config = function()
-            require"flutter-tools".setup {
+            require'flutter-tools'.setup {
                 decorations = {statusline = {device = true}},
                 debugger = {enabled = true},
                 widget_guides = {enabled = true},
@@ -72,76 +72,76 @@ require'packer'.startup(function(use)
     }
 
     -- Theme
-    use "kyazdani42/nvim-web-devicons"
-    use "jeanlucthumm/vim-solarized8"
-    use "morhetz/gruvbox"
-    use "marko-cerovac/material.nvim"
-    use "rose-pine/neovim"
-    use "ishan9299/nvim-solarized-lua"
-    use "folke/tokyonight.nvim"
+    use 'kyazdani42/nvim-web-devicons'
+    use 'jeanlucthumm/vim-solarized8'
+    use 'morhetz/gruvbox'
+    use 'marko-cerovac/material.nvim'
+    use 'rose-pine/neovim'
+    use 'ishan9299/nvim-solarized-lua'
+    use 'folke/tokyonight.nvim'
 
     -- UI
-    use "junegunn/fzf"
-    use "junegunn/fzf.vim"
+    use 'junegunn/fzf'
+    use 'junegunn/fzf.vim'
     use {
-        "ojroques/nvim-lspfuzzy",
-        config = function() require"lspfuzzy".setup {} end
+        'ojroques/nvim-lspfuzzy',
+        config = function() require'lspfuzzy'.setup {} end
     }
     use {
-        "kyazdani42/nvim-tree.lua",
+        'kyazdani42/nvim-tree.lua',
         config = function()
-            require"nvim-tree".setup {update_focused_file = {enable = true}}
+            require'nvim-tree'.setup {update_focused_file = {enable = true}}
         end
     }
-    use {"iamcco/markdown-preview.nvim", run = "cd app && yarn install"}
-    use "airblade/vim-gitgutter"
+    use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install'}
+    use 'airblade/vim-gitgutter'
     use {
-        "nvim-telescope/telescope.nvim",
+        'nvim-telescope/telescope.nvim',
         config = function()
-            require"telescope".setup {
+            require'telescope'.setup {
                 defaults = {
                     mappings = {
                         i = {
-                            ["<C-k>"] = "move_selection_previous",
-                            ["<C-j>"] = "move_selection_next"
+                            ['<C-k>'] = 'move_selection_previous',
+                            ['<C-j>'] = 'move_selection_next'
                         },
-                        n = {["<C-c>"] = "close"}
+                        n = {['<C-c>'] = 'close'}
                     }
                 }
             }
-            require"telescope".load_extension("vim_bookmarks")
-            require"telescope".load_extension("flutter")
+            require'telescope'.load_extension('vim_bookmarks')
+            require'telescope'.load_extension('flutter')
         end
     }
-    use "simrat39/symbols-outline.nvim"
-    use "tom-anders/telescope-vim-bookmarks.nvim"
-    use "nvim-lualine/lualine.nvim" -- configured in the theme section
-    use "mhinz/vim-startify"
+    use 'simrat39/symbols-outline.nvim'
+    use 'tom-anders/telescope-vim-bookmarks.nvim'
+    use 'nvim-lualine/lualine.nvim' -- configured in the theme section
+    use 'mhinz/vim-startify'
 
     -- Editor
-    use "tpope/vim-commentary"
-    use "tpope/vim-fugitive"
-    use "tpope/vim-dispatch"
-    use "moll/vim-bbye"
+    use 'tpope/vim-commentary'
+    use 'tpope/vim-fugitive'
+    use 'tpope/vim-dispatch'
+    use 'moll/vim-bbye'
     use {
-        "jeanlucthumm/nvim-lua-format",
+        'jeanlucthumm/nvim-lua-format',
         config = function()
-            require"nvim-lua-format".setup {
+            require'nvim-lua-format'.setup {
                 save_if_unsaved = true,
                 default = {chop_down_table = true}
             }
         end
     }
-    use "pseewald/vim-anyfold"
+    use 'pseewald/vim-anyfold'
     use {
-        "onsails/lspkind-nvim",
-        config = function() require"lspkind".init {} end
+        'onsails/lspkind-nvim',
+        config = function() require'lspkind'.init {} end
     }
     use {
-        "windwp/nvim-autopairs",
+        'windwp/nvim-autopairs',
         config = function()
-            require"nvim-autopairs".setup {}
-            require"nvim-autopairs.completion.compe".setup {
+            require'nvim-autopairs'.setup {}
+            require'nvim-autopairs.completion.compe'.setup {
                 map_cr = true, -- overide <CR> mapping in insert mode
                 map_complete = true, -- auto insert '(' after select function or method
                 auto_select = true -- pick the first item in suggestion automatically?
@@ -149,15 +149,15 @@ require'packer'.startup(function(use)
 
         end
     }
-    use "bmundt6/workflowish"
-    use "psliwka/vim-smoothie"
-    use "rhysd/conflict-marker.vim"
+    use 'bmundt6/workflowish'
+    use 'psliwka/vim-smoothie'
+    use 'rhysd/conflict-marker.vim'
 
     -- Functional
-    use "MattesGroeger/vim-bookmarks"
-    use "neomake/neomake"
-    use "vim-test/vim-test"
-    use "907th/vim-auto-save"
+    use 'MattesGroeger/vim-bookmarks'
+    use 'neomake/neomake'
+    use 'vim-test/vim-test'
+    use '907th/vim-auto-save'
 
 end) -- packer
 
@@ -167,16 +167,16 @@ cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
 ---- Global options
 g.neomake_open_list = 2
 g.auto_save = 0
-g.auto_save_events = {"InsertLeave", "TextChanged", "CursorHold"}
+g.auto_save_events = {'InsertLeave', 'TextChanged', 'CursorHold'}
 g.neovide_cursor_animation_length = 0.05
 g.bookmark_no_default_key_mappings = 1
 g.symbols_outline = {show_symbol_details = false}
-g.mapleader = " " -- sets <Leader> to <space>
+g.mapleader = ' ' -- sets <Leader> to <space>
 g.dap_virtual_text = true
 g.startify_change_to_dir = 0 -- do not change cwd when opening files
 g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
 g.gitgutter_map_keys = 0 -- disable default keybindings for gitgutter
-vim.v["test#strategy"] = "neomake"
+vim.v['test#strategy'] = 'neomake'
 
 ---- Neovim options
 opt.tabstop = 2
@@ -186,86 +186,86 @@ opt.expandtab = true
 opt.number = true
 opt.splitright = true
 opt.hidden = true
-opt.mouse = "a"
+opt.mouse = 'a'
 opt.updatetime = 500
-opt.guifont = "JetBrains_Mono_Medium_Nerd_Font_Complete:h11"
-opt.completeopt = "menuone,noselect"
-if fn.has("nvim-0.5.0") == 1 then opt.signcolumn = "number" end
+opt.guifont = 'JetBrains_Mono_Medium_Nerd_Font_Complete:h11'
+opt.completeopt = 'menuone,noselect'
+if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
 
 ---- Theme
-local lualine_theme = "solarized_light"
+local lualine_theme = 'solarized_light'
 function SolarizedTheme(background)
     -- Docstrings should be the same color as regular comments
-    vim.cmd("hi! link rustCommentLineDoc Comment")
-    vim.cmd("colorscheme solarized8")
+    vim.cmd('hi! link rustCommentLineDoc Comment')
+    vim.cmd('colorscheme solarized8')
     opt.background = background
 end
 function SolarizedLuaTheme(background)
     opt.background = background
-    if background == "dark" then
-        lualine_theme = "solarized_dark"
+    if background == 'dark' then
+        lualine_theme = 'solarized_dark'
     else
-        lualine_theme = "solarized_light"
+        lualine_theme = 'solarized_light'
     end
     g.solarized_italics = 0
-    cmd("colorscheme solarized")
+    cmd('colorscheme solarized')
 end
 function GruvboxTheme(background)
     g.gruvbox_italic = 1
     g.gruvbox_bold = 1
     opt.background = background
-    vim.v["$BAT_THEME"] = "gruvbox"
-    cmd("colorscheme gruvbox")
+    vim.v['$BAT_THEME'] = 'gruvbox'
+    cmd('colorscheme gruvbox')
 end
-function MaterialTheme(style) -- prefer "deep ocean"
+function MaterialTheme(style) -- prefer 'deep ocean'
     g.material_style = style
-    lualine_theme = "material-nvim"
-    cmd("colorscheme material")
+    lualine_theme = 'material-nvim'
+    cmd('colorscheme material')
 end
-function RosePineTheme(style) -- prefer "dawn" light, "moon" dark
+function RosePineTheme(style) -- prefer 'dawn' light, 'moon' dark
     g.rose_pine_variant = style
     g.rose_pine_disable_italics = true
-    lualine_theme = "rose-pine"
-    cmd("colorscheme rose-pine")
+    lualine_theme = 'rose-pine'
+    cmd('colorscheme rose-pine')
 end
 function TokyoNight(background)
     opt.background = background
-    lualine_theme = "tokyonight"
-    cmd("colorscheme tokyonight")
+    lualine_theme = 'tokyonight'
+    cmd('colorscheme tokyonight')
 end
 local function fallbackTheme()
-    lualine_theme = "solarized_light"
-    SolarizedLuaTheme("light")
+    lualine_theme = 'solarized_light'
+    SolarizedLuaTheme('light')
 end
 local function autoTheme()
-    if env.TERM == "xterm-kitty" then
-        if env.KITTY_THEME == "solarized-light" then
-            -- MaterialTheme("lighter")
-            RosePineTheme("dawn")
-            -- SolarizedLuaTheme("light")
-        elseif env.KITTY_THEME == "solarized-dark" then
-            MaterialTheme("deep ocean")
+    if env.TERM == 'xterm-kitty' then
+        if env.KITTY_THEME == 'solarized-light' then
+            -- MaterialTheme('lighter')
+            RosePineTheme('dawn')
+            -- SolarizedLuaTheme('light')
+        elseif env.KITTY_THEME == 'solarized-dark' then
+            MaterialTheme('deep ocean')
         else
             fallbackTheme()
         end
-    elseif env.THEME == "solarized-light" then
-        -- SolarizedLuaTheme("light")
-        SolarizedLuaTheme("light")
-        -- RosePineTheme("dawn")
+    elseif env.THEME == 'solarized-light' then
+        -- SolarizedLuaTheme('light')
+        SolarizedLuaTheme('light')
+        -- RosePineTheme('dawn')
     else
-        TokyoNight("light")
-        -- MaterialTheme("lighter")
-        -- MaterialTheme("deep ocean")
-        -- RosePineTheme("dawn")
+        TokyoNight('light')
+        -- MaterialTheme('lighter')
+        -- MaterialTheme('deep ocean')
+        -- RosePineTheme('dawn')
         -- fallbackTheme()
     end
 end
 autoTheme()
-vim.cmd("hi! link pythonSpaceError Normal")
+vim.cmd('hi! link pythonSpaceError Normal')
 
 local function lsp_status_component() return require'lsp-status'.status() end
-require"lualine".setup {
-    options = {theme = lualine_theme, extensions = {"quickfix", "nvim-tree"}},
+require'lualine'.setup {
+    options = {theme = lualine_theme, extensions = {'quickfix', 'nvim-tree'}},
     sections = {
         lualine_x = {lsp_status_component, 'encoding', 'fileformat', 'filetype'}
     }
@@ -274,68 +274,68 @@ require"lualine".setup {
 ---- Keymap (note that some keys are defined in lsp_config.lua)
 local function map(mode, lhs, rhs, opts)
     local options = {noremap = true}
-    if opts then options = vim.tbl_extend("force", options, opts) end
+    if opts then options = vim.tbl_extend('force', options, opts) end
     api.nvim_set_keymap(mode, lhs, rhs, options)
 end
-local function nmap(...) map("n", ...) end
-local function ncmap(lhs, rhs, ...) nmap(lhs, "<Cmd>" .. rhs .. "<CR>", ...) end
-local function imap(...) map("i", ...) end
+local function nmap(...) map('n', ...) end
+local function ncmap(lhs, rhs, ...) nmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
+local function imap(...) map('i', ...) end
 
 -- visual
-map("v", "<Leader>y", "\"*y") -- copy to system clipboard
+map('v', '<Leader>y', '\'*y') -- copy to system clipboard
 -- g
-nmap("gt", ":tabe<CR>:term<CR>i")
-ncmap("gr", "Telescope lsp_references")
-ncmap("gio", "Telescope oldfiles")
+nmap('gt', ':tabe<CR>:term<CR>i')
+ncmap('gr', 'Telescope lsp_references')
+ncmap('gio', 'Telescope oldfiles')
 -- <Leader>
-ncmap("<Leader>q", "qall")
-ncmap("<Leader>o", "Telescope lsp_document_symbols")
-ncmap("<Leader>O", "Telescope lsp_dynamic_workspace_symbols")
-ncmap("<Leader>d", "Telescope lsp_document_diagnostics")
-ncmap("<Leader>D", "Telescope lsp_workspace_diagnostics")
-ncmap("<Leader>a", "Telescope lsp_code_actions")
-ncmap("<Leader>s", "SymbolsOutline")
-ncmap("<Leader>t", "NvimTreeFocus")
-ncmap("<Leader><Leader>", "write")
+ncmap('<Leader>q', 'qall')
+ncmap('<Leader>o', 'Telescope lsp_document_symbols')
+ncmap('<Leader>O', 'Telescope lsp_dynamic_workspace_symbols')
+ncmap('<Leader>d', 'Telescope lsp_document_diagnostics')
+ncmap('<Leader>D', 'Telescope lsp_workspace_diagnostics')
+ncmap('<Leader>a', 'Telescope lsp_code_actions')
+ncmap('<Leader>s', 'SymbolsOutline')
+ncmap('<Leader>t', 'NvimTreeFocus')
+ncmap('<Leader><Leader>', 'write')
 -- <Leader>v    nvim config
-ncmap("<Leader>ve", "exe 'tabedit' stdpath('config').'/init.lua'")
-nmap("<Leader>vs", ":exe 'source' stdpath('config').'/init.lua'<CR>")
+ncmap('<Leader>ve', ":exe 'tabedit' stdpath('config').'/init.lua'")
+nmap('<Leader>vs', ":exe 'source' stdpath('config').'/init.lua'<CR>")
 -- <Leader>c    quickfix
-ncmap("<Leader>cl", "cclose")
-ncmap("<Leader>cc", "cc")
-ncmap("<Leader>co", "copen")
+ncmap('<Leader>cl', 'cclose')
+ncmap('<Leader>cc', 'cc')
+ncmap('<Leader>co', 'copen')
 -- <Leader>b    bookmarks
-ncmap("<Leader>bb", "BookmarkToggle")
-ncmap("<Leader>ba", "BookmarkAnnotate")
-ncmap("<Leader>bo", "Telescope vim_bookmarks all")
+ncmap('<Leader>bb', 'BookmarkToggle')
+ncmap('<Leader>ba', 'BookmarkAnnotate')
+ncmap('<Leader>bo', 'Telescope vim_bookmarks all')
 -- <Leader>h    hunks
-ncmap("<Leader>hp", "GitGutterPrevHunk")
-ncmap("<Leader>hn", "GitGutterNextHunk")
-ncmap("<Leader>hs", "GitGutterStageHunk")
-ncmap("<Leader>hu", "GitGutterUndoHunk")
-ncmap("<Leader>hq", "GitGutterQuickFix")
-ncmap("<Leader>hQ", "GitGutterQuickFixCurrentFile")
+ncmap('<Leader>hp', 'GitGutterPrevHunk')
+ncmap('<Leader>hn', 'GitGutterNextHunk')
+ncmap('<Leader>hs', 'GitGutterStageHunk')
+ncmap('<Leader>hu', 'GitGutterUndoHunk')
+ncmap('<Leader>hq', 'GitGutterQuickFix')
+ncmap('<Leader>hQ', 'GitGutterQuickFixCurrentFile')
 -- <C-*> and <A-*>
-ncmap("<C-h>", "tabp")
-ncmap("<C-l>", "tabn")
-map("t", "<C-h>", "<C-\\><C-n><Cmd>:tabp<CR>")
-map("t", "<C-l>", "<C-\\><C-l><Cmd><CR>")
-map("t", "<C-w><C-w>", "<C-\\><C-l><C-w>:tabn<C-w>")
-ncmap("<C-p>", "Telescope commands")
-ncmap("<C-e>", "Telescope buffers")
-ncmap("<C-q>", "Telescope quickfix")
-ncmap("<C-A-e>", "Telescope find_files")
-ncmap("<A-1>", "NvimTreeToggle")
-ncmap("<A-f>", "NvimTreeFindFile")
+ncmap('<C-h>', 'tabp')
+ncmap('<C-l>', 'tabn')
+map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
+map('t', '<C-l>', '<C-\\><C-l><Cmd><CR>')
+map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
+ncmap('<C-p>', 'Telescope commands')
+ncmap('<C-e>', 'Telescope buffers')
+ncmap('<C-q>', 'Telescope quickfix')
+ncmap('<C-A-e>', 'Telescope find_files')
+ncmap('<A-1>', 'NvimTreeToggle')
+ncmap('<A-f>', 'NvimTreeFindFile')
 -- <F*>
-ncmap("<F4>", "Bdelete")
-ncmap("<F7>", "lua require'dap'.step_into()")
-ncmap("<F6>", "lua require'dap'.step_over()")
-ncmap("<F8>", "lua require'dap'.toggle_breakpoint()")
-ncmap("<F12>", "lua require'dap'.continue()")
+ncmap('<F4>', 'Bdelete')
+ncmap('<F7>', 'lua require"dap".step_into()')
+ncmap('<F6>', 'lua require"dap".step_over()')
+ncmap('<F8>', 'lua require"dap".toggle_breakpoint()')
+ncmap('<F12>', 'lua require"dap".continue()')
 -- Auto completion
-imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
-imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
+imap('<Tab>', "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
+imap('<S-Tab>', "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
 
 ---- Filetype overrides
 api.nvim_exec([[
@@ -366,13 +366,13 @@ augroup END
 ---- Util
 function HighlightGroups()
     -- Gives you all highlight groups under the cursor
-    local stack = fn.synstack(fn.line("."), fn.col("."))
+    local stack = fn.synstack(fn.line('.'), fn.col('.'))
     if next(stack) == nil then
-        print("Syntax stack is empty")
+        print('Syntax stack is empty')
         return
     end
-    for _, val in ipairs(stack) do print(fn.synIDattr(val, "name")) end
+    for _, val in ipairs(stack) do print(fn.synIDattr(val, 'name')) end
 end
-cmd("command! -nargs=0 HighlightGroups lua HighlightGroups()")
+cmd('command! -nargs=0 HighlightGroups lua HighlightGroups()')
 
 pcall(require, 'google')
