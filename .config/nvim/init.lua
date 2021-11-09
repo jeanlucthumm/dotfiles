@@ -115,7 +115,7 @@ require'packer'.startup(function(use)
     }
     use "simrat39/symbols-outline.nvim"
     use "tom-anders/telescope-vim-bookmarks.nvim"
-    use "nvim-lualine/lualine.nvim"
+    use "nvim-lualine/lualine.nvim" -- configured in the theme section
     use "mhinz/vim-startify"
 
     -- Editor
@@ -178,15 +178,6 @@ g.startify_session_autoload = 1 -- automatically source session if Session.vim i
 g.gitgutter_map_keys = 0 -- disable default keybindings for gitgutter
 vim.v["test#strategy"] = "neomake"
 
--- Util
-function PrintTable(table)
-    for key, value in pairs(table) do print(key, value) end
-end
-
----- Plugin configuration
-
--- Lualine is configured in the theme section
-
 ---- Neovim options
 opt.tabstop = 2
 opt.shiftwidth = 2
@@ -199,7 +190,7 @@ opt.mouse = "a"
 opt.updatetime = 500
 opt.guifont = "JetBrains_Mono_Medium_Nerd_Font_Complete:h11"
 opt.completeopt = "menuone,noselect"
-if vim.fn.has("nvim-0.5.0") == 1 then opt.signcolumn = "number" end
+if fn.has("nvim-0.5.0") == 1 then opt.signcolumn = "number" end
 
 ---- Theme
 local lualine_theme = "solarized_light"
@@ -280,7 +271,7 @@ require"lualine".setup {
     }
 }
 
----- Keymap (note that some keys are defined in the LSP section)
+---- Keymap (note that some keys are defined in lsp_config.lua)
 local function map(mode, lhs, rhs, opts)
     local options = {noremap = true}
     if opts then options = vim.tbl_extend("force", options, opts) end
@@ -346,7 +337,7 @@ ncmap("<F12>", "lua require'dap'.continue()")
 imap("<Tab>", "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
 imap("<S-Tab>", "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
 
--- Filetype overrides
+---- Filetype overrides
 api.nvim_exec([[
 augroup lua_group
   au!
@@ -372,7 +363,7 @@ augroup rust_group
 augroup END
 ]], false)
 
----- Commands
+---- Util
 function HighlightGroups()
     -- Gives you all highlight groups under the cursor
     local stack = fn.synstack(fn.line("."), fn.col("."))
