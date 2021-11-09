@@ -32,19 +32,43 @@ require'packer'.startup(function(use)
             }
         end
     }
+    use 'L3MON4D3/LuaSnip'
     use {
-        'hrsh7th/nvim-compe',
+        'hrsh7th/nvim-cmp',
+        requires = {
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+            'saadparwaiz1/cmp_luasnip',
+            'neovim/nvim-lspconfig',
+            'L3MON4D3/LuaSnip',
+            'onsails/lspkind-nvim'
+        },
         config = function()
-            require'compe'.setup {
-                enabled = true,
-                autocomplete = true,
-                source = {
-                    path = true,
-                    buffer = true,
-                    nvim_lsp = true,
-                    nvim_lua = true,
-                    calc = true
-                }
+            local cmp = require 'cmp'
+
+            cmp.setup {
+                snippet = {
+                    expand = function(args)
+                        require'luasnip'.lsp_expand(args.body)
+                    end
+                },
+                mapping = {
+                    ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4),
+                                            {'i', 'c'}),
+                    ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4),
+                                            {'i', 'c'}),
+                    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
+                                                {'i', 'c'}),
+                    ['<CR>'] = cmp.mapping.confirm({select = true}),
+                    ['<C-y>'] = cmp.mapping(cmp.mapping.close(), {'i', 'c'})
+                },
+                sources = cmp.config.sources {
+                    {name = 'nvim_lsp'},
+                    {name = 'luasnip'},
+                    {name = 'buffer'}
+                },
+                formatting = {format = require'lspkind'.cmp_format()}
             }
         end
     }
@@ -188,7 +212,7 @@ opt.hidden = true
 opt.mouse = 'a'
 opt.updatetime = 500
 opt.guifont = 'JetBrains_Mono_Medium_Nerd_Font_Complete:h11'
-opt.completeopt = 'menuone,noselect'
+opt.completeopt = 'menu,menuone,noselect'
 if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
 
 ---- Theme
@@ -332,9 +356,6 @@ ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 ncmap('<F8>', 'lua require"dap".toggle_breakpoint()')
 ncmap('<F12>', 'lua require"dap".continue()')
--- Auto completion
-imap('<Tab>', "pumvisible() ? '<C-n>' : '<Tab>'", {expr = true})
-imap('<S-Tab>', "pumvisible() ? '<C-p>' : '<S-Tab>'", {expr = true})
 
 ---- Filetype overrides
 api.nvim_exec([[

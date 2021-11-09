@@ -27,6 +27,8 @@ local function setup_lsp_servers()
         local capabilities = vim.lsp.protocol.make_client_capabilities()
         capabilities.textDocument.completion.completionItem.snippetSupport =
             true
+        -- Inject nvim-cmp stuff
+        require'cmp_nvim_lsp'.update_capabilities(capabilities)
         local config = {
             capabilities = capabilities,
             on_attach = require'common'.on_attach
