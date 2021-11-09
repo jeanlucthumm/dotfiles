@@ -6,68 +6,210 @@ local env = vim.env
 local fn = vim.fn
 local cmd = vim.cmd
 
----- Plugins
--- LuaFormatter off
-require "paq" {
-    "savq/paq-nvim",
-    "nvim-lua/plenary.nvim",
+require'packer'.startup(function(use)
+    use 'wbthomason/packer.nvim'
 
     -- LSP & DAP & nvim
-    "neovim/nvim-lspconfig",
-    "kabouzeid/nvim-lspinstall",
-    "nvim-lua/lsp-status.nvim",
-    "mfussenegger/nvim-dap",
-    "rcarriga/nvim-dap-ui",
-    "hrsh7th/nvim-compe",
-    {"nvim-treesitter/nvim-treesitter", run = function() cmd("TSUpdate") end},
-    "glepnir/lspsaga.nvim",
-    "theHamsta/nvim-dap-virtual-text",
-    "simrat39/rust-tools.nvim",
-    "akinsho/flutter-tools.nvim",
+    use 'neovim/nvim-lspconfig'
+    use {
+        'kabouzeid/nvim-lspinstall',
+        config = function()
+            local lua_config = {
+                Lua = {
+                    runtime = {
+                        -- LuaJIT in the case of Neovim
+                        version = 'LuaJIT',
+                        path = vim.split(package.path, ';')
+                    },
+                    diagnostics = {
+                        -- Get the language server to recognize the `vim` global
+                        globals = {'vim'}
+                    },
+                    workspace = {
+                        -- Make the server aware of Neovim runtime files
+                        library = {
+                            [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                            [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
+                        }
+                    }
+                }
+            }
+            local function setup_lsp_servers()
+                -- Call setup on every installed server
+                require'lspinstall'.setup()
+
+                local servers = require'lspinstall'.installed_servers()
+                for _, server in pairs(servers) do
+                    local capabilities = vim.lsp.protocol
+                                             .make_client_capabilities()
+                    capabilities.textDocument.completion.completionItem
+                        .snippetSupport = true
+                    local config = {
+                        capabilities = capabilities,
+                        on_attach = require'common'.on_attach
+                    }
+
+                    -- Language specific config
+                    if server == "lua" then
+                        config.settings = lua_config
+                    end
+
+                    require'lspconfig'[server].setup(config)
+                end
+            end
+            setup_lsp_servers()
+            require'lspinstall'.post_install_hook = function()
+                -- Automatically reloads after :LspInstall
+                setup_lsp_servers()
+                vim.cmd('bufdo e') -- triggers FileType autocmd to start server
+            end
+        end
+    }
+    use 'nvim-lua/lsp-status.nvim'
+    use {'mfussenegger/nvim-dap', config = function() require 'dap_config' end}
+    use {
+        "rcarriga/nvim-dap-ui",
+        config = function() require'dapui'.setup {} end
+    }
+    use {
+        "nvim-treesitter/nvim-treesitter",
+        run = ":TSUpdate",
+        config = function()
+            require"nvim-treesitter.configs".setup {
+                ensure_installed = "maintained",
+                highlight = {enable = true},
+                indent = {enable = true}
+            }
+        end
+    }
+    use {
+        "hrsh7th/nvim-compe",
+        config = function()
+            require"compe".setup {
+                enabled = true,
+                autocomplete = true,
+                source = {
+                    path = true,
+                    buffer = true,
+                    nvim_lsp = true,
+                    nvim_lua = true,
+                    calc = true
+                }
+            }
+        end
+    }
+    use "glepnir/lspsaga.nvim"
+    use "theHamsta/nvim-dap-virtual-text"
+    use {
+        "simrat39/rust-tools.nvim",
+        config = function() require"rust-tools".setup {} end
+    }
+    use {
+        "akinsho/flutter-tools.nvim",
+        config = function()
+            require"flutter-tools".setup {
+                decorations = {statusline = {device = true}},
+                debugger = {enabled = true},
+                widget_guides = {enabled = true},
+                outline = {auto_open = true},
+                lsp = {
+                    on_attach = require'common'.on_attach,
+                    settings = {lineLength = 100}
+                }
+            }
+
+        end
+    }
 
     -- Theme
-    "kyazdani42/nvim-web-devicons",
-    "jeanlucthumm/vim-solarized8",
-    "morhetz/gruvbox",
-    "marko-cerovac/material.nvim",
-    "rose-pine/neovim",
-    "ishan9299/nvim-solarized-lua",
-    "folke/tokyonight.nvim",
+    use "kyazdani42/nvim-web-devicons"
+    use "jeanlucthumm/vim-solarized8"
+    use "morhetz/gruvbox"
+    use "marko-cerovac/material.nvim"
+    use "rose-pine/neovim"
+    use "ishan9299/nvim-solarized-lua"
+    use "folke/tokyonight.nvim"
 
     -- UI
-    "junegunn/fzf",
-    "junegunn/fzf.vim",
-    "ojroques/nvim-lspfuzzy",
-    "kyazdani42/nvim-tree.lua",
-    {"iamcco/markdown-preview.nvim", run = "cd app && yarn install"},
-    "airblade/vim-gitgutter",
-    "nvim-telescope/telescope.nvim",
-    "simrat39/symbols-outline.nvim",
-    "tom-anders/telescope-vim-bookmarks.nvim",
-    "simrat39/symbols-outline.nvim",
-    "shadmansaleh/lualine.nvim",
-    "mhinz/vim-startify",
+    use "junegunn/fzf"
+    use "junegunn/fzf.vim"
+    use {
+        "ojroques/nvim-lspfuzzy",
+        config = function() require"lspfuzzy".setup {} end
+    }
+    use {
+        "kyazdani42/nvim-tree.lua",
+        config = function()
+            require"nvim-tree".setup {update_focused_file = {enable = true}}
+        end
+    }
+    use {"iamcco/markdown-preview.nvim", run = "cd app && yarn install"}
+    use "airblade/vim-gitgutter"
+    use {
+        "nvim-telescope/telescope.nvim",
+        config = function()
+            require"telescope".setup {
+                defaults = {
+                    mappings = {
+                        i = {
+                            ["<C-k>"] = "move_selection_previous",
+                            ["<C-j>"] = "move_selection_next"
+                        },
+                        n = {["<C-c>"] = "close"}
+                    }
+                }
+            }
+            require"telescope".load_extension("vim_bookmarks")
+            require"telescope".load_extension("flutter")
+        end
+    }
+    use "simrat39/symbols-outline.nvim"
+    use "tom-anders/telescope-vim-bookmarks.nvim"
+    use "nvim-lualine/lualine.nvim"
+    use "mhinz/vim-startify"
 
     -- Editor
-    "tpope/vim-commentary",
-    "tpope/vim-fugitive",
-    "tpope/vim-dispatch",
-    "moll/vim-bbye",
-    "jeanlucthumm/nvim-lua-format",
-    "pseewald/vim-anyfold",
-    "onsails/lspkind-nvim",
-    "windwp/nvim-autopairs",
-    "bmundt6/workflowish",
-    "psliwka/vim-smoothie",
-    "rhysd/conflict-marker.vim",
+    use "tpope/vim-commentary"
+    use "tpope/vim-fugitive"
+    use "tpope/vim-dispatch"
+    use "moll/vim-bbye"
+    use {
+        "jeanlucthumm/nvim-lua-format",
+        config = function()
+            require"nvim-lua-format".setup {
+                save_if_unsaved = true,
+                default = {chop_down_table = true}
+            }
+        end
+    }
+    use "pseewald/vim-anyfold"
+    use {
+        "onsails/lspkind-nvim",
+        config = function() require"lspkind".init {} end
+    }
+    use {
+        "windwp/nvim-autopairs",
+        config = function()
+            require"nvim-autopairs".setup {}
+            require"nvim-autopairs.completion.compe".setup {
+                map_cr = true, -- overide <CR> mapping in insert mode
+                map_complete = true, -- auto insert '(' after select function or method
+                auto_select = true -- pick the first item in suggestion automatically?
+            }
+
+        end
+    }
+    use "bmundt6/workflowish"
+    use "psliwka/vim-smoothie"
+    use "rhysd/conflict-marker.vim"
 
     -- Functional
-    "MattesGroeger/vim-bookmarks",
-    "neomake/neomake",
-    "vim-test/vim-test",
-    "907th/vim-auto-save"
-}
--- LuaFormatter on
+    use "MattesGroeger/vim-bookmarks"
+    use "neomake/neomake"
+    use "vim-test/vim-test"
+    use "907th/vim-auto-save"
+
+end) -- packer
 
 -- For plugin development. Link plugin dir to dev
 cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
@@ -92,204 +234,8 @@ function PrintTable(table)
 end
 
 ---- Plugin configuration
--- LSP keybindings
 
-local lua_config = {
-    Lua = {
-        runtime = {
-            -- LuaJIT in the case of Neovim
-            version = 'LuaJIT',
-            path = vim.split(package.path, ';')
-        },
-        diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = {'vim'}
-        },
-        workspace = {
-            -- Make the server aware of Neovim runtime files
-            library = {
-                [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-                [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
-            }
-        }
-    }
-}
-
--- LSP global setup
-local function setup_lsp_servers()
-    -- Call setup on every installed server
-    require'lspinstall'.setup()
-
-    local servers = require'lspinstall'.installed_servers()
-    for _, server in pairs(servers) do
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities.textDocument.completion.completionItem.snippetSupport =
-            true
-        local config = {
-            capabilities = capabilities,
-            on_attach = require'common'.on_attach
-        }
-
-        -- Language specific config
-        if server == "lua" then config.settings = lua_config end
-
-        require"lspconfig"[server].setup(config)
-    end
-end
-setup_lsp_servers()
-require'lspinstall'.post_install_hook = function()
-    -- Automatically reloads after :LspInstall
-    setup_lsp_servers()
-    vim.cmd("bufdo e") -- triggers FileType autocmd to start server
-end
-
--- DAP Config
-local dap = require "dap"
-dap.adapters.lldb = {
-    type = "executable",
-    command = "/usr/bin/lldb-vscode",
-    name = "lldb"
-}
-dap.configurations.cpp = {
-    {
-        name = "default",
-        type = "lldb",
-        request = "launch",
-        program = function()
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/',
-                                'file')
-        end,
-        cwd = '${workspaceFolder}',
-        stopOnEntry = false,
-        args = {},
-
-        -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
-        --
-        --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-        --
-        -- Otherwise you might get the following error:
-        --
-        --    Error on launch: Failed to attach to the target process
-        --
-        -- But you should be aware of the implications:
-        -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
-        runInTerminal = false
-    }
-}
-dap.configurations.rust = {
-    {
-        name = "default",
-        type = "lldb",
-        request = "launch",
-        program = '${workspaceFolder}/target/debug/${workspaceFolderBasename}',
-        cwd = '${workspaceFolder}',
-        stopOnEntry = false,
-        args = {},
-        runInTerminal = false
-    },
-    {
-        name = "rustc stage1 debug",
-        type = "lldb",
-        request = "launch",
-        program = "/home/jeanluc/Code/rust/build/x86_64-unknown-linux-gnu/stage1/bin/rustc",
-        cwd = '${workspaceFolder}',
-        stopOnEntry = false,
-
-        args = function()
-            local path = fn.input("Target rust project: ",
-                                  "/home/jeanluc/Code/", "file")
-            local target = path:match(".+/(.+)/$") -- extract dir name
-            return {
-                "--crate-name",
-                target,
-                "--edition=2018",
-                path .. "/src/main.rs",
-                "--error-format=json",
-                "--json=diagnostic-rendered-ansi",
-                "--crate-type",
-                "bin",
-                "--emit=dep-info,link",
-                "-C",
-                "embed-bitcode=no",
-                "-C",
-                "debuginfo=2",
-                -- These hashcodes are for mangling, and I copied this one from a cargo project
-                "-C",
-                "metadata=3a8a540162ab7ee9",
-                "-C",
-                "extra-filename=-3a8a540162ab7ee9",
-                "--out-dir",
-                path .. "target/debug/deps",
-                "-C",
-                "incremental=" .. path .. "target/debug/incremental",
-                "-L",
-                "dependency=" .. path .. "target/debug/deps"
-            }
-        end,
-        runInTerminal = false
-    }
-}
-
-fn.sign_define('DapBreakpoint',
-               {text = '🛑', texthl = '', linehl = '', numhl = ''})
-
--- Smaller plugin setup
-require"dapui".setup {}
-require"compe".setup {
-    enabled = true,
-    autocomplete = true,
-    source = {
-        path = true,
-        buffer = true,
-        nvim_lsp = true,
-        nvim_lua = true,
-        calc = true
-    }
-}
-require"nvim-treesitter.configs".setup {
-    ensure_installed = "maintained",
-    highlight = {enable = true},
-    indent = {enable = true}
-}
-require"lspfuzzy".setup {}
-require"lspkind".init {}
-require"telescope".setup {
-    defaults = {
-        mappings = {
-            i = {
-                ["<C-k>"] = "move_selection_previous",
-                ["<C-j>"] = "move_selection_next"
-            },
-            n = {["<C-c>"] = "close"}
-        }
-    }
-}
-require"telescope".load_extension("vim_bookmarks")
-require"telescope".load_extension("flutter")
 -- Lualine is configured in the theme section
-require"rust-tools".setup {}
-require"nvim-autopairs".setup {}
-require"nvim-autopairs.completion.compe".setup {
-    map_cr = true, -- overide <CR> mapping in insert mode
-    map_complete = true, -- auto insert '(' after select function or method
-    auto_select = true -- pick the first item in suggestion automatically?
-}
-require"flutter-tools".setup {
-    decorations = {statusline = {device = true}},
-    debugger = {enabled = true},
-    widget_guides = {enabled = true},
-    outline = {auto_open = true},
-    lsp = {on_attach = require'common'.on_attach, settings = {lineLength = 100}}
-}
-require"nvim-lua-format".setup {
-    save_if_unsaved = true,
-    default = {chop_down_table = true}
-}
-require"nvim-tree".setup {
-    update_focused_file = {
-        enable = true,
-    }
-}
 
 ---- Neovim options
 opt.tabstop = 2
@@ -342,13 +288,13 @@ function RosePineTheme(style) -- prefer "dawn" light, "moon" dark
     cmd("colorscheme rose-pine")
 end
 function TokyoNight(background)
-  opt.background = background
-  lualine_theme = "tokyonight"
-  cmd("colorscheme tokyonight")
+    opt.background = background
+    lualine_theme = "tokyonight"
+    cmd("colorscheme tokyonight")
 end
 local function fallbackTheme()
     lualine_theme = "solarized_light"
-    SolarizedTheme("light")
+    SolarizedLuaTheme("light")
 end
 local function autoTheme()
     if env.TERM == "xterm-kitty" then
@@ -363,7 +309,7 @@ local function autoTheme()
         end
     elseif env.THEME == "solarized-light" then
         -- SolarizedLuaTheme("light")
-        SolarizedTheme("light")
+        SolarizedLuaTheme("light")
         -- RosePineTheme("dawn")
     else
         TokyoNight("light")
