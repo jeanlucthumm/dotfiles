@@ -137,6 +137,7 @@ require'packer'.startup(function(use)
         config = function()
             require'telescope'.setup {
                 defaults = {
+                    path_display = {"tail"},
                     mappings = {
                         i = {
                             ['<C-k>'] = 'move_selection_previous',
