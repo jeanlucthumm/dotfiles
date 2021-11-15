@@ -36,8 +36,10 @@ local function setup_lsp_servers()
 
         -- Language specific config
         if server == "lua" then config.settings = lua_config end
+        if server == "dartls" then goto continue end -- set up by flutter
 
         require'lspconfig'[server].setup(config)
+        ::continue::
     end
 end
 setup_lsp_servers()
