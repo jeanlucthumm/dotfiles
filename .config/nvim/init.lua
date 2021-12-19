@@ -10,12 +10,8 @@ local cmd = vim.cmd
 local packer_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(packer_path)) > 0 then
     PackerBootstrap = fn.system({
-        'git',
-        'clone',
-        '--depth',
-        '1',
-        'https://github.com/wbthomason/packer.nvim',
-        packer_path
+        'git', 'clone', '--depth', '1',
+        'https://github.com/wbthomason/packer.nvim', packer_path
     })
 end
 
@@ -25,8 +21,8 @@ require'packer'.startup(function(use)
     -- LSP & DAP & nvim
     use 'neovim/nvim-lspconfig'
     use {
-        'kabouzeid/nvim-lspinstall',
-        config = function() require 'lsp_config' end
+        'williamboman/nvim-lsp-installer',
+        config = function() require '_lsp_config' end
     }
     use 'nvim-lua/lsp-status.nvim'
     use {'mfussenegger/nvim-dap', config = function() require 'dap_config' end}
@@ -49,13 +45,9 @@ require'packer'.startup(function(use)
     use {
         'hrsh7th/nvim-cmp',
         requires = {
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-path',
-            'saadparwaiz1/cmp_luasnip',
-            'neovim/nvim-lspconfig',
-            'L3MON4D3/LuaSnip',
-            'onsails/lspkind-nvim'
+            'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
+            'saadparwaiz1/cmp_luasnip', 'neovim/nvim-lspconfig',
+            'L3MON4D3/LuaSnip', 'onsails/lspkind-nvim'
         },
         config = function()
             local cmp = require 'cmp'
@@ -77,9 +69,7 @@ require'packer'.startup(function(use)
                     ['<C-y>'] = cmp.mapping(cmp.mapping.close(), {'i', 'c'})
                 },
                 sources = cmp.config.sources {
-                    {name = 'nvim_lsp'},
-                    {name = 'luasnip'},
-                    {name = 'buffer'}
+                    {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'}
                 },
                 formatting = {format = require'lspkind'.cmp_format()}
             }
@@ -134,6 +124,7 @@ require'packer'.startup(function(use)
     use 'airblade/vim-gitgutter'
     use {
         'nvim-telescope/telescope.nvim',
+        requires = {{'nvim-lua/plenary.nvim'}},
         config = function()
             require'telescope'.setup {
                 defaults = {
@@ -179,12 +170,9 @@ require'packer'.startup(function(use)
         'windwp/nvim-autopairs',
         config = function()
             require'nvim-autopairs'.setup {}
-            require'nvim-autopairs.completion.compe'.setup {
-                map_cr = true, -- overide <CR> mapping in insert mode
-                map_complete = true, -- auto insert '(' after select function or method
-                auto_select = true -- pick the first item in suggestion automatically?
-            }
-
+            require'cmp'.event:on('confirm_done',
+                                  require'nvim-autopairs.completion.cmp'.on_confirm_done(
+                                      {map_char = {tex = ''}}))
         end
     }
     use 'bmundt6/workflowish'
@@ -309,7 +297,7 @@ require'lualine'.setup {
     }
 }
 
----- Keymap (note that some keys are defined in lsp_config.lua)
+---- Keymap (note that some keys are defined in _lsp_config.lua)
 local function map(mode, lhs, rhs, opts)
     local options = {noremap = true}
     if opts then options = vim.tbl_extend('force', options, opts) end
