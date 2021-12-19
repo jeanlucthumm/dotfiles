@@ -61,17 +61,6 @@ if not contains "INIT" $STEPS
   and echo "INIT" >> $STEP_FILE
 end
 
-if not contains "NVIM" $STEPS
-  echo $LOG "Setting up neovim"
-
-  git clone --depth=1 "https://github.com/savq/paq-nvim.git" \
-    $XDG_DATA_HOME/nvim/site/pack/paqs/start/paq-nvim
-
-  and nvim +PaqInstall
-
-  and echo "NVIM" >> $STEP_FILE
-end
-
 if not contains "FISH" $STEPS
   echo $LOG "Setting up fish"
 
