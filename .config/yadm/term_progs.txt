@@ -9,7 +9,7 @@ fd
 feh
 fish
 fzf
-git-delta-git
+git-delta
 github-cli
 llvm
 lua
@@ -25,7 +25,8 @@ nmap
 noto-fonts
 npm
 ntfs-3g
-openssh p7zip
+openssh
+p7zip
 pmount
 python-pip
 rustup
