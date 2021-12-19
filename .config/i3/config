@@ -243,12 +243,23 @@ bindsym $mod+\ exec dunstctl close-all
 # =============================================================================
 # STARTUP
 
+# Start i3bar to display a workspace bar (plus the system information i3status # finds out, if available)
+bar {
+	status_command i3blocks -c "$HOME/.config/i3/i3blocks.conf"
+	colors {
+		# colorclass		#border		#back.		#text
+		focused_workspace 	$primary	$primary	$text
+		active_workspace	$background	$background	$text
+		inactive_workspace	$background	$background	$text
+	}
+}
+
 # system
 exec --no-startup-id "$HOME/.config/screenlayout/single.sh"
 exec --no-startup-id /usr/bin/picom
 exec --no-startup-id /usr/bin/xsettingsd -c "$HOME/.config/xsettingsd" &
 exec --no-startup-id /usr/bin/feh --bg-scale $wallpaper
-exec --no-startup-id "$HOME/.config/polybar/launch.sh"
+#exec --no-startup-id "$HOME/.config/polybar/launch.sh"
 exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
 exec --no-startup-id /usr/bin/unclutter --timeout 5
 exec --no-startup-id "$HOME/Code/bin/mouse-profile.sh"

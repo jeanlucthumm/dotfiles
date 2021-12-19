@@ -1,11 +1,27 @@
 # Tune keyboard delay and repeat
 xset r rate 150 80
 
+userresources=$HOME/.Xresources
+usermodmap=$HOME/.Xmodmap
+sysresources=/etc/X11/xinit/.Xresources
+sysmodmap=/etc/X11/xinit/.Xmodmap
+
 # Turn annoying bell off
 xset b off
 
-# Integrate custom Xresources which define colors and other things for some apps
-xrdb -merge /home/jeanluc/.Xresources
+# Merge settings
+if [ -f $sysresources ]; then
+    xrdb -merge $sysresources
+fi
+if [ -f $sysmodmap ]; then
+    xmodmap $sysmodmap
+fi
+if [ -f "$userresources" ]; then
+    xrdb -merge "$userresources"
+fi
+if [ -f "$usermodmap" ]; then
+    xmodmap "$usermodmap"
+fi
 
 # Keyring daemon. Works with ssh-add across all terminal sessions
 eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
