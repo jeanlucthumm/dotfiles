@@ -121,7 +121,7 @@ require'packer'.startup(function(use)
         end
     }
     use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install'}
-    use 'airblade/vim-gitgutter'
+    use 'mhinz/vim-signify'
     use {
         'nvim-telescope/telescope.nvim',
         requires = {{'nvim-lua/plenary.nvim'}},
@@ -279,7 +279,8 @@ local function autoTheme()
         SolarizedLuaTheme('light')
         -- RosePineTheme('dawn')
     else
-        TokyoNight('light')
+        SolarizedLuaTheme('light')
+        -- TokyoNight('light')
         -- MaterialTheme('lighter')
         -- MaterialTheme('deep ocean')
         -- RosePineTheme('dawn')
@@ -338,7 +339,8 @@ ncmap('<Leader>bo', 'Telescope vim_bookmarks all')
 ncmap('<Leader>hp', 'GitGutterPrevHunk')
 ncmap('<Leader>hn', 'GitGutterNextHunk')
 ncmap('<Leader>hs', 'GitGutterStageHunk')
-ncmap('<Leader>hu', 'GitGutterUndoHunk')
+ncmap('<Leader>hu', 'SignifyHunkUndo')
+ncmap('<Leader>hd', 'SignifyHunkDiff')
 ncmap('<Leader>hq', 'GitGutterQuickFix')
 ncmap('<Leader>hQ', 'GitGutterQuickFixCurrentFile')
 -- <C-*> and <A-*>
