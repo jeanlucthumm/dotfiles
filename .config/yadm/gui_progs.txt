@@ -25,7 +25,7 @@ firefox
 fish
 flutter
 fzf
-git-delta-git
+git-delta
 github-cli
 gnome-font-viewer
 gnome-keyring
@@ -43,8 +43,7 @@ meld
 mpv
 namcap
 nautilus
-neovide-git
-neovim-nightly-bin
+neovim
 nerd-fonts-fira-code
 nerd-fonts-jetbrains-mono
 nmap
@@ -74,7 +73,7 @@ spotify
 sqlitebrowser
 tela-icon-theme
 tmux
-torbrowser-launcher
+tor-browser
 traceroute
 transmission-qt
 ttf-dejavu
