@@ -52,6 +52,8 @@ set -x XDG_DOWNLOAD_DIR $HOME/Downloads
 set -x npm_config_prefix $HOME/.node_modules 
 set -x EDITOR (which nvim)
 set -x LC_ALL en_US.UTF-8
+# Works in combination with the Man.sublime-syntax file in bat conf
+set -x MANPAGER "sh -c 'sed -e s/.\\\\x08//g | bat -l man -p'"
 
 set CONFIG $XDG_CONFIG_HOME
 set CONF $CONFIG
