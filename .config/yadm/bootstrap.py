@@ -13,7 +13,7 @@ def eprint(*args, **kwargs):
 def env_var(var: str) -> str:
     r = os.environ.get(var)
     if r is None:
-        eprint(f"Could not get required env variable {var}")
+        eprint(f'Could not get required env variable {var}')
         sys.exit(-1)
     return r
 
@@ -29,30 +29,29 @@ class CommandChain:
     def __init__(self):
         self.failed = False
 
-    def __call__(self, *c) -> bool:
+    def __call__(self, *c) -> subprocess.CompletedProcess | None:
         return self.cmd(*c)
 
-    def cmd(self, *c: str) -> bool:
+    def cmd(self, *c: str) -> subprocess.CompletedProcess | None:
         if self.failed:
-            return False
+            return None
         ret = cmd(*c)
         if ret.returncode != 0:
             self.failed = True
             self.command = str(c)
-            return False
-        return True
+        return ret
 
     def cd(self, directory: str):
         os.chdir(Path(directory))
 
     def check(self) -> bool:
         if self.failed:
-            eprint(f"Command failed: {self.command}")
+            eprint(f'Command failed: {self.command}')
             return False
         return True
 
 
-STEP_FILE = Path(env_var("CONFIG")) / "yadm/step_file.txt"
+STEP_FILE = Path(env_var('CONFIG')) / 'yadm/step_file.txt'
 
 
 class Task:
@@ -68,23 +67,27 @@ class Task:
 
 class Yay(Task):
     def getName(self):
-        return "yay"
+        return 'yay'
 
     def run(self) -> bool:
         c = CommandChain()
-        c("sudo", "/usr/bin/pacman", "-S", "--needed", "git", "base-devel")
-        c("git", "clone", "https://aur.archlinux.org/yay.git")
-        c.cd("yay")
-        c("makepkg", "-si")
-        c.cd("..")
-        c("rm", "-rf", "yay")
+        c('sudo', '/usr/bin/pacman', '-S', '--needed', 'git', 'base-devel')
+        c('git', 'clone', 'https://aur.archlinux.org/yay.git')
+        c.cd('yay')
+        c('makepkg', '-si')
+        c.cd('..')
+        c('rm', '-rf', 'yay')
         return c.check()
+
+    def undo(self):
+        cmd('sudo', '/usr/bin/pacman', '-Rs', 'yay')
+        cmd('rm', '-rf', 'yay')
 
 
 def main():
     y = Yay()
-    y.run()
+    y.undo()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
