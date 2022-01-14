@@ -260,8 +260,11 @@ function TokyoNight(background)
     cmd('colorscheme tokyonight')
 end
 local function fallbackTheme()
-    lualine_theme = 'solarized_light'
-    SolarizedLuaTheme('light')
+    -- SolarizedLuaTheme('light')
+    TokyoNight('light')
+    -- MaterialTheme('lighter')
+    -- MaterialTheme('deep ocean')
+    -- RosePineTheme('dawn')
 end
 local function autoTheme()
     if env.TERM == 'xterm-kitty' then
@@ -279,12 +282,7 @@ local function autoTheme()
         SolarizedLuaTheme('light')
         -- RosePineTheme('dawn')
     else
-        SolarizedLuaTheme('light')
-        -- TokyoNight('light')
-        -- MaterialTheme('lighter')
-        -- MaterialTheme('deep ocean')
-        -- RosePineTheme('dawn')
-        -- fallbackTheme()
+        fallbackTheme()
     end
 end
 autoTheme()
