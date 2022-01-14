@@ -90,7 +90,7 @@ require'packer'.startup(function(use)
             }
         end
     }
-    use 'glepnir/lspsaga.nvim'
+    use 'mhinz/vim-signify'
     use 'theHamsta/nvim-dap-virtual-text'
     use {
         'simrat39/rust-tools.nvim',
