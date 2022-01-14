@@ -94,7 +94,12 @@ require'packer'.startup(function(use)
     use 'theHamsta/nvim-dap-virtual-text'
     use {
         'simrat39/rust-tools.nvim',
-        config = function() require'rust-tools'.setup {} end
+        requires = {'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap'},
+        config = function()
+            require'rust-tools'.setup {
+                server = {on_attach = require'common'.on_attach}
+            }
+        end
     }
     use {
         'akinsho/flutter-tools.nvim',
