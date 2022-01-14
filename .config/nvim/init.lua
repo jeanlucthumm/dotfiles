@@ -141,14 +141,13 @@ require'packer'.startup(function(use)
         end
     }
     use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install'}
-    use 'mhinz/vim-signify'
     use {
         'nvim-telescope/telescope.nvim',
         requires = {{'nvim-lua/plenary.nvim'}},
         config = function()
             require'telescope'.setup {
                 defaults = {
-                    path_display = {"tail"},
+                    path_display = {"smart"},
                     mappings = {
                         i = {
                             ['<C-k>'] = 'move_selection_previous',
