@@ -15,6 +15,7 @@ application/x-extension-shtml=firefox.desktop;
 application/xhtml+xml=firefox.desktop;
 application/x-extension-xhtml=firefox.desktop;
 application/x-extension-xht=firefox.desktop;
+inode/directory=org.gnome.Nautilus.desktop;
 
 [Default Applications]
 video/mp4=mpv.desktop
@@ -30,3 +31,4 @@ application/x-extension-shtml=firefox.desktop
 application/xhtml+xml=firefox.desktop
 application/x-extension-xhtml=firefox.desktop
 application/x-extension-xht=firefox.desktop
+inode/directory=org.gnome.Nautilus.desktop
