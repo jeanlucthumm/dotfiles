@@ -361,6 +361,12 @@ ncmap('<Leader>hu', 'SignifyHunkUndo')
 ncmap('<Leader>hd', 'SignifyHunkDiff')
 ncmap('<Leader>hq', 'GitGutterQuickFix')
 ncmap('<Leader>hQ', 'GitGutterQuickFixCurrentFile')
+-- <Leader>d    debugging
+ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
+ncmap('<Leader>dco', 'lua require"dapui".open()')
+ncmap('<Leader>dcl', 'lua require"dapui".close()')
+ncmap('<Leader>dt', 'lua require"dap".terminate()')
+ncmap('<Leader>ds', 'lua require"dap".continue()')
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
 ncmap('<C-l>', 'tabn')
@@ -377,8 +383,6 @@ ncmap('<A-f>', 'NvimTreeFindFile')
 ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
-ncmap('<F8>', 'lua require"dap".toggle_breakpoint()')
-ncmap('<F12>', 'lua require"dap".continue()')
 
 ---- Filetype overrides
 api.nvim_exec([[
