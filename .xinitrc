@@ -1,8 +1,6 @@
-# Tune keyboard delay and repeat
-xset r rate 150 80
-
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
+userprofile=$HOME/.xprofile
 sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 
@@ -15,6 +13,9 @@ if [ -f $sysresources ]; then
 fi
 if [ -f $sysmodmap ]; then
     xmodmap $sysmodmap
+fi
+if [ -f $userprofile ]; then
+    . $userprofile
 fi
 if [ -f "$userresources" ]; then
     xrdb -merge "$userresources"

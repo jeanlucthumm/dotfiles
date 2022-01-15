@@ -1,0 +1,2 @@
+# Tune keyboard delay and repeat
+xset r rate 150 80
