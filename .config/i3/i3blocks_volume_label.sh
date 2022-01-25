@@ -1,6 +1,4 @@
 #!/bin/bash
-VOL=`pamixer --get-volume`
+VOL=`pactl list sinks | grep Volume | head -n1 | awk '{print $5}'`
 
-echo "♪ $VOL%"	# full_text
-echo "♪"		# short_text
-echo \#`$HOME/bin/color-mid $1 $2 $VOL`
+echo "♪ $VOL"	# full_text
