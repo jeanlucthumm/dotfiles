@@ -5,6 +5,12 @@ lsp_status.register_progress()
 
 local M = {}
 
+function M.hover()
+    if vim.diagnostic.open_float() == nil then
+        vim.lsp.buf.hover()
+    end
+end
+
 function M.on_attach(client, bufnr)
     -- Sets up LSP keybindings when LSP attaches to the buffer
     local function bnmap(lhs, rhs, ...)
@@ -23,10 +29,9 @@ function M.on_attach(client, bufnr)
         silent = true
     }
     bnmap("gd", "vim.lsp.buf.definition()", opts)
-    bnmap("K", "vim.lsp.buf.hover()", opts)
+    bnmap("K", "require'common'.hover()", opts)
     bnmap("<Leader>r", "vim.lsp.buf.rename()", opts)
     bnmap("<Leader>ks", "vim.lsp.buf.signature_help()", opts)
-    bnmap("<Leader>kl", "vim.lsp.diagnostic.show_line_diagnostic()", opts)
     bnmap("<Leader>kp", "vim.lsp.diagnostic.goto_prev()", opts)
     bnmap("<Leader>kn", "vim.lsp.diagnostic.goto_next()", opts)
     bnmap("<Leader>wl", "PrintTable(vim.lsp.buf.list_workspace_folders())", opts)
