@@ -353,13 +353,8 @@ ncmap('<Leader>bb', 'BookmarkToggle')
 ncmap('<Leader>ba', 'BookmarkAnnotate')
 ncmap('<Leader>bo', 'Telescope vim_bookmarks all')
 -- <Leader>h    hunks
-ncmap('<Leader>hp', 'GitGutterPrevHunk')
-ncmap('<Leader>hn', 'GitGutterNextHunk')
-ncmap('<Leader>hs', 'GitGutterStageHunk')
 ncmap('<Leader>hu', 'SignifyHunkUndo')
 ncmap('<Leader>hd', 'SignifyHunkDiff')
-ncmap('<Leader>hq', 'GitGutterQuickFix')
-ncmap('<Leader>hQ', 'GitGutterQuickFixCurrentFile')
 -- <Leader>d    debugging
 ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
 ncmap('<Leader>dco', 'lua require"dapui".open()')
