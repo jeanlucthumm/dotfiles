@@ -41,6 +41,7 @@ require'packer'.startup(function(use)
             }
         end
     }
+    use 'nvim-treesitter/playground'
     use 'L3MON4D3/LuaSnip'
     use {
         'hrsh7th/nvim-cmp',
@@ -126,6 +127,7 @@ require'packer'.startup(function(use)
     use 'rose-pine/neovim'
     use 'ishan9299/nvim-solarized-lua'
     use 'folke/tokyonight.nvim'
+    use 'tjdevries/colorbuddy.nvim'
 
     -- UI
     use 'junegunn/fzf'
@@ -280,10 +282,10 @@ function TokyoNight(background)
 end
 local function fallbackTheme()
     -- SolarizedLuaTheme('light')
-    TokyoNight('light')
+    -- TokyoNight('light')
     -- MaterialTheme('lighter')
     -- MaterialTheme('deep ocean')
-    -- RosePineTheme('dawn')
+    RosePineTheme('dawn')
 end
 local function autoTheme()
     if env.TERM == 'xterm-kitty' then
