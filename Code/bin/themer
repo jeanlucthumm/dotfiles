@@ -68,6 +68,7 @@ def handle_gtk(theme: str):
 
     subprocess.run(["killall", "-HUP", "xsettingsd"])
 
+
 def handle_wallpaper(theme: str):
     screen = get_screen_size()
     path = None
@@ -88,7 +89,13 @@ def handle_wallpaper(theme: str):
     subprocess.run(["feh", "--bg-scale", str(path)])
 
 
-HANDLERS = {"kitty": handle_kitty, "gtk": handle_gtk, "wallpaper": handle_wallpaper}
+def handle_fish(theme: str):
+    if theme not in AVAILABLE_THEMES:
+        raise ThemeError(ERR_UNKNOWN_THEME)
+    subprocess.run(["fish", str(CONFIG / f"fish/theme/{theme}.fish")])
+
+
+HANDLERS = {"kitty": handle_kitty, "gtk": handle_gtk, "wallpaper": handle_wallpaper, "fish": handle_fish}
 
 
 def main():
