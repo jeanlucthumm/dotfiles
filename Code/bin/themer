@@ -30,6 +30,17 @@ def search_and_replace(path: str, search: str, replace: str):
         f.truncate()
 
 
+def get_screen_size() -> str:
+    output = subprocess.getoutput("xrandr")
+    for line in output.splitlines():
+        if " connected" in line:
+            if "3440x1440" in line:
+                return "wide"
+            if "3840x2160" in line:
+                return ""
+    raise ValueError("could not determine screen size:\n" + output)
+
+
 def handle_kitty(theme: str):
     if theme not in ["solarized-light", "solarized-dark"]:
         raise ThemeError(ERR_UNKNOWN_THEME)
@@ -58,11 +69,19 @@ def handle_gtk(theme: str):
     subprocess.run(["killall", "-HUP", "xsettingsd"])
 
 def handle_wallpaper(theme: str):
+    screen = get_screen_size()
+    path = None
     if theme == "solarized-light":
-        path = HOME / "media/flower.jpg"
+        if screen == "4k":
+            path = HOME / "media/flower.jpg"
+        elif screen == "wide":
+            path = HOME / "media/wallpapers/wide/solarized-light.png"
     elif theme == "solarized-dark":
-        path = HOME / "media/arch-dark.png"
-    else:
+        if screen == "4k":
+            path = HOME / "media/arch-dark.png"
+        elif screen == "wide":
+            path = HOME / "media/wallpapers/wide/solarized-dark.png"
+    if path is None:
         raise ThemeError(ERR_UNKNOWN_THEME)
 
     subprocess.run(["ln", "-sf", path, str(HOME / ".config/default_wallpaper")])
