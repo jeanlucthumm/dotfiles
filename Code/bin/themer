@@ -37,7 +37,7 @@ def get_screen_size() -> str:
             if "3440x1440" in line:
                 return "wide"
             if "3840x2160" in line:
-                return ""
+                return "4k"
     raise ValueError("could not determine screen size:\n" + output)
 
 
@@ -48,6 +48,7 @@ def handle_kitty(theme: str):
     search_and_replace(path, "^include.*$", f"include theme-{theme}.conf")
     search_and_replace(path, "^env.*$", f"env KITTY_THEME={theme}")
     subprocess.run(["kitty", "@", "set-colors", "-a", "-c", path])
+    subprocess.run(["kitty", "@", "env", f"KITTY_THEME={theme}"])
 
 
 def handle_gtk(theme: str):
@@ -63,8 +64,8 @@ def handle_gtk(theme: str):
         raise ThemeError(ERR_UNKNOWN_THEME)
 
     path = str(CONFIG / "xsettingsd")
-    search_and_replace(path, "^Net/ThemeName.*$", f"Net/ThemeName \"{name}\"")
-    search_and_replace(path, "^Net/IconThemeName.*$", f"Net/IconThemeName \"{icon}\"")
+    search_and_replace(path, "^Net/ThemeName.*$", f'Net/ThemeName "{name}"')
+    search_and_replace(path, "^Net/IconThemeName.*$", f'Net/IconThemeName "{icon}"')
 
     subprocess.run(["killall", "-HUP", "xsettingsd"])
 
@@ -95,7 +96,22 @@ def handle_fish(theme: str):
     subprocess.run(["fish", str(CONFIG / f"fish/theme/{theme}.fish")])
 
 
-HANDLERS = {"kitty": handle_kitty, "gtk": handle_gtk, "wallpaper": handle_wallpaper, "fish": handle_fish}
+def handle_wal(theme: str):
+    if theme == "solarized-light":
+        subprocess.run(["wal", "--theme", "custom-solarized", "-l"])
+    elif theme == "solarized-dark":
+        subprocess.run(["wal", "--theme", "solarized"])
+    else:
+        raise ThemeError(ERR_UNKNOWN_THEME)
+
+
+HANDLERS = {
+    "kitty": handle_kitty,
+    "gtk": handle_gtk,
+    "wallpaper": handle_wallpaper,
+    "fish": handle_fish,
+    "wal": handle_wal,
+}
 
 
 def main():
