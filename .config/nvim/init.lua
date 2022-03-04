@@ -163,7 +163,6 @@ require'packer'.startup(function(use)
             require'telescope'.load_extension('flutter')
         end
     }
-    use 'simrat39/symbols-outline.nvim'
     use 'tom-anders/telescope-vim-bookmarks.nvim'
     use 'nvim-lualine/lualine.nvim' -- configured in the theme section
     use 'mhinz/vim-startify'
@@ -283,9 +282,9 @@ end
 local function fallbackTheme()
     -- SolarizedLuaTheme('light')
     -- TokyoNight('light')
-    -- MaterialTheme('lighter')
+    MaterialTheme('lighter')
     -- MaterialTheme('deep ocean')
-    RosePineTheme('dawn')
+    -- RosePineTheme('dawn')
 end
 local function autoTheme()
     if env.TERM == 'xterm-kitty' then
