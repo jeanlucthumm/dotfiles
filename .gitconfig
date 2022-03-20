@@ -17,3 +17,6 @@
 	process = git-lfs filter-process
 [credential]
 	helper = cache
+[alias]
+	d = diff
+	s = status
