@@ -29,11 +29,12 @@ function M.on_attach(client, bufnr)
         silent = true
     }
     bnmap("gd", "vim.lsp.buf.definition()", opts)
-    bnmap("K", "require'common'.hover()", opts)
+    bnmap("K", "vim.lsp.buf.hover()", opts)
     bnmap("<Leader>r", "vim.lsp.buf.rename()", opts)
     bnmap("<Leader>ks", "vim.lsp.buf.signature_help()", opts)
     bnmap("<Leader>kp", "vim.lsp.diagnostic.goto_prev()", opts)
     bnmap("<Leader>kn", "vim.lsp.diagnostic.goto_next()", opts)
+    bnmap("<Leader>kk", "vim.diagnostic.open_float()", opts)
     bnmap("<Leader>wl", "PrintTable(vim.lsp.buf.list_workspace_folders())", opts)
 
     -- Capability specific commands

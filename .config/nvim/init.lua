@@ -47,6 +47,7 @@ require'packer'.startup(function(use)
         'hrsh7th/nvim-cmp',
         requires = {
             'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
+            'hrsh7th/cmp-nvim-lsp-signature-help',
             'saadparwaiz1/cmp_luasnip', 'neovim/nvim-lspconfig',
             'L3MON4D3/LuaSnip', 'onsails/lspkind-nvim'
         },
@@ -85,7 +86,8 @@ require'packer'.startup(function(use)
                     end, {"i", "s"})
                 },
                 sources = cmp.config.sources {
-                    {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'}
+                    {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
+                    {name = 'nvim_lsp_signature_help'}
                 },
                 formatting = {format = require'lspkind'.cmp_format()}
             }
@@ -283,7 +285,7 @@ local function fallbackTheme()
     -- SolarizedLuaTheme('light')
     -- TokyoNight('light')
     MaterialTheme('lighter')
-    -- MaterialTheme('deep ocean')
+    -- MaterialTheme('oceanic')
     -- RosePineTheme('dawn')
 end
 local function autoTheme()
