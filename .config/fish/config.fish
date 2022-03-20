@@ -49,11 +49,13 @@ alias vim="nvim"
 alias cat="bat"
 alias ls="exa"
 alias docker="sudo docker"
+alias ssh="TERM=xterm-256color /usr/bin/ssh"
 
 alias so="source $CONFIG/fish/config.fish"
 alias fishconfig="$EDITOR $CONFIG/fish/config.fish"
 alias cdf='cd (fd -t d . ~ | fzf)'
 alias venv="source .venv/bin/activate.fish"
+alias g="git"
 
 
 ### ===========================================================================
@@ -75,7 +77,7 @@ function cdv
     if test -e "$CODE/$argv[1]"
       cd "$CODE/$argv[1]"
     else
-      cd (fd -1a "$argv[1]" "$CODE")
+      cd (fd -1a -t d "$argv[1]" "$CODE")
     end
   else
     cd $CODE
