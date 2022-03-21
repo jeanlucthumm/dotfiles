@@ -126,7 +126,15 @@ require'packer'.startup(function(use)
     use 'jeanlucthumm/vim-solarized8'
     use 'morhetz/gruvbox'
     use 'marko-cerovac/material.nvim'
-    use 'rose-pine/neovim'
+    use {
+        'rose-pine/neovim',
+        config = function()
+            require'rose-pine'.setup {
+                dark_variant = 'moon',
+                disable_italics = true
+            }
+        end
+    }
     use 'ishan9299/nvim-solarized-lua'
     use 'folke/tokyonight.nvim'
     use 'tjdevries/colorbuddy.nvim'
@@ -270,9 +278,7 @@ function MaterialTheme(style) -- prefer 'deep ocean'
     lualine_theme = 'material-nvim'
     cmd('colorscheme material')
 end
-function RosePineTheme(style) -- prefer 'dawn' light, 'moon' dark
-    g.rose_pine_variant = style
-    g.rose_pine_disable_italics = true
+function RosePineTheme()
     lualine_theme = 'rose-pine'
     cmd('colorscheme rose-pine')
 end
@@ -292,7 +298,7 @@ local function autoTheme()
     if env.TERM == 'xterm-kitty' then
         if env.KITTY_THEME == 'solarized-light' then
             -- MaterialTheme('lighter')
-            RosePineTheme('dawn')
+            RosePineTheme()
             -- SolarizedLuaTheme('light')
         elseif env.KITTY_THEME == 'solarized-dark' then
             MaterialTheme('deep ocean')
