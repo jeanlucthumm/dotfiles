@@ -47,9 +47,8 @@ require'packer'.startup(function(use)
         'hrsh7th/nvim-cmp',
         requires = {
             'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
-            'hrsh7th/cmp-nvim-lsp-signature-help',
-            'saadparwaiz1/cmp_luasnip', 'neovim/nvim-lspconfig',
-            'L3MON4D3/LuaSnip', 'onsails/lspkind-nvim'
+            'hrsh7th/cmp-nvim-lsp-signature-help', 'saadparwaiz1/cmp_luasnip',
+            'neovim/nvim-lspconfig', 'L3MON4D3/LuaSnip', 'onsails/lspkind-nvim'
         },
         config = function()
             local cmp = require 'cmp'
@@ -120,6 +119,7 @@ require'packer'.startup(function(use)
 
         end
     }
+    use 'rhysd/vim-clang-format'
 
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
@@ -371,7 +371,8 @@ map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
 map('t', '<C-l>', '<C-\\><C-l><Cmd><CR>')
 map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
 ncmap('<C-p>', 'Telescope commands')
-ncmap('<C-e>', 'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
+ncmap('<C-e>',
+      'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 ncmap('<C-q>', 'Telescope quickfix')
 ncmap('<C-A-e>', 'Telescope find_files')
 ncmap('<A-1>', 'NvimTreeToggle')
@@ -404,6 +405,13 @@ augroup rust_group
   au FileType rust nnoremap tl :TestLast<CR>
   au FileType rust nnoremap tf :TestFile<CR>
   au FileType rust let g:auto_save=1
+augroup END
+ ]], false)
+
+api.nvim_exec([[
+augroup proto_group
+  au!
+  au FileType proto nmap <Leader>f <Cmd>ClangFormat<CR>
 augroup END
 ]], false)
 
