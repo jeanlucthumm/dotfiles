@@ -20,7 +20,7 @@ if not contains "YAY" $STEPS
   echo $LOG "Setting up yay"
 
   sudo /usr/bin/pacman -S --needed git base-devel
-  and git clone https://aur.archlinux.org/yay.git
+  and git clone -f https://aur.archlinux.org/yay.git
   and cd yay
   and makepkg -si
   and cd ..
