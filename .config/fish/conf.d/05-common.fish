@@ -1,6 +1,10 @@
 function generic_install
   if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
-    pacman -S --needed $argv
+    if type -q yay
+      yay -S --needed $argv
+    else
+      sudo pacman -S --needed $argv
+    end
   else if [ "$OS" = "Darwin" ]
     brew install $argv
   else
