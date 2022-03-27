@@ -15,18 +15,18 @@ else
   touch $STEP_FILE
 end
 
-if not contains "YAY" $STEPS
+if not contains "PARU" $STEPS
   and [ "$DISTRO" = "Arch" ]
-  echo $LOG "Setting up yay"
+  echo $LOG "Setting up paru"
 
   sudo /usr/bin/pacman -S --needed git base-devel
-  and git clone -f https://aur.archlinux.org/yay.git
-  and cd yay
+  and git clone -f https://aur.archlinux.org/paru.git
+  and cd paru
   and makepkg -si
   and cd ..
-  and rm -rf yay
+  and rm -rf paru
 
-  and echo "YAY" >> $STEP_FILE
+  and echo "PARU" >> $STEP_FILE
 end
 
 if not contains "RUST" $STEPS
