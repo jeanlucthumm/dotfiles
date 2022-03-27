@@ -119,7 +119,6 @@ require'packer'.startup(function(use)
 
         end
     }
-    use 'rhysd/vim-clang-format'
 
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
@@ -208,6 +207,7 @@ require'packer'.startup(function(use)
     use 'bmundt6/workflowish'
     use 'psliwka/vim-smoothie'
     use 'rhysd/conflict-marker.vim'
+    use 'rhysd/vim-clang-format'
 
     -- Functional
     use 'MattesGroeger/vim-bookmarks'
