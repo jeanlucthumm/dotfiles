@@ -1,6 +1,6 @@
 function generic_install
   if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
-    if type -q yay
+    if type -q paru
       paru -S --needed $argv
     else
       sudo pacman -S --needed $argv
