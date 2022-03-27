@@ -230,8 +230,6 @@ bindsym $mod+Shift+t mode "power"
 # volume & music. signal 10 tells i3blocks to refresh the volume
 bindsym $mod+p exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3% && pkill -SIGRTMIN+10 i3blocks
 bindsym $mod+o exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3% && pkill -SIGRTMIN+10 i3blocks
-bindsym $mod+Shift+p exec --no-startup-id spotifycli --next
-bindsym $mod+Shift+o exec --no-startup-id spotfiycli --prev
 
 # screenshotting to clipboard
 bindsym $mod+Shift+s exec maim -s -u | xclip -selection clipboard -t image/png -i
