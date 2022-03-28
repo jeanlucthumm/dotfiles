@@ -232,7 +232,11 @@ g.mapleader = ' ' -- sets <Leader> to <space>
 g.startify_change_to_dir = 0 -- do not change cwd when opening files
 g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
 g.gitgutter_map_keys = 0 -- disable default keybindings for gitgutter
+g.foldlevel=99 -- no folds on file open
 vim.v['test#strategy'] = 'neomake'
+vim.wo.foldmethod = 'expr' -- expression based folding to enable treesitter
+vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
+vim.wo.foldlevel=99 -- no folds on file open
 
 ---- Neovim options
 opt.tabstop = 2
