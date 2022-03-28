@@ -282,7 +282,12 @@ function MaterialTheme(style) -- prefer 'deep ocean'
     lualine_theme = 'material-nvim'
     cmd('colorscheme material')
 end
-function RosePineTheme()
+function RosePineTheme(style) -- prefer 'dawn' light, 'moon' dark
+    if style == 'dawn' then
+        opt.background = 'light'
+    else
+        opt.background = 'dark'
+    end
     lualine_theme = 'rose-pine'
     cmd('colorscheme rose-pine')
 end
@@ -294,9 +299,9 @@ end
 local function fallbackTheme()
     -- SolarizedLuaTheme('light')
     -- TokyoNight('light')
-    MaterialTheme('lighter')
+    -- MaterialTheme('lighter')
     -- MaterialTheme('oceanic')
-    -- RosePineTheme('dawn')
+    RosePineTheme('dawn')
 end
 local function autoTheme()
     if env.TERM == 'xterm-kitty' then
