@@ -68,7 +68,7 @@ require'packer'.startup(function(use)
                     ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
                                                 {'i', 'c'}),
                     ['<CR>'] = cmp.mapping.confirm({select = true}),
-                    ['<C-y>'] = cmp.mapping(cmp.mapping.close(), {'i', 'c'}),
+                    ['<C-e>'] = cmp.mapping(cmp.mapping.close(), {'i'}),
                     ['<Tab>'] = cmp.mapping(function(fallback)
                         if luasnip.expand_or_jumpable() then
                             luasnip.expand_or_jump()
