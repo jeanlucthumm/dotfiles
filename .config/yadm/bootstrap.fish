@@ -20,7 +20,7 @@ if not contains "PARU" $STEPS
   echo $LOG "Setting up paru"
 
   sudo /usr/bin/pacman -S --needed git base-devel
-  and git clone -f https://aur.archlinux.org/paru.git
+  and git clone https://aur.archlinux.org/paru.git
   and cd paru
   and makepkg -si
   and cd ..
