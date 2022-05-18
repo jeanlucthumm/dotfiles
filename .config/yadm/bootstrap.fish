@@ -19,7 +19,8 @@ if not contains "PARU" $STEPS
   and [ "$DISTRO" = "Arch" ]
   echo $LOG "Setting up paru"
 
-  sudo /usr/bin/pacman -S --needed git base-devel
+  generic_install clang
+  and sudo /usr/bin/pacman -S --needed git base-devel
   and git clone https://aur.archlinux.org/paru.git
   and cd paru
   and makepkg -si
