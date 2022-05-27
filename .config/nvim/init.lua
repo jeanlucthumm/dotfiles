@@ -349,6 +349,8 @@ map('v', '<Leader>y', '\'*y') -- copy to system clipboard
 nmap('gt', ':tabe<CR>:term<CR>i')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
+-- c
+nmap('cp', ':let @" = expand("%:p")<CR>')  -- yank file path
 -- <Leader>
 ncmap('<Leader>q', 'qall')
 ncmap('<Leader>o', 'Telescope lsp_document_symbols')
