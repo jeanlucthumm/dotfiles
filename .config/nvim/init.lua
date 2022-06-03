@@ -186,7 +186,11 @@ require'packer'.startup(function(use)
         config = function()
             require'nvim-lua-format'.setup {
                 save_if_unsaved = true,
-                default = {chop_down_table = true}
+                default = {
+                    chop_down_table = true,
+                    indent_width = 4,
+                    continuation_indent_width = 4
+                }
             }
         end
     }
