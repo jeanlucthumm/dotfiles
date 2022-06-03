@@ -30,7 +30,9 @@ function M.on_attach(client, bufnr)
     bnmap("<Leader>kp", "vim.diagnostic.goto_prev()", opts)
     bnmap("<Leader>kn", "vim.diagnostic.goto_next()", opts)
     bnmap("<Leader>kk", "vim.diagnostic.open_float()", opts)
-    bnmap("<Leader>wl", "PrintTable(vim.lsp.buf.list_workspace_folders())", opts)
+    bnmap("<Leader>wl",
+          "require'common'.print_table(vim.lsp.buf.list_workspace_folders())",
+          opts)
     bnmap("<Leader>a", "vim.lsp.buf.code_action({apply=true})", opts)
 
     -- Capability specific commands
@@ -51,6 +53,19 @@ function M.on_attach(client, bufnr)
         -- CodeLens provides extra actions like "Run Test"
         -- under lang specific unit tests
         bnmap("<F11>", "vim.lsp.codelens.run()", opts)
+    end
+end
+
+function M.print_table(o)
+    if type(o) == 'table' then
+        local s = '{ '
+        for k, v in pairs(o) do
+            if type(k) ~= 'number' then k = '"' .. k .. '"' end
+            s = s .. '[' .. k .. '] = ' .. M.print_table(v) .. ','
+        end
+        return s .. '} '
+    else
+        return tostring(o)
     end
 end
 
