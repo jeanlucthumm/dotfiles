@@ -212,6 +212,14 @@ require'packer'.startup(function(use)
     use 'psliwka/vim-smoothie'
     use 'rhysd/conflict-marker.vim'
     use 'rhysd/vim-clang-format'
+    use {
+        'RishabhRD/nvim-lsputils',
+        requires = {'RishabhRD/popfix'},
+        config = function()
+            vim.lsp.handlers['textDocument/codeAction'] =
+                require'lsputil.codeAction'.code_action_handler
+        end
+    }
 
     -- Functional
     use 'MattesGroeger/vim-bookmarks'
