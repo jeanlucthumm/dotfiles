@@ -324,7 +324,7 @@ local function autoTheme()
     if env.TERM == 'xterm-kitty' then
         if env.KITTY_THEME == 'solarized-light' then
             -- MaterialTheme('lighter')
-            RosePineTheme()
+            RosePineTheme('dawn')
             -- SolarizedLuaTheme('light')
         elseif env.KITTY_THEME == 'solarized-dark' then
             MaterialTheme('deep ocean')
