@@ -12,7 +12,8 @@ if [ $OS = "Linux" ]
 
   set -x CC $BIN/clang
   set -x CXX $BIN/clang++
-  set -x ANDROID_HOME $CODE/android-sdk
+  set -x ANDROID_HOME /opt/android-sdk
+  set -x CHROME_EXECUTABLE /usr/bin/chromium
 
 else if [ $OS = "Darwin" ]
 
