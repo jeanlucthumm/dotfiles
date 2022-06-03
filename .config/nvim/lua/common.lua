@@ -31,6 +31,7 @@ function M.on_attach(client, bufnr)
     bnmap("<Leader>kn", "vim.diagnostic.goto_next()", opts)
     bnmap("<Leader>kk", "vim.diagnostic.open_float()", opts)
     bnmap("<Leader>wl", "PrintTable(vim.lsp.buf.list_workspace_folders())", opts)
+    bnmap("<Leader>a", "vim.lsp.buf.code_action({apply=true})", opts)
 
     -- Capability specific commands
     if client.server_capabilities.documentHighlightProvider then
