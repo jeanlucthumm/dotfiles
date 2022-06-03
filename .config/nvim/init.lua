@@ -264,8 +264,9 @@ opt.splitright = true
 opt.hidden = true
 opt.mouse = 'a'
 opt.updatetime = 500
-opt.guifont = 'JetBrains_Mono_Medium_Nerd_Font_Complete:h11'
+opt.guifont = 'JetBrainsMono Nerd Font:h8'
 opt.completeopt = 'menu,menuone,noselect'
+opt.showmode = false
 if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
 
 ---- Theme
