@@ -20,3 +20,5 @@
 [alias]
 	d = diff
 	s = status
+[safe]
+	directory = /opt/flutter
