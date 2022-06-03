@@ -226,6 +226,10 @@ require'packer'.startup(function(use)
     use 'neomake/neomake'
     use 'vim-test/vim-test'
     use '907th/vim-auto-save'
+    use {
+        'ThePrimeagen/harpoon',
+        config = function() require'telescope'.load_extension('harpoon') end
+    }
 
     if PackerBootstrap then require('packer').sync() end
 end) -- packer
@@ -384,15 +388,22 @@ ncmap('<Leader>co', 'copen')
 ncmap('<Leader>bb', 'BookmarkToggle')
 ncmap('<Leader>ba', 'BookmarkAnnotate')
 ncmap('<Leader>bo', 'Telescope vim_bookmarks all')
--- <Leader>h    hunks
+-- <Leader>h    hunks + harpoon + help
 ncmap('<Leader>hu', 'SignifyHunkUndo')
 ncmap('<Leader>hd', 'SignifyHunkDiff')
+ncmap('<Leader>ha', 'lua require"harpoon.mark".add_file()')
+ncmap('<Leader>ho', 'lua require"harpoon.ui".toggle_quick_menu()')
 -- <Leader>d    debugging
 ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
 ncmap('<Leader>dco', 'lua require"dapui".open()')
 ncmap('<Leader>dcl', 'lua require"dapui".close()')
 ncmap('<Leader>dt', 'lua require"dap".terminate()')
 ncmap('<Leader>ds', 'lua require"dap".continue()')
+-- <Leader>l    harpoon
+ncmap('<Leader>lh', 'lua require"harpoon.ui".nav_file(1)')
+ncmap('<Leader>lj', 'lua require"harpoon.ui".nav_file(2)')
+ncmap('<Leader>lk', 'lua require"harpoon.ui".nav_file(3)')
+
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
 ncmap('<C-l>', 'tabn')
@@ -406,6 +417,7 @@ ncmap('<C-q>', 'Telescope quickfix')
 ncmap('<C-A-e>', 'Telescope find_files')
 ncmap('<A-1>', 'NvimTreeToggle')
 ncmap('<A-f>', 'NvimTreeFindFile')
+ncmap('<C-s>', 'Telescope harpoon marks')
 -- <F*>
 ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
