@@ -67,6 +67,10 @@ require'packer'.startup(function(use)
                                             {'i', 'c'}),
                     ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
                                                 {'i', 'c'}),
+                    ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(),
+                                            {'i', 'c'}),
+                    ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(4),
+                                            {'i', 'c'}),
                     ['<CR>'] = cmp.mapping.confirm({select = true}),
                     ['<C-e>'] = cmp.mapping(cmp.mapping.close(), {'i'}),
                     ['<Tab>'] = cmp.mapping(function(fallback)
