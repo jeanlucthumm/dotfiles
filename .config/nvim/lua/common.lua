@@ -5,6 +5,15 @@ lsp_status.register_progress()
 
 local M = {}
 
+function M.map(mode, lhs, rhs, opts)
+    local options = {noremap = true}
+    if opts then options = vim.tbl_extend('force', options, opts) end
+    api.nvim_set_keymap(mode, lhs, rhs, options)
+end
+function M.nmap(...) M.map('n', ...) end
+function M.ncmap(lhs, rhs, ...) M.nmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
+function M.imap(...) M.map('i', ...) end
+
 function M.hover()
     if vim.diagnostic.open_float() == nil then vim.lsp.buf.hover() end
 end

@@ -355,14 +355,9 @@ require'lualine'.setup {
 }
 
 ---- Keymap (note that some keys are defined in _lsp_config.lua)
-local function map(mode, lhs, rhs, opts)
-    local options = {noremap = true}
-    if opts then options = vim.tbl_extend('force', options, opts) end
-    api.nvim_set_keymap(mode, lhs, rhs, options)
-end
-local function nmap(...) map('n', ...) end
-local function ncmap(lhs, rhs, ...) nmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
-local function imap(...) map('i', ...) end
+local map = require'common'.map
+local nmap = require'common'.nmap
+local ncmap = require'common'.ncmap
 
 -- visual
 map('v', '<Leader>y', '\'*y') -- copy to system clipboard
