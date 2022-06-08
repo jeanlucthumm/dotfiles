@@ -22,8 +22,8 @@ set $browser "google-chrome-stable"
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
-output eDP-1 pos 0 0
-output "Unknown U2790B 0x00009BC0" pos 1920 0
+output eDP-1 pos 3840 800
+output "Unknown U2790B 0x00009BC0" pos 0 0
 
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
@@ -34,6 +34,9 @@ input type:keyboard {
   xkb_numlock enabled
 }
 
+# Disable laptop screen on lid close
+bindswitch --reload --locked lid:on output eDP-1 disable
+bindswitch --reload --locked lid:off output eDP-1 enable
 
 # =============================================================================
 # COSMETIC
