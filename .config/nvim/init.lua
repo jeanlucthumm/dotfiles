@@ -213,7 +213,7 @@ require'packer'.startup(function(use)
         end
     }
     use 'bmundt6/workflowish'
-    use 'psliwka/vim-smoothie'
+    use {'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end}
     use 'rhysd/conflict-marker.vim'
     use 'rhysd/vim-clang-format'
     use {
