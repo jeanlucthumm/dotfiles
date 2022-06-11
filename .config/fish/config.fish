@@ -22,9 +22,6 @@ set -l OS (uname)
 if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   alias pacman="paru"
 
-  alias dim="xrandr --output DP-1 --brightness 0.5"
-  alias undim="xrandr --output DP-1 --brightness 1.0"
-  alias clip="xclip -selection clipboard"
   alias sysyadm="sudo yadm -Y /etc/yadm"
   alias scli="scli -s"
   alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
@@ -37,6 +34,9 @@ if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   if pgrep -x "i3" > /dev/null
     alias i3config="$EDITOR $CONFIG/i3/config"
     alias picomconfig="$EDITOR $CONFIG/picom.conf"
+    alias dim="xrandr --output DP-1 --brightness 0.5"
+    alias undim="xrandr --output DP-1 --brightness 1.0"
+    alias clip="xclip -selection clipboard"
   end
   if pgrep -x "sway" > /dev/null
     alias i3config="$EDITOR $CONFIG/sway/config"
