@@ -20,5 +20,6 @@
 [alias]
 	d = diff
 	s = status
+	de = diff --cached
 [safe]
 	directory = /opt/flutter
