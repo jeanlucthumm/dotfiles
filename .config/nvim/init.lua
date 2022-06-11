@@ -232,7 +232,10 @@ require'packer'.startup(function(use)
     use '907th/vim-auto-save'
     use {
         'ThePrimeagen/harpoon',
-        config = function() require'telescope'.load_extension('harpoon') end
+        config = function()
+            require'harpoon'.setup {global_settings = {enter_on_sendcmd = true}}
+            require'telescope'.load_extension('harpoon')
+        end
     }
 
     if PackerBootstrap then require('packer').sync() end
@@ -360,13 +363,13 @@ local nmap = require'common'.nmap
 local ncmap = require'common'.ncmap
 
 -- visual
-map('v', '<Leader>y', '\'*y') -- copy to system clipboard
+map('v', '<Leader>y', '\'+y') -- copy to system clipboard
 -- g
 nmap('gt', ':tabe<CR>:term<CR>i')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
 -- c
-nmap('cp', ':let @" = expand("%:p")<CR>')  -- yank file path
+nmap('cp', ':let @" = expand("%:p")<CR>') -- yank file path
 -- <Leader>
 ncmap('<Leader>q', 'qall')
 ncmap('<Leader>o', 'Telescope lsp_document_symbols')
