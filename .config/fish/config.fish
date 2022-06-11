@@ -26,6 +26,8 @@ if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   alias scli="scli -s"
   alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
   alias cp="xcp"
+  alias dark="themer solarized-dark"
+  alias light="themer solarized-light"
 
   if [ $TERM = xterm-kitty ]
     alias icat="kitty +kitten icat"
@@ -46,6 +48,7 @@ end
 
 # Default overrides
 alias vim="nvim"
+alias gvim="neovide --multigrid"
 alias cat="bat"
 alias ls="exa"
 alias docker="sudo docker"
