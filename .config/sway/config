@@ -238,9 +238,11 @@ mode "power" {
 }
 bindsym $mod+Shift+t mode "power"
 
-# volume & music. signal 10 tells i3blocks to refresh the volume
-bindsym $mod+p exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3% && pkill -SIGRTMIN+10 i3blocks
-bindsym $mod+o exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3% && pkill -SIGRTMIN+10 i3blocks
+# volume & music
+bindsym $mod+p exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3%
+bindsym $mod+o exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3%
 
 # screenshotting to clipboard
 bindsym $mod+Shift+s exec maim -s -u | xclip -selection clipboard -t image/png -i
