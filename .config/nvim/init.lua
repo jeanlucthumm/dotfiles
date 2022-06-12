@@ -6,6 +6,8 @@ local env = vim.env
 local fn = vim.fn
 local cmd = vim.cmd
 
+local has_google, google = pcall(require, "google")
+
 --- Packer
 local packer_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(packer_path)) > 0 then
@@ -238,6 +240,7 @@ require'packer'.startup(function(use)
         end
     }
 
+    if has_google then google.packer(use) end
     if PackerBootstrap then require('packer').sync() end
 end) -- packer
 
@@ -472,4 +475,6 @@ function HighlightGroups()
 end
 cmd('command! -nargs=0 HighlightGroups lua HighlightGroups()')
 
-pcall(require, 'google')
+if has_google then
+  google.setup()
+end
