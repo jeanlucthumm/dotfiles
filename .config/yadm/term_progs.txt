@@ -13,7 +13,6 @@ lua
 lua-format
 luarocks
 make
-meld
 neovim
 nmap
 npm
