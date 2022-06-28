@@ -5,5 +5,7 @@ font_size 9.0
 enable_audio_bell no
 window_padding_width 8
 allow_remote_control yes
+repaint_delay 6
+input_delay 1
 
 env KITTY_THEME=solarized-light
