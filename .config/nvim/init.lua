@@ -154,7 +154,10 @@ require'packer'.startup(function(use)
     use {
         'kyazdani42/nvim-tree.lua',
         config = function()
-            require'nvim-tree'.setup {update_focused_file = {enable = true}}
+            require'nvim-tree'.setup {
+                update_focused_file = {enable = true},
+                update_cwd = true
+            }
         end
     }
     use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install'}
