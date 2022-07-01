@@ -24,7 +24,6 @@ if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
 
   alias sysyadm="sudo yadm -Y /etc/yadm"
   alias scli="scli -s"
-  alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
   alias cp="xcp"
   alias dark="themer solarized-dark"
   alias light="themer solarized-light"
@@ -55,11 +54,11 @@ alias docker="sudo docker"
 alias ssh="TERM=xterm-256color /usr/bin/ssh"
 
 alias so="source $CONFIG/fish/config.fish"
+alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
 alias fishconfig="$EDITOR $CONFIG/fish/config.fish"
 alias cdf='cd (fd -t d . ~ | fzf)'
 alias venv="source .venv/bin/activate.fish"
 alias g="git"
-
 
 ### ===========================================================================
 ### Functions
@@ -94,6 +93,12 @@ function posture
       return
     end
   end
+end
+
+function i3lock
+  /usr/bin/i3lock -c (python3 $CODE/bin/random_hex.py)
+  sleep 10m
+  xset dpms force off
 end
 
 ### ===========================================================================
