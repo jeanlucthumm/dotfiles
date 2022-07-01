@@ -141,6 +141,7 @@ require'packer'.startup(function(use)
             require'terminal'.setup()
         end
     }
+    use {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu'}
 
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
@@ -400,6 +401,7 @@ ncmap('<Leader>d', 'Telescope lsp_document_diagnostics')
 ncmap('<Leader>D', 'Telescope lsp_workspace_diagnostics')
 ncmap('<Leader>s', 'SymbolsOutline')
 ncmap('<Leader>t', 'NvimTreeFocus')
+ncmap('<Leader>a', 'CodeActionMenu')
 ncmap('<Leader><Leader>', 'write')
 -- <Leader>v    nvim config
 ncmap('<Leader>ve', ":exe 'tabedit' stdpath('config').'/init.lua'")
@@ -495,6 +497,4 @@ function HighlightGroups()
 end
 cmd('command! -nargs=0 HighlightGroups lua HighlightGroups()')
 
-if has_google then
-  google.setup()
-end
+if has_google then google.setup() end
