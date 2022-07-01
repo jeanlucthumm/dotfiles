@@ -41,6 +41,16 @@ require'packer'.startup(function(use)
                 highlight = {enable = true},
                 indent = {enable = true, disable = {"python", "yaml"}}
             }
+            -- Custom parser for go template files
+            local parser_config = require'nvim-treesitter.parsers'.get_parser_configs()
+            parser_config.gotmpl = {
+                install_info = {
+                    url = "https://github.com/ngalaiko/tree-sitter-go-template",
+                    files = { "src/parser.c" }
+                },
+                filetype = "gotmpl",
+                used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl"}
+            }
         end
     }
     use 'nvim-treesitter/playground'
