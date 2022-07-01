@@ -23,3 +23,5 @@
 	de = diff --cached
 [safe]
 	directory = /opt/flutter
+[delta]
+  side-by-side = true
