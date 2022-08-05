@@ -3,7 +3,7 @@ if [ -f "/etc/arch-release" ]
   set -x DISTRO "Arch"
 end
 
-set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/Code/bin $HOME/.cargo/bin
+set -x PATH $PATH $HOME/.local/bin $HOME/.node_modules/bin $HOME/Code/bin $HOME/.cargo/bin $HOME/.pub-cache/bin
 set CODE $HOME/Code
 
 if [ $OS = "Linux" ]
