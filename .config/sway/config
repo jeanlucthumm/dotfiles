@@ -21,11 +21,12 @@ set $browser "google-chrome-stable"
 
 output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
-output eDP-1 pos 3840 800
+output eDP-1 pos 860 1440
 output "Unknown U2790B 0x00009BC0" pos 0 0
 
 output "Unknown U34G2G4R3 0x00000D1F" {
   mode 3440x1440@120Hz
+  pos 0 0
 }
 
 # You can get the names of your inputs by running: swaymsg -t get_inputs
