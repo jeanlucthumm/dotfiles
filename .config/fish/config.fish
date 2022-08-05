@@ -28,7 +28,7 @@ if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   alias dark="themer solarized-dark"
   alias light="themer solarized-light"
 
-  if [ $TERM = xterm-kitty ]
+  if [ "$TERM" = "xterm-kitty" ]
     alias icat="kitty +kitten icat"
     alias newterm='kitty --detach --directory (pwd)'
   end
