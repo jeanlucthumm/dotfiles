@@ -503,6 +503,14 @@ augroup proto_group
 augroup END
 ]], false)
 
+api.nvim_exec([[
+augroup python_group
+  au!
+  au FileType python nnoremap <Leader>f :w<CR> :!black %<CR>
+  au FileType python nnoremap tf :split<CR> :term python %<CR>
+augroup END
+]], false)
+
 ---- Util
 function HighlightGroups()
     -- Gives you all highlight groups under the cursor
