@@ -115,7 +115,10 @@ require'packer'.startup(function(use)
         requires = {'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap'},
         config = function()
             require'rust-tools'.setup {
-                server = {on_attach = require'common'.on_attach}
+                server = {
+                    cargo = {loadOutDirsFromCheck = true},
+                    on_attach = require'common'.on_attach
+                }
             }
         end
     }
@@ -126,7 +129,7 @@ require'packer'.startup(function(use)
                 decorations = {statusline = {device = true}},
                 debugger = {enabled = true},
                 widget_guides = {enabled = true},
-                outline = {auto_open = true},
+                outline = {auto_open = false},
                 lsp = {
                     on_attach = require'common'.on_attach,
                     settings = {lineLength = 100}
