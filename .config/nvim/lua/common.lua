@@ -11,8 +11,10 @@ function M.map(mode, lhs, rhs, opts)
     api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 function M.nmap(...) M.map('n', ...) end
-function M.ncmap(lhs, rhs, ...) M.nmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
+function M.vmap(...) M.map('v', ...) end
 function M.imap(...) M.map('i', ...) end
+function M.ncmap(lhs, rhs, ...) M.nmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
+function M.vcmap(lhs, rhs, ...) M.vmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
 
 function M.hover()
     if vim.diagnostic.open_float() == nil then vim.lsp.buf.hover() end

@@ -145,6 +145,7 @@ require'packer'.startup(function(use)
         end
     }
     use {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu'}
+    use 'glepnir/lspsaga.nvim'
 
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
@@ -386,6 +387,7 @@ require'lualine'.setup {
 ---- Keymap (note that some keys are defined in _lsp_config.lua)
 local map = require'common'.map
 local nmap = require'common'.nmap
+local vcmap = require'common'.vcmap
 local ncmap = require'common'.ncmap
 
 -- visual
@@ -404,7 +406,8 @@ ncmap('<Leader>d', 'Telescope lsp_document_diagnostics')
 ncmap('<Leader>D', 'Telescope lsp_workspace_diagnostics')
 ncmap('<Leader>s', 'SymbolsOutline')
 ncmap('<Leader>t', 'NvimTreeFocus')
-ncmap('<Leader>a', 'CodeActionMenu')
+ncmap('<Leader>a', 'Lspsaga code_action')
+vcmap('<Leader>a', '<C-U>Lspsaga range_code_action')
 ncmap('<Leader><Leader>', 'write')
 -- <Leader>v    nvim config
 ncmap('<Leader>ve', ":exe 'tabedit' stdpath('config').'/init.lua'")
