@@ -164,6 +164,7 @@ require'packer'.startup(function(use)
     use 'ishan9299/nvim-solarized-lua'
     use 'folke/tokyonight.nvim'
     use 'tjdevries/colorbuddy.nvim'
+    use 'projekt0n/github-nvim-theme'
 
     -- UI
     use 'junegunn/fzf'
@@ -347,6 +348,15 @@ function TokyoNight(background)
     lualine_theme = 'tokyonight'
     cmd('colorscheme tokyonight')
 end
+function Github(background)
+    opt.background = background
+    if background == 'dark' then
+        lualine_theme = 'github_dark'
+    else
+        lualine_theme = 'github_light'
+    end
+    require'github-theme'.setup {theme_style = background}
+end
 local function fallbackTheme()
     -- SolarizedLuaTheme('light')
     -- TokyoNight('light')
@@ -360,8 +370,10 @@ local function autoTheme()
             -- MaterialTheme('lighter')
             RosePineTheme('dawn')
             -- SolarizedLuaTheme('light')
+            -- Github('light')
         elseif env.KITTY_THEME == 'solarized-dark' then
             MaterialTheme('deep ocean')
+            -- Github('dark')
         else
             fallbackTheme()
         end
