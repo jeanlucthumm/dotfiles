@@ -379,7 +379,7 @@ local nmap = require'common'.nmap
 local ncmap = require'common'.ncmap
 
 -- visual
-map('v', '<Leader>y', '\'+y') -- copy to system clipboard
+map('v', '<Leader>y', '\"+y') -- copy to system clipboard
 -- g
 nmap('gt', ':tabe<CR>:term<CR>i')
 ncmap('gr', 'Telescope lsp_references')
