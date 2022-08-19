@@ -59,6 +59,8 @@ alias fishconfig="$EDITOR $CONFIG/fish/config.fish"
 alias cdf='cd (fd -t d . ~ | fzf)'
 alias venv="source .venv/bin/activate.fish"
 alias g="git"
+alias t="task"
+alias ta="task active"
 
 ### ===========================================================================
 ### Functions
@@ -97,7 +99,7 @@ end
 
 function i3lock
   /usr/bin/i3lock -c (python3 $CODE/bin/random_hex.py)
-  sleep 10m
+  sleep 30m
   xset dpms force off
 end
 
@@ -111,7 +113,6 @@ if [ $OS = "Linux" -a "$DISTRO" = "Arch" ]
   complete -c themer -x -a (themer --list)
 end
 
-### ===========================================================================
-### Google
-
-importIfExists $CONF/fish/google.fish
+if status is-interactive; and is_ssh_session; and not set -q TMUX
+  exec tmux attach
+end
