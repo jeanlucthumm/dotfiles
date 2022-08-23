@@ -135,6 +135,12 @@ require'packer'.startup(function(use)
 
         end
     }
+    use {
+        'norcalli/nvim-terminal.lua',
+        config = function()
+            require'terminal'.setup()
+        end
+    }
 
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
@@ -443,6 +449,7 @@ ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
+-- TODO:  There's a lua API for this now
 ---- Filetype overrides
 api.nvim_exec([[
 augroup lua_group
