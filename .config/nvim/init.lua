@@ -146,6 +146,7 @@ require'packer'.startup(function(use)
     }
     use {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu'}
     use 'glepnir/lspsaga.nvim'
+    use 'simrat39/symbols-outline.nvim'
 
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
