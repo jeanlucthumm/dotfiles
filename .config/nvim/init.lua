@@ -438,7 +438,7 @@ map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
 ncmap('<C-p>', 'Telescope commands')
 ncmap('<C-e>',
       'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
-ncmap('<C-q>', 'Telescope quickfix')
+nmap('<C-q>', '<C-^>')
 ncmap('<M-e>', 'Telescope find_files')
 ncmap('<C-e>', 'Telescope buffers')
 ncmap('<C-s>', 'Telescope harpoon marks')
