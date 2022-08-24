@@ -508,7 +508,7 @@ api.nvim_exec([[
 augroup python_group
   au!
   au FileType python nnoremap <Leader>f :w<CR> :!black %<CR>
-  au FileType python nnoremap tf :split<CR> :term python %<CR>
+  au FileType python nnoremap tf :split<CR> :term python %<CR>i
 augroup END
 ]], false)
 
