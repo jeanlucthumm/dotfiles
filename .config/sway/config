@@ -21,7 +21,7 @@ set $browser "google-chrome-stable"
 
 output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
-output eDP-1 pos 860 1440
+output eDP-1 pos 0 0
 output "Unknown U2790B 0x00009BC0" pos 0 0
 
 output "Unknown U34G2G4R3 0x00000D1F" {
@@ -248,6 +248,10 @@ bindsym $mod+o exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3%
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3%
 
+# brightness
+bindsym XF86MonBrightnessUp exec --no-startup-id "$HOME/Code/bin/brightness.fish" up 20
+bindsym XF86MonBrightnessDown exec --no-startup-id "$HOME/Code/bin/brightness.fish" down 20
+
 # screenshotting to clipboard
 bindsym $mod+Shift+s exec maim -s -u | xclip -selection clipboard -t image/png -i
 
@@ -271,7 +275,7 @@ bar {
 
   # When the status_command prints a new line to stdout, swaybar updates.
   # The default just shows the current date and time.
-  status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
+  status_command $HOME/.config/sway/status.fish
 
   colors {
     statusline #ffffff
@@ -288,3 +292,4 @@ exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 exec --no-startup-id /usr/bin/kitty --title "scratchpad"
 exec --no-startup-id spotify
 exec --no-startup-id /usr/bin/dex /usr/share/applications/workflowy.desktop
+exec --no-startup-id mako
