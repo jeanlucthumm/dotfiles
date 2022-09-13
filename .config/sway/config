@@ -253,7 +253,7 @@ bindsym XF86MonBrightnessUp exec --no-startup-id "$HOME/Code/bin/brightness.fish
 bindsym XF86MonBrightnessDown exec --no-startup-id "$HOME/Code/bin/brightness.fish" down 20
 
 # screenshotting to clipboard
-bindsym $mod+Shift+s exec maim -s -u | xclip -selection clipboard -t image/png -i
+bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 
 # TODO
 #bindsym $mod+d exec rofi -show drun -width 20 -dpi 144
