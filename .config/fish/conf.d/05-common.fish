@@ -21,7 +21,7 @@ function clip --description "copy to clipboard"
 end
 
 function notify --description "send desktop notification"
-  if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
+  if [ "$OS" = "Linux" ]
     notify-send "$argv[1]"
   else if [ "$OS" = "Darwin" ]
     osascript -e "display notification \"$argv[1]\""
