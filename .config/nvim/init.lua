@@ -425,10 +425,11 @@ ncmap('<Leader><Leader>', 'write')
 -- <Leader>v    nvim config
 ncmap('<Leader>ve', ":exe 'tabedit' stdpath('config').'/init.lua'")
 nmap('<Leader>vs', ":exe 'source' stdpath('config').'/init.lua'<CR>")
--- <Leader>c    quickfix
+-- <Leader>c    quickfix, cd
 ncmap('<Leader>cl', 'cclose')
 ncmap('<Leader>cc', 'cc')
 ncmap('<Leader>co', 'copen')
+ncmap('<Leader>cd', 'cd %:h')
 -- <Leader>b    bookmarks
 ncmap('<Leader>bb', 'BookmarkToggle')
 ncmap('<Leader>ba', 'BookmarkAnnotate')
