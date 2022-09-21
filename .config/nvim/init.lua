@@ -153,15 +153,7 @@ require'packer'.startup(function(use)
     use 'jeanlucthumm/vim-solarized8'
     use 'morhetz/gruvbox'
     use 'marko-cerovac/material.nvim'
-    use {
-        'rose-pine/neovim',
-        config = function()
-            require'rose-pine'.setup {
-                dark_variant = 'moon',
-                disable_italics = true
-            }
-        end
-    }
+    use 'rose-pine/neovim'
     use 'ishan9299/nvim-solarized-lua'
     use 'folke/tokyonight.nvim'
     use 'tjdevries/colorbuddy.nvim'
@@ -186,7 +178,7 @@ require'packer'.startup(function(use)
     use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install'}
     use {
         'nvim-telescope/telescope.nvim',
-        requires = {{'nvim-lua/plenary.nvim'}},
+        requires = {'nvim-lua/plenary.nvim'},
         config = function()
             require'telescope'.setup {
                 defaults = {
@@ -343,6 +335,10 @@ function RosePineTheme(style) -- prefer 'dawn' light, 'moon' dark
     end
     lualine_theme = 'rose-pine'
     cmd('colorscheme rose-pine')
+    require'rose-pine'.setup {
+        dark_variant = 'moon',
+        disable_italics = true
+    }
 end
 function TokyoNight(background)
     opt.background = background
@@ -405,8 +401,9 @@ local ncmap = require'common'.ncmap
 
 -- visual
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
+nmap('<Leader>p', '\"+p') -- paste from system clipboard
 -- g
-nmap('gt', ':tabe<CR>:term<CR>i')
+nmap('gt', ':tabe<CR>:term<CR>:file term:cli<CR>i')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
 -- c
@@ -455,8 +452,9 @@ ncmap('<Leader>lk', 'lua require"harpoon.ui".nav_file(3)')
 ncmap('<C-h>', 'tabp')
 ncmap('<C-l>', 'tabn')
 map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
-map('t', '<C-l>', '<C-\\><C-l><Cmd><CR>')
+map('t', '<C-l>', '<C-\\><C-n><Cmd>:tabn<CR>')
 map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
+map('t', '<C-\\><C-\\>', '<C-\\><C-n>')
 ncmap('<C-p>', 'Telescope commands')
 ncmap('<C-e>',
       'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
