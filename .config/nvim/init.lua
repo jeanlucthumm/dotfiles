@@ -199,6 +199,12 @@ require'packer'.startup(function(use)
     use 'tom-anders/telescope-vim-bookmarks.nvim'
     use 'nvim-lualine/lualine.nvim' -- configured in the theme section
     use 'mhinz/vim-startify'
+    use {
+        'rcarriga/nvim-notify',
+        config = function ()
+            vim.notify = require"notify"
+        end
+    }
 
     -- Editor
     use 'tpope/vim-commentary'
