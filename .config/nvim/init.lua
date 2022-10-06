@@ -359,7 +359,7 @@ function TokyoNight(background)
     lualine_theme = 'tokyonight'
     cmd('colorscheme tokyonight')
 end
-function Github(background)
+function GithubTheme(background)
     opt.background = background
     if background == 'dark' then
         lualine_theme = 'github_dark'
@@ -386,10 +386,10 @@ local function autoTheme()
             -- MaterialTheme('lighter')
             RosePineTheme('dawn')
             -- SolarizedLuaTheme('light')
-            -- Github('light')
+            -- GithubTheme('light')
         elseif env.KITTY_THEME == 'solarized-dark' then
             MaterialTheme('deep ocean')
-            -- Github('dark')
+            -- GithubTheme('dark')
         else
             fallbackTheme()
         end
