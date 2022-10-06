@@ -153,11 +153,19 @@ require'packer'.startup(function(use)
     use 'jeanlucthumm/vim-solarized8'
     use 'morhetz/gruvbox'
     use 'marko-cerovac/material.nvim'
-    use 'rose-pine/neovim'
-    use 'ishan9299/nvim-solarized-lua'
+    use {
+        'rose-pine/neovim',
+        config = function()
+            require'rose-pine'.setup {
+                dark_variant = 'moon',
+                disable_italics = true
+            }
+        end
+    }
     use 'folke/tokyonight.nvim'
     use 'tjdevries/colorbuddy.nvim'
     use 'projekt0n/github-nvim-theme'
+    use 'savq/melange'
 
     -- UI
     use 'junegunn/fzf'
@@ -360,12 +368,17 @@ function Github(background)
     end
     require'github-theme'.setup {theme_style = background}
 end
+function MelangeTheme(background)
+    opt.background = background
+    cmd('colorscheme melange')
+end
+
 local function fallbackTheme()
     -- SolarizedLuaTheme('light')
-    -- TokyoNight('light')
     -- MaterialTheme('lighter')
     -- MaterialTheme('oceanic')
-    RosePineTheme('dawn')
+    -- RosePineTheme('dawn')
+    MelangeTheme('light')
 end
 local function autoTheme()
     if env.TERM == 'xterm-kitty' then
