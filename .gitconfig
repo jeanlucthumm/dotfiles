@@ -1,6 +1,7 @@
 [user]
 	email = jeanlucthumm@gmail.com
 	name = Jean-Luc Thumm
+	signingkey = B4710A8A5E391635
 [core]
 	pager = delta -s --line-numbers-zero-style black
 	excludesfile = ~/.config/.gitignore
@@ -25,3 +26,7 @@
 	directory = /opt/flutter
 [delta]
   side-by-side = true
+[commit]
+  gpgsign = true
+[gpg]
+  program = gpg
