@@ -370,6 +370,7 @@ function GithubTheme(background)
 end
 function MelangeTheme(background)
     opt.background = background
+    lualine_theme = 'auto'
     cmd('colorscheme melange')
 end
 
@@ -378,7 +379,7 @@ local function fallbackTheme()
     -- MaterialTheme('lighter')
     -- MaterialTheme('oceanic')
     -- RosePineTheme('dawn')
-    MelangeTheme('light')
+    MelangeTheme('dark')
 end
 local function autoTheme()
     if env.TERM == 'xterm-kitty' then
