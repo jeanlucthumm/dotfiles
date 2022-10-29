@@ -44,7 +44,7 @@ lsp_installer.on_server_ready(function(server)
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities.textDocument.completion.completionItem.snippetSupport = true
     -- Inject nvim-cmp stuff
-    require'cmp_nvim_lsp'.update_capabilities(capabilities)
+    require'cmp_nvim_lsp'.default_capabilities(capabilities)
     local config = {
         capabilities = capabilities,
         on_attach = require'common'.on_attach
