@@ -416,6 +416,7 @@ require'lualine'.setup {
 ---- Keymap (note that some keys are defined in _lsp_config.lua)
 local map = require'common'.map
 local nmap = require'common'.nmap
+local imap = require'common'.imap
 local vcmap = require'common'.vcmap
 local ncmap = require'common'.ncmap
 
@@ -471,6 +472,9 @@ ncmap('<Leader>lk', 'lua require"harpoon.ui".nav_file(3)')
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
 ncmap('<C-l>', 'tabn')
+nmap('<C-j>', '<C-e>') -- scroll one line up
+nmap('<C-k>', '<C-y>') -- scroll one line down
+imap('<C-v>', '<C-r>+')
 map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
 map('t', '<C-l>', '<C-\\><C-n><Cmd>:tabn<CR>')
 map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
