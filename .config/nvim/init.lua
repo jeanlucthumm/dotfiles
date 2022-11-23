@@ -488,6 +488,7 @@ ncmap('<C-e>', 'Telescope buffers')
 ncmap('<C-s>', 'Telescope harpoon marks')
 ncmap('<M-1>', 'NvimTreeToggle')
 ncmap('<M-f>', 'NvimTreeFindFile')
+ncmap('<C-w>d', 'lua OpenInRight()')
 -- <F*>
 ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
@@ -546,5 +547,14 @@ function HighlightGroups()
     for _, val in ipairs(stack) do print(fn.synIDattr(val, 'name')) end
 end
 cmd('command! -nargs=0 HighlightGroups lua HighlightGroups()')
+
+
+function OpenInRight()
+  local wins = api.nvim_tabpage_list_wins(0)
+  local left_buf = api.nvim_win_get_buf(wins[1])
+  local left_pos = api.nvim_win_get_cursor(wins[1])
+  api.nvim_win_set_buf(wins[2], left_buf)
+  api.nvim_win_set_cursor(wins[2], left_pos)
+end
 
 if has_google then google.setup() end
