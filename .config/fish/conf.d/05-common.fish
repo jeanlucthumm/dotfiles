@@ -31,3 +31,5 @@ function notify --description "send desktop notification"
     osascript -e "display notification \"$argv[1]\""
   end
 end
+
+alias clear-nvim-swap="rm -rf $XDG_DATA_HOME/nvim/swap"

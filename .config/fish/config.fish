@@ -28,10 +28,6 @@ if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   alias dark="themer solarized-dark"
   alias light="themer solarized-light"
 
-  if [ "$TERM" = "xterm-kitty" ]
-    alias icat="kitty +kitten icat"
-    alias newterm='kitty --detach --directory (pwd)'
-  end
   if pgrep -x "i3" > /dev/null
     alias i3config="$EDITOR $CONFIG/i3/config"
     alias picomconfig="$EDITOR $CONFIG/picom.conf"
@@ -42,6 +38,11 @@ if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   if pgrep -x "sway" > /dev/null
     alias i3config="$EDITOR $CONFIG/sway/config"
   end
+end
+
+if [ "$TERM" = "xterm-kitty" ]
+  alias icat="kitty +kitten icat"
+  alias newterm='kitty --detach --directory (pwd)'
 end
 
 
