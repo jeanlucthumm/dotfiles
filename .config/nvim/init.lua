@@ -42,14 +42,15 @@ require'packer'.startup(function(use)
                 indent = {enable = true, disable = {"python", "yaml"}}
             }
             -- Custom parser for go template files
-            local parser_config = require'nvim-treesitter.parsers'.get_parser_configs()
+            local parser_config =
+                require'nvim-treesitter.parsers'.get_parser_configs()
             parser_config.gotmpl = {
                 install_info = {
                     url = "https://github.com/ngalaiko/tree-sitter-go-template",
-                    files = { "src/parser.c" }
+                    files = {"src/parser.c"}
                 },
                 filetype = "gotmpl",
-                used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl"}
+                used_by = {"gohtmltmpl", "gotexttmpl", "gotmpl"}
             }
         end
     }
@@ -140,9 +141,7 @@ require'packer'.startup(function(use)
     }
     use {
         'norcalli/nvim-terminal.lua',
-        config = function()
-            require'terminal'.setup()
-        end
+        config = function() require'terminal'.setup() end
     }
     use {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu'}
     use 'glepnir/lspsaga.nvim'
@@ -209,9 +208,7 @@ require'packer'.startup(function(use)
     use 'mhinz/vim-startify'
     use {
         'rcarriga/nvim-notify',
-        config = function ()
-            vim.notify = require"notify"
-        end
+        config = function() vim.notify = require "notify" end
     }
 
     -- Editor
@@ -349,10 +346,7 @@ function RosePineTheme(style) -- prefer 'dawn' light, 'moon' dark
     end
     lualine_theme = 'rose-pine'
     cmd('colorscheme rose-pine')
-    require'rose-pine'.setup {
-        dark_variant = 'moon',
-        disable_italics = true
-    }
+    require'rose-pine'.setup {dark_variant = 'moon', disable_italics = true}
 end
 function TokyoNight(background)
     opt.background = background
