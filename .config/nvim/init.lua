@@ -268,6 +268,13 @@ require'packer'.startup(function(use)
             require'telescope'.load_extension('harpoon')
         end
     }
+    use {
+        'CRAG666/code_runner.nvim',
+        requires = 'nvim-lua/plenary.nvim',
+        config = function()
+            require'code_runner'.setup {filetype = {python = "python -u"}}
+        end
+    }
 
     if has_google then google.packer(use) end
     if PackerBootstrap then require('packer').sync() end
@@ -462,6 +469,9 @@ ncmap('<Leader>ds', 'lua require"dap".continue()')
 ncmap('<Leader>lh', 'lua require"harpoon.ui".nav_file(1)')
 ncmap('<Leader>lj', 'lua require"harpoon.ui".nav_file(2)')
 ncmap('<Leader>lk', 'lua require"harpoon.ui".nav_file(3)')
+-- <Leader>w    running
+ncmap('<Leader>ww', 'RunCode')
+ncmap('<Leader>wc', 'RunClose')
 
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
@@ -526,7 +536,6 @@ api.nvim_exec([[
 augroup python_group
   au!
   au FileType python nnoremap <Leader>f :w<CR> :!black %<CR>
-  au FileType python nnoremap tf :split<CR> :term python %<CR>i
 augroup END
 ]], false)
 
