@@ -19,9 +19,9 @@
 [credential]
 	helper = cache
 [alias]
-	d = diff
+	de = diff
 	s = status
-	de = diff --cached
+	d = diff --cached
 [safe]
 	directory = /opt/flutter
 [delta]
