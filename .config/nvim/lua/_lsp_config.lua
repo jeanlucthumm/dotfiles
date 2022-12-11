@@ -45,6 +45,11 @@ lsp_installer.on_server_ready(function(server)
     capabilities.textDocument.completion.completionItem.snippetSupport = true
     -- Inject nvim-cmp stuff
     require'cmp_nvim_lsp'.default_capabilities(capabilities)
+    local has_google, google = pcall(require, "google")
+    if has_google then
+        google.update_capabilities(capabilities)
+    end
+
     local config = {
         capabilities = capabilities,
         on_attach = require'common'.on_attach

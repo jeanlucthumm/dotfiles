@@ -66,6 +66,15 @@ require'packer'.startup(function(use)
         config = function()
             local cmp = require 'cmp'
             local luasnip = require 'luasnip'
+            local sources = nil
+            if has_google then
+                sources = require"google".cmp_sources
+            else
+                sources = cmp.config.sources {
+                    {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
+                    {name = 'nvim_lsp_signature_help'}
+                }
+            end
 
             cmp.setup {
                 snippet = {
@@ -101,10 +110,7 @@ require'packer'.startup(function(use)
                         end
                     end, {"i", "s"})
                 },
-                sources = cmp.config.sources {
-                    {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
-                    {name = 'nvim_lsp_signature_help'}
-                },
+                sources = sources,
                 formatting = {format = require'lspkind'.cmp_format()}
             }
         end
