@@ -104,6 +104,10 @@ function i3lock
   xset dpms force off
 end
 
+function i3workspace -d "get name of current i3 workspace"
+  i3-msg -t get_workspaces | jq -r 'map(select(.focused))[0].name'
+end
+
 ### ===========================================================================
 ### Shell
 
