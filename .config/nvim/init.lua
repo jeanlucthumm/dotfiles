@@ -268,13 +268,6 @@ require'packer'.startup(function(use)
     use 'vim-test/vim-test'
     use '907th/vim-auto-save'
     use {
-        'ThePrimeagen/harpoon',
-        config = function()
-            require'harpoon'.setup {global_settings = {enter_on_sendcmd = true}}
-            require'telescope'.load_extension('harpoon')
-        end
-    }
-    use {
         'CRAG666/code_runner.nvim',
         requires = 'nvim-lua/plenary.nvim',
         config = function()
