@@ -57,7 +57,7 @@ function M.on_attach(client, bufnr)
       ]], false)
     end
     if client.server_capabilities.documentFormattingProvider then
-        bnmap("<Leader>f", "vim.lsp.buf.formatting()", opts)
+        bnmap("<Leader>f", "vim.lsp.buf.format()", opts)
     end
     if client.server_capabilities.codeLensProvider then
         -- CodeLens provides extra actions like "Run Test"
