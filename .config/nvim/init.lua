@@ -526,13 +526,16 @@ api.nvim_create_autocmd({"FileType"}, {
     callback = function() nmap('<Leader>f', ':w<CR>:!black %<CR>') end
 })
 
+---- Util
 
+-- When current tab has vertical dual split, open the buffer on the left
+-- in the window on the right at the same position
 function OpenInRight()
-  local wins = api.nvim_tabpage_list_wins(0)
-  local left_buf = api.nvim_win_get_buf(wins[1])
-  local left_pos = api.nvim_win_get_cursor(wins[1])
-  api.nvim_win_set_buf(wins[2], left_buf)
-  api.nvim_win_set_cursor(wins[2], left_pos)
+    local wins = api.nvim_tabpage_list_wins(0)
+    local left_buf = api.nvim_win_get_buf(wins[1])
+    local left_pos = api.nvim_win_get_cursor(wins[1])
+    api.nvim_win_set_buf(wins[2], left_buf)
+    api.nvim_win_set_cursor(wins[2], left_pos)
 end
 
 if has_google then google.setup() end
