@@ -33,6 +33,14 @@ require'packer'.startup(function(use)
         config = function() require'dapui'.setup {} end
     }
     use {
+        'mfussenegger/nvim-dap-python',
+        requires = {'mfussenegger/nvim-dap'},
+        config = function()
+            require'dap-python'.setup('~/.virtualenv/debug/bin/python')
+            require'dap-python'.test_runner = 'pytest'
+        end
+    }
+    use {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate',
         config = function()
