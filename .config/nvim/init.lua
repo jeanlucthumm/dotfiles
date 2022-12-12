@@ -502,58 +502,29 @@ ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
--- TODO:  There's a lua API for this now
+
 ---- Filetype overrides
-api.nvim_exec([[
-augroup lua_group
-  au!
-  au FileType lua nmap <F10> :Neomake<CR>
-  au FileType lua nmap <Leader>cl :lclose<CR>
-  au FileType lua nmap <Leader>cc :ll<CR>
-  au FileType lua nmap <Leader>co :lopen<CR>
-  au FileType lua nmap <Leader>f :lua require'nvim-lua-format'.format()<CR>
-  au FileType lua set tabstop=4
-  au FileType lua set shiftwidth=4
-augroup END
-]], false)
-
-api.nvim_exec([[
-augroup rust_group
-  au!
-  au FileType rust nmap <F10> :w<CR>:Neomake! cargo<CR>
-  au FileType rust map t <Nop>
-  au FileType rust nnoremap tn :TestNearest<CR>
-  au FileType rust nnoremap tl :TestLast<CR>
-  au FileType rust nnoremap tf :TestFile<CR>
-  au FileType rust let g:auto_save=1
-augroup END
- ]], false)
-
-api.nvim_exec([[
-augroup proto_group
-  au!
-  au FileType proto nmap <Leader>f <Cmd>ClangFormat<CR>
-augroup END
-]], false)
-
-api.nvim_exec([[
-augroup python_group
-  au!
-  au FileType python nnoremap <Leader>f :w<CR> :!black %<CR>
-augroup END
-]], false)
-
----- Util
-function HighlightGroups()
-    -- Gives you all highlight groups under the cursor
-    local stack = fn.synstack(fn.line('.'), fn.col('.'))
-    if next(stack) == nil then
-        print('Syntax stack is empty')
-        return
+api.nvim_create_autocmd({"FileType"}, {
+    pattern = {"lua"},
+    callback = function()
+        ncmap('<F10>', 'Neomake')
+        ncmap('<Leader>f', 'lua require"nvim-lua-format".format()')
+        opt.tabstop = 4
+        opt.shiftwidth = 4
     end
-    for _, val in ipairs(stack) do print(fn.synIDattr(val, 'name')) end
-end
-cmd('command! -nargs=0 HighlightGroups lua HighlightGroups()')
+})
+api.nvim_create_autocmd({"FileType"}, {
+    pattern = {"rust"},
+    callback = function() g.auto_save = 1 end
+})
+api.nvim_create_autocmd({"FileType"}, {
+    pattern = {"proto"},
+    callback = function() ncmap('<Leader>f', 'ClangFormat') end
+})
+api.nvim_create_autocmd({"FileType"}, {
+    pattern = {"python"},
+    callback = function() nmap('<Leader>f', ':w<CR>:!black %<CR>') end
+})
 
 
 function OpenInRight()
