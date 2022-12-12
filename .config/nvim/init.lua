@@ -282,6 +282,11 @@ require'packer'.startup(function(use)
             require'code_runner'.setup {filetype = {python = "python -u"}}
         end
     }
+    use {
+        'ThePrimeagen/harpoon',
+        requires = {'nvim-lua/plenary.nvim'},
+        config = function() require'telescope'.load_extension('harpoon') end
+    }
 
     if has_google then google.packer(use) end
     if PackerBootstrap then require('packer').sync() end
@@ -460,22 +465,16 @@ ncmap('<Leader>cd', 'cd %:h')
 ncmap('<Leader>bb', 'BookmarkToggle')
 ncmap('<Leader>ba', 'BookmarkAnnotate')
 ncmap('<Leader>bo', 'Telescope vim_bookmarks all')
--- <Leader>h    hunks + harpoon + help
+-- <Leader>h    hunks + help
 ncmap('<Leader>hu', 'SignifyHunkUndo')
 ncmap('<Leader>hd', 'SignifyHunkDiff')
-ncmap('<Leader>ha', 'lua require"harpoon.mark".add_file()')
-ncmap('<Leader>ho', 'lua require"harpoon.ui".toggle_quick_menu()')
 ncmap('<Leader>hh', 'Telescope help_tags')
 -- <Leader>d    debugging
 ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
 ncmap('<Leader>dco', 'lua require"dapui".open()')
 ncmap('<Leader>dcl', 'lua require"dapui".close()')
 ncmap('<Leader>dt', 'lua require"dap".terminate()')
-ncmap('<Leader>ds', 'lua require"dap".continue()')
--- <Leader>l    harpoon
-ncmap('<Leader>lh', 'lua require"harpoon.ui".nav_file(1)')
-ncmap('<Leader>lj', 'lua require"harpoon.ui".nav_file(2)')
-ncmap('<Leader>lk', 'lua require"harpoon.ui".nav_file(3)')
+ncmap('<Leader>dc', 'lua require"dap".continue()')
 -- <Leader>w    running
 ncmap('<Leader>ww', 'RunCode')
 ncmap('<Leader>wc', 'RunClose')
