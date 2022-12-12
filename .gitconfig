@@ -22,6 +22,7 @@
 	de = diff
 	s = status
 	d = diff --cached
+  tree = log --graph --decorate --oneline --all
 [safe]
 	directory = /opt/flutter
 [delta]
