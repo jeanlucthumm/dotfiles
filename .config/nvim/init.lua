@@ -238,6 +238,7 @@ require'packer'.startup(function(use)
         'rcarriga/nvim-notify',
         config = function() vim.notify = require "notify" end
     }
+    use 'xiyaowong/virtcolumn.nvim'
 
     -- Editor
     use 'tpope/vim-commentary'
