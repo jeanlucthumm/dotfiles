@@ -63,7 +63,18 @@ require'packer'.startup(function(use)
         end
     }
     use 'nvim-treesitter/playground'
-    use 'L3MON4D3/LuaSnip'
+    use {
+        'L3MON4D3/LuaSnip',
+        config = function ()
+            require'luasnip'.config.set_config({
+                region_check_events = 'InsertEnter',
+                delete_check_events = 'InsertLeave',
+            })
+            require"luasnip.loaders.from_lua".lazy_load({
+                paths = { "./snippets"}
+            })
+        end
+    }
     use {
         'hrsh7th/nvim-cmp',
         requires = {
