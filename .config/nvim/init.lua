@@ -170,7 +170,10 @@ require'packer'.startup(function(use)
     }
     use {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu'}
     use 'glepnir/lspsaga.nvim'
-    use 'simrat39/symbols-outline.nvim'
+    use {
+        'simrat39/symbols-outline.nvim',
+        config = function() require'symbols-outline'.setup() end
+    }
 
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
