@@ -297,11 +297,6 @@ require'packer'.startup(function(use)
             require'code_runner'.setup {filetype = {python = "python -u"}}
         end
     }
-    use {
-        'ThePrimeagen/harpoon',
-        requires = {'nvim-lua/plenary.nvim'},
-        config = function() require'telescope'.load_extension('harpoon') end
-    }
 
     if has_google then google.packer(use) end
     if PackerBootstrap then require('packer').sync() end
@@ -508,7 +503,6 @@ ncmap('<C-e>',
 nmap('<C-q>', '<C-^>')
 ncmap('<M-e>', 'Telescope find_files')
 ncmap('<C-e>', 'Telescope buffers')
-ncmap('<C-s>', 'Telescope harpoon marks')
 ncmap('<M-1>', 'NvimTreeToggle')
 ncmap('<M-f>', 'NvimTreeFindFile')
 ncmap('<C-w>d', 'lua OpenInRight()')
