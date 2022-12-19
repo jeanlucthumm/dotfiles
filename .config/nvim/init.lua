@@ -220,7 +220,10 @@ require'packer'.startup(function(use)
                             ['<C-k>'] = 'move_selection_previous',
                             ['<C-j>'] = 'move_selection_next'
                         },
-                        n = {['<C-c>'] = 'close'}
+                        n = {
+                            ['<C-c>'] = 'close',
+                            ['<C-x>'] = require'telescope.actions'.delete_buffer
+                        }
                     }
                 }
             }
