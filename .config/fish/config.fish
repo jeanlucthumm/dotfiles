@@ -48,7 +48,7 @@ end
 
 # Default overrides
 alias vim="nvim"
-alias gvim="neovide --multigrid"
+alias neov="neovide --multigrid --maximized"
 alias cat="bat"
 alias ls="exa"
 alias docker="sudo docker"
