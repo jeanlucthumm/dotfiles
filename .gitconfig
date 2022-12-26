@@ -1,30 +1,30 @@
 [user]
-	email = jeanlucthumm@gmail.com
-	name = Jean-Luc Thumm
-	signingkey = B4710A8A5E391635
+  email = jeanlucthumm@gmail.com
+  name = Jean-Luc Thumm
+  signingkey = B4710A8A5E391635
 [core]
-	pager = delta --line-numbers-zero-style black
-	excludesfile = ~/.config/.gitignore
+  pager = delta --line-numbers-zero-style black
+  excludesfile = ~/.config/.gitignore
 [interactive]
   diffFilter = delta --color-only
 [init]
-	defaultBranch = master
+  defaultBranch = master
 [merge]
   conflictstyle = diff3
 [filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
 [credential]
-	helper = cache
+  helper = cache
 [alias]
-	de = diff
-	s = status
-	d = diff --cached
+  de = diff
+  s = status
+  d = diff --cached
   tree = log --graph --decorate --oneline --all
 [safe]
-	directory = /opt/flutter
+  directory = /opt/flutter
 [delta]
   side-by-side = true
   light = true
