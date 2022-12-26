@@ -3,14 +3,14 @@
 	name = Jean-Luc Thumm
 	signingkey = B4710A8A5E391635
 [core]
-	pager = delta -s --line-numbers-zero-style black
+	pager = delta --line-numbers-zero-style black
 	excludesfile = ~/.config/.gitignore
+[interactive]
+  diffFilter = delta --color-only
 [init]
 	defaultBranch = master
 [merge]
-	tool = meld
-[mergetool "meld"]
-	cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+  conflictstyle = diff3
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
@@ -27,6 +27,8 @@
 	directory = /opt/flutter
 [delta]
   side-by-side = true
+  light = true
+  navigate = true
 [commit]
   gpgsign = true
 [gpg]
