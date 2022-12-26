@@ -271,7 +271,7 @@ exec --no-startup-id /usr/bin/unclutter --timeout 5
 exec --no-startup-id "$HOME/Code/bin/mouse-profile.sh"
 exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 exec --no-startup-id /usr/bin/redshift
-exec --no-startup-id /usr/bin/xss-lock "$HOME/.config/i3/lock.fish"
+exec --no-startup-id /usr/bin/xss-lock "$HOME/.config/i3/lock.sh"
 
 # scratchpad
 exec --no-startup-id /usr/bin/kitty --title "scratchpad"
