@@ -29,7 +29,7 @@ if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
   alias light="themer solarized-light"
 
   if pgrep -x "i3" > /dev/null
-    alias i3config="$EDITOR $CONFIG/i3/config"
+    alias i3config="$EDITOR $CONFIG/i3/config##template"
     alias picomconfig="$EDITOR $CONFIG/picom.conf"
     alias dim="xrandr --output DP-1 --brightness 0.5"
     alias undim="xrandr --output DP-1 --brightness 1.0"
