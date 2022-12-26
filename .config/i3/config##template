@@ -222,7 +222,7 @@ mode "power" {
     bindsym r exec --no-startup-id systemctl reboot; mode "default"
     bindsym p exec --no-startup-id systemctl poweroff; mode "default"
     bindsym h exec --no-startup-id systemctl hibernate; mode "default"
-    bindsym l exec --no-startup-id betterlockscreen -l dimblur; mode "default"
+    bindsym l exec --no-startup-id loginctl lock-session; mode "default"
     bindsym Return mode "default"
 }
 bindsym $mod+Shift+t mode "power"
@@ -271,6 +271,7 @@ exec --no-startup-id /usr/bin/unclutter --timeout 5
 exec --no-startup-id "$HOME/Code/bin/mouse-profile.sh"
 exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 exec --no-startup-id /usr/bin/redshift
+exec --no-startup-id /usr/bin/xss-lock "$HOME/.config/i3/lock.fish"
 
 # scratchpad
 exec --no-startup-id /usr/bin/kitty --title "scratchpad"
