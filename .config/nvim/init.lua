@@ -172,7 +172,14 @@ require'packer'.startup(function(use)
     use 'glepnir/lspsaga.nvim'
     use {
         'simrat39/symbols-outline.nvim',
-        config = function() require'symbols-outline'.setup() end
+        config = function()
+            require'symbols-outline'.setup({
+                auto_close = true,
+                autofold_depth = 1,
+                relative_width = false,
+                width = 40
+            })
+        end
     }
 
     -- Theme
