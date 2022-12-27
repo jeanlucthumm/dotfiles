@@ -370,17 +370,17 @@ function GruvboxTheme(background)
     vim.v['$BAT_THEME'] = 'gruvbox'
     cmd('colorscheme gruvbox')
 end
-function MaterialTheme(style) -- prefer 'deep ocean'
-    g.material_style = style
+function MaterialTheme(background) -- prefer 'deep ocean'
+    if background == "dark" then
+        g.material_style = 'deep ocean'
+    elseif background == 'light' then
+        g.material_style = 'lighter'
+    end
     lualine_theme = 'material-nvim'
     cmd('colorscheme material')
 end
-function RosePineTheme(style) -- prefer 'dawn' light, 'moon' dark
-    if style == 'dawn' then
-        opt.background = 'light'
-    else
-        opt.background = 'dark'
-    end
+function RosePineTheme(background)
+    opt.background = background
     lualine_theme = 'rose-pine'
     cmd('colorscheme rose-pine')
     require'rose-pine'.setup {dark_variant = 'moon', disable_italics = true}
@@ -406,29 +406,24 @@ function MelangeTheme(background)
 end
 
 local function fallbackTheme()
-    -- SolarizedLuaTheme('light')
-    -- MaterialTheme('lighter')
-    -- MaterialTheme('oceanic')
-    -- RosePineTheme('dawn')
-    MelangeTheme('dark')
+    RosePineTheme('dawn')
 end
 local function autoTheme()
+    local has_theme, theme = pcall(require, "theme")
+    if has_theme then
+        theme.setup()
+        return
+    end
     if env.TERM == 'xterm-kitty' then
         if env.KITTY_THEME == 'solarized-light' then
-            -- MaterialTheme('lighter')
-            RosePineTheme('dawn')
-            -- SolarizedLuaTheme('light')
-            -- GithubTheme('light')
+            RosePineTheme('light')
         elseif env.KITTY_THEME == 'solarized-dark' then
-            MaterialTheme('deep ocean')
-            -- GithubTheme('dark')
+            MaterialTheme('dark')
         else
             fallbackTheme()
         end
     elseif env.THEME == 'solarized-light' then
-        -- SolarizedLuaTheme('light')
-        SolarizedLuaTheme('light')
-        -- RosePineTheme('dawn')
+        RosePineTheme('dawn')
     else
         fallbackTheme()
     end
