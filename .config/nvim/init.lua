@@ -65,14 +65,12 @@ require'packer'.startup(function(use)
     use 'nvim-treesitter/playground'
     use {
         'L3MON4D3/LuaSnip',
-        config = function ()
+        config = function()
             require'luasnip'.config.set_config({
                 region_check_events = 'InsertEnter',
-                delete_check_events = 'InsertLeave',
+                delete_check_events = 'InsertLeave'
             })
-            require"luasnip.loaders.from_lua".lazy_load({
-                paths = { "./snippets"}
-            })
+            require"luasnip.loaders.from_lua".lazy_load({paths = {"./snippets"}})
         end
     }
     use {
@@ -520,7 +518,6 @@ ncmap('<C-w>d', 'lua OpenInRight()')
 ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
-
 
 ---- Filetype overrides
 api.nvim_create_autocmd({"FileType"}, {
