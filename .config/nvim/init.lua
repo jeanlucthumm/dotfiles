@@ -406,7 +406,7 @@ function MelangeTheme(background)
 end
 
 local function fallbackTheme()
-    RosePineTheme('dawn')
+    RosePineTheme('light')
 end
 local function autoTheme()
     local has_theme, theme = pcall(require, "theme")
@@ -423,7 +423,7 @@ local function autoTheme()
             fallbackTheme()
         end
     elseif env.THEME == 'solarized-light' then
-        RosePineTheme('dawn')
+        RosePineTheme('light')
     else
         fallbackTheme()
     end
