@@ -15,28 +15,29 @@ else
   touch $STEP_FILE
 end
 
+if not contains "RUST" $STEPS
+  and not [ "$DISTRO" = "Arch" ]
+  echo $LOG "Setting up Rust"
+
+  # TODO: Make this generic
+  sudo /usr/bin/pacman -S --needed rustup
+  and rustup default stable
+
+  and echo "RUST" >> $STEP_FILE
+end
+
 if not contains "PARU" $STEPS
   and [ "$DISTRO" = "Arch" ]
   echo $LOG "Setting up paru"
 
-  generic_install clang
-  and sudo /usr/bin/pacman -S --needed git base-devel
-  and git clone https://aur.archlinux.org/paru.git
-  and cd paru
+  and sudo /usr/bin/pacman -S --needed git base-devel clang
+  and git clone https://aur.archlinux.org/paru.git /tmp/paru
+  and cd /tmp/paru
   and makepkg -si
   and cd ..
   and rm -rf paru
 
   and echo "PARU" >> $STEP_FILE
-end
-
-if not contains "RUST" $STEPS
-  echo $LOG "Setting up Rust"
-
-  sudo /usr/bin/pacman -S --needed rustup
-  and rustup default stable
-
-  and echo "RUST" >> $STEP_FILE
 end
 
 if not contains "INIT" $STEPS
@@ -46,11 +47,16 @@ if not contains "INIT" $STEPS
   echo \t2. Arch + GUI
   read -l -P "(1/2): " resp
 
+  set -l SUFF ".txt"
+  if [ "$DISTRO" = "Arch" ]
+    set SUFF "_arch.txt"
+  end
+
   and switch $resp
     case 1
-      /usr/bin/cat "$CONF/yadm/term_progs.txt" | read -za PROGS
+      /usr/bin/cat "$CONF/yadm/term_progs$SUFF" | read -za PROGS
     case 2
-      /usr/bin/cat "$CONF/progs.txt" | read -za PROGS
+      /usr/bin/cat "$CONF/progs$SUFF" | read -za PROGS
     case '*'
       echo "Uknown option: $resp"
       exit 1
@@ -65,8 +71,10 @@ end
 if not contains "FISH" $STEPS
   echo $LOG "Setting up fish"
 
-  curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
-  and fisher update
+  set -l CHECKSUM "429a76e5b5e692c921aa03456a41258b614374426f959535167222a28b676201 -"
+  set -l URL "https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install"
+  curl -sL $URL | tee /tmp/omf-install | sha256sum --quiet -c (echo $CHECKSUM | psub)
+  and fish /tmp/omf-install
 
   and echo "FISH" >> $STEP_FILE
 end
