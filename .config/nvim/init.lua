@@ -489,6 +489,8 @@ ncmap('<Leader>dc', 'lua require"dap".continue()')
 -- <Leader>w    running
 ncmap('<Leader>ww', 'RunCode')
 ncmap('<Leader>wc', 'RunClose')
+-- <Leader>p    projects
+-- reserved
 
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
