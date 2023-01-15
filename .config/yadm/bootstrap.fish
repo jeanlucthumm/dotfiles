@@ -16,7 +16,6 @@ else
 end
 
 if not contains "RUST" $STEPS
-  and not [ "$DISTRO" = "Arch" ]
   echo $LOG "Setting up Rust"
 
   # TODO: Make this generic
