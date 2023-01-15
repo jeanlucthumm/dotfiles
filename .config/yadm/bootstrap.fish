@@ -30,6 +30,7 @@ if not contains "PARU" $STEPS
   echo $LOG "Setting up paru"
 
   and sudo /usr/bin/pacman -S --needed git base-devel clang
+  and rm -rf /tmp/paru
   and git clone https://aur.archlinux.org/paru.git /tmp/paru
   and cd /tmp/paru
   and makepkg -si
