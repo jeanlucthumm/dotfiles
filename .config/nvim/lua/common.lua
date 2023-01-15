@@ -6,14 +6,19 @@ lsp_status.register_progress()
 local M = {}
 
 function M.map(mode, lhs, rhs, opts)
-    local options = {noremap = true}
+    local options = { noremap = true }
     if opts then options = vim.tbl_extend('force', options, opts) end
     api.nvim_set_keymap(mode, lhs, rhs, options)
 end
+
 function M.nmap(...) M.map('n', ...) end
+
 function M.vmap(...) M.map('v', ...) end
+
 function M.imap(...) M.map('i', ...) end
+
 function M.ncmap(lhs, rhs, ...) M.nmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
+
 function M.vcmap(lhs, rhs, ...) M.vmap(lhs, '<Cmd>' .. rhs .. '<CR>', ...) end
 
 function M.hover()
@@ -24,7 +29,11 @@ function M.on_attach(client, bufnr)
     -- Sets up LSP keybindings when LSP attaches to the buffer
     local function bnmap(lhs, rhs, ...)
         api.nvim_buf_set_keymap(bufnr, "n", lhs, "<Cmd>lua " .. rhs .. "<CR>",
-                                ...)
+            ...)
+    end
+
+    local function bmap(keys, func)
+        vim.keymap.set('n', keys, func, { buffer = bufnr })
     end
 
     -- LSP Status
@@ -33,7 +42,7 @@ function M.on_attach(client, bufnr)
     api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     -- Mappings
-    local opts = {noremap = true, silent = true}
+    local opts = { noremap = true, silent = true }
     bnmap("gd", "vim.lsp.buf.definition()", opts)
     bnmap("K", "vim.lsp.buf.hover()", opts)
     bnmap("<Leader>r", "vim.lsp.buf.rename()", opts)
@@ -42,8 +51,8 @@ function M.on_attach(client, bufnr)
     bnmap("<Leader>kn", "vim.diagnostic.goto_next()", opts)
     bnmap("<Leader>kk", "vim.diagnostic.open_float()", opts)
     bnmap("<Leader>wl",
-          "require'common'.print_table(vim.lsp.buf.list_workspace_folders())",
-          opts)
+        "require'common'.print_table(vim.lsp.buf.list_workspace_folders())",
+        opts)
 
     -- Capability specific commands
     if client.server_capabilities.documentHighlightProvider then
@@ -54,10 +63,12 @@ function M.on_attach(client, bufnr)
       autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
       augroup END
-      ]], false)
+      ]] , false)
     end
     if client.server_capabilities.documentFormattingProvider then
-        bnmap("<Leader>f", "vim.lsp.buf.format()", opts)
+        bmap('<Leader>f', function()
+            vim.lsp.buf.format({ timeout_ms = '5000' })
+        end)
     end
     if client.server_capabilities.codeLensProvider then
         -- CodeLens provides extra actions like "Run Test"
