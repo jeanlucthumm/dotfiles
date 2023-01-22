@@ -62,6 +62,4 @@ set -x MANPAGER "sh -c 'sed -e s/.\\\\x08//g | bat -l man -p'"
 # Fish prompts have automatic detection of venv
 set -x VIRTUAL_ENV_DISABLE_PROMPT 1
 
-set -x CONFIG $XDG_CONFIG_HOME
-set -x CONF $CONFIG
-set GITHUB "https://www.github.com/jeanlucthumm"
+set -x CONF $XDG_CONFIG_HOME

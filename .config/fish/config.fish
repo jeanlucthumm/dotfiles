@@ -17,77 +17,52 @@ importIfExists $HOME/.cargo/env
 ### ===========================================================================
 ### Alias
 
-set -l OS (uname)
+if status is-interactive
+  if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
+    alias pacman="paru"
 
-if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
-  alias pacman="paru"
+    alias sysyadm="sudo yadm -Y /etc/yadm"
+    alias cp="xcp"
+    alias dark="themer solarized-dark"
+    alias light="themer solarized-light"
 
-  alias sysyadm="sudo yadm -Y /etc/yadm"
-  alias scli="scli -s"
-  alias cp="xcp"
-  alias dark="themer solarized-dark"
-  alias light="themer solarized-light"
-
-  if pgrep -x "i3" > /dev/null
-    alias i3config="$EDITOR $CONFIG/i3/config##template"
-    alias picomconfig="$EDITOR $CONFIG/picom.conf"
-    alias dim="xrandr --output DP-1 --brightness 0.5"
-    alias undim="xrandr --output DP-1 --brightness 1.0"
-    alias clip="xclip -selection clipboard"
+    if pgrep -x "i3" > /dev/null
+      alias i3config="$EDITOR $CONFIG/i3/config##template"
+      alias picomconfig="$EDITOR $CONFIG/picom.conf"
+      alias dim="xrandr --output DP-1 --brightness 0.5"
+      alias undim="xrandr --output DP-1 --brightness 1.0"
+      alias clip="xclip -selection clipboard"
+    end
+    if pgrep -x "sway" > /dev/null
+      alias i3config="$EDITOR $CONFIG/sway/config"
+    end
+    if [ "$XDG_SESSION_TYPE" = "x11" ]
+      alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
+    end
   end
-  if pgrep -x "sway" > /dev/null
-    alias i3config="$EDITOR $CONFIG/sway/config"
+
+  if [ "$TERM" = "xterm-kitty" ]
+    alias icat="kitty +kitten icat"
+    alias newterm='kitty --detach --directory (pwd)'
   end
+
+
+  # Default overrides
+  alias vim="nvim"
+  alias neov="neovide --multigrid --maximized"
+  alias cat="bat"
+  alias ls="exa"
+  alias docker="sudo docker"
+  alias ssh="TERM=xterm-256color /usr/bin/ssh"
+
+  alias cdf='cd (fd -t d . ~ | fzf)'
+  alias venv="source .venv/bin/activate.fish"
+  alias g="git"
+  alias clear-nvim-swap="rm -rf $XDG_DATA_HOME/nvim/swap"
 end
-
-if [ "$TERM" = "xterm-kitty" ]
-  alias icat="kitty +kitten icat"
-  alias newterm='kitty --detach --directory (pwd)'
-end
-
-
-# Default overrides
-alias vim="nvim"
-alias neov="neovide --multigrid --maximized"
-alias cat="bat"
-alias ls="exa"
-alias docker="sudo docker"
-alias ssh="TERM=xterm-256color /usr/bin/ssh"
-
-alias so="source $CONFIG/fish/config.fish"
-alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
-alias fishconfig="$EDITOR $CONFIG/fish/config.fish"
-alias cdf='cd (fd -t d . ~ | fzf)'
-alias venv="source .venv/bin/activate.fish"
-alias g="git"
-alias t="task"
-alias ta="task active"
 
 ### ===========================================================================
 ### Functions
-
-function work
-  set -l dir_file $CONFIG/fish/work_dir_file.txt
-  if count $argv &> /dev/null
-    echo $argv[1] > $dir_file
-  else if test -e $dir_file
-    cd (cat $dir_file)
-  else
-    echo "No work path set."
-  end
-end
-
-function cdv
-  if count $argv &> /dev/null
-    if test -e "$CODE/$argv[1]"
-      cd "$CODE/$argv[1]"
-    else
-      cd (fd -1a -t d -d 1 "$argv[1]" "$CODE")
-    end
-  else
-    cd $CODE
-  end
-end
 
 function posture
   while true
