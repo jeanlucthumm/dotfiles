@@ -4,7 +4,7 @@
 
 # File containing a list of steps already executed.
 # This avoid doing the same thing twice if we call bootstrap multiple times
-set STEP_FILE $CONFIG/yadm/steps.txt
+set STEP_FILE $CONF/yadm/steps.txt
 
 set LOG "-->"
 

@@ -26,3 +26,5 @@ unrar
 unzip
 xcp
 yarn
+exa
+git-delta
