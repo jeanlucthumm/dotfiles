@@ -45,7 +45,8 @@ require'packer'.startup(function(use)
         run = ':TSUpdate',
         config = function()
             require'nvim-treesitter.configs'.setup {
-                ensure_installed = 'all',
+                ensure_installed = {'c', 'lua', 'rust', 'fish'},
+                auto_install = true,
                 highlight = {enable = true},
                 indent = {enable = true, disable = {"python", "yaml"}}
             }
