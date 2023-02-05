@@ -27,18 +27,16 @@ if status is-interactive
     alias light="themer solarized-light"
 
     if pgrep -x "i3" > /dev/null
-      alias i3config="$EDITOR $CONFIG/i3/config##template"
-      alias picomconfig="$EDITOR $CONFIG/picom.conf"
+      alias i3config="$EDITOR $CONF/i3/config##template"
+      alias picomconfig="$EDITOR $CONF/picom.conf"
       alias dim="xrandr --output DP-1 --brightness 0.5"
       alias undim="xrandr --output DP-1 --brightness 1.0"
       alias clip="xclip -selection clipboard"
     end
     if pgrep -x "sway" > /dev/null
-      alias i3config="$EDITOR $CONFIG/sway/config"
+      alias i3config="$EDITOR $CONF/sway/config"
     end
-    if [ "$XDG_SESSION_TYPE" = "x11" ]
-      alias fixkeyb="source $HOME/.xprofile && xmodmap $CONFIG/capsrebind.Xmodmap"
-    end
+    alias fixkeyb="source $HOME/.xprofile && xmodmap $CONF/capsrebind.Xmodmap"
   end
 
   if [ "$TERM" = "xterm-kitty" ]
