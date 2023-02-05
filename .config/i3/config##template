@@ -200,7 +200,7 @@ mode "custom" {
     bindsym $mod+p exec --no-startup-id /usr/bin/picom --experimental-backends --backend glx
     bindsym $mod+x exec --no-startup-id /usr/bin/xmodmap "$HOME/.config/capsrebind.Xmodmap"
     bindsym $mod+r exec --no-startup-id /usr/bin/systemctl --user restart redshift
-    bindsym $mod+l exec --no-startup-id bash "$HOME/.config/i3/rust-dev.layout.sh"
+    bindsym $mod+l exec --no-startup-id i3-layout-manager; mode "default"
 
     bindsym $mod+Return mode "default"
     bindsym $mod+Escape mode "default"
