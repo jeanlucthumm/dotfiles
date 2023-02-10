@@ -11,8 +11,13 @@ settings:
       normal:
         <Ctrl+Shift+j>: tab-move -
         <Ctrl+Shift+k>: tab-move +
+        <Ctrl+d>: tab-close
+        <Ctrl+u>: undo
         J: tab-prev
         K: tab-next
+        d: scroll-page 0 0.5
+        u: scroll-page 0 -0.5
+        x: tab-close
   bindings.key_mappings:
     global:
       <Ctrl+6>: <Ctrl+^>
@@ -32,7 +37,7 @@ settings:
     https://webgazer.cs.brown.edu: true
   content.media.video_capture:
     https://webgazer.cs.brown.edu: true
-  content.notifications:
+  content.notifications.enabled:
     https://gitter.im: true
     https://tomato-timer.com: true
     https://www.reddit.com: false
@@ -45,10 +50,10 @@ settings:
     global: null
   fonts.default_size:
     global: 8pt
+  qt.chromium.low_end_device_mode:
+    global: auto
   qt.highdpi:
     global: false
-  qt.low_end_device_mode:
-    global: auto
   url.default_page:
     global: https://www.google.com/
   url.searchengines:
@@ -60,4 +65,4 @@ settings:
   window.title_format:
     global: '{perc}{current_title}{title_sep}qutebrowser'
   zoom.default:
-    global: 125%
+    global: 100%
