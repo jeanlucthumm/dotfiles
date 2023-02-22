@@ -173,7 +173,6 @@ require'packer'.startup(function(use)
         'simrat39/symbols-outline.nvim',
         config = function()
             require'symbols-outline'.setup({
-                auto_close = true,
                 autofold_depth = 1,
                 relative_width = false,
                 width = 40
@@ -227,11 +226,11 @@ require'packer'.startup(function(use)
                     mappings = {
                         i = {
                             ['<C-k>'] = 'move_selection_previous',
-                            ['<C-j>'] = 'move_selection_next'
+                            ['<C-j>'] = 'move_selection_next',
+                            ['<C-d>'] = require'telescope.actions'.delete_buffer,
                         },
                         n = {
                             ['<C-c>'] = 'close',
-                            ['<C-x>'] = require'telescope.actions'.delete_buffer
                         }
                     }
                 }
