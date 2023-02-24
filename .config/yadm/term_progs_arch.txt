@@ -13,8 +13,6 @@ lua-format
 luarocks
 make
 neovim
-nmap
-npm
 ntfs-3g
 openssh
 p7zip
@@ -26,5 +24,3 @@ unrar
 unzip
 xcp
 yarn
-exa
-git-delta
