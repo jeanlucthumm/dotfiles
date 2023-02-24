@@ -23,8 +23,38 @@ require'packer'.startup(function(use)
     -- LSP & DAP & nvim
     use 'neovim/nvim-lspconfig'
     use {
-        'williamboman/nvim-lsp-installer',
-        config = function() require '_lsp_config' end
+        'williamboman/mason.nvim',
+        config = function() require'mason'.setup() end
+    }
+    use {
+        'folke/neodev.nvim',
+        config = function ()
+            require'neodev'.setup{}
+        end
+    }
+    use {
+        'williamboman/mason-lspconfig',
+        after = 'neodev.nvim',
+        config = function()
+            require'mason-lspconfig'.setup {
+                ensure_installed = {"lua_ls", "rust_analyzer"}
+            }
+            -- Set default configuration for all installed servers
+            for _, lsp in ipairs(require 'mason-lspconfig'.get_installed_servers()) do
+                local config = {
+                    capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
+                    on_attach = require 'common'.on_attach
+                }
+                if lsp == 'lua_ls' then
+                    config.settings = {
+                        Lua = {
+                            telemetry = { enable = false }
+                        }
+                    }
+                end
+                require'lspconfig'[lsp].setup(config)
+            end
+        end
     }
     use 'nvim-lua/lsp-status.nvim'
     use {'mfussenegger/nvim-dap', config = function() require 'dap_config' end}
