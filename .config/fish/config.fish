@@ -72,6 +72,7 @@ function posture
 end
 
 function i3lock
+  timew stop
   /usr/bin/i3lock -c (python3 $CODE/bin/random_hex.py)
   sleep 30m
   xset dpms force off
