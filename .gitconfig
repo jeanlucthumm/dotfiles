@@ -7,8 +7,6 @@
   excludesfile = ~/.config/.gitignore
 [interactive]
   diffFilter = delta --color-only
-[init]
-  defaultBranch = master
 [merge]
   conflictstyle = diff3
 [filter "lfs"]
