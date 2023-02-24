@@ -6,14 +6,18 @@ local env = vim.env
 local fn = vim.fn
 local cmd = vim.cmd
 
-local has_google, google = pcall(require, "google")
+local has_google, google = pcall(require, 'google')
 
 --- Packer
 local packer_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(packer_path)) > 0 then
     PackerBootstrap = fn.system({
-        'git', 'clone', '--depth', '1',
-        'https://github.com/wbthomason/packer.nvim', packer_path
+        'git',
+        'clone',
+        '--depth',
+        '1',
+        'https://github.com/wbthomason/packer.nvim',
+        packer_path,
     })
 end
 
@@ -24,43 +28,35 @@ require'packer'.startup(function(use)
     use 'neovim/nvim-lspconfig'
     use {
         'williamboman/mason.nvim',
-        config = function() require'mason'.setup() end
+        config = function() require'mason'.setup() end,
     }
-    use {
-        'folke/neodev.nvim',
-        config = function ()
-            require'neodev'.setup{}
-        end
-    }
+    use {'folke/neodev.nvim', config = function() require'neodev'.setup {} end}
     use {
         'williamboman/mason-lspconfig',
         after = 'neodev.nvim',
         config = function()
             require'mason-lspconfig'.setup {
-                ensure_installed = {"lua_ls", "rust_analyzer"}
+                ensure_installed = {'lua_ls', 'rust_analyzer'},
             }
             -- Set default configuration for all installed servers
-            for _, lsp in ipairs(require 'mason-lspconfig'.get_installed_servers()) do
+            for _, lsp in ipairs(
+                              require'mason-lspconfig'.get_installed_servers()) do
                 local config = {
-                    capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
-                    on_attach = require 'common'.on_attach
+                    capabilities = require'cmp_nvim_lsp'.default_capabilities(),
+                    on_attach = require'common'.on_attach,
                 }
                 if lsp == 'lua_ls' then
-                    config.settings = {
-                        Lua = {
-                            telemetry = { enable = false }
-                        }
-                    }
+                    config.settings = {Lua = {telemetry = {enable = false}}}
                 end
                 require'lspconfig'[lsp].setup(config)
             end
-        end
+        end,
     }
     use 'nvim-lua/lsp-status.nvim'
     use {'mfussenegger/nvim-dap', config = function() require 'dap_config' end}
     use {
         'rcarriga/nvim-dap-ui',
-        config = function() require'dapui'.setup {} end
+        config = function() require'dapui'.setup {} end,
     }
     use {
         'mfussenegger/nvim-dap-python',
@@ -68,7 +64,7 @@ require'packer'.startup(function(use)
         config = function()
             require'dap-python'.setup('~/.virtualenv/debug/bin/python')
             require'dap-python'.test_runner = 'pytest'
-        end
+        end,
     }
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -78,20 +74,20 @@ require'packer'.startup(function(use)
                 ensure_installed = {'c', 'lua', 'rust', 'fish'},
                 auto_install = true,
                 highlight = {enable = true},
-                indent = {enable = true, disable = {"python", "yaml"}}
+                indent = {enable = true, disable = {'python', 'yaml'}},
             }
             -- Custom parser for go template files
             local parser_config =
                 require'nvim-treesitter.parsers'.get_parser_configs()
             parser_config.gotmpl = {
                 install_info = {
-                    url = "https://github.com/ngalaiko/tree-sitter-go-template",
-                    files = {"src/parser.c"}
+                    url = 'https://github.com/ngalaiko/tree-sitter-go-template',
+                    files = {'src/parser.c'},
                 },
-                filetype = "gotmpl",
-                used_by = {"gohtmltmpl", "gotexttmpl", "gotmpl"}
+                filetype = 'gotmpl',
+                used_by = {'gohtmltmpl', 'gotexttmpl', 'gotmpl'},
             }
-        end
+        end,
     }
     use 'nvim-treesitter/playground'
     use {
@@ -99,28 +95,35 @@ require'packer'.startup(function(use)
         config = function()
             require'luasnip'.config.set_config({
                 region_check_events = 'InsertEnter',
-                delete_check_events = 'InsertLeave'
+                delete_check_events = 'InsertLeave',
             })
-            require"luasnip.loaders.from_lua".lazy_load({paths = {"./snippets"}})
-        end
+            require'luasnip.loaders.from_lua'.lazy_load({paths = {'./snippets'}})
+        end,
     }
     use {
         'hrsh7th/nvim-cmp',
         requires = {
-            'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
-            'hrsh7th/cmp-nvim-lsp-signature-help', 'saadparwaiz1/cmp_luasnip',
-            'neovim/nvim-lspconfig', 'L3MON4D3/LuaSnip', 'onsails/lspkind-nvim'
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+            'hrsh7th/cmp-nvim-lsp-signature-help',
+            'saadparwaiz1/cmp_luasnip',
+            'neovim/nvim-lspconfig',
+            'L3MON4D3/LuaSnip',
+            'onsails/lspkind-nvim',
         },
         config = function()
             local cmp = require 'cmp'
             local luasnip = require 'luasnip'
             local sources = nil
             if has_google then
-                sources = require"google".cmp_sources
+                sources = require'google'.cmp_sources
             else
                 sources = cmp.config.sources {
-                    {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
-                    {name = 'nvim_lsp_signature_help'}
+                    {name = 'nvim_lsp'},
+                    {name = 'luasnip'},
+                    {name = 'buffer'},
+                    {name = 'nvim_lsp_signature_help'},
                 }
             end
 
@@ -128,7 +131,7 @@ require'packer'.startup(function(use)
                 snippet = {
                     expand = function(args)
                         require'luasnip'.lsp_expand(args.body)
-                    end
+                    end,
                 },
                 mapping = {
                     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4),
@@ -149,19 +152,19 @@ require'packer'.startup(function(use)
                         else
                             fallback()
                         end
-                    end, {"i", "s"}),
+                    end, {'i', 's'}),
                     ['<S-Tab>'] = cmp.mapping(function(fallback)
                         if luasnip.jumpable(-1) then
                             luasnip.jump(-1)
                         else
                             fallback()
                         end
-                    end, {"i", "s"})
+                    end, {'i', 's'}),
                 },
                 sources = sources,
-                formatting = {format = require'lspkind'.cmp_format()}
+                formatting = {format = require'lspkind'.cmp_format()},
             }
-        end
+        end,
     }
     use 'mhinz/vim-signify'
     use 'theHamsta/nvim-dap-virtual-text'
@@ -172,10 +175,10 @@ require'packer'.startup(function(use)
             require'rust-tools'.setup {
                 server = {
                     cargo = {loadOutDirsFromCheck = true},
-                    on_attach = require'common'.on_attach
-                }
+                    on_attach = require'common'.on_attach,
+                },
             }
-        end
+        end,
     }
     use {
         'akinsho/flutter-tools.nvim',
@@ -187,15 +190,15 @@ require'packer'.startup(function(use)
                 outline = {auto_open = false},
                 lsp = {
                     on_attach = require'common'.on_attach,
-                    settings = {lineLength = 100}
-                }
+                    settings = {lineLength = 100},
+                },
             }
 
-        end
+        end,
     }
     use {
         'norcalli/nvim-terminal.lua',
-        config = function() require'terminal'.setup() end
+        config = function() require'terminal'.setup() end,
     }
     use {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu'}
     use 'glepnir/lspsaga.nvim'
@@ -205,9 +208,9 @@ require'packer'.startup(function(use)
             require'symbols-outline'.setup({
                 autofold_depth = 1,
                 relative_width = false,
-                width = 40
+                width = 40,
             })
-        end
+        end,
     }
 
     -- Theme
@@ -220,9 +223,9 @@ require'packer'.startup(function(use)
         config = function()
             require'rose-pine'.setup {
                 dark_variant = 'moon',
-                disable_italics = true
+                disable_italics = true,
             }
-        end
+        end,
     }
     use 'folke/tokyonight.nvim'
     use 'tjdevries/colorbuddy.nvim'
@@ -234,16 +237,16 @@ require'packer'.startup(function(use)
     use 'junegunn/fzf.vim'
     use {
         'ojroques/nvim-lspfuzzy',
-        config = function() require'lspfuzzy'.setup {} end
+        config = function() require'lspfuzzy'.setup {} end,
     }
     use {
         'kyazdani42/nvim-tree.lua',
         config = function()
             require'nvim-tree'.setup {
                 update_focused_file = {enable = true},
-                update_cwd = true
+                update_cwd = true,
             }
-        end
+        end,
     }
     use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install'}
     use {
@@ -252,7 +255,7 @@ require'packer'.startup(function(use)
         config = function()
             require'telescope'.setup {
                 defaults = {
-                    path_display = {"smart"},
+                    path_display = {'smart'},
                     mappings = {
                         i = {
                             ['<C-k>'] = 'move_selection_previous',
@@ -267,14 +270,14 @@ require'packer'.startup(function(use)
             }
             require'telescope'.load_extension('vim_bookmarks')
             require'telescope'.load_extension('flutter')
-        end
+        end,
     }
     use 'tom-anders/telescope-vim-bookmarks.nvim'
     use 'nvim-lualine/lualine.nvim' -- configured in the theme section
     use 'mhinz/vim-startify'
     use {
         'rcarriga/nvim-notify',
-        config = function() vim.notify = require "notify" end
+        config = function() vim.notify = require 'notify' end,
     }
     use 'xiyaowong/virtcolumn.nvim'
 
@@ -291,15 +294,15 @@ require'packer'.startup(function(use)
                 default = {
                     chop_down_table = true,
                     indent_width = 4,
-                    continuation_indent_width = 4
-                }
+                    continuation_indent_width = 4,
+                },
             }
-        end
+        end,
     }
     use 'pseewald/vim-anyfold'
     use {
         'onsails/lspkind-nvim',
-        config = function() require'lspkind'.init {} end
+        config = function() require'lspkind'.init {} end,
     }
     use {
         'windwp/nvim-autopairs',
@@ -308,7 +311,7 @@ require'packer'.startup(function(use)
             require'cmp'.event:on('confirm_done',
                                   require'nvim-autopairs.completion.cmp'.on_confirm_done(
                                       {map_char = {tex = ''}}))
-        end
+        end,
     }
     use 'bmundt6/workflowish'
     use {'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end}
@@ -320,7 +323,7 @@ require'packer'.startup(function(use)
         config = function()
             vim.lsp.handlers['textDocument/codeAction'] =
                 require'lsputil.codeAction'.code_action_handler
-        end
+        end,
     }
 
     -- Functional
@@ -332,8 +335,8 @@ require'packer'.startup(function(use)
         'CRAG666/code_runner.nvim',
         requires = 'nvim-lua/plenary.nvim',
         config = function()
-            require'code_runner'.setup {filetype = {python = "python -u"}}
-        end
+            require'code_runner'.setup {filetype = {python = 'python -u'}}
+        end,
     }
 
     if has_google then google.packer(use) end
@@ -401,7 +404,7 @@ function GruvboxTheme(background)
     cmd('colorscheme gruvbox')
 end
 function MaterialTheme(background) -- prefer 'deep ocean'
-    if background == "dark" then
+    if background == 'dark' then
         g.material_style = 'deep ocean'
     elseif background == 'light' then
         g.material_style = 'lighter'
@@ -435,11 +438,9 @@ function MelangeTheme(background)
     cmd('colorscheme melange')
 end
 
-local function fallbackTheme()
-    RosePineTheme('light')
-end
+local function fallbackTheme() RosePineTheme('light') end
 local function autoTheme()
-    local has_theme, theme = pcall(require, "theme")
+    local has_theme, theme = pcall(require, 'theme')
     if has_theme then
         theme.setup()
         return
@@ -465,8 +466,8 @@ local function lsp_status_component() return require'lsp-status'.status() end
 require'lualine'.setup {
     options = {theme = lualine_theme, extensions = {'quickfix', 'nvim-tree'}},
     sections = {
-        lualine_x = {lsp_status_component, 'encoding', 'fileformat', 'filetype'}
-    }
+        lualine_x = {lsp_status_component, 'encoding', 'fileformat', 'filetype'},
+    },
 }
 
 ---- Keymap (note that some keys are defined in _lsp_config.lua)
@@ -495,8 +496,8 @@ ncmap('<Leader>a', 'Lspsaga code_action')
 vcmap('<Leader>a', '<C-U>Lspsaga range_code_action')
 ncmap('<Leader><Leader>', 'write')
 -- <Leader>v    nvim config
-ncmap('<Leader>ve', ":exe 'tabedit' stdpath('config').'/init.lua'")
-nmap('<Leader>vs', ":exe 'source' stdpath('config').'/init.lua'<CR>")
+ncmap('<Leader>ve', ':exe \'tabedit\' stdpath(\'config\').\'/init.lua\'')
+nmap('<Leader>vs', ':exe \'source\' stdpath(\'config\').\'/init.lua\'<CR>')
 -- <Leader>c    quickfix, cd
 ncmap('<Leader>cl', 'cclose')
 ncmap('<Leader>cc', 'cc')
@@ -547,26 +548,26 @@ ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
 ---- Filetype overrides
-api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"lua"},
+api.nvim_create_autocmd({'FileType'}, {
+    pattern = {'lua'},
     callback = function()
         ncmap('<F10>', 'Neomake')
         ncmap('<Leader>f', 'lua require"nvim-lua-format".format()')
         opt.tabstop = 4
         opt.shiftwidth = 4
-    end
+    end,
 })
-api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"rust"},
-    callback = function() g.auto_save = 1 end
+api.nvim_create_autocmd({'FileType'}, {
+    pattern = {'rust'},
+    callback = function() g.auto_save = 1 end,
 })
-api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"proto"},
-    callback = function() ncmap('<Leader>f', 'ClangFormat') end
+api.nvim_create_autocmd({'FileType'}, {
+    pattern = {'proto'},
+    callback = function() ncmap('<Leader>f', 'ClangFormat') end,
 })
-api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"python"},
-    callback = function() nmap('<Leader>f', ':w<CR>:!black %<CR>') end
+api.nvim_create_autocmd({'FileType'}, {
+    pattern = {'python'},
+    callback = function() nmap('<Leader>f', ':w<CR>:!black %<CR>') end,
 })
 
 ---- Util
