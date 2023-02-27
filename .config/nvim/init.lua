@@ -360,7 +360,6 @@ g.auto_save = 0
 g.auto_save_events = {'InsertLeave', 'TextChanged', 'CursorHold'}
 g.neovide_cursor_animation_length = 0.05
 g.bookmark_no_default_key_mappings = 1
-g.symbols_outline = {show_symbol_details = false}
 g.mapleader = ' ' -- sets <Leader> to <space>
 g.startify_change_to_dir = 0 -- do not change cwd when opening files
 g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
@@ -498,7 +497,7 @@ nmap('cp', ':let @" = expand("%:p")<CR>') -- yank file path
 ncmap('<Leader>q', 'qall')
 ncmap('<Leader>o', 'Telescope lsp_document_symbols')
 ncmap('<Leader>O', 'Telescope lsp_dynamic_workspace_symbols')
-ncmap('<Leader>s', 'SymbolsOutline')
+ncmap('<Leader>s', 'SymbolsOutlineOpen')
 ncmap('<Leader>t', 'NvimTreeFocus')
 ncmap('<Leader>a', 'Lspsaga code_action')
 vcmap('<Leader>a', '<C-U>Lspsaga range_code_action')
