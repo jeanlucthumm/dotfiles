@@ -505,7 +505,10 @@ ncmap('<Leader><Leader>', 'write')
 -- <Leader>v    nvim config
 ncmap('<Leader>ve', ':exe \'tabedit\' stdpath(\'config\').\'/init.lua\'')
 nmap('<Leader>vs', ':exe \'source\' stdpath(\'config\').\'/init.lua\'<CR>')
-ncmap('<Leader>vp', 'PackerCompile')
+nmap('<Leader>vp', function ()
+    require'packer'.compile()
+    vim.notify("Packer compiled")
+end)
 -- <Leader>c    quickfix, cd
 ncmap('<Leader>cl', 'cclose')
 ncmap('<Leader>cc', 'cc')

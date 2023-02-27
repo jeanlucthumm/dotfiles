@@ -6,9 +6,7 @@ lsp_status.register_progress()
 local M = {}
 
 function M.map(mode, lhs, rhs, opts)
-    local options = { noremap = true }
-    if opts then options = vim.tbl_extend('force', options, opts) end
-    api.nvim_set_keymap(mode, lhs, rhs, options)
+    vim.keymap.set(mode, lhs, rhs, opts)
 end
 
 function M.nmap(...) M.map('n', ...) end
