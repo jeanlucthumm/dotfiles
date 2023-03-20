@@ -396,6 +396,7 @@ opt.updatetime = 500
 opt.guifont = 'JetBrainsMono Nerd Font:h8'
 opt.completeopt = 'menu,menuone,noselect'
 opt.showmode = false
+opt.scrolloff = 999 -- min number of lines to keep above and below cursor
 if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
 
 ---- Theme
