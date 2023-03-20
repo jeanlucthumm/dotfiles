@@ -56,7 +56,10 @@ if status is-interactive
   alias cdf='cd (fd -t d . ~ | fzf)'
   alias venv="source .venv/bin/activate.fish"
   alias g="git"
-  alias clear-nvim-swap="rm -rf $XDG_DATA_HOME/nvim/swap"
+  alias clear-nvim-swap="rm -rf ~/.local/state/nvim/swap"
+  alias t="task"
+  alias ta="task active"
+  alias day="timew day"
 end
 
 ### ===========================================================================
