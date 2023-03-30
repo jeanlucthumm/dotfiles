@@ -564,8 +564,8 @@ ncmap('<C-e>',
 nmap('<C-q>', '<C-^>')
 ncmap('<M-e>', 'Telescope find_files')
 ncmap('<C-e>', 'Telescope buffers')
-ncmap('<M-1>', 'NvimTreeToggle')
 ncmap('<M-f>', 'NvimTreeFindFile')
+ncmap('<M-t>', 'NvimTreeOpen %:h')
 ncmap('<C-w>d', 'lua OpenInRight()')
 -- <F*>
 ncmap('<F4>', 'Bdelete')
