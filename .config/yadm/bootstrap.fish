@@ -78,3 +78,16 @@ if not contains "FISH" $STEPS
 
   and echo "FISH" >> $STEP_FILE
 end
+
+if not contains "TASK" $STEPS
+  echo $LOG "Setting up taskwarrior"
+
+  # See https://github.com/GothenburgBitFactory/taskwarrior/issues/1439
+  cd ~/.task/hooks
+  and ln -f -s on-modify.blocks_attr.py on-add.blocks_attr.py
+  and ln -f -s on-modify.blocks_attr.py on-launch.blocks_attr.py
+  and task config uda.blocks.type string
+  and task config uda.blocks.label Blocks
+
+  and echo "TASK" >> $STEP_FILE
+end
