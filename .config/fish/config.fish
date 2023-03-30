@@ -59,6 +59,7 @@ if status is-interactive
   alias clear-nvim-swap="rm -rf ~/.local/state/nvim/swap"
   alias t="task"
   alias ta="task active"
+  alias tr="task ready"
   alias day="timew day"
 end
 
