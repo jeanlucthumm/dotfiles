@@ -396,7 +396,7 @@ opt.updatetime = 500
 opt.guifont = 'JetBrainsMono Nerd Font:h8'
 opt.completeopt = 'menu,menuone,noselect'
 opt.showmode = false
-opt.scrolloff = 999 -- min number of lines to keep above and below cursor
+opt.scrolloff = 30 -- min number of lines to keep above and below cursor
 if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
 
 ---- Theme
@@ -417,13 +417,14 @@ function SolarizedLuaTheme(background)
     g.solarized_italics = 0
     cmd('colorscheme solarized')
 end
+
 function GruvboxTheme(background)
-    g.gruvbox_italic = 1
-    g.gruvbox_bold = 1
     opt.background = background
+    lualine_theme = 'gruvbox_' .. background
     vim.v['$BAT_THEME'] = 'gruvbox'
     cmd('colorscheme gruvbox')
 end
+
 function MaterialTheme(background) -- prefer 'deep ocean'
     if background == 'dark' then
         g.material_style = 'deep ocean'
