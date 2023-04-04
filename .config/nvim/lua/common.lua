@@ -24,15 +24,8 @@ function M.hover()
 end
 
 function M.on_attach(client, bufnr)
-    -- Sets up LSP keybindings when LSP attaches to the buffer
-    local function bnmap(lhs, rhs, ...)
-        api.nvim_buf_set_keymap(bufnr, "n", lhs, "<Cmd>lua " .. rhs .. "<CR>",
-            ...)
-    end
-
-    local function bmap(keys, func)
-        vim.keymap.set('n', keys, func, { buffer = bufnr })
-    end
+    local map = M.map
+    local nmap = M.nmap
 
     -- LSP Status
     lsp_status.on_attach(client)
@@ -40,15 +33,15 @@ function M.on_attach(client, bufnr)
     api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     -- Mappings
-    local opts = { noremap = true, silent = true }
-    bnmap("gd", "vim.lsp.buf.definition()", opts)
-    bnmap("K", "vim.lsp.buf.hover()", opts)
-    bnmap("<Leader>r", "vim.lsp.buf.rename()", opts)
-    bnmap("<Leader>ks", "vim.lsp.buf.signature_help()", opts)
-    bnmap("<Leader>kp", "vim.diagnostic.goto_prev()", opts)
-    bnmap("<Leader>kn", "vim.diagnostic.goto_next()", opts)
-    bnmap("<Leader>kk", "vim.diagnostic.open_float()", opts)
-    bnmap("<Leader>wl",
+    local opts = { noremap = true, silent = true, buffer=bufnr }
+    nmap("gd", "vim.lsp.buf.definition()", opts)
+    nmap("K", "", opts)
+    nmap("<Leader>r", "vim.lsp.buf.rename()", opts)
+    nmap("<Leader>ks", "vim.lsp.buf.signature_help()", opts)
+    nmap("<Leader>kp", "vim.diagnostic.goto_prev()", opts)
+    nmap("<Leader>kn", "vim.diagnostic.goto_next()", opts)
+    nmap("<Leader>kk", "vim.diagnostic.open_float()", opts)
+    nmap("<Leader>wl",
         "require'common'.print_table(vim.lsp.buf.list_workspace_folders())",
         opts)
 
@@ -64,14 +57,14 @@ function M.on_attach(client, bufnr)
       ]] , false)
     end
     if client.server_capabilities.documentFormattingProvider then
-        bmap('<Leader>f', function()
+        map('<Leader>f', function()
             vim.lsp.buf.format({ timeout_ms = '5000' })
         end)
     end
     if client.server_capabilities.codeLensProvider then
         -- CodeLens provides extra actions like "Run Test"
         -- under lang specific unit tests
-        bnmap("<F11>", "vim.lsp.codelens.run()", opts)
+        nmap("<F11>", "vim.lsp.codelens.run()", opts)
     end
 end
 
