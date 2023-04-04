@@ -52,6 +52,20 @@ require'packer'.startup(function(use)
             end
         end,
     }
+    use {
+        'jose-elias-alvarez/null-ls.nvim',
+        requires = {'nvim-lua/plenary.nvim'},
+        config = function ()
+            local n = require('null-ls')
+            n.setup {
+                n.builtins.formatting.black,
+                n.builtins.formatting.fish_indent,
+                n.builtins.formatting.lua_format,
+                n.builtins.formatting.mdformat,
+                n.builtins.formatting.clang_format,
+            }
+        end
+    }
     use 'nvim-lua/lsp-status.nvim'
     use {'mfussenegger/nvim-dap', config = function() require 'dap_config' end}
     use {
@@ -575,25 +589,8 @@ ncmap('<F6>', 'lua require"dap".step_over()')
 
 ---- Filetype overrides
 api.nvim_create_autocmd({'FileType'}, {
-    pattern = {'lua'},
-    callback = function()
-        ncmap('<F10>', 'Neomake')
-        ncmap('<Leader>f', 'lua require"nvim-lua-format".format()')
-        opt.tabstop = 4
-        opt.shiftwidth = 4
-    end,
-})
-api.nvim_create_autocmd({'FileType'}, {
     pattern = {'rust'},
     callback = function() g.auto_save = 1 end,
-})
-api.nvim_create_autocmd({'FileType'}, {
-    pattern = {'proto'},
-    callback = function() ncmap('<Leader>f', 'ClangFormat') end,
-})
-api.nvim_create_autocmd({'FileType'}, {
-    pattern = {'python'},
-    callback = function() nmap('<Leader>f', ':w<CR>:!black %<CR>') end,
 })
 
 ---- Util
