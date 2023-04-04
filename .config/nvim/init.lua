@@ -11,360 +11,359 @@ local has_google, google = pcall(require, 'google')
 --- Packer
 local packer_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(packer_path)) > 0 then
-    PackerBootstrap = fn.system({
-        'git',
-        'clone',
-        '--depth',
-        '1',
-        'https://github.com/wbthomason/packer.nvim',
-        packer_path,
-    })
+  PackerBootstrap = fn.system({
+    'git',
+    'clone',
+    '--depth',
+    '1',
+    'https://github.com/wbthomason/packer.nvim',
+    packer_path,
+  })
 end
 
-require'packer'.startup(function(use)
-    use 'wbthomason/packer.nvim'
+require 'packer'.startup(function(use)
+  use 'wbthomason/packer.nvim'
 
-    -- LSP & DAP & nvim
-    use 'neovim/nvim-lspconfig'
-    use {
-        'williamboman/mason.nvim',
-        config = function() require'mason'.setup() end,
-    }
-    use {'folke/neodev.nvim', config = function() require'neodev'.setup {} end}
-    use {
-        'williamboman/mason-lspconfig',
-        after = 'neodev.nvim',
-        config = function()
-            require'mason-lspconfig'.setup {
-                ensure_installed = {'lua_ls', 'rust_analyzer'},
-            }
-            -- Set default configuration for all installed servers
-            for _, lsp in ipairs(
-                              require'mason-lspconfig'.get_installed_servers()) do
-                local config = {
-                    capabilities = require'cmp_nvim_lsp'.default_capabilities(),
-                    on_attach = require'common'.on_attach,
-                }
-                if lsp == 'lua_ls' then
-                    config.settings = {Lua = {telemetry = {enable = false}}}
-                end
-                require'lspconfig'[lsp].setup(config)
-            end
-        end,
-    }
-    use {
-        'jose-elias-alvarez/null-ls.nvim',
-        requires = {'nvim-lua/plenary.nvim'},
-        config = function ()
-            local n = require('null-ls')
-            n.setup {
-                n.builtins.formatting.black,
-                n.builtins.formatting.fish_indent,
-                n.builtins.formatting.lua_format,
-                n.builtins.formatting.mdformat,
-                n.builtins.formatting.clang_format,
-                n.builtins.diagnostics.fish,
-                n.builtins.diagnostics.flake8,
-                n.builtins.diagnostics.luacheck,
-            }
-        end
-    }
-    use 'nvim-lua/lsp-status.nvim'
-    use {'mfussenegger/nvim-dap', config = function() require 'dap_config' end}
-    use {
-        'rcarriga/nvim-dap-ui',
-        config = function() require'dapui'.setup {} end,
-    }
-    use {
-        'mfussenegger/nvim-dap-python',
-        requires = {'mfussenegger/nvim-dap'},
-        config = function()
-            require'dap-python'.setup('~/.virtualenv/debug/bin/python')
-            require'dap-python'.test_runner = 'pytest'
-        end,
-    }
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-        config = function()
-            require'nvim-treesitter.configs'.setup {
-                ensure_installed = {'c', 'lua', 'rust', 'fish'},
-                auto_install = true,
-                highlight = {enable = true},
-                indent = {enable = true, disable = {'python', 'yaml'}},
-            }
-            -- Custom parser for go template files
-            local parser_config =
-                require'nvim-treesitter.parsers'.get_parser_configs()
-            parser_config.gotmpl = {
-                install_info = {
-                    url = 'https://github.com/ngalaiko/tree-sitter-go-template',
-                    files = {'src/parser.c'},
-                },
-                filetype = 'gotmpl',
-                used_by = {'gohtmltmpl', 'gotexttmpl', 'gotmpl'},
-            }
-        end,
-    }
-    use 'nvim-treesitter/playground'
-    use {
-        'L3MON4D3/LuaSnip',
-        config = function()
-            require'luasnip'.config.set_config({
-                region_check_events = 'InsertEnter',
-                delete_check_events = 'InsertLeave',
-            })
-            require'luasnip.loaders.from_lua'.lazy_load({paths = {'./snippets'}})
-        end,
-    }
-    use {
-        'hrsh7th/nvim-cmp',
-        requires = {
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-path',
-            'hrsh7th/cmp-nvim-lsp-signature-help',
-            'saadparwaiz1/cmp_luasnip',
-            'neovim/nvim-lspconfig',
-            'L3MON4D3/LuaSnip',
-            'onsails/lspkind-nvim',
+  -- LSP & DAP & nvim
+  use 'neovim/nvim-lspconfig'
+  use {
+    'williamboman/mason.nvim',
+    config = function() require 'mason'.setup() end,
+  }
+  use { 'folke/neodev.nvim', config = function() require 'neodev'.setup {} end }
+  use {
+    'williamboman/mason-lspconfig',
+    after = 'neodev.nvim',
+    config = function()
+      require 'mason-lspconfig'.setup {
+        ensure_installed = { 'lua_ls', 'rust_analyzer' },
+      }
+      -- Set default configuration for all installed servers
+      for _, lsp in ipairs(
+        require 'mason-lspconfig'.get_installed_servers()) do
+        local config = {
+          capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
+          on_attach = require 'common'.on_attach,
         }
-    }
-    use 'mhinz/vim-signify'
-    use 'theHamsta/nvim-dap-virtual-text'
-    use {
-        'simrat39/rust-tools.nvim',
-        requires = {'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap'},
-        config = function()
-            require'rust-tools'.setup {
-                server = {
-                    cargo = {loadOutDirsFromCheck = true},
-                    on_attach = require'common'.on_attach,
-                },
-            }
-        end,
-    }
-    use {
-        'akinsho/flutter-tools.nvim',
-        config = function()
-            require'flutter-tools'.setup {
-                decorations = {statusline = {device = true}},
-                debugger = {enabled = true},
-                widget_guides = {enabled = true},
-                outline = {auto_open = false},
-                lsp = {
-                    on_attach = require'common'.on_attach,
-                    settings = {lineLength = 100},
-                },
-            }
-
-        end,
-    }
-    use {
-        'norcalli/nvim-terminal.lua',
-        config = function() require'terminal'.setup() end,
-    }
-    use {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu'}
-    use 'glepnir/lspsaga.nvim'
-    use {
-        'simrat39/symbols-outline.nvim',
-        config = function()
-            require'symbols-outline'.setup({
-                autofold_depth = 1,
-                relative_width = false,
-                width = 40,
-            })
-        end,
-    }
-    use {
-        'leoluz/nvim-dap-go',
-        config = function() 
-            require'dap-go'.setup {
-                dap_configurations = {
-                    type = "go",
-                    name = "Attach remote",
-                    mode = "remote",
-                    request = "attach",
-                }
-            }
+        if lsp == 'lua_ls' then
+          config.settings = { Lua = { telemetry = { enable = false } } }
         end
+        require 'lspconfig'[lsp].setup(config)
+      end
+    end,
+  }
+  use {
+    'jose-elias-alvarez/null-ls.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local n = require('null-ls')
+      n.setup {
+        n.builtins.formatting.black,
+        n.builtins.formatting.fish_indent,
+        n.builtins.formatting.lua_format,
+        n.builtins.formatting.mdformat,
+        n.builtins.formatting.clang_format,
+        n.builtins.diagnostics.fish,
+        n.builtins.diagnostics.flake8,
+        n.builtins.diagnostics.luacheck,
+      }
+    end
+  }
+  use 'nvim-lua/lsp-status.nvim'
+  use { 'mfussenegger/nvim-dap', config = function() require 'dap_config' end }
+  use {
+    'rcarriga/nvim-dap-ui',
+    config = function() require 'dapui'.setup {} end,
+  }
+  use {
+    'mfussenegger/nvim-dap-python',
+    requires = { 'mfussenegger/nvim-dap' },
+    config = function()
+      require 'dap-python'.setup('~/.virtualenv/debug/bin/python')
+      require 'dap-python'.test_runner = 'pytest'
+    end,
+  }
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    config = function()
+      require 'nvim-treesitter.configs'.setup {
+        ensure_installed = { 'c', 'lua', 'rust', 'fish' },
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true, disable = { 'python', 'yaml' } },
+      }
+      -- Custom parser for go template files
+      local parser_config =
+          require 'nvim-treesitter.parsers'.get_parser_configs()
+      parser_config.gotmpl = {
+        install_info = {
+          url = 'https://github.com/ngalaiko/tree-sitter-go-template',
+          files = { 'src/parser.c' },
+        },
+        filetype = 'gotmpl',
+        used_by = { 'gohtmltmpl', 'gotexttmpl', 'gotmpl' },
+      }
+    end,
+  }
+  use 'nvim-treesitter/playground'
+  use {
+    'L3MON4D3/LuaSnip',
+    config = function()
+      require 'luasnip'.config.set_config({
+        region_check_events = 'InsertEnter',
+        delete_check_events = 'InsertLeave',
+      })
+      require 'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets' } })
+    end,
+  }
+  use {
+    'hrsh7th/nvim-cmp',
+    requires = {
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
+      'saadparwaiz1/cmp_luasnip',
+      'neovim/nvim-lspconfig',
+      'L3MON4D3/LuaSnip',
+      'onsails/lspkind-nvim',
     }
+  }
+  use 'mhinz/vim-signify'
+  use 'theHamsta/nvim-dap-virtual-text'
+  use {
+    'simrat39/rust-tools.nvim',
+    requires = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
+    config = function()
+      require 'rust-tools'.setup {
+        server = {
+          cargo = { loadOutDirsFromCheck = true },
+          on_attach = require 'common'.on_attach,
+        },
+      }
+    end,
+  }
+  use {
+    'akinsho/flutter-tools.nvim',
+    config = function()
+      require 'flutter-tools'.setup {
+        decorations = { statusline = { device = true } },
+        debugger = { enabled = true },
+        widget_guides = { enabled = true },
+        outline = { auto_open = false },
+        lsp = {
+          on_attach = require 'common'.on_attach,
+          settings = { lineLength = 100 },
+        },
+      }
+    end,
+  }
+  use {
+    'norcalli/nvim-terminal.lua',
+    config = function() require 'terminal'.setup() end,
+  }
+  use { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' }
+  use 'glepnir/lspsaga.nvim'
+  use {
+    'simrat39/symbols-outline.nvim',
+    config = function()
+      require 'symbols-outline'.setup({
+        autofold_depth = 1,
+        relative_width = false,
+        width = 40,
+      })
+    end,
+  }
+  use {
+    'leoluz/nvim-dap-go',
+    config = function()
+      require 'dap-go'.setup {
+        dap_configurations = {
+          type = "go",
+          name = "Attach remote",
+          mode = "remote",
+          request = "attach",
+        }
+      }
+    end
+  }
 
-    -- Theme
-    use 'kyazdani42/nvim-web-devicons'
-    use 'jeanlucthumm/vim-solarized8'
-    use 'ellisonleao/gruvbox.nvim'
-    use 'marko-cerovac/material.nvim'
-    use {
-        'rose-pine/neovim',
-        config = function()
-            require'rose-pine'.setup {
-                dark_variant = 'moon',
-                disable_italics = true,
+  -- Theme
+  use 'kyazdani42/nvim-web-devicons'
+  use 'jeanlucthumm/vim-solarized8'
+  use 'ellisonleao/gruvbox.nvim'
+  use 'marko-cerovac/material.nvim'
+  use {
+    'rose-pine/neovim',
+    config = function()
+      require 'rose-pine'.setup {
+        dark_variant = 'moon',
+        disable_italics = true,
+      }
+    end,
+  }
+  use 'folke/tokyonight.nvim'
+  use 'tjdevries/colorbuddy.nvim'
+  use 'projekt0n/github-nvim-theme'
+  use 'savq/melange'
+
+  -- UI
+  use 'junegunn/fzf'
+  use 'junegunn/fzf.vim'
+  use {
+    'ojroques/nvim-lspfuzzy',
+    config = function() require 'lspfuzzy'.setup {} end,
+  }
+  use {
+    'kyazdani42/nvim-tree.lua',
+    config = function()
+      require 'nvim-tree'.setup {
+        update_focused_file = { enable = true },
+        update_cwd = true,
+      }
+    end,
+  }
+  use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require 'telescope'.setup {
+        defaults = {
+          path_display = { 'smart' },
+          mappings = {
+            i = {
+              ['<C-k>'] = 'move_selection_previous',
+              ['<C-j>'] = 'move_selection_next',
+              ['<C-d>'] = require 'telescope.actions'.delete_buffer,
+            },
+            n = {
+              ['<C-c>'] = 'close',
             }
-        end,
-    }
-    use 'folke/tokyonight.nvim'
-    use 'tjdevries/colorbuddy.nvim'
-    use 'projekt0n/github-nvim-theme'
-    use 'savq/melange'
+          }
+        }
+      }
+      require 'telescope'.load_extension('vim_bookmarks')
+      require 'telescope'.load_extension('flutter')
+    end,
+  }
+  use 'tom-anders/telescope-vim-bookmarks.nvim'
+  use 'nvim-lualine/lualine.nvim' -- configured in the theme section
+  use 'mhinz/vim-startify'
+  use {
+    'rcarriga/nvim-notify',
+    config = function() vim.notify = require 'notify' end,
+  }
+  use 'xiyaowong/virtcolumn.nvim'
 
-    -- UI
-    use 'junegunn/fzf'
-    use 'junegunn/fzf.vim'
-    use {
-        'ojroques/nvim-lspfuzzy',
-        config = function() require'lspfuzzy'.setup {} end,
-    }
-    use {
-        'kyazdani42/nvim-tree.lua',
-        config = function()
-            require'nvim-tree'.setup {
-                update_focused_file = {enable = true},
-                update_cwd = true,
-            }
-        end,
-    }
-    use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install'}
-    use {
-        'nvim-telescope/telescope.nvim',
-        requires = {'nvim-lua/plenary.nvim'},
-        config = function()
-            require'telescope'.setup {
-                defaults = {
-                    path_display = {'smart'},
-                    mappings = {
-                        i = {
-                            ['<C-k>'] = 'move_selection_previous',
-                            ['<C-j>'] = 'move_selection_next',
-                            ['<C-d>'] = require'telescope.actions'.delete_buffer,
-                        },
-                        n = {
-                            ['<C-c>'] = 'close',
-                        }
-                    }
-                }
-            }
-            require'telescope'.load_extension('vim_bookmarks')
-            require'telescope'.load_extension('flutter')
-        end,
-    }
-    use 'tom-anders/telescope-vim-bookmarks.nvim'
-    use 'nvim-lualine/lualine.nvim' -- configured in the theme section
-    use 'mhinz/vim-startify'
-    use {
-        'rcarriga/nvim-notify',
-        config = function() vim.notify = require 'notify' end,
-    }
-    use 'xiyaowong/virtcolumn.nvim'
+  -- Editor
+  use 'tpope/vim-commentary'
+  use 'tpope/vim-fugitive'
+  use 'tpope/vim-dispatch'
+  use 'moll/vim-bbye'
+  use 'pseewald/vim-anyfold'
+  use {
+    'onsails/lspkind-nvim',
+    config = function() require 'lspkind'.init {} end,
+  }
+  use {
+    'windwp/nvim-autopairs',
+    config = function()
+      require 'nvim-autopairs'.setup {}
+      require 'cmp'.event:on('confirm_done',
+        require 'nvim-autopairs.completion.cmp'.on_confirm_done(
+          { map_char = { tex = '' } }))
+    end,
+  }
+  use 'bmundt6/workflowish'
+  use { 'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end }
+  use 'rhysd/conflict-marker.vim'
+  use 'rhysd/vim-clang-format'
+  use {
+    'RishabhRD/nvim-lsputils',
+    requires = { 'RishabhRD/popfix' },
+    config = function()
+      vim.lsp.handlers['textDocument/codeAction'] =
+          require 'lsputil.codeAction'.code_action_handler
+    end,
+  }
 
-    -- Editor
-    use 'tpope/vim-commentary'
-    use 'tpope/vim-fugitive'
-    use 'tpope/vim-dispatch'
-    use 'moll/vim-bbye'
-    use 'pseewald/vim-anyfold'
-    use {
-        'onsails/lspkind-nvim',
-        config = function() require'lspkind'.init {} end,
-    }
-    use {
-        'windwp/nvim-autopairs',
-        config = function()
-            require'nvim-autopairs'.setup {}
-            require'cmp'.event:on('confirm_done',
-                                  require'nvim-autopairs.completion.cmp'.on_confirm_done(
-                                      {map_char = {tex = ''}}))
-        end,
-    }
-    use 'bmundt6/workflowish'
-    use {'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end}
-    use 'rhysd/conflict-marker.vim'
-    use 'rhysd/vim-clang-format'
-    use {
-        'RishabhRD/nvim-lsputils',
-        requires = {'RishabhRD/popfix'},
-        config = function()
-            vim.lsp.handlers['textDocument/codeAction'] =
-                require'lsputil.codeAction'.code_action_handler
-        end,
-    }
+  -- Functional
+  use 'MattesGroeger/vim-bookmarks'
+  use 'neomake/neomake'
+  use 'vim-test/vim-test'
+  use '907th/vim-auto-save'
+  use {
+    'CRAG666/code_runner.nvim',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function()
+      require 'code_runner'.setup { filetype = { python = 'python -u' } }
+    end,
+  }
 
-    -- Functional
-    use 'MattesGroeger/vim-bookmarks'
-    use 'neomake/neomake'
-    use 'vim-test/vim-test'
-    use '907th/vim-auto-save'
-    use {
-        'CRAG666/code_runner.nvim',
-        requires = 'nvim-lua/plenary.nvim',
-        config = function()
-            require'code_runner'.setup {filetype = {python = 'python -u'}}
-        end,
-    }
-
-    if has_google then google.packer(use) end
-    if PackerBootstrap then require('packer').sync() end
+  if has_google then google.packer(use) end
+  if PackerBootstrap then require('packer').sync() end
 end) -- packer
 
 local function nvim_cmp_config()
-    local has_cmp, cmp = pcall(require, 'cmp')
-    if not has_cmp then
-        return
-    end
-    local luasnip = require 'luasnip'
+  local has_cmp, cmp = pcall(require, 'cmp')
+  if not has_cmp then
+    return
+  end
+  local luasnip = require 'luasnip'
 
-    local config = {
-        snippet = {
-            expand = function(args)
-                require 'luasnip'.lsp_expand(args.body)
-            end,
-        },
-        mapping = {
-            ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs( -4),
-                { 'i', 'c' }),
-            ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4),
-                { 'i', 'c' }),
-            ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
-                { 'i', 'c' }),
-            ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(),
-                { 'i', 'c' }),
-            ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(),
-                { 'i', 'c' }),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
-            ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
-            ['<Tab>'] = cmp.mapping(function(fallback)
-                if luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
-                else
-                    fallback()
-                end
-            end, { 'i', 's' }),
-            ['<S-Tab>'] = cmp.mapping(function(fallback)
-                if luasnip.jumpable( -1) then
-                    luasnip.jump( -1)
-                else
-                    fallback()
-                end
-            end, { 'i', 's' }),
-        },
-        sources = {
-            { name = 'luasnip',                 priority = 50 },
-            { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
-            { name = 'nvim_lsp_signature_help', priority = 10 },
-            { name = 'buffer',                  priority = 1 },
-        },
-        formatting = {
-            format = require 'lspkind'.cmp_format()
-        },
-        sorting = {
-            priority_weight = 10,
-        }
+  local config = {
+    snippet = {
+      expand = function(args)
+        require 'luasnip'.lsp_expand(args.body)
+      end,
+    },
+    mapping = {
+      ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs( -4),
+        { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4),
+        { 'i', 'c' }),
+      ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
+        { 'i', 'c' }),
+      ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(),
+        { 'i', 'c' }),
+      ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(),
+        { 'i', 'c' }),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+      ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
+      ['<Tab>'] = cmp.mapping(function(fallback)
+        if luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        else
+          fallback()
+        end
+      end, { 'i', 's' }),
+      ['<S-Tab>'] = cmp.mapping(function(fallback)
+        if luasnip.jumpable( -1) then
+          luasnip.jump( -1)
+        else
+          fallback()
+        end
+      end, { 'i', 's' }),
+    },
+    sources = {
+      { name = 'luasnip',                 priority = 50 },
+      { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
+      { name = 'nvim_lsp_signature_help', priority = 10 },
+      { name = 'buffer',                  priority = 1 },
+    },
+    formatting = {
+      format = require 'lspkind'.cmp_format()
+    },
+    sorting = {
+      priority_weight = 10,
     }
-    if has_google then
-        config = google.update_cmp_config(config)
-    end
-    cmp.setup(config)
+  }
+  if has_google then
+    config = google.update_cmp_config(config)
+  end
+  cmp.setup(config)
 end
 nvim_cmp_config()
 
@@ -374,7 +373,7 @@ cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
 ---- Global options
 g.neomake_open_list = 2
 g.auto_save = 0
-g.auto_save_events = {'InsertLeave', 'TextChanged', 'CursorHold'}
+g.auto_save_events = { 'InsertLeave', 'TextChanged', 'CursorHold' }
 g.neovide_cursor_animation_length = 0.05
 g.bookmark_no_default_key_mappings = 1
 g.mapleader = ' ' -- sets <Leader> to <space>
@@ -406,102 +405,107 @@ if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
 ---- Theme
 local lualine_theme = 'solarized_light'
 function SolarizedTheme(background)
-    -- Docstrings should be the same color as regular comments
-    vim.cmd('hi! link rustCommentLineDoc Comment')
-    vim.cmd('colorscheme solarized8')
-    opt.background = background
+  -- Docstrings should be the same color as regular comments
+  vim.cmd('hi! link rustCommentLineDoc Comment')
+  vim.cmd('colorscheme solarized8')
+  opt.background = background
 end
+
 function SolarizedLuaTheme(background)
-    opt.background = background
-    if background == 'dark' then
-        lualine_theme = 'solarized_dark'
-    else
-        lualine_theme = 'solarized_light'
-    end
-    g.solarized_italics = 0
-    cmd('colorscheme solarized')
+  opt.background = background
+  if background == 'dark' then
+    lualine_theme = 'solarized_dark'
+  else
+    lualine_theme = 'solarized_light'
+  end
+  g.solarized_italics = 0
+  cmd('colorscheme solarized')
 end
 
 function GruvboxTheme(background)
-    opt.background = background
-    lualine_theme = 'gruvbox_' .. background
-    vim.v['$BAT_THEME'] = 'gruvbox'
-    cmd('colorscheme gruvbox')
+  opt.background = background
+  lualine_theme = 'gruvbox_' .. background
+  vim.v['$BAT_THEME'] = 'gruvbox'
+  cmd('colorscheme gruvbox')
 end
 
 function MaterialTheme(background) -- prefer 'deep ocean'
-    if background == 'dark' then
-        g.material_style = 'deep ocean'
-    elseif background == 'light' then
-        g.material_style = 'lighter'
-    end
-    lualine_theme = 'material-nvim'
-    cmd('colorscheme material')
+  if background == 'dark' then
+    g.material_style = 'deep ocean'
+  elseif background == 'light' then
+    g.material_style = 'lighter'
+  end
+  lualine_theme = 'material-nvim'
+  cmd('colorscheme material')
 end
+
 function RosePineTheme(background)
-    opt.background = background
-    lualine_theme = 'rose-pine'
-    cmd('colorscheme rose-pine')
-    require'rose-pine'.setup {dark_variant = 'moon', disable_italics = true}
+  opt.background = background
+  lualine_theme = 'rose-pine'
+  cmd('colorscheme rose-pine')
+  require 'rose-pine'.setup { dark_variant = 'moon', disable_italics = true }
 end
+
 function TokyoNight(background)
-    opt.background = background
-    lualine_theme = 'tokyonight'
-    cmd('colorscheme tokyonight')
+  opt.background = background
+  lualine_theme = 'tokyonight'
+  cmd('colorscheme tokyonight')
 end
+
 function GithubTheme(background)
-    opt.background = background
-    if background == 'dark' then
-        lualine_theme = 'github_dark'
-    else
-        lualine_theme = 'github_light'
-    end
-    require'github-theme'.setup {theme_style = background}
+  opt.background = background
+  if background == 'dark' then
+    lualine_theme = 'github_dark'
+  else
+    lualine_theme = 'github_light'
+  end
+  require 'github-theme'.setup { theme_style = background }
 end
+
 function MelangeTheme(background)
-    opt.background = background
-    lualine_theme = 'auto'
-    cmd('colorscheme melange')
+  opt.background = background
+  lualine_theme = 'auto'
+  cmd('colorscheme melange')
 end
 
 local function fallbackTheme() RosePineTheme('light') end
 local function autoTheme()
-    local has_theme, theme = pcall(require, 'theme')
-    if has_theme then
-        theme.setup()
-        return
-    end
-    if env.TERM == 'xterm-kitty' then
-        if env.KITTY_THEME == 'solarized-light' then
-            RosePineTheme('light')
-        elseif env.KITTY_THEME == 'solarized-dark' then
-            MaterialTheme('dark')
-        else
-            fallbackTheme()
-        end
-    elseif env.THEME == 'solarized-light' then
-        RosePineTheme('light')
+  local has_theme, theme = pcall(require, 'theme')
+  if has_theme then
+    theme.setup()
+    return
+  end
+  if env.TERM == 'xterm-kitty' then
+    if env.KITTY_THEME == 'solarized-light' then
+      RosePineTheme('light')
+    elseif env.KITTY_THEME == 'solarized-dark' then
+      MaterialTheme('dark')
     else
-        fallbackTheme()
+      fallbackTheme()
     end
+  elseif env.THEME == 'solarized-light' then
+    RosePineTheme('light')
+  else
+    fallbackTheme()
+  end
 end
 autoTheme()
 vim.cmd('hi! link pythonSpaceError Normal')
 
-local function lsp_status_component() return require'lsp-status'.status() end
-require'lualine'.setup {
-    options = {theme = lualine_theme, extensions = {'quickfix', 'nvim-tree'}},
-    sections = {
-        lualine_x = {lsp_status_component, 'encoding', 'fileformat', 'filetype'},
-    },
+local function lsp_status_component() return require 'lsp-status'.status() end
+require 'lualine'.setup {
+  options = { theme = lualine_theme, extensions = { 'quickfix', 'nvim-tree' } },
+  sections = {
+    lualine_x = { lsp_status_component, 'encoding', 'fileformat', 'filetype' },
+  },
 }
 
 ---- Keymap (note that some keys are defined in _lsp_config.lua)
-local map = require'common'.map
-local nmap = require'common'.nmap
-local imap = require'common'.imap
-local vcmap = require'common'.vcmap
-local ncmap = require'common'.ncmap
+local map = require 'common'.map
+local nmap = require 'common'.nmap
+local imap = require 'common'.imap
+local vcmap = require 'common'.vcmap
+local ncmap = require 'common'.ncmap
 
 -- visual
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
@@ -524,9 +528,9 @@ ncmap('<Leader><Leader>', 'write')
 -- <Leader>v    nvim config
 ncmap('<Leader>ve', ':exe \'tabedit\' stdpath(\'config\').\'/init.lua\'')
 nmap('<Leader>vs', ':exe \'source\' stdpath(\'config\').\'/init.lua\'<CR>')
-nmap('<Leader>vp', function ()
-    require'packer'.compile()
-    vim.notify("Packer compiled")
+nmap('<Leader>vp', function()
+  require 'packer'.compile()
+  vim.notify("Packer compiled")
 end)
 -- <Leader>c    quickfix, cd
 ncmap('<Leader>cl', 'cclose')
@@ -565,7 +569,7 @@ map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
 map('t', '<C-\\><C-\\>', '<C-\\><C-n>')
 ncmap('<C-p>', 'Telescope commands')
 ncmap('<C-e>',
-      'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
+  'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 nmap('<C-q>', '<C-^>')
 ncmap('<M-e>', 'Telescope find_files')
 ncmap('<C-e>', 'Telescope buffers')
@@ -578,9 +582,9 @@ ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
 ---- Filetype overrides
-api.nvim_create_autocmd({'FileType'}, {
-    pattern = {'rust'},
-    callback = function() g.auto_save = 1 end,
+api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = { 'rust' },
+  callback = function() g.auto_save = 1 end,
 })
 
 ---- Util
@@ -588,11 +592,11 @@ api.nvim_create_autocmd({'FileType'}, {
 -- When current tab has vertical dual split, open the buffer on the left
 -- in the window on the right at the same position
 function OpenInRight()
-    local wins = api.nvim_tabpage_list_wins(0)
-    local left_buf = api.nvim_win_get_buf(wins[1])
-    local left_pos = api.nvim_win_get_cursor(wins[1])
-    api.nvim_win_set_buf(wins[2], left_buf)
-    api.nvim_win_set_cursor(wins[2], left_pos)
+  local wins = api.nvim_tabpage_list_wins(0)
+  local left_buf = api.nvim_win_get_buf(wins[1])
+  local left_pos = api.nvim_win_get_cursor(wins[1])
+  api.nvim_win_set_buf(wins[2], left_buf)
+  api.nvim_win_set_cursor(wins[2], left_pos)
 end
 
 if has_google then google.setup() end
