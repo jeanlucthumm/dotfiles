@@ -260,19 +260,6 @@ require'packer'.startup(function(use)
     use 'tpope/vim-fugitive'
     use 'tpope/vim-dispatch'
     use 'moll/vim-bbye'
-    use {
-        'jeanlucthumm/nvim-lua-format',
-        config = function()
-            require'nvim-lua-format'.setup {
-                save_if_unsaved = true,
-                default = {
-                    chop_down_table = true,
-                    indent_width = 4,
-                    continuation_indent_width = 4,
-                },
-            }
-        end,
-    }
     use 'pseewald/vim-anyfold'
     use {
         'onsails/lspkind-nvim',
