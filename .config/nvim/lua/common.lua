@@ -26,6 +26,7 @@ end
 function M.on_attach(client, bufnr)
   local map = M.map
   local nmap = M.nmap
+  local ncmap = M.ncmap
 
   -- LSP Status
   lsp_status.on_attach(client)
@@ -35,7 +36,7 @@ function M.on_attach(client, bufnr)
   -- Mappings
   local opts = { noremap = true, silent = true, buffer = bufnr }
   nmap("gd", "vim.lsp.buf.definition()", opts)
-  nmap("K", "", opts)
+  ncmap("K", "Lspsaga hover_doc", opts)
   nmap("<Leader>r", "vim.lsp.buf.rename()", opts)
   nmap("<Leader>ks", "vim.lsp.buf.signature_help()", opts)
   nmap("<Leader>kp", "vim.diagnostic.goto_prev()", opts)
