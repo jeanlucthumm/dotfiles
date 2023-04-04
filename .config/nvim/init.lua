@@ -190,7 +190,7 @@ require'packer'.startup(function(use)
     -- Theme
     use 'kyazdani42/nvim-web-devicons'
     use 'jeanlucthumm/vim-solarized8'
-    use 'morhetz/gruvbox'
+    use 'ellisonleao/gruvbox.nvim'
     use 'marko-cerovac/material.nvim'
     use {
         'rose-pine/neovim',
