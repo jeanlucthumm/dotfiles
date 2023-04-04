@@ -63,6 +63,9 @@ require'packer'.startup(function(use)
                 n.builtins.formatting.lua_format,
                 n.builtins.formatting.mdformat,
                 n.builtins.formatting.clang_format,
+                n.builtins.diagnostics.fish,
+                n.builtins.diagnostics.flake8,
+                n.builtins.diagnostics.luacheck,
             }
         end
     }
