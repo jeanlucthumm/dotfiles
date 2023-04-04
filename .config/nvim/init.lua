@@ -164,7 +164,13 @@ require 'packer'.startup(function(use)
     config = function() require 'terminal'.setup() end,
   }
   use { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' }
-  use 'glepnir/lspsaga.nvim'
+  use {
+    'glepnir/lspsaga.nvim',
+    requires = { 'nvim-tree/nvim-web-devicons', 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require 'lspsaga'.setup {}
+    end,
+  }
   use {
     'simrat39/symbols-outline.nvim',
     config = function()
