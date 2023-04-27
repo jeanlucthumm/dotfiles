@@ -55,6 +55,9 @@ require 'packer'.startup(function(use)
   use {
     'jose-elias-alvarez/null-ls.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
+    cond = function ()
+      return not has_google
+    end,
     config = function()
       local n = require('null-ls')
       n.setup {
