@@ -6,7 +6,7 @@ local env = vim.env
 local fn = vim.fn
 local cmd = vim.cmd
 
-local has_google, google = pcall(require, 'google')
+HasGoogle, Google = pcall(require, 'google')
 
 --- Packer
 local packer_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
@@ -34,6 +34,9 @@ require 'packer'.startup(function(use)
   use {
     'williamboman/mason-lspconfig',
     after = 'neodev.nvim',
+    cond = function ()
+      return not HasGoogle
+    end,
     config = function()
       require 'mason-lspconfig'.setup {
         ensure_installed = { 'lua_ls', 'rust_analyzer' },
@@ -56,7 +59,7 @@ require 'packer'.startup(function(use)
     'jose-elias-alvarez/null-ls.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
     cond = function ()
-      return not has_google
+      return not HasGoogle
     end,
     config = function()
       local n = require('null-ls')
@@ -311,7 +314,7 @@ require 'packer'.startup(function(use)
     end,
   }
 
-  if has_google then google.packer(use) end
+  if HasGoogle then Google.packer(use) end
   if PackerBootstrap then require('packer').sync() end
 end) -- packer
 
@@ -369,8 +372,8 @@ local function nvim_cmp_config()
       priority_weight = 10,
     }
   }
-  if has_google then
-    config = google.update_cmp_config(config)
+  if HasGoogle then
+    config = Google.update_cmp_config(config)
   end
   cmp.setup(config)
 end
@@ -608,4 +611,4 @@ function OpenInRight()
   api.nvim_win_set_cursor(wins[2], left_pos)
 end
 
-if has_google then google.setup() end
+if HasGoogle then Google.setup() end
