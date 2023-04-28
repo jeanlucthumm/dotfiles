@@ -47,6 +47,9 @@ require 'packer'.startup(function(use)
         local config = {
           capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
           on_attach = require 'common'.on_attach,
+          flags = {
+            debounce_text_changes = 150,
+          },
         }
         if lsp == 'lua_ls' then
           config.settings = { Lua = { telemetry = { enable = false } } }
