@@ -27,20 +27,24 @@ local plugin_spec = {
   {'nvim-lua/plenary.nvim'},
 
   --- LSP & DAP & nvim
-  {'neovim/nvim-lspconfig'},
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {'folke/neodev.nvim'}
+  },
   {
     'williamboman/mason.nvim', 
-    lazy = false, 
     build=":MasonUpdate",
     config = function()
       require'mason'.setup()
     end,
   },
-  { 'folke/neodev.nvim'}, -- lua LSP setup for better nvim integration
+  { 'folke/neodev.nvim',
+    config=function ()
+      require'neodev'.setup{}
+    end}, -- lua LSP setup for better nvim integration
   {
     'williamboman/mason-lspconfig',
     dependencies = {'folke/neodev.nvim', 'williamboman/mason.nvim'},
-    lazy = false, 
     cond = function ()
       return not HasGoogle
     end,
