@@ -8,32 +8,29 @@ local cmd = vim.cmd
 
 HasGoogle, Google = pcall(require, 'google')
 
---- Packer
-local packer_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(packer_path)) > 0 then
-  PackerBootstrap = fn.system({
-    'git',
-    'clone',
-    '--depth',
-    '1',
-    'https://github.com/wbthomason/packer.nvim',
-    packer_path,
+--- Lazy bootstrap
+local lazypath = fn.stdpath('data') .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.notify('Bootstraping lazy.nvim...')
+  fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
   })
 end
+opt.rtp:prepend(lazypath)
 
-require 'packer'.startup(function(use)
-  use 'wbthomason/packer.nvim'
-
-  -- LSP & DAP & nvim
-  use 'neovim/nvim-lspconfig'
-  use {
-    'williamboman/mason.nvim',
-    config = function() require 'mason'.setup() end,
-  }
-  use { 'folke/neodev.nvim', config = function() require 'neodev'.setup {} end }
-  use {
+local plugin_spec = {
+  --- LSP & DAP & nvim
+  {'neovim/nvim-lspconfig'},
+  { 'williamboman/mason.nvim'},
+  { 'folke/neodev.nvim'}, -- lua LSP setup for better nvim integration
+  {
     'williamboman/mason-lspconfig',
-    after = 'neodev.nvim',
+    dependencies = {'neodev.nvim'},
     cond = function ()
       return not HasGoogle
     end,
@@ -57,10 +54,9 @@ require 'packer'.startup(function(use)
         require 'lspconfig'[lsp].setup(config)
       end
     end,
-  }
-  use {
+  },
+  {
     'jose-elias-alvarez/null-ls.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
     cond = function ()
       return not HasGoogle
     end,
@@ -77,24 +73,20 @@ require 'packer'.startup(function(use)
         n.builtins.diagnostics.luacheck,
       }
     end
-  }
-  use 'nvim-lua/lsp-status.nvim'
-  use { 'mfussenegger/nvim-dap', config = function() require 'dap_config' end }
-  use {
-    'rcarriga/nvim-dap-ui',
-    config = function() require 'dapui'.setup {} end,
-  }
-  use {
+  },
+  {'nvim-lua/lsp-status.nvim'},
+  {'mfussenegger/nvim-dap'}, --TODO verify setup works automatically
+  { 'rcarriga/nvim-dap-ui'}, --TODO verify setup works automatically
+  {
     'mfussenegger/nvim-dap-python',
-    requires = { 'mfussenegger/nvim-dap' },
     config = function()
       require 'dap-python'.setup('~/.virtualenv/debug/bin/python')
       require 'dap-python'.test_runner = 'pytest'
     end,
-  }
-  use {
+  },
+  {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
+    build = ':TSUpdate',
     config = function()
       require 'nvim-treesitter.configs'.setup {
         ensure_installed = { 'c', 'lua', 'rust', 'fish' },
@@ -114,9 +106,9 @@ require 'packer'.startup(function(use)
         used_by = { 'gohtmltmpl', 'gotexttmpl', 'gotmpl' },
       }
     end,
-  }
-  use 'nvim-treesitter/playground'
-  use {
+  },
+  {'nvim-treesitter/playground'},
+  {
     'L3MON4D3/LuaSnip',
     config = function()
       require 'luasnip'.config.set_config({
@@ -125,10 +117,10 @@ require 'packer'.startup(function(use)
       })
       require 'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets' } })
     end,
-  }
-  use {
+  },
+  {
     'hrsh7th/nvim-cmp',
-    requires = {
+    dependencies = {
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
@@ -138,12 +130,11 @@ require 'packer'.startup(function(use)
       'L3MON4D3/LuaSnip',
       'onsails/lspkind-nvim',
     }
-  }
-  use 'mhinz/vim-signify'
-  use 'theHamsta/nvim-dap-virtual-text'
-  use {
+  },
+  {'mhinz/vim-signify'}, -- TODO look into nvim version
+  {'theHamsta/nvim-dap-virtual-text'},
+  {
     'simrat39/rust-tools.nvim',
-    requires = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     config = function()
       require 'rust-tools'.setup {
         server = {
@@ -152,8 +143,8 @@ require 'packer'.startup(function(use)
         },
       }
     end,
-  }
-  use {
+  },
+  {
     'akinsho/flutter-tools.nvim',
     config = function()
       require 'flutter-tools'.setup {
@@ -167,20 +158,16 @@ require 'packer'.startup(function(use)
         },
       }
     end,
-  }
-  use {
+  },
+  -- TODO remove
+  {
     'norcalli/nvim-terminal.lua',
-    config = function() require 'terminal'.setup() end,
-  }
-  use { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' }
-  use {
-    'glepnir/lspsaga.nvim',
-    requires = { 'nvim-tree/nvim-web-devicons', 'nvim-treesitter/nvim-treesitter' },
-    config = function()
-      require 'lspsaga'.setup {}
-    end,
-  }
-  use {
+  },
+  -- TODO set this plugin for <Leader>a
+  { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' },
+  { 'glepnir/lspsaga.nvim' },
+  -- TODO refine keymap
+  {
     'simrat39/symbols-outline.nvim',
     config = function()
       require 'symbols-outline'.setup({
@@ -189,8 +176,9 @@ require 'packer'.startup(function(use)
         width = 40,
       })
     end,
-  }
-  use {
+  },
+  -- TODO test google config
+  {
     'leoluz/nvim-dap-go',
     config = function()
       require 'dap-go'.setup {
@@ -202,14 +190,15 @@ require 'packer'.startup(function(use)
         }
       }
     end
-  }
+  },
 
-  -- Theme
-  use 'kyazdani42/nvim-web-devicons'
-  use 'jeanlucthumm/vim-solarized8'
-  use 'ellisonleao/gruvbox.nvim'
-  use 'marko-cerovac/material.nvim'
-  use {
+  --- Theme
+  {'kyazdani42/nvim-web-devicons'},
+  -- TODO remove
+  {'jeanlucthumm/vim-solarized8'},
+  {'ellisonleao/gruvbox.nvim'},
+  {'marko-cerovac/material.nvim'},
+  {
     'rose-pine/neovim',
     config = function()
       require 'rose-pine'.setup {
@@ -217,20 +206,19 @@ require 'packer'.startup(function(use)
         disable_italics = true,
       }
     end,
-  }
-  use 'folke/tokyonight.nvim'
-  use 'tjdevries/colorbuddy.nvim'
-  use 'projekt0n/github-nvim-theme'
-  use 'savq/melange'
+  },
+  {'folke/tokyonight.nvim'},
+  {'tjdevries/colorbuddy.nvim'},
+  {'projekt0n/github-nvim-theme'},
+  {'savq/melange'},
 
-  -- UI
-  use 'junegunn/fzf'
-  use 'junegunn/fzf.vim'
-  use {
-    'ojroques/nvim-lspfuzzy',
-    config = function() require 'lspfuzzy'.setup {} end,
-  }
-  use {
+  --- UI
+  -- TODO remove
+  {'junegunn/fzf'},
+  {'junegunn/fzf.vim'},
+  { 'ojroques/nvim-lspfuzzy' },
+  -- TODO update config for CWD
+  {
     'kyazdani42/nvim-tree.lua',
     config = function()
       require 'nvim-tree'.setup {
@@ -238,11 +226,10 @@ require 'packer'.startup(function(use)
         update_cwd = true,
       }
     end,
-  }
-  use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
-  use {
+  },
+  { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
+  {
     'nvim-telescope/telescope.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
     config = function()
       require 'telescope'.setup {
         defaults = {
@@ -262,27 +249,30 @@ require 'packer'.startup(function(use)
       require 'telescope'.load_extension('vim_bookmarks')
       require 'telescope'.load_extension('flutter')
     end,
-  }
-  use 'tom-anders/telescope-vim-bookmarks.nvim'
-  use 'nvim-lualine/lualine.nvim' -- configured in the theme section
-  use 'mhinz/vim-startify'
-  use {
-    'rcarriga/nvim-notify',
-    config = function() vim.notify = require 'notify' end,
-  }
-  use 'xiyaowong/virtcolumn.nvim'
+    dependencies = {
+      {'tom-anders/telescope-vim-bookmarks.nvim'},
+    }
+  },
+  -- TODO look at config for this for lazy.nvim
+  {'nvim-lualine/lualine.nvim'}, -- configured in the theme section
+  {'mhinz/vim-startify'}, -- startup screen
+  { 'rcarriga/nvim-notify' }, -- pretty notifications
+  {'xiyaowong/virtcolumn.nvim'}, -- makes virtual column a pixel wide
 
-  -- Editor
-  use 'tpope/vim-commentary'
-  use 'tpope/vim-fugitive'
-  use 'tpope/vim-dispatch'
-  use 'moll/vim-bbye'
-  use 'pseewald/vim-anyfold'
-  use {
+  --- Editor
+  {'tpope/vim-commentary'},
+  -- TODO Remove
+  {'tpope/vim-fugitive'},
+  {'tpope/vim-dispatch'},
+  -- TODO Remove
+  {'moll/vim-bbye'},
+  -- TODO figure out keybindings
+  {'pseewald/vim-anyfold'},
+  {
     'onsails/lspkind-nvim',
     config = function() require 'lspkind'.init {} end,
-  }
-  use {
+  },
+  {
     'windwp/nvim-autopairs',
     config = function()
       require 'nvim-autopairs'.setup {}
@@ -290,37 +280,41 @@ require 'packer'.startup(function(use)
         require 'nvim-autopairs.completion.cmp'.on_confirm_done(
           { map_char = { tex = '' } }))
     end,
-  }
-  use 'bmundt6/workflowish'
-  use { 'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end }
-  use 'rhysd/conflict-marker.vim'
-  use 'rhysd/vim-clang-format'
-  use {
+  },
+  -- TODO Remove
+  {'bmundt6/workflowish'},
+  { 'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end },
+  {'rhysd/conflict-marker.vim'},
+  -- TODO remove because of null-ls
+  {'rhysd/vim-clang-format'},
+  -- TODO remove, conflicting with other stuff
+  {
     'RishabhRD/nvim-lsputils',
     requires = { 'RishabhRD/popfix' },
     config = function()
       vim.lsp.handlers['textDocument/codeAction'] =
           require 'lsputil.codeAction'.code_action_handler
     end,
-  }
+  },
 
   -- Functional
-  use 'MattesGroeger/vim-bookmarks'
-  use 'neomake/neomake'
-  use 'vim-test/vim-test'
-  use '907th/vim-auto-save'
-  use {
+  -- TODO remove
+  {'MattesGroeger/vim-bookmarks'},
+  {'neomake/neomake'},
+  -- TODO remove
+  {'vim-test/vim-test'},
+  {'907th/vim-auto-save'},
+  {
     'CRAG666/code_runner.nvim',
-    requires = 'nvim-lua/plenary.nvim',
     config = function()
       require 'code_runner'.setup { filetype = { python = 'python -u' } }
     end,
-  }
+  },
+} -- plugin_spec
 
-  if HasGoogle then Google.packer(use) end
-  if PackerBootstrap then require('packer').sync() end
-end) -- packer
+require'lazy'.setup(plugin_spec)
 
+-- TODO see if can be moved into lazy.nvim config
 local function nvim_cmp_config()
   local has_cmp, cmp = pcall(require, 'cmp')
   if not has_cmp then
@@ -385,6 +379,7 @@ nvim_cmp_config()
 -- For plugin development. Link plugin dir to dev
 cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
 
+-- TODO move these into plugin config where applicable
 ---- Global options
 g.neomake_open_list = 2
 g.auto_save = 0
@@ -417,6 +412,7 @@ opt.showmode = false
 opt.scrolloff = 30 -- min number of lines to keep above and below cursor
 if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
 
+-- TODO make command based and move into config, func dep on `opt.background`
 ---- Theme
 local lualine_theme = 'solarized_light'
 function SolarizedTheme(background)
@@ -604,6 +600,7 @@ api.nvim_create_autocmd({ 'FileType' }, {
 
 ---- Util
 
+-- TODO this has bug when nvim-tree is open
 -- When current tab has vertical dual split, open the buffer on the left
 -- in the window on the right at the same position
 function OpenInRight()
@@ -614,4 +611,5 @@ function OpenInRight()
   api.nvim_win_set_cursor(wins[2], left_pos)
 end
 
+-- TODO move into lazy.nvim
 if HasGoogle then Google.setup() end
