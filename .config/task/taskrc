@@ -14,14 +14,11 @@
 
 # Use the command 'task show' to see all defaults and overrides
 
-# Files
-data.location=$HOME/.task
-
 # To use the default location of the XDG directories,
 # move this configuration file from ~/.taskrc to ~/.config/task/taskrc and uncomment below
 
-#data.location=~/.local/share/task
-#hooks.location=~/.config/task/hooks
+data.location=~/.local/share/task
+hooks.location=~/.config/task/hooks
 
 # Color theme (uncomment one to use)
 #include light-16.theme
@@ -45,4 +42,4 @@ uda.blocks.label=Blocks
 urgency.uda.priority.L.coefficient=0.8
 
 # Put contexts defined with `task context define` in this file
-include .task/context.config
+include ~/.config/task/context.config
