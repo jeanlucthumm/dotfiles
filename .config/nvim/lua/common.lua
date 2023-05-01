@@ -58,7 +58,7 @@ function M.on_attach(client, bufnr)
       ]], false)
   end
   if client.server_capabilities.documentFormattingProvider then
-    map('<Leader>f', function()
+    nmap('<Leader>f', function()
       vim.lsp.buf.format({ timeout_ms = '5000' })
     end)
   end
