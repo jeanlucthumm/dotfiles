@@ -24,28 +24,28 @@ end
 opt.rtp:prepend(lazypath)
 
 local plugin_spec = {
-  {'nvim-lua/plenary.nvim'},
+  { 'nvim-lua/plenary.nvim' },
 
   --- LSP & DAP & nvim
   {
     'neovim/nvim-lspconfig',
-    dependencies = {'folke/neodev.nvim'}
+    dependencies = { 'folke/neodev.nvim' }
   },
   {
-    'williamboman/mason.nvim', 
-    build=":MasonUpdate",
+    'williamboman/mason.nvim',
+    build = ":MasonUpdate",
     config = function()
-      require'mason'.setup()
+      require 'mason'.setup()
     end,
   },
   { 'folke/neodev.nvim',
-    config=function ()
-      require'neodev'.setup{}
-    end}, -- lua LSP setup for better nvim integration
+    config = function()
+      require 'neodev'.setup {}
+    end }, -- lua LSP setup for better nvim integration
   {
     'williamboman/mason-lspconfig',
-    dependencies = {'folke/neodev.nvim', 'williamboman/mason.nvim'},
-    cond = function ()
+    dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim' },
+    cond = function()
       return not HasGoogle
     end,
     config = function()
@@ -71,7 +71,7 @@ local plugin_spec = {
   },
   {
     'jose-elias-alvarez/null-ls.nvim',
-    cond = function ()
+    cond = function()
       return not HasGoogle
     end,
     config = function()
@@ -80,7 +80,7 @@ local plugin_spec = {
         n.builtins.formatting.black,
         n.builtins.formatting.fish_indent,
         -- TODO this isn't working for some reason
-        n.builtins.formatting.lua_format.with{
+        n.builtins.formatting.lua_format.with {
           extra_args = {
             '--double-quote-to-single-quote',
             '--extra-sep-at-table-end',
@@ -94,9 +94,9 @@ local plugin_spec = {
       }
     end
   },
-  {'nvim-lua/lsp-status.nvim'},
-  {'mfussenegger/nvim-dap'}, --TODO verify setup works automatically
-  { 'rcarriga/nvim-dap-ui'}, --TODO verify setup works automatically
+  { 'nvim-lua/lsp-status.nvim' },
+  { 'mfussenegger/nvim-dap' }, --TODO verify setup works automatically
+  { 'rcarriga/nvim-dap-ui' }, --TODO verify setup works automatically
   {
     'mfussenegger/nvim-dap-python',
     config = function()
@@ -127,7 +127,7 @@ local plugin_spec = {
       }
     end,
   },
-  {'nvim-treesitter/playground'},
+  { 'nvim-treesitter/playground' },
   {
     'L3MON4D3/LuaSnip',
     config = function()
@@ -151,8 +151,8 @@ local plugin_spec = {
       'onsails/lspkind-nvim',
     }
   },
-  {'mhinz/vim-signify'}, -- TODO look into nvim version
-  {'theHamsta/nvim-dap-virtual-text'},
+  { 'mhinz/vim-signify' }, -- TODO look into nvim version
+  { 'theHamsta/nvim-dap-virtual-text' },
   {
     'simrat39/rust-tools.nvim',
     config = function()
@@ -209,9 +209,9 @@ local plugin_spec = {
   },
 
   --- Theme
-  {'kyazdani42/nvim-web-devicons'},
-  {'ellisonleao/gruvbox.nvim'},
-  {'marko-cerovac/material.nvim'},
+  { 'kyazdani42/nvim-web-devicons' },
+  { 'ellisonleao/gruvbox.nvim' },
+  { 'marko-cerovac/material.nvim' },
   {
     'rose-pine/neovim',
     config = function()
@@ -221,10 +221,10 @@ local plugin_spec = {
       }
     end,
   },
-  {'folke/tokyonight.nvim'},
-  {'tjdevries/colorbuddy.nvim'},
-  {'projekt0n/github-nvim-theme'},
-  {'savq/melange'},
+  { 'folke/tokyonight.nvim' },
+  { 'tjdevries/colorbuddy.nvim' },
+  { 'projekt0n/github-nvim-theme' },
+  { 'savq/melange' },
 
   --- UI
   -- TODO update config for CWD
@@ -260,20 +260,20 @@ local plugin_spec = {
       require 'telescope'.load_extension('flutter')
     end,
     dependencies = {
-      {'tom-anders/telescope-vim-bookmarks.nvim'},
+      { 'tom-anders/telescope-vim-bookmarks.nvim' },
     }
   },
   -- TODO look at config for this for lazy.nvim
-  {'nvim-lualine/lualine.nvim'}, -- configured in the theme section
-  {'mhinz/vim-startify'}, -- startup screen
+  { 'nvim-lualine/lualine.nvim' }, -- configured in the theme section
+  { 'mhinz/vim-startify' }, -- startup screen
   { 'rcarriga/nvim-notify' }, -- pretty notifications
-  {'xiyaowong/virtcolumn.nvim'}, -- makes virtual column a pixel wide
+  { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
 
   --- Editor
-  {'tpope/vim-commentary'},
-  {'moll/vim-bbye'}, -- better version of :bdelete
+  { 'tpope/vim-commentary' },
+  { 'moll/vim-bbye' }, -- better version of :bdelete
   -- TODO figure out keybindings
-  {'pseewald/vim-anyfold'},
+  { 'pseewald/vim-anyfold' },
   {
     'onsails/lspkind-nvim',
     config = function() require 'lspkind'.init {} end,
@@ -287,12 +287,12 @@ local plugin_spec = {
           { map_char = { tex = '' } }))
     end,
   },
-  { 'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end },
-  {'rhysd/conflict-marker.vim'},
+  { 'psliwka/vim-smoothie',     cond = function() return not vim.g.neovide end },
+  { 'rhysd/conflict-marker.vim' },
 
   -- Functional
-  {'neomake/neomake'},
-  {'907th/vim-auto-save'},
+  { 'neomake/neomake' },
+  { '907th/vim-auto-save' },
   {
     'CRAG666/code_runner.nvim',
     config = function()
@@ -301,7 +301,7 @@ local plugin_spec = {
   },
 } -- plugin_spec
 
-require'lazy'.setup(plugin_spec)
+require 'lazy'.setup(plugin_spec)
 
 -- TODO see if can be moved into lazy.nvim config
 local function nvim_cmp_config()
