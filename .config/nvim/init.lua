@@ -159,10 +159,6 @@ local plugin_spec = {
       }
     end,
   },
-  -- TODO remove
-  {
-    'norcalli/nvim-terminal.lua',
-  },
   -- TODO set this plugin for <Leader>a
   { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' },
   { 'glepnir/lspsaga.nvim' },
@@ -194,8 +190,6 @@ local plugin_spec = {
 
   --- Theme
   {'kyazdani42/nvim-web-devicons'},
-  -- TODO remove
-  {'jeanlucthumm/vim-solarized8'},
   {'ellisonleao/gruvbox.nvim'},
   {'marko-cerovac/material.nvim'},
   {
@@ -213,10 +207,6 @@ local plugin_spec = {
   {'savq/melange'},
 
   --- UI
-  -- TODO remove
-  {'junegunn/fzf'},
-  {'junegunn/fzf.vim'},
-  { 'ojroques/nvim-lspfuzzy' },
   -- TODO update config for CWD
   {
     'kyazdani42/nvim-tree.lua',
@@ -261,11 +251,7 @@ local plugin_spec = {
 
   --- Editor
   {'tpope/vim-commentary'},
-  -- TODO Remove
-  {'tpope/vim-fugitive'},
-  {'tpope/vim-dispatch'},
-  -- TODO Remove
-  {'moll/vim-bbye'},
+  {'moll/vim-bbye'}, -- better version of :bdelete
   -- TODO figure out keybindings
   {'pseewald/vim-anyfold'},
   {
@@ -281,28 +267,11 @@ local plugin_spec = {
           { map_char = { tex = '' } }))
     end,
   },
-  -- TODO Remove
-  {'bmundt6/workflowish'},
   { 'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end },
   {'rhysd/conflict-marker.vim'},
-  -- TODO remove because of null-ls
-  {'rhysd/vim-clang-format'},
-  -- TODO remove, conflicting with other stuff
-  {
-    'RishabhRD/nvim-lsputils',
-    requires = { 'RishabhRD/popfix' },
-    config = function()
-      vim.lsp.handlers['textDocument/codeAction'] =
-          require 'lsputil.codeAction'.code_action_handler
-    end,
-  },
 
   -- Functional
-  -- TODO remove
-  {'MattesGroeger/vim-bookmarks'},
   {'neomake/neomake'},
-  -- TODO remove
-  {'vim-test/vim-test'},
   {'907th/vim-auto-save'},
   {
     'CRAG666/code_runner.nvim',
