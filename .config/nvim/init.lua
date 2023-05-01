@@ -79,7 +79,13 @@ local plugin_spec = {
       n.setup {
         n.builtins.formatting.black,
         n.builtins.formatting.fish_indent,
-        n.builtins.formatting.lua_format,
+        -- TODO this isn't working for some reason
+        n.builtins.formatting.lua_format.with{
+          extra_args = {
+            '--double-quote-to-single-quote',
+            '--extra-sep-at-table-end',
+          },
+        },
         n.builtins.formatting.mdformat,
         n.builtins.formatting.clang_format,
         n.builtins.diagnostics.fish,
