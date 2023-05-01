@@ -24,7 +24,6 @@ function M.hover()
 end
 
 function M.on_attach(client, bufnr)
-  local map = M.map
   local nmap = M.nmap
   local ncmap = M.ncmap
 
