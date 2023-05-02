@@ -8,6 +8,8 @@ local cmd = vim.cmd
 
 HasGoogle, Google = pcall(require, 'google')
 
+g.mapleader = ' ' -- sets <Leader> to <space>
+
 --- Lazy bootstrap
 local lazypath = fn.stdpath('data') .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -43,7 +45,7 @@ local plugin_spec = {
     config = function()
       require 'neodev'.setup {}
     end
-  },       -- lua LSP setup for better nvim integration
+  }, -- lua LSP setup for better nvim integration
   {
     'williamboman/mason-lspconfig',
     dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim' },
@@ -370,7 +372,6 @@ g.auto_save = 0
 g.auto_save_events = { 'InsertLeave', 'TextChanged', 'CursorHold' }
 g.neovide_cursor_animation_length = 0.05
 g.bookmark_no_default_key_mappings = 1
-g.mapleader = ' '                              -- sets <Leader> to <space>
 g.startify_change_to_dir = 0                   -- do not change cwd when opening files
 g.startify_session_autoload = 1                -- automatically source session if Session.vim is found
 g.gitgutter_map_keys = 0                       -- disable default keybindings for gitgutter
