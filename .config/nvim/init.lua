@@ -114,6 +114,8 @@ local plugin_spec = {
         highlight = { enable = true },
         indent = { enable = true, disable = { 'python', 'yaml' } },
       }
+      vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
+      vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
       -- Custom parser for go template files
       local parser_config =
           require 'nvim-treesitter.parsers'.get_parser_configs()
@@ -248,7 +250,6 @@ local plugin_spec = {
       })
     end,
   },
-  -- TODO test google config
   {
     'leoluz/nvim-dap-go',
     config = function()
@@ -327,9 +328,15 @@ local plugin_spec = {
   },
   -- TODO look at config for this for lazy.nvim
   { 'nvim-lualine/lualine.nvim' }, -- configured in the theme section
-  { 'mhinz/vim-startify' },        -- startup screen
-  { 'rcarriga/nvim-notify' },      -- pretty notifications
-  { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
+  {
+    'mhinz/vim-startify',
+    config = function()
+      g.startify_change_to_dir = 0    -- do not change cwd when opening files
+      g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
+    end
+  },                                  -- startup screen
+  { 'rcarriga/nvim-notify' },         -- pretty notifications
+  { 'xiyaowong/virtcolumn.nvim' },    -- makes virtual column a pixel wide
 
   --- Editor
   { 'tpope/vim-commentary' },
@@ -353,8 +360,20 @@ local plugin_spec = {
   { 'rhysd/conflict-marker.vim' },
 
   -- Functional
-  { 'neomake/neomake' },
-  { '907th/vim-auto-save' },
+  {
+    'neomake/neomake',
+    config = function()
+      g.neomake_open_list = 2
+      vim.v['test#strategy'] = 'neomake'
+    end
+  },
+  {
+    '907th/vim-auto-save',
+    config = function()
+      g.auto_save = 0
+      g.auto_save_events = { 'InsertLeave', 'TextChanged', 'CursorHold' }
+    end
+  },
   {
     'CRAG666/code_runner.nvim',
     config = function()
@@ -376,19 +395,9 @@ cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
 
 -- TODO move these into plugin config where applicable
 ---- Global options
-g.neomake_open_list = 2
-g.auto_save = 0
-g.auto_save_events = { 'InsertLeave', 'TextChanged', 'CursorHold' }
 g.neovide_cursor_animation_length = 0.05
-g.bookmark_no_default_key_mappings = 1
-g.startify_change_to_dir = 0                   -- do not change cwd when opening files
-g.startify_session_autoload = 1                -- automatically source session if Session.vim is found
-g.gitgutter_map_keys = 0                       -- disable default keybindings for gitgutter
-g.foldlevel = 99                               -- no folds on file open
-vim.v['test#strategy'] = 'neomake'
-vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
-vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
-vim.wo.foldlevel = 99                          -- no folds on file open
+g.foldlevel = 99      -- no folds on file open
+vim.wo.foldlevel = 99 -- no folds on file open
 
 ---- Neovim options
 opt.tabstop = 2
@@ -404,7 +413,7 @@ opt.guifont = 'JetBrainsMono Nerd Font:h8'
 opt.completeopt = 'menu,menuone,noselect'
 opt.showmode = false
 opt.scrolloff = 30 -- min number of lines to keep above and below cursor
-if fn.has('nvim-0.5.0') == 1 then opt.signcolumn = 'number' end
+opt.signcolumn = 'number'
 
 -- TODO make command based and move into config, func dep on `opt.background`
 ---- Theme
@@ -505,7 +514,7 @@ require 'lualine'.setup {
   },
 }
 
----- Keymap (note that some keys are defined in _lsp_config.lua)
+---- Keymap (note that some keys are defined in common.lua)
 local map = require 'common'.map
 local nmap = require 'common'.nmap
 local imap = require 'common'.imap
