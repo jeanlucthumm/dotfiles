@@ -301,6 +301,7 @@ local plugin_spec = {
   {
     'nvim-telescope/telescope.nvim',
     config = function()
+      local actions = require'telescope.actions'
       require 'telescope'.setup {
         defaults = {
           path_display = { 'smart' },
@@ -308,20 +309,21 @@ local plugin_spec = {
             i = {
               ['<C-k>'] = 'move_selection_previous',
               ['<C-j>'] = 'move_selection_next',
-              ['<C-d>'] = require 'telescope.actions'.delete_buffer,
+              ['<C-x>'] = actions.delete_buffer,
+              ['<C-u>'] = actions.preview_scrolling_up,
+              ['<C-d>'] = actions.preview_scrolling_down,
             },
             n = {
               ['<C-c>'] = 'close',
             }
+          },
+          preview = {
+            timeout = 2000,
           }
         }
       }
-      require 'telescope'.load_extension('vim_bookmarks')
       require 'telescope'.load_extension('flutter')
     end,
-    dependencies = {
-      { 'tom-anders/telescope-vim-bookmarks.nvim' },
-    }
   },
   -- TODO look at config for this for lazy.nvim
   { 'nvim-lualine/lualine.nvim' }, -- configured in the theme section
