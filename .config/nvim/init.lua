@@ -265,7 +265,14 @@ local plugin_spec = {
 
   --- Theme
   { 'kyazdani42/nvim-web-devicons' },
-  { 'ellisonleao/gruvbox.nvim' },
+  {
+    'ellisonleao/gruvbox.nvim',
+    config = function()
+      require 'gruvbox'.setup {
+        bold = false,
+      }
+    end
+  },
   { 'marko-cerovac/material.nvim' },
   {
     'rose-pine/neovim',
