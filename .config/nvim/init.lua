@@ -398,6 +398,7 @@ cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
 g.neovide_cursor_animation_length = 0.05
 g.foldlevel = 99      -- no folds on file open
 vim.wo.foldlevel = 99 -- no folds on file open
+vim.notify = require 'notify'
 
 ---- Neovim options
 opt.tabstop = 2
