@@ -38,10 +38,12 @@ local plugin_spec = {
       require 'mason'.setup()
     end,
   },
-  { 'folke/neodev.nvim',
+  {
+    'folke/neodev.nvim',
     config = function()
       require 'neodev'.setup {}
-    end }, -- lua LSP setup for better nvim integration
+    end
+  },       -- lua LSP setup for better nvim integration
   {
     'williamboman/mason-lspconfig',
     dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim' },
@@ -90,7 +92,7 @@ local plugin_spec = {
   },
   { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap' }, --TODO verify setup works automatically
-  { 'rcarriga/nvim-dap-ui' }, --TODO verify setup works automatically
+  { 'rcarriga/nvim-dap-ui' },  --TODO verify setup works automatically
   {
     'mfussenegger/nvim-dap-python',
     config = function()
@@ -314,8 +316,8 @@ local plugin_spec = {
   },
   -- TODO look at config for this for lazy.nvim
   { 'nvim-lualine/lualine.nvim' }, -- configured in the theme section
-  { 'mhinz/vim-startify' }, -- startup screen
-  { 'rcarriga/nvim-notify' }, -- pretty notifications
+  { 'mhinz/vim-startify' },        -- startup screen
+  { 'rcarriga/nvim-notify' },      -- pretty notifications
   { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
 
   --- Editor
@@ -368,15 +370,15 @@ g.auto_save = 0
 g.auto_save_events = { 'InsertLeave', 'TextChanged', 'CursorHold' }
 g.neovide_cursor_animation_length = 0.05
 g.bookmark_no_default_key_mappings = 1
-g.mapleader = ' ' -- sets <Leader> to <space>
-g.startify_change_to_dir = 0 -- do not change cwd when opening files
-g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
-g.gitgutter_map_keys = 0 -- disable default keybindings for gitgutter
-g.foldlevel = 99 -- no folds on file open
+g.mapleader = ' '                              -- sets <Leader> to <space>
+g.startify_change_to_dir = 0                   -- do not change cwd when opening files
+g.startify_session_autoload = 1                -- automatically source session if Session.vim is found
+g.gitgutter_map_keys = 0                       -- disable default keybindings for gitgutter
+g.foldlevel = 99                               -- no folds on file open
 vim.v['test#strategy'] = 'neomake'
-vim.wo.foldmethod = 'expr' -- expression based folding to enable treesitter
+vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
 vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
-vim.wo.foldlevel = 99 -- no folds on file open
+vim.wo.foldlevel = 99                          -- no folds on file open
 
 ---- Neovim options
 opt.tabstop = 2
@@ -502,7 +504,7 @@ local ncmap = require 'common'.ncmap
 
 -- visual
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
-nmap('<Leader>p', '\"+p') -- paste from system clipboard
+nmap('<Leader>p', '\"+p')     -- paste from system clipboard
 -- g
 nmap('gt', ':tabe<CR>:term<CR>:file term:cli<CR>i')
 ncmap('gr', 'Telescope lsp_references')
