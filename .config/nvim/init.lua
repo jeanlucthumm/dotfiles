@@ -56,8 +56,10 @@ local plugin_spec = {
       -- Set default configuration for all installed servers
       for _, lsp in ipairs(
         require 'mason-lspconfig'.get_installed_servers()) do
+        local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
+        capabilities = vim.tbl_extend('keep', capabilities, require 'lsp-status'.capabilities)
         local config = {
-          capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
+          capabilities = capabilities,
           on_attach = require 'common'.on_attach,
           flags = {
             debounce_text_changes = 150,
