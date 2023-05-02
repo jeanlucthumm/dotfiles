@@ -45,9 +45,6 @@ local plugin_spec = {
   {
     'williamboman/mason-lspconfig',
     dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim' },
-    cond = function()
-      return not HasGoogle
-    end,
     config = function()
       require 'mason-lspconfig'.setup {
         ensure_installed = { 'lua_ls', 'rust_analyzer' },
@@ -71,9 +68,6 @@ local plugin_spec = {
   },
   {
     'jose-elias-alvarez/null-ls.nvim',
-    cond = function()
-      return not HasGoogle
-    end,
     config = function()
       local n = require('null-ls')
       n.setup {
@@ -149,7 +143,62 @@ local plugin_spec = {
       'neovim/nvim-lspconfig',
       'L3MON4D3/LuaSnip',
       'onsails/lspkind-nvim',
-    }
+    },
+    config = function()
+      local cmp = require 'cmp'
+      local luasnip = require 'luasnip'
+      local conf = {
+        snippet = {
+          expand = function(args)
+            require 'luasnip'.lsp_expand(args.body)
+          end,
+        },
+        mapping = {
+          ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4),
+            { 'i', 'c' }),
+          ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4),
+            { 'i', 'c' }),
+          ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
+            { 'i', 'c' }),
+          ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(),
+            { 'i', 'c' }),
+          ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(),
+            { 'i', 'c' }),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+          ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+        },
+        sources = {
+          { name = 'luasnip',                 priority = 50 },
+          { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
+          { name = 'nvim_lsp_signature_help', priority = 10 },
+          { name = 'buffer',                  priority = 1 },
+        },
+        formatting = {
+          format = require 'lspkind'.cmp_format()
+        },
+        sorting = {
+          priority_weight = 10,
+        }
+      }
+      if HasGoogle then
+        conf = Google.update_cmp_config(conf)
+      end
+      cmp.setup(conf)
+    end
   },
   { 'mhinz/vim-signify' }, -- TODO look into nvim version
   { 'theHamsta/nvim-dap-virtual-text' },
@@ -299,71 +348,15 @@ local plugin_spec = {
       require 'code_runner'.setup { filetype = { python = 'python -u' } }
     end,
   },
+
+  { import = "google-plugins" },
 } -- plugin_spec
 
-require 'lazy'.setup(plugin_spec)
-
--- TODO see if can be moved into lazy.nvim config
-local function nvim_cmp_config()
-  local has_cmp, cmp = pcall(require, 'cmp')
-  if not has_cmp then
-    return
-  end
-  local luasnip = require 'luasnip'
-
-  local config = {
-    snippet = {
-      expand = function(args)
-        require 'luasnip'.lsp_expand(args.body)
-      end,
-    },
-    mapping = {
-      ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs( -4),
-        { 'i', 'c' }),
-      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4),
-        { 'i', 'c' }),
-      ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
-        { 'i', 'c' }),
-      ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(),
-        { 'i', 'c' }),
-      ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(),
-        { 'i', 'c' }),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }),
-      ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
-      ['<Tab>'] = cmp.mapping(function(fallback)
-        if luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
-        else
-          fallback()
-        end
-      end, { 'i', 's' }),
-      ['<S-Tab>'] = cmp.mapping(function(fallback)
-        if luasnip.jumpable( -1) then
-          luasnip.jump( -1)
-        else
-          fallback()
-        end
-      end, { 'i', 's' }),
-    },
-    sources = {
-      { name = 'luasnip',                 priority = 50 },
-      { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
-      { name = 'nvim_lsp_signature_help', priority = 10 },
-      { name = 'buffer',                  priority = 1 },
-    },
-    formatting = {
-      format = require 'lspkind'.cmp_format()
-    },
-    sorting = {
-      priority_weight = 10,
-    }
-  }
-  if HasGoogle then
-    config = Google.update_cmp_config(config)
-  end
-  cmp.setup(config)
+if HasGoogle then
+  Google.update_plugin_spec(plugin_spec)
 end
-nvim_cmp_config()
+
+require 'lazy'.setup(plugin_spec)
 
 -- For plugin development. Link plugin dir to dev
 cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
