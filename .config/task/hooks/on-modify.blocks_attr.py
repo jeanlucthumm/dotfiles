@@ -52,7 +52,7 @@ import sys
 # Adjust this if "task" is not regular Taskwarrior.
 TASK = 'task'
 # Adjust path if needed. It is a temporary file managed by the hook.
-SHIMFILE = "%s/.task/hooks/blocks_shim.txt" % os.getenv('HOME')
+SHIMFILE = "%s/.config/task/hooks/blocks_shim.txt" % os.getenv('HOME')
 
 def on_launch():
     try:
