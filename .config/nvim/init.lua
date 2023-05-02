@@ -290,15 +290,12 @@ local plugin_spec = {
   { 'savq/melange' },
 
   --- UI
-  -- TODO update config for CWD
   {
     'kyazdani42/nvim-tree.lua',
-    config = function()
-      require 'nvim-tree'.setup {
-        update_focused_file = { enable = true },
-        update_cwd = true,
-      }
-    end,
+    opts = {
+      update_focused_file = { enable = true },
+      sync_root_with_cwd = true,
+    }
   },
   { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
   {
@@ -383,10 +380,6 @@ local plugin_spec = {
 
   { import = "google-plugins" },
 } -- plugin_spec
-
-if HasGoogle then
-  Google.update_plugin_spec(plugin_spec)
-end
 
 require 'lazy'.setup(plugin_spec)
 
