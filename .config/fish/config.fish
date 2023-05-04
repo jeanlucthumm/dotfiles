@@ -39,6 +39,8 @@ if status is-interactive
     alias fixkeyb="source $HOME/.xprofile && xmodmap $CONF/capsrebind.Xmodmap"
   end
 
+  alias done="notify 'done'"
+
   if [ "$TERM" = "xterm-kitty" ]
     alias icat="kitty +kitten icat"
     alias newterm='kitty --detach --directory (pwd)'
