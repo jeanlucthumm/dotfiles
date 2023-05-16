@@ -116,7 +116,7 @@ local plugin_spec = {
     build = ':TSUpdate',
     config = function()
       require 'nvim-treesitter.configs'.setup {
-        ensure_installed = { 'c', 'lua', 'rust', 'fish' },
+        ensure_installed = { 'c', 'lua', 'rust', 'fish', 'markdown', 'markdown_inline' },
         auto_install = true,
         highlight = { enable = true },
         indent = { enable = true, disable = { 'python', 'yaml' } },
@@ -245,7 +245,13 @@ local plugin_spec = {
   },
   -- TODO set this plugin for <Leader>a
   { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' },
-  { 'glepnir/lspsaga.nvim' },
+  {
+    'glepnir/lspsaga.nvim',
+    event = "LspAttach",
+    config = function()
+      require 'lspsaga'.setup {}
+    end,
+  },
   -- TODO refine keymap
   {
     'simrat39/symbols-outline.nvim',
@@ -308,7 +314,7 @@ local plugin_spec = {
   {
     'nvim-telescope/telescope.nvim',
     config = function()
-      local actions = require'telescope.actions'
+      local actions = require 'telescope.actions'
       require 'telescope'.setup {
         defaults = {
           path_display = { 'smart' },
