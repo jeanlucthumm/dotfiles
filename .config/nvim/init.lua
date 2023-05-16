@@ -66,7 +66,14 @@ local plugin_spec = {
           },
         }
         if lsp == 'lua_ls' then
-          config.settings = { Lua = { telemetry = { enable = false } } }
+          config.settings = {
+            Lua = {
+              workspace = {
+                checkThirdParty = false
+              },
+              telemetry = { enable = false }
+            }
+          }
         end
         require 'lspconfig'[lsp].setup(config)
       end
