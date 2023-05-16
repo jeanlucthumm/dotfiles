@@ -35,7 +35,7 @@ function M.on_attach(client, bufnr)
   -- Mappings
   local opts = { noremap = true, silent = true, buffer = bufnr }
   ncmap("gd", "lua vim.lsp.buf.definition()", opts)
-  ncmap("K", "lua Lspsaga hover_doc", opts)
+  ncmap("K", "lua vim.lsp.buf.hover()", opts)
   ncmap("<Leader>r", "lua vim.lsp.buf.rename()", opts)
   ncmap("<Leader>ks", "lua vim.lsp.buf.signature_help()", opts)
   ncmap("<Leader>kp", "lua vim.diagnostic.goto_prev()", opts)
