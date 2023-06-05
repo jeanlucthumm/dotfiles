@@ -1,4 +1,4 @@
-function ttoggle -d "Stop this task and make another one active" -a new_task
+function ts -d "Stop this task and make another one active" -a new_task
   set -l tmpfile "/tmp/toggle_last_id"
   task +ACTIVE export | jq '.[0].id' | read -l active_id
   echo "Active task is $active_id"

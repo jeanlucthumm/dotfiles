@@ -63,6 +63,7 @@ if status is-interactive
   alias ta="task active"
   alias tr="task ready"
   alias day="timew day"
+  alias acc="task end.after:yesterday completed"
 end
 
 ### ===========================================================================
