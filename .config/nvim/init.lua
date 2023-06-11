@@ -401,11 +401,8 @@ if HasGoogle then
 end
 
 require 'lazy'.setup(plugin_spec, {
-  dev = { path = "~/Code/nvim-plugins" },
+  dev = { path = fn.expand("$HOME/Code/nvim-plugins") },
 })
-
--- For plugin development. Link plugin dir to dev
-cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
 
 -- TODO move these into plugin config where applicable
 ---- Global options
