@@ -370,6 +370,8 @@ local plugin_spec = {
   },
   { 'psliwka/vim-smoothie',     cond = function() return not vim.g.neovide end },
   { 'rhysd/conflict-marker.vim' },
+  { 'ThePrimeagen/harpoon'},
+
 
   -- Functional
   {
@@ -534,7 +536,10 @@ local ncmap = require 'common'.ncmap
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
 nmap('<Leader>p', '\"+p')     -- paste from system clipboard
 -- g
-nmap('gt', ':tabe<CR>:term<CR>:file term:cli<CR>i')
+nmap('gtt', ':tabe<CR>:term<CR>:file term:cli<CR>i')
+ncmap('gti', 'lua require"harpoon.term".gotoTerminal(1)')
+ncmap('gto', 'lua require"harpoon.term".gotoTerminal(2)')
+ncmap('gtp', 'lua require"harpoon.term".gotoTerminal(3)')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
 -- c
