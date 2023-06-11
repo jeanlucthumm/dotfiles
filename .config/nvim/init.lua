@@ -630,5 +630,9 @@ function OpenInRight()
   api.nvim_win_set_cursor(wins[2], left_pos)
 end
 
+function Inspect(tbl)
+  print(vim.inspect(tbl))
+end
+
 -- TODO move into lazy.nvim
 if HasGoogle then Google.setup() end
