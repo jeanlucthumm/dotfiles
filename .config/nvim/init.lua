@@ -103,7 +103,7 @@ local plugin_spec = {
   },
   { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap' }, --TODO verify setup works automatically
-  { 'rcarriga/nvim-dap-ui' },  --TODO verify setup works automatically
+  { 'rcarriga/nvim-dap-ui' }, --TODO verify setup works automatically
   {
     'mfussenegger/nvim-dap-python',
     config = function()
@@ -121,7 +121,7 @@ local plugin_spec = {
         highlight = { enable = true },
         indent = { enable = true },
       }
-      vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
+      vim.wo.foldmethod = 'expr' -- expression based folding to enable treesitter
       vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
       -- Custom parser for go template files
       local parser_config =
@@ -169,7 +169,7 @@ local plugin_spec = {
           end,
         },
         mapping = {
-          ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4),
+          ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs( -4),
             { 'i', 'c' }),
           ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4),
             { 'i', 'c' }),
@@ -189,8 +189,8 @@ local plugin_spec = {
             end
           end, { 'i', 's' }),
           ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(-1) then
-              luasnip.jump(-1)
+            if luasnip.jumpable( -1) then
+              luasnip.jump( -1)
             else
               fallback()
             end
@@ -343,12 +343,12 @@ local plugin_spec = {
   {
     'mhinz/vim-startify',
     config = function()
-      g.startify_change_to_dir = 0    -- do not change cwd when opening files
+      g.startify_change_to_dir = 0 -- do not change cwd when opening files
       g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
     end
-  },                                  -- startup screen
-  { 'rcarriga/nvim-notify' },         -- pretty notifications
-  { 'xiyaowong/virtcolumn.nvim' },    -- makes virtual column a pixel wide
+  }, -- startup screen
+  { 'rcarriga/nvim-notify' }, -- pretty notifications
+  { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
 
   --- Editor
   { 'tpope/vim-commentary' },
@@ -370,7 +370,7 @@ local plugin_spec = {
   },
   { 'psliwka/vim-smoothie',     cond = function() return not vim.g.neovide end },
   { 'rhysd/conflict-marker.vim' },
-  { 'ThePrimeagen/harpoon'},
+  { 'ThePrimeagen/harpoon' },
 
 
   -- Functional
@@ -393,10 +393,12 @@ local plugin_spec = {
     config = function()
       require 'code_runner'.setup { filetype = { python = 'python -u' } }
     end,
-  },
-
-  { import = "google-plugins" },
+  }
 } -- plugin_spec
+
+if HasGoogle then
+  table.insert(plugin_spec, { import = "google-plugins" })
+end
 
 require 'lazy'.setup(plugin_spec, {
   dev = { path = "~/Code/nvim-plugins" },
@@ -408,7 +410,7 @@ cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
 -- TODO move these into plugin config where applicable
 ---- Global options
 g.neovide_cursor_animation_length = 0.05
-g.foldlevel = 99      -- no folds on file open
+g.foldlevel = 99 -- no folds on file open
 vim.wo.foldlevel = 99 -- no folds on file open
 vim.notify = require 'notify'
 
@@ -536,7 +538,7 @@ local ncmap = require 'common'.ncmap
 
 -- visual
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
-nmap('<Leader>p', '\"+p')     -- paste from system clipboard
+nmap('<Leader>p', '\"+p') -- paste from system clipboard
 -- g
 nmap('gtt', ':tabe<CR>:term<CR>:file term:cli<CR>i')
 ncmap('gti', 'lua require"harpoon.term".gotoTerminal(1)')
