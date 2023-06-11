@@ -119,7 +119,7 @@ local plugin_spec = {
         ensure_installed = { 'c', 'lua', 'rust', 'fish', 'markdown', 'markdown_inline' },
         auto_install = true,
         highlight = { enable = true },
-        indent = { enable = true, disable = { 'python', 'yaml' } },
+        indent = { enable = true },
       }
       vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
       vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
