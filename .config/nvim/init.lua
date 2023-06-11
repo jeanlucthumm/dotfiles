@@ -398,7 +398,9 @@ local plugin_spec = {
   { import = "google-plugins" },
 } -- plugin_spec
 
-require 'lazy'.setup(plugin_spec)
+require 'lazy'.setup(plugin_spec, {
+  dev = { path = "~/Code/nvim-plugins" },
+})
 
 -- For plugin development. Link plugin dir to dev
 cmd [[ set rtp+=$HOME/.config/nvim/dev ]]
