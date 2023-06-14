@@ -97,7 +97,6 @@ local plugin_spec = {
           n.builtins.formatting.clang_format,
           n.builtins.diagnostics.fish,
           n.builtins.diagnostics.flake8,
-          n.builtins.diagnostics.luacheck,
         },
       }
     end
