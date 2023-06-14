@@ -39,3 +39,5 @@
 	helper = !/usr/bin/gh auth git-credential
 [pull]
 	rebase = true
+[init]
+	defaultBranch = master
