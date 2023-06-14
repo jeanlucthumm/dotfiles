@@ -84,20 +84,21 @@ local plugin_spec = {
     config = function()
       local n = require('null-ls')
       n.setup {
-        n.builtins.formatting.black,
-        n.builtins.formatting.fish_indent,
-        -- TODO this isn't working for some reason
-        n.builtins.formatting.lua_format.with {
-          extra_args = {
-            '--double-quote-to-single-quote',
-            '--extra-sep-at-table-end',
+        sources = {
+          n.builtins.formatting.black,
+          n.builtins.formatting.fish_indent,
+          n.builtins.formatting.lua_format.with {
+            extra_args = {
+              '--double-quote-to-single-quote',
+              '--extra-sep-at-table-end',
+            },
           },
+          n.builtins.formatting.mdformat,
+          n.builtins.formatting.clang_format,
+          n.builtins.diagnostics.fish,
+          n.builtins.diagnostics.flake8,
+          n.builtins.diagnostics.luacheck,
         },
-        n.builtins.formatting.mdformat,
-        n.builtins.formatting.clang_format,
-        n.builtins.diagnostics.fish,
-        n.builtins.diagnostics.flake8,
-        n.builtins.diagnostics.luacheck,
       }
     end
   },

@@ -44,22 +44,20 @@ function M.on_attach(client, bufnr)
   ncmap("<Leader>wl",
     "require'common'.print_table(vim.lsp.buf.list_workspace_folders())",
     opts)
+  nmap('<Leader>f', function()
+    vim.lsp.buf.format({ timeout_ms = '5000', async = true })
+  end)
 
   -- Capability specific commands
   if client.server_capabilities.documentHighlightProvider then
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
-    api.nvim_exec([[
+    api.nvim_exec2 [[
       augroup lsp_document_highlight
       autocmd! * <buffer>
       autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
       augroup END
-      ]], false)
-  end
-  if client.server_capabilities.documentFormattingProvider then
-    nmap('<Leader>f', function()
-      vim.lsp.buf.format({ timeout_ms = '5000' })
-    end)
+    ]]
   end
   if client.server_capabilities.codeLensProvider then
     -- CodeLens provides extra actions like "Run Test"
