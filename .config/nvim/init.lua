@@ -580,12 +580,14 @@ ncmap('<Leader>wc', 'RunClose')
 -- <Leader>p    projects
 -- reserved
 
+
+
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
 ncmap('<C-l>', 'tabn')
 nmap('<C-j>', '<C-e>') -- scroll one line up
 nmap('<C-k>', '<C-y>') -- scroll one line down
-imap('<C-v>', '<C-r>+')
+imap('<C-v>', '<C-c>:set paste<CR>"+p:set nopaste<CR>i')
 map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
 map('t', '<C-l>', '<C-\\><C-n><Cmd>:tabn<CR>')
 map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
