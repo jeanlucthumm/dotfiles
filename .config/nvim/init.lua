@@ -273,7 +273,7 @@ local plugin_spec = {
   },
 
   --- Theme
-  { 'kyazdani42/nvim-web-devicons' },
+  { 'nvim-tree/nvim-web-devicons' },
   {
     'ellisonleao/gruvbox.nvim',
     config = function()
@@ -388,6 +388,11 @@ local plugin_spec = {
     config = function()
       require 'code_runner'.setup { filetype = { python = 'python -u' } }
     end,
+  },
+  {
+    'folke/trouble.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {},
   }
 } -- plugin_spec
 
