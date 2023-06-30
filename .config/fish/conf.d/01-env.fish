@@ -17,7 +17,7 @@ if [ $OS = "Linux" ]
   set -x CHROME_EXECUTABLE /usr/bin/chromium
   set -x GPG_TTY (tty)
 
-  set -x PATH $PATH $ANDROID_SDK_ROOT/platforms $ANDROID_SDK_ROOT/tools/bin $ANDROID_SDK_ROOT/platform-tools
+  set -x PATH $PATH $ANDROID_SDK_ROOT/platforms $ANDROID_SDK_ROOT/tools/bin $ANDROID_SDK_ROOT/platform-tools /opt/flutter/bin
 
 else if [ $OS = "Darwin" ]
 
