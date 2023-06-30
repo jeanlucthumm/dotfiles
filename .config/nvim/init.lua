@@ -421,7 +421,6 @@ opt.splitright = true
 opt.hidden = true
 opt.mouse = 'a'
 opt.updatetime = 500
-opt.guifont = 'JetBrainsMono Nerd Font:h8'
 opt.completeopt = 'menu,menuone,noselect'
 opt.showmode = false
 opt.scrolloff = 30 -- min number of lines to keep above and below cursor
