@@ -19,8 +19,10 @@
 [alias]
   de = diff
   s = status
+  stat = status
   d = diff --cached
   tree = log --graph --decorate --oneline --all
+  check = checkout
 [safe]
   directory = /opt/flutter
 [delta]
