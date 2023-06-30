@@ -4,6 +4,8 @@ function clip -d "copy to clipboard"
       xclip -selection clipboard
     else if [ "$XDG_SESSION_TYPE" = "wayland" ]
       wl-copy
+    else if set -q TMUX
+      tmux loadb -
     end
   else if [ "$OS" = "Darwin" ]
     pbcopy
