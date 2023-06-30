@@ -5,9 +5,7 @@ lsp_status.register_progress()
 
 local M = {}
 
-function M.map(mode, lhs, rhs, opts)
-  vim.keymap.set(mode, lhs, rhs, opts)
-end
+function M.map(mode, lhs, rhs, opts) vim.keymap.set(mode, lhs, rhs, opts) end
 
 function M.nmap(...) M.map('n', ...) end
 
@@ -30,23 +28,23 @@ function M.on_attach(client, bufnr)
   -- LSP Status
   lsp_status.on_attach(client)
 
-  api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+  api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings
   local opts = { noremap = true, silent = true, buffer = bufnr }
-  ncmap("gd", "lua vim.lsp.buf.definition()", opts)
-  ncmap("K", "lua vim.lsp.buf.hover()", opts)
-  ncmap("<Leader>r", "lua vim.lsp.buf.rename()", opts)
-  ncmap("<Leader>ks", "lua vim.lsp.buf.signature_help()", opts)
-  ncmap("<Leader>kp", "lua vim.diagnostic.goto_prev()", opts)
-  ncmap("<Leader>kn", "lua vim.diagnostic.goto_next()", opts)
-  ncmap("<Leader>kk", "lua vim.diagnostic.open_float()", opts)
-  ncmap("<Leader>wl",
-    "require'common'.print_table(vim.lsp.buf.list_workspace_folders())",
+  ncmap('gd', 'lua vim.lsp.buf.definition()', opts)
+  ncmap('K', 'lua vim.lsp.buf.hover()', opts)
+  ncmap('<Leader>r', 'lua vim.lsp.buf.rename()', opts)
+  ncmap('<Leader>ks', 'lua vim.lsp.buf.signature_help()', opts)
+  ncmap('<Leader>kp', 'lua vim.diagnostic.goto_prev()', opts)
+  ncmap('<Leader>kn', 'lua vim.diagnostic.goto_next()', opts)
+  ncmap('<Leader>kk', 'lua vim.diagnostic.open_float()', opts)
+  ncmap('<Leader>a', 'lua vim.lsp.buf.code_action()', opts)
+  ncmap('<Leader>wl',
+    'require\'common\'.print_table(vim.lsp.buf.list_workspace_folders())',
     opts)
-  nmap('<Leader>f', function()
-    vim.lsp.buf.format({ timeout_ms = '5000', async = true })
-  end)
+  nmap('<Leader>f',
+    function() vim.lsp.buf.format({ timeout_ms = '5000', async = true }) end)
 
   -- Capability specific commands
   if client.server_capabilities.documentHighlightProvider then
@@ -62,7 +60,7 @@ function M.on_attach(client, bufnr)
   if client.server_capabilities.codeLensProvider then
     -- CodeLens provides extra actions like "Run Test"
     -- under lang specific unit tests
-    ncmap("<F11>", "lua vim.lsp.codelens.run()", opts)
+    ncmap('<F11>', 'lua vim.lsp.codelens.run()', opts)
   end
 end
 
