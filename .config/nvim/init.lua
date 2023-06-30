@@ -114,6 +114,8 @@ local plugin_spec = {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    -- TODO: See https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
+    commit = '33eb472b459',
     config = function()
       require 'nvim-treesitter.configs'.setup {
         ensure_installed = { 'c', 'lua', 'rust', 'fish', 'markdown', 'markdown_inline' },
