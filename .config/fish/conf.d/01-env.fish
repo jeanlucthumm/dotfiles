@@ -46,6 +46,11 @@ switch (get_theme)
     set -x BAT_THEME "Solarized (light)"
   case "solarized-dark"
     set -x BAT_THEME "Solarized (dark)"
+  case "gruvbox-light"
+    set -x BAT_THEME "gruvbox-light"
+    fish_config theme choose "fish default"
+  case "gruvbox-dark"
+    set -x BAT_THEME "gruvbox-dark"
 end
 
 # XDG
