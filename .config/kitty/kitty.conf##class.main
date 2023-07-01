@@ -1,4 +1,4 @@
-include theme-solarized-light.conf
+include theme/theme-solarized-light.conf
 
 font_family Fira Code Retina
 font_size 9.0
