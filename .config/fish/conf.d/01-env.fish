@@ -18,6 +18,7 @@ if [ $OS = "Linux" ]
   set -x GPG_TTY (tty)
 
   set -x PATH $PATH $ANDROID_SDK_ROOT/platforms $ANDROID_SDK_ROOT/tools/bin $ANDROID_SDK_ROOT/platform-tools /opt/flutter/bin
+  set -x PATH $PATH $HOME/go/bin $HOME/.gem/ruby/3.0.0/bin
 
 else if [ $OS = "Darwin" ]
 
