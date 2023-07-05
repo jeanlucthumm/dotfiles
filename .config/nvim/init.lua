@@ -95,6 +95,8 @@ local plugin_spec = {
           },
           n.builtins.formatting.mdformat,
           n.builtins.formatting.clang_format,
+          n.builtins.formatting.buf,
+          n.builtins.formatting.prettier,
           n.builtins.diagnostics.fish,
           n.builtins.diagnostics.flake8,
         },
