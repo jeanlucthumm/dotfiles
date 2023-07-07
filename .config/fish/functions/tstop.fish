@@ -1,1 +1,3 @@
-alias tstop="t +ACTIVE stop"
+function tstop
+  task +ACTIVE stop
+end
