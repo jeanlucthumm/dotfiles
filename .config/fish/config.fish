@@ -18,6 +18,9 @@ importIfExists $HOME/.cargo/env
 ### Alias
 
 if status is-interactive
+  if [ "$OS" = "Linux" ]
+    alias fixkeyb="source $HOME/.xprofile && xmodmap $CONF/capsrebind.Xmodmap"
+  end
   if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
     alias pacman="paru"
 
@@ -36,7 +39,6 @@ if status is-interactive
     if pgrep -x "sway" > /dev/null
       alias i3config="$EDITOR $CONF/sway/config"
     end
-    alias fixkeyb="source $HOME/.xprofile && xmodmap $CONF/capsrebind.Xmodmap"
   end
 
   alias done="notify 'done'"
