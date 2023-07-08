@@ -91,6 +91,10 @@ local plugin_spec = {
             extra_args = {
               '--double-quote-to-single-quote',
               '--extra-sep-at-table-end',
+              '--spaces-before-call=0',
+              '--chop-down-table',
+              '--tab-width=2',
+              '--indent-width=2',
             },
           },
           n.builtins.formatting.mdformat,
@@ -98,7 +102,11 @@ local plugin_spec = {
           n.builtins.formatting.buf,
           n.builtins.formatting.prettier,
           n.builtins.diagnostics.fish,
-          n.builtins.diagnostics.flake8,
+          n.builtins.diagnostics.flake8.with {
+            extra_args = {
+              '--max-line-lenth', '88',
+            },
+          },
         },
       }
     end
