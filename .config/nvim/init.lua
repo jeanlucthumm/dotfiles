@@ -616,10 +616,6 @@ ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
 ---- Filetype overrides
-api.nvim_create_autocmd({ 'FileType' }, {
-  pattern = { 'rust' },
-  callback = function() g.auto_save = 1 end,
-})
 
 ---- Util
 
