@@ -575,12 +575,14 @@ ncmap('<Leader>bo', 'Telescope vim_bookmarks all')
 ncmap('<Leader>hu', 'SignifyHunkUndo')
 ncmap('<Leader>hd', 'SignifyHunkDiff')
 ncmap('<Leader>hh', 'Telescope help_tags')
--- <Leader>d    debugging
+ncmap('<Leader>hk', 'Telescope keymaps')
+-- <Leader>d    debugging + diagnostics
 ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
 ncmap('<Leader>duo', 'lua require"dapui".open()')
 ncmap('<Leader>duc', 'lua require"dapui".close()')
 ncmap('<Leader>dt', 'lua require"dap".terminate()')
 ncmap('<Leader>dc', 'lua require"dap".continue()')
+ncmap('<Leader>dp', 'Trouble')
 -- <Leader>w    running
 ncmap('<Leader>ww', 'RunCode')
 ncmap('<Leader>wc', 'RunClose')
