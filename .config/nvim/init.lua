@@ -11,15 +11,15 @@ HasGoogle, Google = pcall(require, 'google')
 g.mapleader = ' ' -- sets <Leader> to <space>
 
 --- Lazy bootstrap
-local lazypath = fn.stdpath('data') .. "/lazy/lazy.nvim"
+local lazypath = fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.notify('Bootstraping lazy.nvim...')
   fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
     lazypath,
   })
 end
@@ -29,23 +29,13 @@ local plugin_spec = {
   { 'nvim-lua/plenary.nvim' },
 
   --- LSP & DAP & nvim
-  {
-    'neovim/nvim-lspconfig',
-    dependencies = { 'folke/neodev.nvim' }
-  },
+  { 'neovim/nvim-lspconfig', dependencies = { 'folke/neodev.nvim' } },
   {
     'williamboman/mason.nvim',
-    build = ":MasonUpdate",
-    config = function()
-      require 'mason'.setup()
-    end,
+    build = ':MasonUpdate',
+    config = function() require 'mason'.setup() end,
   },
-  {
-    'folke/neodev.nvim',
-    config = function()
-      require 'neodev'.setup {}
-    end
-  }, -- lua LSP setup for better nvim integration
+  { 'folke/neodev.nvim',       config = function() require 'neodev'.setup {} end }, -- lua LSP setup for better nvim integration
   {
     'williamboman/mason-lspconfig',
     dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim' },
@@ -54,25 +44,21 @@ local plugin_spec = {
         ensure_installed = { 'lua_ls', 'rust_analyzer' },
       }
       -- Set default configuration for all installed servers
-      for _, lsp in ipairs(
-        require 'mason-lspconfig'.get_installed_servers()) do
+      for _, lsp in ipairs(require 'mason-lspconfig'.get_installed_servers()) do
         local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
-        capabilities = vim.tbl_extend('keep', capabilities, require 'lsp-status'.capabilities)
+        capabilities = vim.tbl_extend('keep', capabilities,
+          require 'lsp-status'.capabilities)
         local config = {
           capabilities = capabilities,
           on_attach = require 'common'.on_attach,
-          flags = {
-            debounce_text_changes = 150,
-          },
+          flags = { debounce_text_changes = 150 },
         }
         if lsp == 'lua_ls' then
           config.settings = {
             Lua = {
-              workspace = {
-                checkThirdParty = false
-              },
-              telemetry = { enable = false }
-            }
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+            },
           }
         end
         require 'lspconfig'[lsp].setup(config)
@@ -103,17 +89,15 @@ local plugin_spec = {
           n.builtins.formatting.prettier,
           n.builtins.diagnostics.fish,
           n.builtins.diagnostics.flake8.with {
-            extra_args = {
-              '--max-line-lenth', '88',
-            },
+            extra_args = { '--max-line-lenth', '88' },
           },
         },
       }
-    end
+    end,
   },
   { 'nvim-lua/lsp-status.nvim' },
-  { 'mfussenegger/nvim-dap' }, --TODO verify setup works automatically
-  { 'rcarriga/nvim-dap-ui' }, --TODO verify setup works automatically
+  { 'mfussenegger/nvim-dap' }, -- TODO verify setup works automatically
+  { 'rcarriga/nvim-dap-ui' }, -- TODO verify setup works automatically
   {
     'mfussenegger/nvim-dap-python',
     config = function()
@@ -128,7 +112,14 @@ local plugin_spec = {
     commit = '33eb472b459',
     config = function()
       require 'nvim-treesitter.configs'.setup {
-        ensure_installed = { 'c', 'lua', 'rust', 'fish', 'markdown', 'markdown_inline' },
+        ensure_installed = {
+          'c',
+          'lua',
+          'rust',
+          'fish',
+          'markdown',
+          'markdown_inline',
+        },
         auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
@@ -181,16 +172,11 @@ local plugin_spec = {
           end,
         },
         mapping = {
-          ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs( -4),
-            { 'i', 'c' }),
-          ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4),
-            { 'i', 'c' }),
-          ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(),
-            { 'i', 'c' }),
-          ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(),
-            { 'i', 'c' }),
-          ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(),
-            { 'i', 'c' }),
+          ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs( -4), { 'i', 'c' }),
+          ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+          ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+          ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+          ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
           ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
           ['<Tab>'] = cmp.mapping(function(fallback)
@@ -214,18 +200,12 @@ local plugin_spec = {
           { name = 'nvim_lsp_signature_help', priority = 10 },
           { name = 'buffer',                  priority = 1 },
         },
-        formatting = {
-          format = require 'lspkind'.cmp_format()
-        },
-        sorting = {
-          priority_weight = 10,
-        }
+        formatting = { format = require 'lspkind'.cmp_format() },
+        sorting = { priority_weight = 10 },
       }
-      if HasGoogle then
-        conf = Google.update_cmp_config(conf)
-      end
+      if HasGoogle then conf = Google.update_cmp_config(conf) end
       cmp.setup(conf)
-    end
+    end,
   },
   { 'mhinz/vim-signify' }, -- TODO look into nvim version
   { 'theHamsta/nvim-dap-virtual-text' },
@@ -273,33 +253,26 @@ local plugin_spec = {
     config = function()
       require 'dap-go'.setup {
         dap_configurations = {
-          type = "go",
-          name = "Attach remote",
-          mode = "remote",
-          request = "attach",
-        }
+          type = 'go',
+          name = 'Attach remote',
+          mode = 'remote',
+          request = 'attach',
+        },
       }
-    end
+    end,
   },
 
   --- Theme
   { 'nvim-tree/nvim-web-devicons' },
   {
     'ellisonleao/gruvbox.nvim',
-    config = function()
-      require 'gruvbox'.setup {
-        bold = false,
-      }
-    end
+    config = function() require 'gruvbox'.setup { bold = false } end,
   },
   { 'marko-cerovac/material.nvim' },
   {
     'rose-pine/neovim',
     config = function()
-      require 'rose-pine'.setup {
-        dark_variant = 'moon',
-        disable_italics = true,
-      }
+      require 'rose-pine'.setup { dark_variant = 'moon', disable_italics = true }
     end,
   },
   { 'folke/tokyonight.nvim' },
@@ -310,10 +283,7 @@ local plugin_spec = {
   --- UI
   {
     'kyazdani42/nvim-tree.lua',
-    opts = {
-      update_focused_file = { enable = true },
-      sync_root_with_cwd = true,
-    }
+    opts = { update_focused_file = { enable = true }, sync_root_with_cwd = true },
   },
   { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
   {
@@ -331,14 +301,10 @@ local plugin_spec = {
               ['<C-u>'] = actions.preview_scrolling_up,
               ['<C-d>'] = actions.preview_scrolling_down,
             },
-            n = {
-              ['<C-c>'] = 'close',
-            }
+            n = { ['<C-c>'] = 'close' },
           },
-          preview = {
-            timeout = 2000,
-          }
-        }
+          preview = { timeout = 2000 },
+        },
       }
       require 'telescope'.load_extension('flutter')
     end,
@@ -350,7 +316,7 @@ local plugin_spec = {
     config = function()
       g.startify_change_to_dir = 0 -- do not change cwd when opening files
       g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
-    end
+    end,
   }, -- startup screen
   { 'rcarriga/nvim-notify' }, -- pretty notifications
   { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
@@ -360,10 +326,7 @@ local plugin_spec = {
   { 'moll/vim-bbye' }, -- better version of :bdelete
   -- TODO figure out keybindings
   { 'pseewald/vim-anyfold' },
-  {
-    'onsails/lspkind-nvim',
-    config = function() require 'lspkind'.init {} end,
-  },
+  { 'onsails/lspkind-nvim',     config = function() require 'lspkind'.init {} end },
   {
     'windwp/nvim-autopairs',
     config = function()
@@ -377,21 +340,20 @@ local plugin_spec = {
   { 'rhysd/conflict-marker.vim' },
   { 'ThePrimeagen/harpoon' },
 
-
   -- Functional
   {
     'neomake/neomake',
     config = function()
       g.neomake_open_list = 2
       vim.v['test#strategy'] = 'neomake'
-    end
+    end,
   },
   {
     '907th/vim-auto-save',
     config = function()
       g.auto_save = 0
       g.auto_save_events = { 'InsertLeave', 'TextChanged', 'CursorHold' }
-    end
+    end,
   },
   {
     'CRAG666/code_runner.nvim',
@@ -403,16 +365,13 @@ local plugin_spec = {
     'folke/trouble.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {},
-  }
+  },
 } -- plugin_spec
 
-if HasGoogle then
-  table.insert(plugin_spec, { import = "google-plugins" })
-end
+if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
 
-require 'lazy'.setup(plugin_spec, {
-  dev = { path = fn.expand("$HOME/Code/nvim-plugins") },
-})
+require 'lazy'.setup(plugin_spec,
+  { dev = { path = fn.expand('$HOME/Code/nvim-plugins') } })
 
 -- TODO move these into plugin config where applicable
 ---- Global options
@@ -568,7 +527,7 @@ ncmap('<Leader>ve', ':exe \'tabedit\' stdpath(\'config\').\'/init.lua\'')
 nmap('<Leader>vs', ':exe \'source\' stdpath(\'config\').\'/init.lua\'<CR>')
 nmap('<Leader>vp', function()
   require 'packer'.compile()
-  vim.notify("Packer compiled")
+  vim.notify('Packer compiled')
 end)
 -- <Leader>c    quickfix, cd
 ncmap('<Leader>cl', 'cclose')
@@ -596,8 +555,6 @@ ncmap('<Leader>ww', 'RunCode')
 ncmap('<Leader>wc', 'RunClose')
 -- <Leader>p    projects
 -- reserved
-
-
 
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
@@ -638,9 +595,7 @@ function OpenInRight()
   api.nvim_win_set_cursor(wins[2], left_pos)
 end
 
-function Inspect(tbl)
-  print(vim.inspect(tbl))
-end
+function Inspect(tbl) print(vim.inspect(tbl)) end
 
 -- TODO move into lazy.nvim
 if HasGoogle then Google.setup() end
