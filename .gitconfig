@@ -21,7 +21,7 @@
   s = status
   stat = status
   d = diff --cached
-  tree = log --graph --decorate --oneline --all
+  tree = log --graph --decorate --oneline --all -n 25
   check = checkout
 [safe]
   directory = /opt/flutter
