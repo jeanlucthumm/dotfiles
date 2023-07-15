@@ -58,6 +58,16 @@ local plugin_spec = {
             Lua = {
               workspace = { checkThirdParty = false },
               telemetry = { enable = false },
+              format = {
+                enable = true,
+                defaultConfig = {
+                  indent_size = '2',
+                  quote_style = 'single',
+                  max_line_length = '100',
+                  trailing_table_separator = 'always',
+                  space_before_function_call_single_arg = 'false',
+                }
+              }
             },
           }
         end
@@ -73,16 +83,6 @@ local plugin_spec = {
         sources = {
           n.builtins.formatting.black,
           n.builtins.formatting.fish_indent,
-          n.builtins.formatting.lua_format.with {
-            extra_args = {
-              '--double-quote-to-single-quote',
-              '--extra-sep-at-table-end',
-              '--spaces-before-call=0',
-              '--chop-down-table',
-              '--tab-width=2',
-              '--indent-width=2',
-            },
-          },
           n.builtins.formatting.mdformat,
           n.builtins.formatting.clang_format,
           n.builtins.formatting.buf,
