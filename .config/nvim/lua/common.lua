@@ -1,6 +1,6 @@
 local api = vim.api
 
-local lsp_status = require 'lsp-status'
+local lsp_status = require'lsp-status'
 lsp_status.register_progress()
 
 local M = {}
@@ -31,7 +31,7 @@ function M.on_attach(client, bufnr)
   api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings
-  local opts = { noremap = true, silent = true, buffer = bufnr }
+  local opts = { noremap = true, silent = true, buffer = bufnr, }
   ncmap('gd', 'lua vim.lsp.buf.definition()', opts)
   ncmap('K', 'lua vim.lsp.buf.hover()', opts)
   ncmap('<Leader>r', 'lua vim.lsp.buf.rename()', opts)
@@ -44,12 +44,12 @@ function M.on_attach(client, bufnr)
     'require\'common\'.print_table(vim.lsp.buf.list_workspace_folders())',
     opts)
   nmap('<Leader>f',
-    function() vim.lsp.buf.format({ timeout_ms = '5000', async = true }) end)
+    function() vim.lsp.buf.format({ timeout_ms = '5000', async = true, }) end)
 
   -- Capability specific commands
   if client.server_capabilities.documentHighlightProvider then
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
-    api.nvim_exec2 [[
+    api.nvim_exec2[[
       augroup lsp_document_highlight
       autocmd! * <buffer>
       autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
