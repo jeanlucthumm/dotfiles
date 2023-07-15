@@ -96,8 +96,8 @@ local plugin_spec = {
     end,
   },
   { 'nvim-lua/lsp-status.nvim' },
-  { 'mfussenegger/nvim-dap' },
-  { 'rcarriga/nvim-dap-ui',    opt = {}, }, -- TODO verify setup works automatically
+  { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end, },
+  { 'rcarriga/nvim-dap-ui' }, -- TODO verify setup works automatically
   {
     'mfussenegger/nvim-dap-python',
     config = function()
@@ -376,7 +376,6 @@ local plugin_spec = {
 } -- plugin_spec
 
 if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
--- require'dap_config'
 
 require'lazy'.setup(plugin_spec,
   { dev = { path = fn.expand('$HOME/Code/nvim-plugins'), }, })

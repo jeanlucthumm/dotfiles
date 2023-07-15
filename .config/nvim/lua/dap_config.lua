@@ -33,7 +33,9 @@ dap.configurations.cpp = {
   },
 }
 
-table.insert(dap.configuration.rust, {
+-- TODO which of these custom ones do we actually need
+dap.configurations.rust = dap.configurations.rust or {}
+table.insert(dap.configurations.rust, {
   name = 'default',
   type = 'lldb',
   request = 'launch',
@@ -43,7 +45,7 @@ table.insert(dap.configuration.rust, {
   args = {},
   runInTerminal = false,
 })
-table.insert(dap.configuration.rust, {
+table.insert(dap.configurations.rust, {
   name = 'rustc stage1 debug',
   type = 'lldb',
   request = 'launch',
