@@ -97,7 +97,7 @@ local plugin_spec = {
   },
   { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end, },
-  { 'rcarriga/nvim-dap-ui' }, -- TODO verify setup works automatically
+  { 'rcarriga/nvim-dap-ui',    opts = {}, },
   {
     'mfussenegger/nvim-dap-python',
     config = function()
@@ -552,8 +552,7 @@ ncmap('<Leader>hh', 'Telescope help_tags')
 ncmap('<Leader>hk', 'Telescope keymaps')
 -- <Leader>d    debugging + diagnostics
 ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
-ncmap('<Leader>duo', 'lua require"dapui".open()')
-ncmap('<Leader>duc', 'lua require"dapui".close()')
+ncmap('<Leader>duo', 'lua require"dapui".toggle()')
 ncmap('<Leader>dt', 'lua require"dap".terminate()')
 ncmap('<Leader>dc', 'lua require"dap".continue()')
 ncmap('<Leader>dp', 'Trouble')
@@ -588,6 +587,13 @@ ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
 ---- Filetype overrides
+
+api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = { 'python' },
+  callback = function()
+    ncmap('<Leader>dm', 'lua require"dap-python".test_method()')
+  end,
+})
 
 ---- Util
 
