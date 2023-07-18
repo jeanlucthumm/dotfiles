@@ -1,3 +1,4 @@
 #include ".cache/wal/colors.Xresources"
+#include ".config/dpi.Xresources"
 Xcursor.theme: volantes_cursors
 Xcursor.size: 10

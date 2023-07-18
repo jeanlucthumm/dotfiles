@@ -1,12 +1,8 @@
 include theme-solarized-light.conf
 
-font_family FiraCode Nerd Font Mono
-font_size 10.0
 enable_audio_bell no
 window_padding_width 8
 allow_remote_control yes
 clipboard_control write-clipboard write-primary read-clipboard-ask read-primary-ask no-append
 input_delay 1
 scrollback_pager nvim -c 'set ft=terminal' -
-
-env KITTY_THEME=solarized-light
