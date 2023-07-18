@@ -1,4 +1,4 @@
-include theme-solarized-light.conf
+include theme.conf
 
 enable_audio_bell no
 window_padding_width 8
