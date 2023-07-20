@@ -586,15 +586,6 @@ ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
----- Filetype overrides
-
-api.nvim_create_autocmd({ 'FileType' }, {
-  pattern = { 'python' },
-  callback = function()
-    ncmap('<Leader>dm', 'lua require"dap-python".test_method()')
-  end,
-})
-
 ---- Util
 
 -- TODO this has bug when nvim-tree is open
