@@ -39,6 +39,8 @@ if status is-interactive
     if pgrep -x "sway" > /dev/null
       alias i3config="$EDITOR $CONF/sway/config"
     end
+    zoxide init fish | source
+    alias cd="z"
   end
 
   alias done="notify 'done'"
