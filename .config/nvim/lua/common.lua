@@ -64,6 +64,13 @@ function M.on_attach(client, bufnr)
   end
 end
 
+function M.capabilities()
+  local capabilities = require'cmp_nvim_lsp'.default_capabilities()
+  capabilities = vim.tbl_extend('keep', capabilities,
+    require'lsp-status'.capabilities)
+  return capabilities
+end
+
 function M.print_table(o)
   if type(o) == 'table' then
     local s = '{ '

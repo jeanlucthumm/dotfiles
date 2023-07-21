@@ -29,52 +29,40 @@ local plugin_spec = {
   { 'nvim-lua/plenary.nvim' },
 
   --- LSP & DAP & nvim
-  { 'neovim/nvim-lspconfig', dependencies = { 'folke/neodev.nvim' }, },
   {
-    'williamboman/mason.nvim',
-    build = ':MasonUpdate',
-    config = function() require'mason'.setup() end,
-  },
-  { 'folke/neodev.nvim',       config = function() require'neodev'.setup{} end, }, -- lua LSP setup for better nvim integration
-  {
-    'williamboman/mason-lspconfig',
-    dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim' },
+    'neovim/nvim-lspconfig',
+    dependencies = { 'folke/neodev.nvim' },
     config = function()
-      require'mason-lspconfig'.setup{
-        ensure_installed = { 'lua_ls', 'rust_analyzer' },
-      }
-      -- Set default configuration for all installed servers
-      for _, lsp in ipairs(require'mason-lspconfig'.get_installed_servers()) do
-        local capabilities = require'cmp_nvim_lsp'.default_capabilities()
-        capabilities = vim.tbl_extend('keep', capabilities,
-          require'lsp-status'.capabilities)
-        local config = {
-          capabilities = capabilities,
+      local function extend(config)
+        return vim.tbl_deep_extend('force', {
+          capabilities = require'common'.capabilities(),
           on_attach = require'common'.on_attach,
           flags = { debounce_text_changes = 150, },
-        }
-        if lsp == 'lua_ls' then
-          config.settings = {
-            Lua = {
-              workspace = { checkThirdParty = false, },
-              telemetry = { enable = false, },
-              format = {
-                enable = true,
-                defaultConfig = {
-                  indent_size = '2',
-                  quote_style = 'single',
-                  max_line_length = '100',
-                  trailing_table_separator = 'always',
-                  space_before_function_call_single_arg = 'only_table',
-                },
+        }, config)
+      end
+      local lspconfig = require'lspconfig'
+      lspconfig.lua_ls.setup(extend{
+        settings = {
+          Lua = {
+            workspace = { checkThirdParty = false, },
+            telemetry = { enable = false, },
+            format = {
+              enable = true,
+              defaultConfig = {
+                indent_size = '2',
+                quote_style = 'single',
+                max_line_length = '100',
+                trailing_table_separator = 'always',
+                space_before_function_call_single_arg = 'only_table',
               },
             },
-          }
-        end
-        require'lspconfig'[lsp].setup(config)
-      end
+          },
+        },
+      })
+      lspconfig.pyright.setup(extend{})
     end,
   },
+  { 'folke/neodev.nvim',    config = function() require'neodev'.setup{} end, }, -- lua LSP setup for better nvim integration
   {
     'jose-elias-alvarez/null-ls.nvim',
     config = function()
