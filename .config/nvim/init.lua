@@ -37,15 +37,15 @@ local plugin_spec = {
         return vim.tbl_deep_extend('force', {
           capabilities = require'common'.capabilities(),
           on_attach = require'common'.on_attach,
-          flags = { debounce_text_changes = 150, },
+          flags = { debounce_text_changes = 150 },
         }, config)
       end
       local lspconfig = require'lspconfig'
-      lspconfig.lua_ls.setup(extend{
+      lspconfig.lua_ls.setup(extend {
         settings = {
           Lua = {
-            workspace = { checkThirdParty = false, },
-            telemetry = { enable = false, },
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
             format = {
               -- https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/lua.template.editorconfig
               enable = true,
@@ -60,15 +60,15 @@ local plugin_spec = {
           },
         },
       })
-      lspconfig.pyright.setup(extend{})
+      lspconfig.pyright.setup(extend {})
     end,
   },
-  { 'folke/neodev.nvim',    config = function() require'neodev'.setup{} end, }, -- lua LSP setup for better nvim integration
+  { 'folke/neodev.nvim',    config = function() require'neodev'.setup {} end }, -- lua LSP setup for better nvim integration
   {
     'jose-elias-alvarez/null-ls.nvim',
     config = function()
       local n = require('null-ls')
-      n.setup{
+      n.setup {
         sources = {
           n.builtins.formatting.black,
           n.builtins.formatting.fish_indent,
@@ -77,7 +77,7 @@ local plugin_spec = {
           n.builtins.formatting.buf,
           n.builtins.formatting.prettier,
           n.builtins.diagnostics.fish,
-          n.builtins.diagnostics.flake8.with{
+          n.builtins.diagnostics.flake8.with {
             extra_args = { '--max-line-lenth', '88' },
           },
         },
@@ -85,8 +85,8 @@ local plugin_spec = {
     end,
   },
   { 'nvim-lua/lsp-status.nvim' },
-  { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end, },
-  { 'rcarriga/nvim-dap-ui',    opts = {}, },
+  { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end },
+  { 'rcarriga/nvim-dap-ui',    opts = {} },
   {
     'mfussenegger/nvim-dap-python',
     config = function()
@@ -100,7 +100,7 @@ local plugin_spec = {
     -- TODO: See https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
     commit = '33eb472b459',
     config = function()
-      require'nvim-treesitter.configs'.setup{
+      require'nvim-treesitter.configs'.setup {
         ensure_installed = {
           'c',
           'lua',
@@ -110,10 +110,10 @@ local plugin_spec = {
           'markdown_inline',
         },
         auto_install = true,
-        highlight = { enable = true, },
-        indent = { enable = true, },
+        highlight = { enable = true },
+        indent = { enable = true },
       }
-      vim.wo.foldmethod = 'expr' -- expression based folding to enable treesitter
+      vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
       vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
       -- Custom parser for go template files
       local parser_config =
@@ -136,7 +136,7 @@ local plugin_spec = {
         region_check_events = 'InsertEnter',
         delete_check_events = 'InsertLeave',
       })
-      require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets' }, })
+      require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets' } })
     end,
   },
   {
@@ -161,12 +161,12 @@ local plugin_spec = {
           end,
         },
         mapping = {
-          ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs( -4), { 'i', 'c' }),
+          ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
           ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
           ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
           ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
           ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
-          ['<CR>'] = cmp.mapping.confirm({ select = true, }),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
           ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
           ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_jumpable() then
@@ -176,21 +176,21 @@ local plugin_spec = {
             end
           end, { 'i', 's' }),
           ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if luasnip.jumpable( -1) then
-              luasnip.jump( -1)
+            if luasnip.jumpable(-1) then
+              luasnip.jump(-1)
             else
               fallback()
             end
           end, { 'i', 's' }),
         },
         sources = {
-          { name = 'luasnip',                 priority = 50, },
-          { name = 'nvim_lsp',                priority = 10, max_item_count = 20, },
-          { name = 'nvim_lsp_signature_help', priority = 10, },
-          { name = 'buffer',                  priority = 1, },
+          { name = 'luasnip',                 priority = 50 },
+          { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
+          { name = 'nvim_lsp_signature_help', priority = 10 },
+          { name = 'buffer',                  priority = 1 },
         },
-        formatting = { format = require'lspkind'.cmp_format(), },
-        sorting = { priority_weight = 10, },
+        formatting = { format = require'lspkind'.cmp_format() },
+        sorting = { priority_weight = 10 },
       }
       if HasGoogle then conf = Google.update_cmp_config(conf) end
       cmp.setup(conf)
@@ -198,11 +198,12 @@ local plugin_spec = {
   },
   { 'mhinz/vim-signify' }, -- TODO look into nvim version
   { 'theHamsta/nvim-dap-virtual-text' },
-  { 'simrat39/rust-tools.nvim',
+  {
+    'simrat39/rust-tools.nvim',
     config = function()
-      require'rust-tools'.setup{
+      require'rust-tools'.setup {
         server = {
-          cargo = { loadOutDirsFromCheck = true, },
+          cargo = { loadOutDirsFromCheck = true },
           on_attach = require'common'.on_attach,
           capabilities = require'common'.capabilities(),
         },
@@ -218,14 +219,14 @@ local plugin_spec = {
   {
     'akinsho/flutter-tools.nvim',
     config = function()
-      require'flutter-tools'.setup{
-        decorations = { statusline = { device = true, }, },
-        debugger = { enabled = true, },
-        widget_guides = { enabled = true, },
-        outline = { auto_open = false, },
+      require'flutter-tools'.setup {
+        decorations = { statusline = { device = true } },
+        debugger = { enabled = true },
+        widget_guides = { enabled = true },
+        outline = { auto_open = false },
         lsp = {
           on_attach = require'common'.on_attach,
-          settings = { lineLength = 100, },
+          settings = { lineLength = 100 },
         },
       }
     end,
@@ -246,7 +247,7 @@ local plugin_spec = {
   {
     'leoluz/nvim-dap-go',
     config = function()
-      require'dap-go'.setup{
+      require'dap-go'.setup {
         dap_configurations = {
           type = 'go',
           name = 'Attach remote',
@@ -261,13 +262,13 @@ local plugin_spec = {
   { 'nvim-tree/nvim-web-devicons' },
   {
     'ellisonleao/gruvbox.nvim',
-    config = function() require'gruvbox'.setup{ bold = false, } end,
+    config = function() require'gruvbox'.setup { bold = false } end,
   },
   { 'marko-cerovac/material.nvim' },
   {
     'rose-pine/neovim',
     config = function()
-      require'rose-pine'.setup{ dark_variant = 'moon', disable_italics = true, }
+      require'rose-pine'.setup { dark_variant = 'moon', disable_italics = true }
     end,
   },
   { 'folke/tokyonight.nvim' },
@@ -278,14 +279,14 @@ local plugin_spec = {
   --- UI
   {
     'kyazdani42/nvim-tree.lua',
-    opts = { update_focused_file = { enable = true, }, sync_root_with_cwd = true, },
+    opts = { update_focused_file = { enable = true }, sync_root_with_cwd = true },
   },
-  { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
+  { 'iamcco/markdown-preview.nvim',           build = 'cd app && yarn install' },
   {
     'nvim-telescope/telescope.nvim',
     config = function()
       local actions = require'telescope.actions'
-      require'telescope'.setup{
+      require'telescope'.setup {
         defaults = {
           path_display = { 'smart' },
           mappings = {
@@ -298,7 +299,7 @@ local plugin_spec = {
             },
             n = { ['<C-c>'] = 'close' },
           },
-          preview = { timeout = 2000, },
+          preview = { timeout = 2000 },
         },
       }
       require'telescope'.load_extension('flutter')
@@ -312,12 +313,12 @@ local plugin_spec = {
     -- startup screen
     'mhinz/vim-startify',
     config = function()
-      g.startify_change_to_dir = 0 -- do not change cwd when opening files
+      g.startify_change_to_dir = 0    -- do not change cwd when opening files
       g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
     end,
   },
-  { 'rcarriga/nvim-notify' }, -- pretty notifications
-  { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
+  { 'rcarriga/nvim-notify' },        -- pretty notifications
+  { 'xiyaowong/virtcolumn.nvim' },   -- makes virtual column a pixel wide
   { 'MattesGroeger/vim-bookmarks' }, -- bookmarks
 
 
@@ -326,17 +327,17 @@ local plugin_spec = {
   { 'moll/vim-bbye' }, -- better version of :bdelete
   -- TODO figure out keybindings
   { 'pseewald/vim-anyfold' },
-  { 'onsails/lspkind-nvim',       config = function() require'lspkind'.init{} end, },
+  { 'onsails/lspkind-nvim',       config = function() require'lspkind'.init {} end },
   {
     'windwp/nvim-autopairs',
     config = function()
-      require'nvim-autopairs'.setup{}
+      require'nvim-autopairs'.setup {}
       require'cmp'.event:on('confirm_done',
         require'nvim-autopairs.completion.cmp'.on_confirm_done(
-          { map_char = { tex = '' }, }))
+          { map_char = { tex = '' } }))
     end,
   },
-  { 'psliwka/vim-smoothie',     cond = function() return not vim.g.neovide end, },
+  { 'psliwka/vim-smoothie',     cond = function() return not vim.g.neovide end },
   { 'rhysd/conflict-marker.vim' },
   { 'ThePrimeagen/harpoon' },
 
@@ -358,7 +359,7 @@ local plugin_spec = {
   {
     'CRAG666/code_runner.nvim',
     config = function()
-      require'code_runner'.setup{ filetype = { python = 'python -u' }, }
+      require'code_runner'.setup { filetype = { python = 'python -u' } }
     end,
   },
   {
@@ -371,12 +372,12 @@ local plugin_spec = {
 if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
 
 require'lazy'.setup(plugin_spec,
-  { dev = { path = fn.expand('$HOME/Code/nvim-plugins'), }, })
+  { dev = { path = fn.expand('$HOME/Code/nvim-plugins') } })
 
 -- TODO move these into plugin config where applicable
 ---- Global options
 g.neovide_cursor_animation_length = 0.05
-g.foldlevel = 99 -- no folds on file open
+g.foldlevel = 99      -- no folds on file open
 vim.wo.foldlevel = 99 -- no folds on file open
 vim.notify = require'notify'
 
@@ -437,7 +438,7 @@ function RosePineTheme(background)
   opt.background = background
   lualine_theme = 'rose-pine'
   cmd('colorscheme rose-pine')
-  require'rose-pine'.setup{ dark_variant = 'moon', disable_italics = true, }
+  require'rose-pine'.setup { dark_variant = 'moon', disable_italics = true }
 end
 
 function TokyoNight(background)
@@ -453,7 +454,7 @@ function GithubTheme(background)
   else
     lualine_theme = 'github_light'
   end
-  require'github-theme'.setup{ theme_style = background, }
+  require'github-theme'.setup { theme_style = background }
 end
 
 function MelangeTheme(background)
@@ -487,8 +488,8 @@ autoTheme()
 vim.cmd('hi! link pythonSpaceError Normal')
 
 local function lsp_status_component() return require'lsp-status'.status() end
-require'lualine'.setup{
-  options = { theme = lualine_theme, extensions = { 'quickfix', 'nvim-tree' }, },
+require'lualine'.setup {
+  options = { theme = lualine_theme, extensions = { 'quickfix', 'nvim-tree' } },
   sections = {
     lualine_x = { lsp_status_component, 'encoding', 'fileformat', 'filetype' },
   },
@@ -503,7 +504,7 @@ local ncmap = require'common'.ncmap
 
 -- visual
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
-nmap('<Leader>p', '\"+p') -- paste from system clipboard
+nmap('<Leader>p', '\"+p')     -- paste from system clipboard
 -- g
 nmap('gtt', ':tabe<CR>:term<CR>:file term:cli<CR>i')
 ncmap('gti', 'lua require"harpoon.term".gotoTerminal(1)')
