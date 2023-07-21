@@ -564,6 +564,7 @@ ncmap('<C-e>',
   'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 nmap('<C-q>', '<C-^>')
 ncmap('<M-e>', 'Telescope find_files')
+ncmap('<M-r>', 'Telescope grep_string')
 ncmap('<C-e>', 'Telescope buffers')
 ncmap('<M-f>', 'NvimTreeFindFile')
 ncmap('<M-t>', 'NvimTreeOpen %:h')
