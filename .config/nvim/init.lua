@@ -231,13 +231,6 @@ local plugin_spec = {
   },
   -- TODO set this plugin for <Leader>a
   { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' },
-  -- {
-  --   'glepnir/lspsaga.nvim',
-  --   event = "LspAttach",
-  --   config = function()
-  --     require 'lspsaga'.setup {}
-  --   end,
-  -- },
   -- TODO refine keymap
   {
     'simrat39/symbols-outline.nvim',
