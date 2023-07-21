@@ -197,13 +197,19 @@ local plugin_spec = {
   },
   { 'mhinz/vim-signify' }, -- TODO look into nvim version
   { 'theHamsta/nvim-dap-virtual-text' },
-  {
-    'simrat39/rust-tools.nvim',
+  { 'simrat39/rust-tools.nvim',
     config = function()
       require'rust-tools'.setup{
         server = {
           cargo = { loadOutDirsFromCheck = true, },
           on_attach = require'common'.on_attach,
+          capabilities = require'common'.capabilities(),
+        },
+        dap = {
+          adapter = require'rust-tools.dap'.get_codelldb_adapter(
+            '/usr/lib/codelldb/adapter/codelldb',
+            '/usr/lib/codelldb/lldb/lib/liblldb.so'
+          ),
         },
       }
     end,
