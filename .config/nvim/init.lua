@@ -301,26 +301,31 @@ local plugin_spec = {
         },
       }
       require'telescope'.load_extension('flutter')
+      require'telescope'.load_extension('vim_bookmarks')
     end,
   },
+  { 'tom-anders/telescope-vim-bookmarks.nvim' },
   -- TODO look at config for this for lazy.nvim
   { 'nvim-lualine/lualine.nvim' }, -- configured in the theme section
   {
+    -- startup screen
     'mhinz/vim-startify',
     config = function()
       g.startify_change_to_dir = 0 -- do not change cwd when opening files
       g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
     end,
-  }, -- startup screen
+  },
   { 'rcarriga/nvim-notify' }, -- pretty notifications
   { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
+  { 'MattesGroeger/vim-bookmarks' }, -- bookmarks
+
 
   --- Editor
   { 'tpope/vim-commentary' },
   { 'moll/vim-bbye' }, -- better version of :bdelete
   -- TODO figure out keybindings
   { 'pseewald/vim-anyfold' },
-  { 'onsails/lspkind-nvim',     config = function() require'lspkind'.init{} end, },
+  { 'onsails/lspkind-nvim',       config = function() require'lspkind'.init{} end, },
   {
     'windwp/nvim-autopairs',
     config = function()
