@@ -29,4 +29,3 @@ urgency.uda.priority.L.coefficient=0.8
 
 # Put contexts defined with `task context define` in this file
 include ~/.config/task/context.config
-context=sleep_tracking
