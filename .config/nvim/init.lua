@@ -47,12 +47,13 @@ local plugin_spec = {
             workspace = { checkThirdParty = false, },
             telemetry = { enable = false, },
             format = {
+              -- https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/lua.template.editorconfig
               enable = true,
               defaultConfig = {
                 indent_size = '2',
                 quote_style = 'single',
                 max_line_length = '100',
-                trailing_table_separator = 'always',
+                trailing_table_separator = 'smart',
                 space_before_function_call_single_arg = 'only_table',
               },
             },
