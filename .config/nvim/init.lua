@@ -322,6 +322,10 @@ local plugin_spec = {
   { 'rcarriga/nvim-notify' },        -- pretty notifications
   { 'xiyaowong/virtcolumn.nvim' },   -- makes virtual column a pixel wide
   { 'MattesGroeger/vim-bookmarks' }, -- bookmarks
+  {
+    'stevearc/dressing.nvim',
+    opts = {},
+  },
 
 
   --- Editor
@@ -329,7 +333,7 @@ local plugin_spec = {
   { 'moll/vim-bbye' }, -- better version of :bdelete
   -- TODO figure out keybindings
   { 'pseewald/vim-anyfold' },
-  { 'onsails/lspkind-nvim',       config = function() require'lspkind'.init {} end },
+  { 'onsails/lspkind-nvim', config = function() require'lspkind'.init {} end },
   {
     'windwp/nvim-autopairs',
     config = function()
