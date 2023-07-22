@@ -39,7 +39,8 @@ function M.on_attach(client, bufnr)
   ncmap('<Leader>kp', 'lua vim.diagnostic.goto_prev()', opts)
   ncmap('<Leader>kn', 'lua vim.diagnostic.goto_next()', opts)
   ncmap('<Leader>kk', 'lua vim.diagnostic.open_float()', opts)
-  ncmap('<Leader>a', 'lua vim.lsp.buf.code_action()', opts)
+  -- TODO: fork and create a hook function for 'textDocument/codeAction'
+  ncmap('<Leader>a', 'CodeActionMenu', opts)
   ncmap('<Leader>wl',
     'require\'common\'.print_table(vim.lsp.buf.list_workspace_folders())',
     opts)
