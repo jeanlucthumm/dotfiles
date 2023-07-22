@@ -49,13 +49,14 @@ function M.on_attach(client, bufnr)
   -- Capability specific commands
   if client.server_capabilities.documentHighlightProvider then
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
-    api.nvim_exec2[[
-      augroup lsp_document_highlight
-      autocmd! * <buffer>
-      autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-      autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]]
+    api.nvim_create_autocmd({ 'CursorHold' }, {
+      command = 'lua vim.lsp.buf.document_highlight()',
+      buffer = bufnr,
+    })
+    api.nvim_create_autocmd({ 'CursorMoved' }, {
+      command = 'lua vim.lsp.buf.clear_references()',
+      buffer = bufnr,
+    })
   end
   if client.server_capabilities.codeLensProvider then
     -- CodeLens provides extra actions like "Run Test"
