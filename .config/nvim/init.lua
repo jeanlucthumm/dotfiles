@@ -29,6 +29,7 @@ local plugin_spec = {
   { 'nvim-lua/plenary.nvim' },
 
   --- LSP & DAP & nvim
+  { 'folke/neodev.nvim',    config = function() require'neodev'.setup {} end }, -- lua LSP setup for better nvim integration
   {
     'neovim/nvim-lspconfig',
     dependencies = { 'folke/neodev.nvim' },
@@ -63,7 +64,6 @@ local plugin_spec = {
       lspconfig.pyright.setup(extend {})
     end,
   },
-  { 'folke/neodev.nvim',    config = function() require'neodev'.setup {} end }, -- lua LSP setup for better nvim integration
   {
     'jose-elias-alvarez/null-ls.nvim',
     config = function()
@@ -201,6 +201,8 @@ local plugin_spec = {
   {
     'simrat39/rust-tools.nvim',
     config = function()
+      local extension_path = vim.env.HOME ..
+          '/.vscode-oss/extensions/vadimcn.vscode-lldb-1.9.2-universal'
       require'rust-tools'.setup {
         server = {
           cargo = { loadOutDirsFromCheck = true },
@@ -209,8 +211,8 @@ local plugin_spec = {
         },
         dap = {
           adapter = require'rust-tools.dap'.get_codelldb_adapter(
-            '/usr/lib/codelldb/adapter/codelldb',
-            '/usr/lib/codelldb/lldb/lib/liblldb.so'
+            extension_path .. '/adapter/codelldb',
+            extension_path .. '/lldb/lib/liblldb.so'
           ),
         },
       }
