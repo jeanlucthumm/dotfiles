@@ -215,6 +215,11 @@ local plugin_spec = {
             extension_path .. '/lldb/lib/liblldb.so'
           ),
         },
+        tools = {
+          inlay_hints = {
+            highlight = 'InlayHints',
+          },
+        },
       }
     end,
   },
