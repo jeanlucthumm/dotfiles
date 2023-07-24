@@ -66,6 +66,7 @@ local plugin_spec = {
   },
   {
     'jose-elias-alvarez/null-ls.nvim',
+    enabled = not HasGoogle,
     config = function()
       local n = require('null-ls')
       n.setup {
