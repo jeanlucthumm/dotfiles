@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "bottom",
-  "modules-right": ["custom/timew", "clock"],
+  "modules-right": ["custom/task", "custom/timew", "clock"],
   "modules-left": ["hyprland/workspaces"],
   "clock": {
     "format": "{:%H:%M}",
@@ -22,6 +22,12 @@
   },
   "custom/timew": {
     "format": "{}",
+    "interval": 5,
     "exec": "$HOME/Code/bin/timew-status.fish",
-  }
+  },
+  "custom/task": {
+    "format": "{}",
+    "interval": 5,
+    "exec": "task +ACTIVE export | jq -r '.[0].description'",
+  },
 }

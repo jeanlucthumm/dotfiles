@@ -35,7 +35,7 @@ window#waybar {
     color: white;
 }
 
-#battery, #cpu, #memory, #network, #pulseaudio, #tray, #mode, #idle_inhibitor {
+#custom-timew #custom-task {
     padding: 2px 5px;
     margin: 0 10px;
 }
