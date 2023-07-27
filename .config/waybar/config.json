@@ -23,11 +23,6 @@
   "custom/timew": {
     "format": "{}",
     "interval": 5,
-    "exec": "$HOME/Code/bin/timew-status.fish",
-  },
-  "custom/task": {
-    "format": "{}",
-    "interval": 5,
-    "exec": "task +ACTIVE export | jq -r '.[0].description'",
+    "exec": "$HOME/Code/bin/task-timew-status.fish",
   },
 }
