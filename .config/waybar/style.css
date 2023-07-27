@@ -35,9 +35,14 @@ window#waybar {
     color: white;
 }
 
-#clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray, #mode, #idle_inhibitor {
+#battery, #cpu, #memory, #network, #pulseaudio, #tray, #mode, #idle_inhibitor {
     padding: 2px 5px;
     margin: 0 10px;
+}
+ 
+#clock {
+  padding: 5px 2px 5px 10px;
+  margin: 0 10px;
 }
 
 

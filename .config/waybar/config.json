@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "bottom",
-  "modules-right": ["clock"],
+  "modules-right": ["custom/timew", "clock"],
   "modules-left": ["hyprland/workspaces"],
   "clock": {
     "format": "{:%H:%M}",
@@ -20,4 +20,8 @@
     "on-scroll-up": "shift_up",
     "on-scroll-down": "shift_down"
   },
+  "custom/timew": {
+    "format": "{}",
+    "exec": "$HOME/Code/bin/timew-status.fish",
+  }
 }
