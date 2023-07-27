@@ -41,9 +41,6 @@ function M.on_attach(client, bufnr)
   ncmap('<Leader>kk', 'lua vim.diagnostic.open_float()', opts)
   -- TODO: fork and create a hook function for 'textDocument/codeAction'
   ncmap('<Leader>a', 'CodeActionMenu', opts)
-  ncmap('<Leader>wl',
-    'require\'common\'.print_table(vim.lsp.buf.list_workspace_folders())',
-    opts)
   nmap('<Leader>f',
     function() vim.lsp.buf.format({ timeout_ms = '5000', async = true }) end)
 

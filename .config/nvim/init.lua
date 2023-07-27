@@ -586,7 +586,11 @@ ncmap('<M-e>', 'Telescope find_files')
 ncmap('<M-r>', 'Telescope grep_string')
 ncmap('<C-e>', 'Telescope buffers')
 ncmap('<M-f>', 'NvimTreeFindFile')
-ncmap('<M-t>', 'NvimTreeOpen %:h')
+nmap('<M-t>', function()
+  require'telescope.builtin'.find_files({
+    cwd = fn.expand('%:h'),
+  })
+end)
 ncmap('<C-w>d', 'lua OpenInRight()')
 -- <F*>
 ncmap('<F4>', 'Bdelete')
