@@ -254,6 +254,7 @@ local plugin_spec = {
   },
   {
     'leoluz/nvim-dap-go',
+    enabled = not HasGoogle,
     config = function()
       require'dap-go'.setup {
         dap_configurations = {
@@ -561,7 +562,7 @@ ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
 ncmap('<Leader>duo', 'lua require"dapui".toggle()')
 ncmap('<Leader>dt', 'lua require"dap".terminate()')
 ncmap('<Leader>dc', 'lua require"dap".continue()')
-ncmap('<Leader>dp', 'Trouble')
+ncmap('<Leader>dp', 'TroubleToggle')
 -- <Leader>w    running
 ncmap('<Leader>ww', 'RunCode')
 ncmap('<Leader>wc', 'RunClose')
