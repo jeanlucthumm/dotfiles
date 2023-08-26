@@ -22,12 +22,11 @@ if [ $OS = "Linux" ]
 
 else if [ $OS = "Darwin" ]
 
-  set -x PATH $PATH /opt/homebrew/bin
-  set -g BIN /usr/local/bin
+  set -x PATH /opt/homebrew/bin $PATH
 
-  set -x CC /usr/local/opt/llvm/bin/clang
-  set -x CXX /usr/local/opt/llvm/bin/clang++
   set -x ANDROID_HOME /Users/$USER/Library/Android/sdk
+
+  status --is-interactive; and rbenv init - fish | source
 
 end
 
