@@ -8,17 +8,19 @@ set STEP_FILE $CONF/yadm/steps.txt
 
 set LOG "-->"
 
+functions -e cat
+
 # Read all finished steps into $STEPS
 if test -e $STEP_FILE
-  /usr/bin/cat $STEP_FILE | read -za STEPS
+  cat $STEP_FILE | read -za STEPS
 else
   touch $STEP_FILE
 end
 
 if not contains "RUST" $STEPS
+  and [ "$DISTRO" = "Arch" ]  # Only Arch needs rust first because of paru
   echo $LOG "Setting up Rust"
 
-  # TODO: Make this generic
   sudo /usr/bin/pacman -S --needed rustup
   and rustup default stable
 
@@ -42,25 +44,16 @@ end
 
 if not contains "INIT" $STEPS
   echo $LOG "Setting up initial programs"
-  echo "Select installation type: "
-  echo \t1. Minimal
-  echo \t2. Arch + GUI
-  read -l -P "(1/2): " resp
+  echo "On OS [$OS] distro [$DISTRO]"
 
   set -l SUFF ".txt"
-  if [ "$DISTRO" = "Arch" ]
+  if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
     set SUFF "_arch.txt"
+  else if [ "$OS" = "Darwin" ]
+    set SUFF "_darwin.txt"
   end
 
-  and switch $resp
-    case 1
-      /usr/bin/cat "$CONF/yadm/term_progs$SUFF" | read -za PROGS
-    case 2
-      /usr/bin/cat "$CONF/progs$SUFF" | read -za PROGS
-    case '*'
-      echo "Uknown option: $resp"
-      exit 1
-  end
+  cat "$CONF/yadm/term_progs$SUFF" | read -za PROGS
 
   and echo $PROGS
   and generic_install $PROGS
@@ -73,21 +66,9 @@ if not contains "FISH" $STEPS
 
   set -l CHECKSUM "429a76e5b5e692c921aa03456a41258b614374426f959535167222a28b676201 -"
   set -l URL "https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install"
-  curl -sL $URL | tee /tmp/omf-install | sha256sum --quiet -c (echo $CHECKSUM | psub)
+
+  and curl -sL $URL | tee /tmp/omf-install | sha256sum --quiet -c (echo $CHECKSUM | psub)
   and fish /tmp/omf-install
 
   and echo "FISH" >> $STEP_FILE
-end
-
-if not contains "TASK" $STEPS
-  echo $LOG "Setting up taskwarrior"
-
-  # See https://github.com/GothenburgBitFactory/taskwarrior/issues/1439
-  cd ~/.task/hooks
-  and ln -f -s on-modify.blocks_attr.py on-add.blocks_attr.py
-  and ln -f -s on-modify.blocks_attr.py on-launch.blocks_attr.py
-  and task config uda.blocks.type string
-  and task config uda.blocks.label Blocks
-
-  and echo "TASK" >> $STEP_FILE
 end
