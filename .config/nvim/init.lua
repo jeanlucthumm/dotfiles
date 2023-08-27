@@ -353,6 +353,12 @@ local plugin_spec = {
   { 'psliwka/vim-smoothie',     cond = function() return not vim.g.neovide end },
   { 'rhysd/conflict-marker.vim' },
   { 'ThePrimeagen/harpoon' },
+  {
+    'ggandor/leap.nvim',
+    config = function()
+      require'leap'.add_default_mappings()
+    end
+  },
 
   -- Functional
   {
