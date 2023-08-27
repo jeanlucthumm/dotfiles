@@ -1,8 +1,0 @@
-include theme.conf
-
-enable_audio_bell no
-window_padding_width 8
-allow_remote_control yes
-clipboard_control write-clipboard write-primary read-clipboard-ask read-primary-ask no-append
-input_delay 1
-scrollback_pager nvim -c 'set ft=terminal' -
