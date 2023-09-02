@@ -15,7 +15,6 @@ if [ $OS = "Linux" ]
   set -x ANDROID_SDK_ROOT $HOME/Android/Sdk
   set -x ANDROID_HOME $ANDROID_SDK_ROOT
   set -x CHROME_EXECUTABLE /usr/bin/chromium
-  set -x GPG_TTY (tty)
 
   set -x PATH $PATH $ANDROID_SDK_ROOT/platforms $ANDROID_SDK_ROOT/tools/bin $ANDROID_SDK_ROOT/platform-tools /opt/flutter/bin
   set -x PATH $PATH $HOME/go/bin $HOME/.gem/ruby/3.0.0/bin
@@ -67,5 +66,6 @@ set -x LC_ALL en_US.UTF-8
 set -x MANPAGER "sh -c 'sed -e s/.\\\\x08//g | bat -l man -p'"
 # Fish prompts have automatic detection of venv
 set -x VIRTUAL_ENV_DISABLE_PROMPT 1
+set -x GPG_TTY (tty)
 
 set -x CONF $XDG_CONFIG_HOME
