@@ -69,6 +69,7 @@ if status is-interactive
   alias day="timew day"
   alias acc="task end.after:today completed"
   alias fix-tmux-ssh="bass (tmux show-environment -s SSH_AUTH_SOCK)"
+  alias sgpt="OPENAI_API_KEY=(cat $CONF/openai.key) command sgpt"
 end
 
 ### ===========================================================================
