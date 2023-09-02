@@ -6,13 +6,18 @@ local env = vim.env
 local fn = vim.fn
 local cmd = vim.cmd
 
-HasGoogle, Google = pcall(require, 'google')
-
 g.mapleader = ' ' -- sets <Leader> to <space>
+
+local function file_exists(path)
+  local stat = vim.loop.fs_stat(path)
+  return stat and stat.type or false
+end
+
+HasGoogle = file_exists(fn.stdpath('config') .. '/lua/google.lua')
 
 --- Lazy bootstrap
 local lazypath = fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
+if not file_exists(lazypath) then
   vim.notify('Bootstraping lazy.nvim...')
   fn.system({
     'git',
@@ -193,7 +198,7 @@ local plugin_spec = {
         formatting = { format = require'lspkind'.cmp_format() },
         sorting = { priority_weight = 10 },
       }
-      if HasGoogle then conf = Google.update_cmp_config(conf) end
+      if HasGoogle then conf = require'google'.update_cmp_config(conf) end
       cmp.setup(conf)
     end,
   },
@@ -392,6 +397,8 @@ if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
 
 require'lazy'.setup(plugin_spec,
   { dev = { path = fn.expand('$HOME/Code/nvim-plugins') } })
+
+if HasGoogle then Google = require'google' end
 
 -- TODO move these into plugin config where applicable
 ---- Global options
