@@ -1,7 +1,6 @@
 [user]
   email = jeanlucthumm@gmail.com
   name = Jean-Luc Thumm
-  signingkey = B4710A8A5E391635
 [core]
   pager = delta --line-numbers-zero-style black
   excludesfile = ~/.config/.gitignore
@@ -43,3 +42,5 @@
 	rebase = true
 [init]
 	defaultBranch = master
+[include]
+  path = .gitconfig-key
