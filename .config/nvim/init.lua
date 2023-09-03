@@ -595,6 +595,7 @@ nmap('<C-k>', '<C-y>') -- scroll one line down
 imap('<C-v>', '<C-c>:set paste<CR>"+p:set nopaste<CR>i')
 map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
 map('t', '<C-l>', '<C-\\><C-n><Cmd>:tabn<CR>')
+map('t', '<C-o>', '<C-\\><C-n><C-^>')
 map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
 map('t', '<C-\\><C-\\>', '<C-\\><C-n>')
 ncmap('<C-p>', 'Telescope commands')
