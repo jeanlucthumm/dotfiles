@@ -10,8 +10,6 @@ if [ $OS = "Linux" ]
 
   set -g BIN /usr/bin
 
-  set -x CC $BIN/clang
-  set -x CXX $BIN/clang++
   set -x ANDROID_SDK_ROOT $HOME/Android/Sdk
   set -x ANDROID_HOME $ANDROID_SDK_ROOT
   set -x CHROME_EXECUTABLE /usr/bin/chromium
