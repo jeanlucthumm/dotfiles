@@ -589,7 +589,6 @@ ncmap('<Leader>wc', 'RunClose')
 
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
-ncmap('<C-l>', 'tabn')
 nmap('<C-j>', '<C-e>') -- scroll one line up
 nmap('<C-k>', '<C-y>') -- scroll one line down
 imap('<C-v>', '<C-c>:set paste<CR>"+p:set nopaste<CR>i')
@@ -602,6 +601,7 @@ ncmap('<C-p>', 'Telescope commands')
 ncmap('<C-e>',
   'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 nmap('<C-q>', '<C-^>')
+ncmap('<C-l>', 'lua require"harpoon.term".gotoTerminal(1)')
 ncmap('<M-e>', 'Telescope find_files')
 ncmap('<M-r>', 'Telescope grep_string')
 ncmap('<C-e>', 'Telescope buffers')
