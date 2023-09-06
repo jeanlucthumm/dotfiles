@@ -580,6 +580,7 @@ ncmap('<Leader>dd', 'lua require"dap".toggle_breakpoint()')
 ncmap('<Leader>duo', 'lua require"dapui".toggle()')
 ncmap('<Leader>dt', 'lua require"dap".terminate()')
 ncmap('<Leader>dc', 'lua require"dap".continue()')
+ncmap('<Leader>dr', 'lua require"dap".restart()')
 ncmap('<Leader>dp', 'TroubleToggle')
 -- <Leader>w    running
 ncmap('<Leader>ww', 'RunCode')
