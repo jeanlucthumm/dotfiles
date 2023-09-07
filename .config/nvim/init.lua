@@ -404,6 +404,8 @@ if HasGoogle then Google = require'google' end
 ---- Global options
 g.neovide_cursor_animation_length = 0.05
 g.foldlevel = 99      -- no folds on file open
+g.omni_sql_no_default_maps = 1 -- disable annoying sql keymaps
+
 vim.wo.foldlevel = 99 -- no folds on file open
 vim.notify = require'notify'
 
