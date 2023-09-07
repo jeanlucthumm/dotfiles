@@ -362,7 +362,7 @@ local plugin_spec = {
     'ggandor/leap.nvim',
     config = function()
       require'leap'.add_default_mappings()
-    end
+    end,
   },
 
   -- Functional
@@ -390,6 +390,25 @@ local plugin_spec = {
     'folke/trouble.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {},
+  },
+  {
+    'jackMort/ChatGPT.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require'chatgpt'.setup {
+        openai_params = {
+          model = 'gpt-4',
+        },
+        popup_input = {
+          submit = '<C-b>',
+        },
+      }
+    end,
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+    },
   },
 } -- plugin_spec
 
@@ -546,7 +565,7 @@ ncmap('gfa', 'lua require"harpoon.mark".add_file()')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
 -- c
-nmap('cp', ':let @" = expand("%:p")<CR>') -- yank file path
+ncmap('<Leader>c', 'ChatGPT')
 -- <Leader>
 ncmap('<Leader>q', 'qall')
 ncmap('<Leader>o', 'Telescope lsp_document_symbols')
