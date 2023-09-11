@@ -394,6 +394,7 @@ local plugin_spec = {
   {
     'jackMort/ChatGPT.nvim',
     event = 'VeryLazy',
+    enabled = not HasGoogle,
     config = function()
       require'chatgpt'.setup {
         openai_params = {
