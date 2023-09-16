@@ -579,10 +579,7 @@ local ncmap = require'common'.ncmap
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
 nmap('<Leader>p', '\"+p')     -- paste from system clipboard
 -- g
-nmap('gtt', ':tabe<CR>:term<CR>:file term:cli<CR>i')
-ncmap('gti', 'lua require"harpoon.term".gotoTerminal(1)')
-ncmap('gto', 'lua require"harpoon.term".gotoTerminal(2)')
-ncmap('gtp', 'lua require"harpoon.term".gotoTerminal(3)')
+ncmap('gt', 'lua require"harpoon.term".gotoTerminal(1)')
 ncmap('gfi', 'lua require"harpoon.ui".nav_file(1)')
 ncmap('gfo', 'lua require"harpoon.ui".nav_file(2)')
 ncmap('gfp', 'lua require"harpoon.ui".nav_file(3)')
@@ -636,19 +633,19 @@ ncmap('<Leader>wc', 'RunClose')
 
 -- <C-*> and <A-*>
 ncmap('<C-h>', 'tabp')
+ncmap('<C-l>', 'tabn')
 nmap('<C-j>', '<C-e>') -- scroll one line up
 nmap('<C-k>', '<C-y>') -- scroll one line down
 imap('<C-v>', '<C-c>:set paste<CR>"+p:set nopaste<CR>i')
 map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
 map('t', '<C-l>', '<C-\\><C-n><Cmd>:tabn<CR>')
-map('t', '<C-o>', '<C-\\><C-n><C-^>')
+map('t', '<C-q>', '<C-\\><C-n><C-^>')
 map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
 map('t', '<C-\\><C-\\>', '<C-\\><C-n>')
 ncmap('<C-p>', 'Telescope commands')
 ncmap('<C-e>',
   'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 nmap('<C-q>', '<C-^>')
-ncmap('<C-l>', 'lua require"harpoon.term".gotoTerminal(1)')
 ncmap('<M-e>', 'Telescope find_files')
 ncmap('<M-r>', 'Telescope grep_string')
 ncmap('<C-e>', 'Telescope buffers')
