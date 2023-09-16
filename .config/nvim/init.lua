@@ -10,7 +10,16 @@ g.mapleader = ' ' -- sets <Leader> to <space>
 
 local function file_exists(path)
   local stat = vim.loop.fs_stat(path)
-  return stat and stat.type or false
+  return stat or false
+end
+
+local function find_existing_path(paths)
+  for _, path in ipairs(paths) do
+    if file_exists(path) then
+      return path
+    end
+  end
+  return nil
 end
 
 HasGoogle = file_exists(fn.stdpath('config') .. '/lua/google.lua')
@@ -207,20 +216,31 @@ local plugin_spec = {
   {
     'simrat39/rust-tools.nvim',
     config = function()
-      local extension_path = vim.env.HOME ..
-          '/.vscode-oss/extensions/vadimcn.vscode-lldb-1.9.2-universal'
+      -- Gives pretty pretting during Rust debugging by hijacking the CodeLLDB
+      -- extension from VSCode.
+      local paths = {
+        vim.env.HOME .. '/.vscode-oss/extensions/vadimcn.vscode-lldb-1.9.2-universal',
+        vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.9.2',
+      }
+      local extension_path = find_existing_path(paths)
+      local this_os = vim.loop.os_uname().sysname;
+
+      local dap = {}
+      if extension_path then
+        dap.adapter = require'rust-tools.dap'.get_codelldb_adapter(
+          extension_path .. '/adapter/codelldb',
+          extension_path .. '/lldb/lib/liblldb' .. (this_os == 'Linux' and '.so' or '.dylib')
+        )
+      else
+        vim.notify('CodeLLD extension not found, pretty Rust debugging disabled')
+      end
       require'rust-tools'.setup {
         server = {
           cargo = { loadOutDirsFromCheck = true },
           on_attach = require'common'.on_attach,
           capabilities = require'common'.capabilities(),
         },
-        dap = {
-          adapter = require'rust-tools.dap'.get_codelldb_adapter(
-            extension_path .. '/adapter/codelldb',
-            extension_path .. '/lldb/lib/liblldb.so'
-          ),
-        },
+        dap = dap,
         tools = {
           inlay_hints = {
             highlight = 'InlayHints',
@@ -423,10 +443,10 @@ if HasGoogle then Google = require'google' end
 -- TODO move these into plugin config where applicable
 ---- Global options
 g.neovide_cursor_animation_length = 0.05
-g.foldlevel = 99      -- no folds on file open
+g.foldlevel = 99               -- no folds on file open
 g.omni_sql_no_default_maps = 1 -- disable annoying sql keymaps
 
-vim.wo.foldlevel = 99 -- no folds on file open
+vim.wo.foldlevel = 99          -- no folds on file open
 vim.notify = require'notify'
 
 ---- Neovim options
