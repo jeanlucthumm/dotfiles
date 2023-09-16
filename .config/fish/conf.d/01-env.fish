@@ -19,7 +19,7 @@ if [ $OS = "Linux" ]
 
 else if [ $OS = "Darwin" ]
 
-  set -x PATH /opt/homebrew/bin $PATH
+  set -x PATH /opt/homebrew/bin /opt/homebrew/opt/llvm/bin $PATH
 
   set -x ANDROID_HOME /Users/$USER/Library/Android/sdk
 
