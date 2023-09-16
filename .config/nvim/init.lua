@@ -264,6 +264,16 @@ local plugin_spec = {
       }
     end,
   },
+  {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig', 'nvim-lua/lsp-status.nvim' },
+    config = function()
+      require'typescript-tools'.setup {
+        on_attach = require'common'.on_attach,
+        capabilities = require'common'.capabilities(),
+      }
+    end,
+  },
   -- TODO set this plugin for <Leader>a
   { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' },
   -- TODO refine keymap
