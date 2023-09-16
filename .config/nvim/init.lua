@@ -421,7 +421,12 @@ local plugin_spec = {
           model = 'gpt-4',
         },
         popup_input = {
-          submit = '<C-b>',
+          submit = '<CR>',
+        },
+        chat = {
+          keymaps = {
+            close = { '<C-q>' },
+          },
         },
       }
     end,
@@ -586,12 +591,11 @@ ncmap('gfa', 'lua require"harpoon.mark".add_file()')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
 -- c
-ncmap('<Leader>c', 'ChatGPT')
+ncmap('<Leader>s', 'ChatGPT')
 -- <Leader>
 ncmap('<Leader>q', 'qall')
 ncmap('<Leader>o', 'Telescope lsp_document_symbols')
 ncmap('<Leader>O', 'Telescope lsp_dynamic_workspace_symbols')
-ncmap('<Leader>s', 'SymbolsOutlineOpen')
 ncmap('<Leader>t', 'NvimTreeFocus')
 ncmap('<Leader>a', 'Lspsaga code_action')
 vcmap('<Leader>a', '<C-U>Lspsaga range_code_action')
