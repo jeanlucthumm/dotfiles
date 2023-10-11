@@ -267,6 +267,7 @@ local plugin_spec = {
   {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig', 'nvim-lua/lsp-status.nvim' },
+    enabled = not HasGoogle,
     config = function()
       require'typescript-tools'.setup {
         on_attach = require'common'.on_attach,
