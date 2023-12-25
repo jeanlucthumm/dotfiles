@@ -590,7 +590,10 @@ local ncmap = require'common'.ncmap
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
 nmap('<Leader>p', '\"+p')     -- paste from system clipboard
 -- g
-ncmap('gt', 'lua require"harpoon.term".gotoTerminal(1)')
+nmap('gt', function()
+  vim.cmd('tabe ' .. fn.expand('%'))
+  require'harpoon.term'.gotoTerminal(1)
+end)
 ncmap('gfi', 'lua require"harpoon.ui".nav_file(1)')
 ncmap('gfo', 'lua require"harpoon.ui".nav_file(2)')
 ncmap('gfp', 'lua require"harpoon.ui".nav_file(3)')
