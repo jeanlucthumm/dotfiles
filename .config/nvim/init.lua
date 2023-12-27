@@ -401,7 +401,6 @@ local plugin_spec = {
     'neomake/neomake',
     config = function()
       g.neomake_open_list = 2
-      vim.v['test#strategy'] = 'neomake'
     end,
   },
   {
@@ -504,7 +503,6 @@ end
 function GruvboxTheme(background)
   opt.background = background
   lualine_theme = 'gruvbox_' .. background
-  vim.v['$BAT_THEME'] = 'gruvbox'
   cmd('colorscheme gruvbox')
 end
 
