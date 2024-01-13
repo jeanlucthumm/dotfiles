@@ -7,7 +7,7 @@ fzf
 git-delta
 git-lfs
 github
-gpg
+gnupg
 lua
 luarocks
 make
@@ -17,3 +17,4 @@ task
 tmux
 unzip
 yarn
+zoxide
