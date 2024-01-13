@@ -32,3 +32,5 @@ application/xhtml+xml=firefox.desktop
 application/x-extension-xhtml=firefox.desktop
 application/x-extension-xht=firefox.desktop
 inode/directory=org.gnome.Nautilus.desktop
+x-scheme-handler/postman=Postman.desktop
+x-scheme-handler/notion=notion-app.desktop
