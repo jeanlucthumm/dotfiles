@@ -18,3 +18,4 @@ tmux
 unzip
 yarn
 zoxide
+protobuf
