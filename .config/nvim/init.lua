@@ -404,12 +404,6 @@ local plugin_spec = {
 
   -- Functional
   {
-    'neomake/neomake',
-    config = function()
-      g.neomake_open_list = 2
-    end,
-  },
-  {
     '907th/vim-auto-save',
     config = function()
       g.auto_save = 0
