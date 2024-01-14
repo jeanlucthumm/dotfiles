@@ -25,4 +25,7 @@
     "interval": 5,
     "exec": "$HOME/Code/bin/task-timew-status.fish",
   },
+  "hyprland/workspaces": {
+    "format": "{name}"
+  },
 }
