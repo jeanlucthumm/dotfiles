@@ -56,6 +56,7 @@ set -x XDG_CONFIG_HOME $HOME/.config
 set -x XDG_CACHE_HOME $HOME/.cache 
 set -x XDG_DATA_HOME $HOME/.local/share 
 set -x XDG_DOWNLOAD_DIR $HOME/Downloads 
+set -x XDG_PICTURES_DIR $HOME/media
 
 set -x npm_config_prefix $HOME/.node_modules 
 set -x EDITOR (which nvim)
