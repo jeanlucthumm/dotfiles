@@ -302,6 +302,12 @@ local plugin_spec = {
       }
     end,
   },
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    opts = {},
+  },
 
   --- Theme
   { 'nvim-tree/nvim-web-devicons' },
