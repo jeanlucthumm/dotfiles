@@ -169,6 +169,7 @@ local plugin_spec = {
     config = function()
       local cmp = require'cmp'
       local luasnip = require'luasnip'
+      local copilot = require'copilot.suggestion'
       local conf = {
         snippet = {
           expand = function(args)
@@ -184,7 +185,9 @@ local plugin_spec = {
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
           ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
           ['<Tab>'] = cmp.mapping(function(fallback)
-            if luasnip.expand_or_jumpable() then
+            if copilot.is_visible() then
+              copilot.accept()
+            elseif luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
             else
               fallback()
@@ -306,7 +309,14 @@ local plugin_spec = {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
     event = 'InsertEnter',
-    opts = {},
+    opts = {
+      panel = {
+        auto_refresh = true,
+      },
+      suggestion = {
+        auto_trigger = true,
+      },
+    },
   },
 
   --- Theme
