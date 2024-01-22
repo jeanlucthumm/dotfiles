@@ -601,6 +601,7 @@ local vcmap = require'common'.vcmap
 local ncmap = require'common'.ncmap
 
 imap('<C-c>', '<Esc>')
+nmap('<C-c>', '<Esc>')
 -- visual
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
 nmap('<Leader>p', '\"+p')     -- paste from system clipboard
