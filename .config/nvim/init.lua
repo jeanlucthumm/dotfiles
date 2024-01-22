@@ -169,7 +169,6 @@ local plugin_spec = {
     config = function()
       local cmp = require'cmp'
       local luasnip = require'luasnip'
-      local copilot = require'copilot.suggestion'
       local conf = {
         snippet = {
           expand = function(args)
@@ -185,9 +184,14 @@ local plugin_spec = {
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
           ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
           ['<Tab>'] = cmp.mapping(function(fallback)
-            if copilot.is_visible() then
-              copilot.accept()
-            elseif luasnip.expand_or_jumpable() then
+            if not HasGoogle then
+              local copilot = require'copilot.suggestion'
+              if copilot.is_visible() then
+                copilot.accept()
+                return
+              end
+            end
+            if luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
             else
               fallback()
@@ -307,6 +311,7 @@ local plugin_spec = {
   },
   {
     'zbirenbaum/copilot.lua',
+    enabled = not HasGoogle,
     cmd = 'Copilot',
     event = 'InsertEnter',
     opts = {
