@@ -29,7 +29,8 @@
   directory = /opt/flutter
 [delta]
   side-by-side = true
-  light = true
+  light = false
+  features = gruvmax-fang
   navigate = true
 [commit]
   gpgsign = true
@@ -47,3 +48,4 @@
 	defaultBranch = master
 [include]
   path = .gitconfig-key
+  path = .config/delta/themes.gitconfig
