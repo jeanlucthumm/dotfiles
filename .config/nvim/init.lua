@@ -369,10 +369,8 @@ local plugin_spec = {
         },
       }
       require'telescope'.load_extension('flutter')
-      require'telescope'.load_extension('vim_bookmarks')
     end,
   },
-  { 'tom-anders/telescope-vim-bookmarks.nvim' },
   -- TODO look at config for this for lazy.nvim
   { 'nvim-lualine/lualine.nvim' }, -- configured in the theme section
   {
@@ -385,7 +383,6 @@ local plugin_spec = {
   },
   { 'rcarriga/nvim-notify' },        -- pretty notifications
   { 'xiyaowong/virtcolumn.nvim' },   -- makes virtual column a pixel wide
-  { 'MattesGroeger/vim-bookmarks' }, -- bookmarks
   {
     'stevearc/dressing.nvim',
     opts = {},
@@ -640,10 +637,6 @@ ncmap('<Leader>cl', 'cclose')
 ncmap('<Leader>cc', 'cc')
 ncmap('<Leader>co', 'copen')
 ncmap('<Leader>cd', 'cd %:h')
--- <Leader>b    bookmarks
-ncmap('<Leader>bb', 'BookmarkToggle')
-ncmap('<Leader>ba', 'BookmarkAnnotate')
-ncmap('<Leader>bo', 'Telescope vim_bookmarks all')
 -- <Leader>h    hunks + help
 ncmap('<Leader>hu', 'SignifyHunkUndo')
 ncmap('<Leader>hd', 'SignifyHunkDiff')
