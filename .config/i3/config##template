@@ -14,7 +14,11 @@
 set $mod Mod4
 set $wallpaper "$HOME/.config/default_wallpaper"
 set $layout "$HOME/.config/default_layout.sh"
-set $browser "/usr/bin/firefox"
+{% if yadm.class == "google" %}
+set $browser google-chrome-stable
+{% else %}
+set $browser firefox
+{% endif %}
 
 # =============================================================================
 # COSMETIC
@@ -22,7 +26,7 @@ set $browser "/usr/bin/firefox"
 font pango:DejaVu Sans Mono 8
 
 # window customization
-{% if yadm.class == "simple" %}
+{% if yadm.class == "google" %}
 default_border pixel 2
 {% else %}
 default_border pixel 2
@@ -241,8 +245,8 @@ bindsym $mod+c exec $browser
 bindsym $mod+b exec polybar-msg cmd toggle
 bindsym $mod+n exec nautilus
 bindsym $mod+backslash exec dunstctl close-all
-{% if yadm.class == "simple" %}
-bindsym $mod+x exec google-chrome-stable
+{% if yadm.class == "google" %}
+bindsym $mod+x exec firefox
 {% else %}
 bindsym $mod+x exec /usr/bin/qutebrowser
 {% endif %}
