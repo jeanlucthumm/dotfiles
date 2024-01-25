@@ -12,6 +12,8 @@ ERR_UNKNOWN_THEME = "Unknown theme"
 AVAILABLE_THEMES = [
     "solarized-light",
     "solarized-dark",
+    "gruvbox-light",
+    "gruvbox-dark",
 ]
 
 HOME = Path(os.environ["HOME"])
@@ -29,6 +31,14 @@ def search_and_replace(path: str, search: str, replace: str):
         f.seek(0)
         f.write(text)
         f.truncate()
+
+
+def is_wayland() -> bool:
+    return os.environ.get("XDG_SESSION_TYPE") == "wayland"
+
+
+def is_hyprland() -> bool:
+    return "HYPRLAND_INSTANCE_SIGNATURE" in os.environ
 
 
 def get_screen_size() -> str:
@@ -77,16 +87,33 @@ def get_screen_size() -> str:
 
 
 def handle_kitty(theme: str):
-    if theme not in ["solarized-light", "solarized-dark"]:
+    if theme == "solarized-light":
+        theme_file = "theme-solarized-light.conf"
+    elif theme == "solarized-light":
+        theme_file = "theme-solarized-dark.conf"
+    elif theme == "gruvbox-light":
+        theme_file = "gruvbox_light.conf"
+    elif theme == "gruvbox-dark":
+        theme_file = "gruvbox_dark.conf"
+    else:
         raise ThemeError(ERR_UNKNOWN_THEME)
-    path = str(CONFIG / "kitty/kitty.conf")
-    search_and_replace(path, "^include.*$", f"include theme-{theme}.conf")
+    path = str(CONFIG / "kitty/theme.conf")
+    search_and_replace(path, "^include.*$", f"include theme/{theme_file}")
     search_and_replace(path, "^env.*$", f"env KITTY_THEME={theme}")
-    subprocess.run(["kitty", "@", "set-colors", "-a", "-c", path])
+    subprocess.run(
+        [
+            "kitty",
+            "@",
+            "set-colors",
+            "-a",
+            "-c",
+            str(CONFIG / "kitty" / "theme" / theme_file),
+        ]
+    )
     subprocess.run(["kitty", "@", "env", f"KITTY_THEME={theme}"])
 
 
-def handle_gtk(theme: str):
+def handle_gtk_x11(theme: str):
     if theme == "solarized-light":
         # name = "NumixSolarizedLightBlue"
         # icon = "WhiteSur-dark"
@@ -105,6 +132,30 @@ def handle_gtk(theme: str):
     subprocess.run(["killall", "-HUP", "xsettingsd"])
 
 
+def handle_gsettings(theme: str):
+    if theme == "solarized-light":
+        name = "NumixSolarizedLightBlue"
+        icon = "WhiteSur-dark"
+    elif theme == "solarized-dark":
+        name = "NumixSolarizedDarkBlue"
+        icon = "WhiteSur-dark"
+    elif theme == "gruvbox-light":
+        name = "Gruvbox-Light-B"
+        icon = "Gruvbox-Light"
+    elif theme == "gruvbox-dark":
+        name = "Gruvbox-Dark-B"
+        icon = "Gruvbox-Dark"
+    else:
+        raise ThemeError(ERR_UNKNOWN_THEME)
+
+    subprocess.run(
+        ["gsettings", "set", "org.gnome.desktop.interface", "gtk-theme", name]
+    )
+    subprocess.run(
+        ["gsettings", "set", "org.gnome.desktop.interface", "icon-theme", icon]
+    )
+
+
 def handle_wallpaper(theme: str):
     screen = get_screen_size()
     path = None
@@ -118,35 +169,38 @@ def handle_wallpaper(theme: str):
             path = HOME / "media/arch-dark.png"
         elif screen == "wide":
             path = HOME / "media/wallpapers/wide/solarized-dark.png"
+    elif theme == "gruvbox-light":
+        if screen == "4k":
+            path = HOME / "media/flower.jpg"
+        elif screen == "wide":
+            path = HOME / "media/wallpapers/wide/gruvbox-light.png"
+    elif theme == "gruvbox-dark":
+        if screen == "4k":
+            path = HOME / "media/flower.jpg"
+        elif screen == "wide":
+            path = HOME / "media/wallpapers/wide/gruvbox-dark.png"
+
     if path is None:
         raise ThemeError(ERR_UNKNOWN_THEME)
 
-    subprocess.run(["ln", "-sf", path, str(HOME / ".config/default_wallpaper")])
-    subprocess.run(["feh", "--bg-scale", str(path)])
+    default_path = CONFIG / "default_wallpaper"
+    subprocess.run(["ln", "-sf", path, str(default_path)])
 
-
-def handle_fish(theme: str):
-    if theme not in AVAILABLE_THEMES:
-        raise ThemeError(ERR_UNKNOWN_THEME)
-    subprocess.run(["fish", str(CONFIG / f"fish/theme/{theme}.fish")])
-
-
-def handle_wal(theme: str):
-    if theme == "solarized-light":
-        subprocess.run(["wal", "--theme", "custom-solarized", "-l"])
-    elif theme == "solarized-dark":
-        subprocess.run(["wal", "--theme", "solarized"])
+    if is_hyprland():
+        subprocess.run(["hyprctl", "hyprpaper", "unload", str(default_path)])
+        subprocess.run(["hyprctl", "hyprpaper", "preload", str(default_path)])
+        monitor = json.loads(subprocess.getoutput("hyprctl monitors -j"))[0]
+        print(f"{monitor['name']},{str(default_path)}")
+        subprocess.run(
+            [
+                "hyprctl",
+                "hyprpaper",
+                "wallpaper",
+                f"{monitor['name']},{str(default_path)}",
+            ]
+        )
     else:
-        raise ThemeError(ERR_UNKNOWN_THEME)
-
-
-HANDLERS = {
-    "kitty": handle_kitty,
-    "gtk": handle_gtk,
-    "wallpaper": handle_wallpaper,
-    "fish": handle_fish,
-    "wal": handle_wal,
-}
+        subprocess.run(["feh", "--bg-scale", str(path)])
 
 
 def main():
@@ -157,8 +211,17 @@ def main():
     if sys.argv[1] == "--list":
         print(" ".join(AVAILABLE_THEMES))
         return
+
+    handlers = {
+        "kitty": handle_kitty,
+        "wallpaper": handle_wallpaper,
+    }
+    if is_wayland():
+        handlers["gsettings"] = handle_gsettings
+    else:
+        handlers["gtk"] = handle_gtk_x11
     bad_handlers = []
-    for key, handler in HANDLERS.items():
+    for key, handler in handlers.items():
         try:
             handler(sys.argv[1])
         except ThemeError:
