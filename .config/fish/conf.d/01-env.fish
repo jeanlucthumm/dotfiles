@@ -42,14 +42,19 @@ end
 switch (get_theme)
   case "solarized-light"
     set -x BAT_THEME "Solarized (light)"
+    set -g theme_color_scheme light
   case "solarized-dark"
     set -x BAT_THEME "Solarized (dark)"
+    set -g theme_color_scheme dark
   case "gruvbox-light"
     set -x BAT_THEME "gruvbox-light"
-    fish_config theme choose "fish default"
+    set -g theme_color_scheme light
   case "gruvbox-dark"
     set -x BAT_THEME "gruvbox-dark"
+    set -g theme_color_scheme dark
 end
+
+set -g theme_nerd_fonts yes
 
 # XDG
 set -x XDG_CONFIG_HOME $HOME/.config 
