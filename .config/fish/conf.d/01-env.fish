@@ -43,15 +43,19 @@ switch (get_theme)
   case "solarized-light"
     set -x BAT_THEME "Solarized (light)"
     set -g theme_color_scheme light
+    fish_config theme choose "fish default"
   case "solarized-dark"
     set -x BAT_THEME "Solarized (dark)"
     set -g theme_color_scheme dark
+    fish_config theme choose "Tomorrow Night"
   case "gruvbox-light"
     set -x BAT_THEME "gruvbox-light"
     set -g theme_color_scheme light
+    fish_config theme choose "fish default"
   case "gruvbox-dark"
     set -x BAT_THEME "gruvbox-dark"
     set -g theme_color_scheme dark
+    fish_config theme choose "Tomorrow Night"
 end
 
 set -g theme_nerd_fonts yes
