@@ -55,7 +55,6 @@ if status is-interactive
 
   # Default overrides
   alias vim="nvim"
-  alias neov="neovide --multigrid --maximized"
   alias cat="bat"
   alias ls="exa"
   alias docker="sudo docker"
