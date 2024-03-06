@@ -599,6 +599,8 @@ local ncmap = require'common'.ncmap
 
 imap('<C-c>', '<Esc>')
 nmap('<C-c>', '<Esc>')
+nmap('<C-w>c', '<Nop>')
+nmap('<C-w><C-c>', '<Nop>')
 -- visual
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
 nmap('<Leader>p', '\"+p')     -- paste from system clipboard
