@@ -34,3 +34,4 @@ application/x-extension-xht=firefox.desktop
 inode/directory=org.gnome.Nautilus.desktop
 x-scheme-handler/postman=Postman.desktop
 x-scheme-handler/notion=notion-app.desktop
+x-scheme-handler/figma=figma-linux.desktop
