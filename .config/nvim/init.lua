@@ -344,7 +344,7 @@ local plugin_spec = {
     'kyazdani42/nvim-tree.lua',
     opts = { update_focused_file = { enable = true }, sync_root_with_cwd = true },
   },
-  { 'iamcco/markdown-preview.nvim',           build = 'cd app && yarn install' },
+  { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
   {
     'nvim-telescope/telescope.nvim',
     config = function()
@@ -378,8 +378,8 @@ local plugin_spec = {
       g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
     end,
   },
-  { 'rcarriga/nvim-notify' },        -- pretty notifications
-  { 'xiyaowong/virtcolumn.nvim' },   -- makes virtual column a pixel wide
+  { 'rcarriga/nvim-notify' },      -- pretty notifications
+  { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
   {
     'stevearc/dressing.nvim',
     opts = {},
