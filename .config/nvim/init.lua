@@ -92,9 +92,6 @@ local plugin_spec = {
           n.builtins.formatting.buf,
           n.builtins.formatting.prettier,
           n.builtins.diagnostics.fish,
-          n.builtins.diagnostics.flake8.with {
-            extra_args = { '--max-line-lenth', '88' },
-          },
         },
       }
     end,
