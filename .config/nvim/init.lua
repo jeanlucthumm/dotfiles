@@ -76,6 +76,7 @@ local plugin_spec = {
         },
       })
       lspconfig.pyright.setup(extend {})
+      lspconfig.gopls.setup(extend {})
     end,
   },
   {
@@ -250,6 +251,15 @@ local plugin_spec = {
         },
       }
     end,
+  },
+  {
+    'ray-x/go.nvim',
+    opts = {},
+    event = 'CmdlineEnter',
+    ft = { 'go', 'gomod' },
+    dependencies = {
+      'ray-x/guihua.lua',
+    },
   },
   {
     'akinsho/flutter-tools.nvim',
