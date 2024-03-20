@@ -453,6 +453,19 @@ local plugin_spec = {
       'nvim-telescope/telescope.nvim',
     },
   },
+  {
+    'ThePrimeagen/harpoon',
+    config = function()
+      local opt = {
+        enter_on_sendcmd = true,
+      }
+      if HasGoogle then
+        local g = require'google'.harpoon_config()
+        opt = vim.tbl_deep_extend('force', opt, g)
+      end
+      require'harpoon'.setup(opt)
+    end,
+  }
 } -- plugin_spec
 
 if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
@@ -607,7 +620,9 @@ ncmap('gfi', 'lua require"harpoon.ui".nav_file(1)')
 ncmap('gfo', 'lua require"harpoon.ui".nav_file(2)')
 ncmap('gfp', 'lua require"harpoon.ui".nav_file(3)')
 ncmap('gff', 'lua require"harpoon.ui".toggle_quick_menu()')
+ncmap('gft', 'lua require"harpoon.cmd-ui".toggle_quick_menu()')
 ncmap('gfa', 'lua require"harpoon.mark".add_file()')
+ncmap('gt', 'lua require"harpoon.term".gotoTerminal(1)')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
 -- c
