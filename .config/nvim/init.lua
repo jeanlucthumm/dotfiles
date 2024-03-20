@@ -235,8 +235,6 @@ local plugin_spec = {
           extension_path .. '/adapter/codelldb',
           extension_path .. '/lldb/lib/liblldb' .. (this_os == 'Linux' and '.so' or '.dylib')
         )
-      else
-        vim.notify('CodeLLD extension not found, pretty Rust debugging disabled')
       end
       require'rust-tools'.setup {
         server = {
