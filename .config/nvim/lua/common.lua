@@ -61,6 +61,16 @@ function M.on_attach(client, bufnr)
     -- under lang specific unit tests
     ncmap('<F11>', 'lua vim.lsp.codelens.run()', opts)
   end
+  if client.server_capabilities.documentFormattingProvider then
+    local formatAu = api.nvim_create_augroup("LspFormatting", {})
+    api.nvim_create_autocmd("BufWritePre", {
+      group = formatAu,
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format()
+      end,
+    })
+  end
 end
 
 function M.capabilities()
