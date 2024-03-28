@@ -46,14 +46,21 @@ function M.on_attach(client, bufnr)
 
   -- Capability specific commands
   if client.server_capabilities.documentHighlightProvider then
+    local au = api.nvim_create_augroup('LspHighlighting', {})
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
-    api.nvim_create_autocmd({ 'CursorHold' }, {
-      command = 'lua vim.lsp.buf.document_highlight()',
+    api.nvim_create_autocmd('CursorHold', {
+      group = au,
       buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.document_highlight()
+      end,
     })
-    api.nvim_create_autocmd({ 'CursorMoved' }, {
-      command = 'lua vim.lsp.buf.clear_references()',
+    api.nvim_create_autocmd('CursorMoved', {
+      group = au,
       buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.clear_references()
+      end,
     })
   end
   if client.server_capabilities.codeLensProvider then
@@ -62,9 +69,10 @@ function M.on_attach(client, bufnr)
     ncmap('<F11>', 'lua vim.lsp.codelens.run()', opts)
   end
   if client.server_capabilities.documentFormattingProvider then
-    local formatAu = api.nvim_create_augroup("LspFormatting", {})
-    api.nvim_create_autocmd("BufWritePre", {
-      group = formatAu,
+    -- Format on save
+    local au = api.nvim_create_augroup('LspFormatting', {})
+    api.nvim_create_autocmd('BufWritePre', {
+      group = au,
       buffer = bufnr,
       callback = function()
         vim.lsp.buf.format()
