@@ -77,3 +77,7 @@ set -x VIRTUAL_ENV_DISABLE_PROMPT 1
 set -x GPG_TTY (tty)
 
 set -x CONF $XDG_CONFIG_HOME
+
+if [ -f "$CODE/google-cloud-sdk/path.fish.inc" ]
+  source "$CODE/google-cloud-sdk/path.fish.inc"
+end
