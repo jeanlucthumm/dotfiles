@@ -439,31 +439,6 @@ local plugin_spec = {
     opts = {},
   },
   {
-    'jackMort/ChatGPT.nvim',
-    event = 'VeryLazy',
-    enabled = not HasGoogle,
-    config = function()
-      require'chatgpt'.setup {
-        openai_params = {
-          model = 'gpt-4',
-        },
-        popup_input = {
-          submit = '<CR>',
-        },
-        chat = {
-          keymaps = {
-            close = { '<C-q>' },
-          },
-        },
-      }
-    end,
-    dependencies = {
-      'MunifTanjim/nui.nvim',
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope.nvim',
-    },
-  },
-  {
     'ThePrimeagen/harpoon',
     config = function()
       local opt = {
