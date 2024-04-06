@@ -348,10 +348,6 @@ local plugin_spec = {
   { 'savq/melange' },
 
   --- UI
-  {
-    'kyazdani42/nvim-tree.lua',
-    opts = { update_focused_file = { enable = true }, sync_root_with_cwd = true },
-  },
   { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
   {
     'nvim-telescope/telescope.nvim',
@@ -450,7 +446,14 @@ local plugin_spec = {
       end
       require'harpoon'.setup(opt)
     end,
-  }
+  },
+  {
+    'echasnovski/mini.nvim',
+    version = '*',
+    config = function()
+      require'mini.files'.setup {}
+    end,
+  },
 } -- plugin_spec
 
 if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
