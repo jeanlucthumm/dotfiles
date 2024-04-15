@@ -99,7 +99,11 @@ local plugin_spec = {
   },
   { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end },
-  { 'rcarriga/nvim-dap-ui',    opts = {} },
+  { 
+    'rcarriga/nvim-dap-ui',    
+    opts = {},
+    dependencies = { 'nvim-neotest/nvim-nio' },
+  },
   {
     'mfussenegger/nvim-dap-python',
     config = function()
