@@ -337,6 +337,10 @@ local plugin_spec = {
   { 'tjdevries/colorbuddy.nvim' },
   { 'projekt0n/github-nvim-theme' },
   { 'savq/melange' },
+  {
+    'mcchrish/zenbones.nvim',
+    dependencies = { 'rktjmp/lush.nvim' },
+  },
 
   --- UI
   { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
@@ -543,6 +547,12 @@ function MelangeTheme(background)
   opt.background = background
   lualine_theme = 'auto'
   cmd('colorscheme melange')
+end
+
+function ZenbonesTheme(background)
+  opt.background = background
+  lualine_theme = 'auto'
+  cmd('colorscheme zenbones')
 end
 
 local function fallbackTheme() RosePineTheme('light') end
