@@ -306,20 +306,6 @@ local plugin_spec = {
     end,
   },
   {
-    'leoluz/nvim-dap-go',
-    enabled = not HasGoogle,
-    config = function()
-      require'dap-go'.setup {
-        dap_configurations = {
-          type = 'go',
-          name = 'Attach remote',
-          mode = 'remote',
-          request = 'attach',
-        },
-      }
-    end,
-  },
-  {
     'zbirenbaum/copilot.lua',
     enabled = not HasGoogle,
     cmd = 'Copilot',
