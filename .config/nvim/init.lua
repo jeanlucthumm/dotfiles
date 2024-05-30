@@ -99,8 +99,8 @@ local plugin_spec = {
   },
   { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end },
-  { 
-    'rcarriga/nvim-dap-ui',    
+  {
+    'rcarriga/nvim-dap-ui',
     opts = {},
     dependencies = { 'nvim-neotest/nvim-nio' },
   },
@@ -114,8 +114,6 @@ local plugin_spec = {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    -- TODO: See https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
-    commit = '33eb472b459',
     config = function()
       require'nvim-treesitter.configs'.setup {
         ensure_installed = {
