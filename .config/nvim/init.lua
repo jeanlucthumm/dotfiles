@@ -184,15 +184,18 @@ local plugin_spec = {
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
           ['<C-e>'] = cmp.mapping(cmp.mapping.close(), { 'i' }),
           ['<Tab>'] = cmp.mapping(function(fallback)
-            if not HasGoogle then
-              local copilot = require'copilot.suggestion'
-              if copilot.is_visible() then
-                copilot.accept()
-                return
-              end
-            end
             if luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
+            elseif not HasGoogle and require'copilot.suggestion'.is_visible() then
+              require'copilot.suggestion'.accept()
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<C-Tab>'] = cmp.mapping(function(fallback)
+            local copilot = require'copilot.suggestion'
+            if not HasGoogle and copilot.is_visible() then
+              copilot.accept_line()
             else
               fallback()
             end
