@@ -453,6 +453,7 @@ local plugin_spec = {
       require'mini.files'.setup {}
     end,
   },
+  { 'nvim-pack/nvim-spectre' },
 } -- plugin_spec
 
 if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
