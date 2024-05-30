@@ -620,6 +620,7 @@ ncmap('gfa', 'lua require"harpoon.mark".add_file()')
 ncmap('gt', 'lua require"harpoon.term".gotoTerminal(1)')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
+ncmap('gii', 'Telescope lsp_implementations')
 -- c
 ncmap('<Leader>s', 'ChatGPT')
 -- <Leader>
