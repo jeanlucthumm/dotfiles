@@ -400,8 +400,12 @@ local plugin_spec = {
           { map_char = { tex = '' } }))
     end,
   },
-  { 'psliwka/vim-smoothie',     cond = function() return not vim.g.neovide end },
-  { 'rhysd/conflict-marker.vim' },
+  { 'psliwka/vim-smoothie', cond = function() return not vim.g.neovide end },
+  {
+    'akinsho/git-conflict.nvim',
+    version = '*',
+    config = true,
+  },
   { 'ThePrimeagen/harpoon' },
   {
     'ggandor/leap.nvim',
