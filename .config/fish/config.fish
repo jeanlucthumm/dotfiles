@@ -68,6 +68,7 @@ if status is-interactive
   alias t="task"
   alias ta="task active"
   alias tr="task ready"
+  alias tdesc="tprop description"
   alias day="timew day"
   alias acc="task end.after:today completed"
   alias fix-tmux-ssh="bass (tmux show-environment -s SSH_AUTH_SOCK)"
