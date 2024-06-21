@@ -268,7 +268,9 @@ local plugin_spec = {
   },
   {
     'ray-x/go.nvim',
-    opts = {},
+    opts = {
+      lsp_codelens = false,
+    },
     event = 'CmdlineEnter',
     ft = { 'go', 'gomod' },
     dependencies = {
