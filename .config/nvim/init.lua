@@ -502,6 +502,12 @@ local plugin_spec = {
     version = '*',
     config = function()
       require'mini.files'.setup {}
+      require'mini.indentscope'.setup {
+        draw = {
+          delay = 100,
+          animation = require'mini.indentscope'.gen_animation.none(),
+        },
+      }
     end,
   },
   { 'nvim-pack/nvim-spectre' },
