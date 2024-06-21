@@ -133,7 +133,9 @@ local plugin_spec = {
         },
         auto_install = true,
         highlight = { enable = true },
-        indent = { enable = true },
+        indent = {
+          enable = true,
+        },
       }
       vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
       vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
