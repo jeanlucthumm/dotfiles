@@ -480,7 +480,9 @@ local plugin_spec = {
   {
     'folke/trouble.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    opts = {},
+    opts = {
+      focus = true,
+    },
   },
   {
     'ThePrimeagen/harpoon',
