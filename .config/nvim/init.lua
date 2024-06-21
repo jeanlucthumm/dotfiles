@@ -303,9 +303,7 @@ local plugin_spec = {
       }
     end,
   },
-  -- TODO set this plugin for <Leader>a
-  { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' },
-  -- TODO refine keymap
+  { 'aznhe21/actions-preview.nvim' },
   {
     'simrat39/symbols-outline.nvim',
     config = function()
