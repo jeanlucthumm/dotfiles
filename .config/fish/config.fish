@@ -61,7 +61,6 @@ if status is-interactive
   alias ssh="TERM=xterm-256color /usr/bin/ssh"
 
   alias cdf='cd (fd -t d . ~ | fzf)'
-  alias done="notify 'done'"
   alias venv="source .venv/bin/activate.fish"
   alias g="git"
   alias ga="git a"
