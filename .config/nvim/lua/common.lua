@@ -21,6 +21,18 @@ function M.hover()
   if vim.diagnostic.open_float() == nil then vim.lsp.buf.hover() end
 end
 
+local auformat = vim.api.nvim_create_augroup('LspFormatting', {})
+local auhigh = vim.api.nvim_create_augroup('LspHighlighting', {})
+
+local lsp_formatting = function(bufnr)
+  local clients = vim.lsp.get_clients { bufnr = bufnr, name = 'null-ls' }
+  if #clients == 0 then
+    vim.lsp.buf.format { bufnr = bufnr }
+  else
+    vim.lsp.buf.format { bufnr = bufnr, name = 'null-ls' }
+  end
+end
+
 function M.on_attach(client, bufnr)
   local nmap = M.nmap
   local ncmap = M.ncmap
@@ -39,24 +51,23 @@ function M.on_attach(client, bufnr)
   ncmap('<Leader>kp', 'lua vim.diagnostic.goto_prev()', opts)
   ncmap('<Leader>kn', 'lua vim.diagnostic.goto_next()', opts)
   ncmap('<Leader>kk', 'lua vim.diagnostic.open_float()', opts)
-  -- TODO: fork and create a hook function for 'textDocument/codeAction'
-  ncmap('<Leader>a', 'CodeActionMenu', opts)
-  nmap('<Leader>f',
-    function() vim.lsp.buf.format({ timeout_ms = '5000', async = true }) end)
+  vim.keymap.set({ 'v', 'n' }, '<Leader>a', require('actions-preview').code_actions)
+
+  nmap('<Leader>f', function() lsp_formatting(nil) end)
 
   -- Capability specific commands
   if client.server_capabilities.documentHighlightProvider then
-    local au = api.nvim_create_augroup('LspHighlighting', {})
+    api.nvim_clear_autocmds({ group = auhigh, buffer = bufnr })
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
     api.nvim_create_autocmd('CursorHold', {
-      group = au,
+      group = auhigh,
       buffer = bufnr,
       callback = function()
         vim.lsp.buf.document_highlight()
       end,
     })
     api.nvim_create_autocmd('CursorMoved', {
-      group = au,
+      group = auhigh,
       buffer = bufnr,
       callback = function()
         vim.lsp.buf.clear_references()
@@ -70,12 +81,12 @@ function M.on_attach(client, bufnr)
   end
   if client.server_capabilities.documentFormattingProvider then
     -- Format on save
-    local au = api.nvim_create_augroup('LspFormatting', {})
+    api.nvim_clear_autocmds({ group = auformat, buffer = bufnr })
     api.nvim_create_autocmd('BufWritePre', {
-      group = au,
+      group = auformat,
       buffer = bufnr,
       callback = function()
-        vim.lsp.buf.format()
+        lsp_formatting(bufnr)
       end,
     })
   end
