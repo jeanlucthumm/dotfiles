@@ -664,10 +664,6 @@ nmap('<C-w><C-c>', '<Nop>')
 map('v', '<Leader>y', '\"+y') -- copy to system clipboard
 nmap('<Leader>p', '\"+p')     -- paste from system clipboard
 -- g
-nmap('gt', function()
-  vim.cmd('tabe ' .. fn.expand('%'))
-  require'harpoon.term'.gotoTerminal(1)
-end)
 ncmap('gfi', 'lua require"harpoon.ui".nav_file(1)')
 ncmap('gfo', 'lua require"harpoon.ui".nav_file(2)')
 ncmap('gfp', 'lua require"harpoon.ui".nav_file(3)')
@@ -689,8 +685,6 @@ nmap('<Leader>S', function()
   symbols.open_outline()
   fn.win_gotoid(symbols.view.winnr)
 end)
-ncmap('<Leader>a', 'Lspsaga code_action')
-vcmap('<Leader>a', '<C-U>Lspsaga range_code_action')
 ncmap('<Leader><Leader>', 'write')
 -- <Leader>t    file navigation
 ncmap('<Leader>tt', 'lua MiniFiles.open()')
