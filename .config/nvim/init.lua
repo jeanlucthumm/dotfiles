@@ -43,7 +43,12 @@ local plugin_spec = {
   { 'nvim-lua/plenary.nvim' },
 
   --- LSP & DAP & nvim
-  { 'folke/neodev.nvim',    config = function() require'neodev'.setup {} end }, -- lua LSP setup for better nvim integration
+  {
+    'folke/neodev.nvim',
+    opts = {
+      pathStrict = true,
+    },
+  }, -- lua LSP setup for better nvim integration
   {
     'neovim/nvim-lspconfig',
     dependencies = { 'folke/neodev.nvim' },
