@@ -710,7 +710,7 @@ ncmap('<Leader>duo', 'lua require"dapui".toggle()')
 ncmap('<Leader>dt', 'lua require"dap".terminate()')
 ncmap('<Leader>dc', 'lua require"dap".continue()')
 ncmap('<Leader>dr', 'lua require"dap".restart()')
-ncmap('<Leader>dp', 'Trouble')
+ncmap('<Leader>dp', 'Trouble diagnostics')
 -- <Leader>w    running
 ncmap('<Leader>ww', 'RunCode')
 ncmap('<Leader>wc', 'RunClose')
