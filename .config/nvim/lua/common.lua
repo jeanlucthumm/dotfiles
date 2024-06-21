@@ -40,7 +40,7 @@ function M.on_attach(client, bufnr)
   -- LSP Status
   lsp_status.on_attach(client)
 
-  api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', { buf = bufnr })
 
   -- Mappings
   local opts = { noremap = true, silent = true, buffer = bufnr }
