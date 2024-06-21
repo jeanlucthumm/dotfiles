@@ -65,4 +65,4 @@ table.insert(dap.configurations.go,
 )
 
 vim.fn.sign_define('DapBreakpoint',
-  { text = 'X', texthl = '', linehl = '', numhl = '' })
+  { text = '🧘', texthl = '', linehl = '', numhl = '' })
