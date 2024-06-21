@@ -422,6 +422,46 @@ local plugin_spec = {
       require'leap'.add_default_mappings()
     end,
   },
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require'nvim-treesitter.configs'.setup {
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ['af'] = '@function.outer',
+              ['if'] = '@function.inner',
+              ['ab'] = '@block.outer',
+              ['ib'] = '@block.inner',
+            },
+          },
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              [']F'] = '@function.outer',
+              [']B'] = '@block.outer',
+            },
+            goto_previous_start = {
+              ['[F'] = '@function.outer',
+              ['[B'] = '@block.outer',
+            },
+            goto_next_end = {
+              [']f'] = '@function.outer',
+              [']b'] = '@block.outer',
+            },
+            goto_previous_end = {
+              ['[f'] = '@function.outer',
+              ['[b'] = '@block.outer',
+            },
+          },
+        },
+      }
+    end,
+  },
 
   -- Functional
   {
