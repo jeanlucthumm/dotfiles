@@ -99,6 +99,7 @@ local plugin_spec = {
           n.builtins.formatting.prettier,
           n.builtins.formatting.dart_format,
           n.builtins.diagnostics.fish,
+          n.builtins.diagnostics.actionlint,
         },
       }
     end,
