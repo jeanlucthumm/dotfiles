@@ -69,6 +69,7 @@ if status is-interactive
   alias gs="git stat"
   alias gt="git tree"
   alias gd="git d"
+  alias gda="git a && git d"
   alias clear-nvim-swap="rm -rf ~/.local/state/nvim/swap"
   alias t="task"
   alias ta="task active"
