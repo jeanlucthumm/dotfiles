@@ -350,6 +350,7 @@ local plugin_spec = {
     'mcchrish/zenbones.nvim',
     dependencies = { 'rktjmp/lush.nvim' },
   },
+  { 'maxmx03/solarized.nvim' },
 
   --- UI
   { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
@@ -551,7 +552,7 @@ local lualine_theme = 'solarized_light'
 function SolarizedTheme(background)
   -- Docstrings should be the same color as regular comments
   vim.cmd('hi! link rustCommentLineDoc Comment')
-  vim.cmd('colorscheme solarized8')
+  vim.cmd('colorscheme solarized')
   opt.background = background
 end
 
