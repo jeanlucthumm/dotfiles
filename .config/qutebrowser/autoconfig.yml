@@ -31,6 +31,8 @@ settings:
       <Shift+Return>: <Return>
   colors.completion.category.bg:
     global: black
+  content.javascript.clipboard:
+    global: access
   content.media.audio_capture:
     https://webgazer.cs.brown.edu: true
   content.media.audio_video_capture:
