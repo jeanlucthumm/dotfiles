@@ -766,15 +766,41 @@ ncmap('<F6>', 'lua require"dap".step_over()')
 
 ---- Util
 
--- TODO this has bug when nvim-tree is open
--- When current tab has vertical dual split, open the buffer on the left
--- in the window on the right at the same position
+-- Opens the current buffer in the right window and focuses it
 function OpenInRight()
+  local current_win = api.nvim_get_current_win()
   local wins = api.nvim_tabpage_list_wins(0)
-  local left_buf = api.nvim_win_get_buf(wins[1])
-  local left_pos = api.nvim_win_get_cursor(wins[1])
-  api.nvim_win_set_buf(wins[2], left_buf)
-  api.nvim_win_set_cursor(wins[2], left_pos)
+  local current_win_pos = api.nvim_win_get_position(current_win)
+  local current_win_width = api.nvim_win_get_width(current_win)
+  local right_edge = current_win_pos[2] + current_win_width
+
+  local right_win = nil
+  local smallest_distance = math.huge
+
+  for _, win in ipairs(wins) do
+    if win ~= current_win then
+      local win_pos = api.nvim_win_get_position(win)
+      if win_pos[1] == current_win_pos[1] and win_pos[2] > current_win_pos[2] then
+        local distance = win_pos[2] - right_edge
+        if distance < smallest_distance then
+          smallest_distance = distance
+          right_win = win
+        end
+      end
+    end
+  end
+
+  if not right_win then
+    vim.notify('No right window found')
+    return
+  end
+
+  local current_buf = api.nvim_win_get_buf(current_win)
+  local current_pos = api.nvim_win_get_cursor(current_win)
+
+  api.nvim_win_set_buf(right_win, current_buf)
+  api.nvim_win_set_cursor(right_win, current_pos)
+  api.nvim_set_current_win(right_win)
 end
 
 function Inspect(tbl) print(vim.inspect(tbl)) end
