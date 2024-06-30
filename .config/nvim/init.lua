@@ -449,26 +449,30 @@ local plugin_spec = {
               ['if'] = '@function.inner',
               ['ab'] = '@block.outer',
               ['ib'] = '@block.inner',
+              ['ip'] = '@parameter.inner',
+              ['ap'] = '@parameter.outer',
+              ['ic'] = '@call.inner',
+              ['ac'] = '@call.outer',
             },
           },
           move = {
             enable = true,
             set_jumps = true,
             goto_next_start = {
+              [']f'] = { query = { '@function.outer', '@class.outer' } },
+              [']b'] = '@block.outer',
+            },
+            goto_previous_start = {
+              ['[f'] = { query = { '@function.outer', '@class.outer' } },
+              ['[b'] = '@block.outer',
+            },
+            goto_next_end = {
               [']F'] = '@function.outer',
               [']B'] = '@block.outer',
             },
-            goto_previous_start = {
+            goto_previous_end = {
               ['[F'] = '@function.outer',
               ['[B'] = '@block.outer',
-            },
-            goto_next_end = {
-              [']f'] = '@function.outer',
-              [']b'] = '@block.outer',
-            },
-            goto_previous_end = {
-              ['[f'] = '@function.outer',
-              ['[b'] = '@block.outer',
             },
           },
         },
