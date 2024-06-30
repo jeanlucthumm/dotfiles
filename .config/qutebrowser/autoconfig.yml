@@ -23,6 +23,7 @@ settings:
       <Ctrl+6>: <Ctrl+^>
       <Ctrl+Enter>: <Ctrl+Return>
       <Ctrl+[>: <Escape>
+      <Ctrl+c>: <Escape>
       <Ctrl+i>: <Tab>
       <Ctrl+j>: <Return>
       <Ctrl+m>: <Return>
@@ -58,11 +59,14 @@ settings:
     global: auto
   qt.highdpi:
     global: false
+  scrolling.smooth:
+    global: false
   url.default_page:
     global: https://www.google.com/
   url.searchengines:
     global:
       DEFAULT: https://www.google.com/search?hl=en&q={}
+      g: https://pkg.go.dev/search?q={}
       r: https://doc.rust-lang.org/std/index.html?search={}
   url.start_pages:
     global: https://www.google.com
