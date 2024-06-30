@@ -239,7 +239,10 @@ local plugin_spec = {
     end,
   },
   { 'mhinz/vim-signify' }, -- TODO look into nvim version
-  { 'theHamsta/nvim-dap-virtual-text' },
+  {
+    'theHamsta/nvim-dap-virtual-text',
+    opts = {},
+  },
   {
     'simrat39/rust-tools.nvim',
     config = function()
@@ -435,6 +438,7 @@ local plugin_spec = {
     'nvim-treesitter/nvim-treesitter-textobjects',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
+      ---@diagnostic disable-next-line: missing-fields
       require'nvim-treesitter.configs'.setup {
         textobjects = {
           select = {
