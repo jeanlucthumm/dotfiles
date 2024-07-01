@@ -67,6 +67,7 @@ set -x XDG_DATA_HOME $HOME/.local/share
 set -x XDG_DOWNLOAD_DIR $HOME/Downloads 
 set -x XDG_PICTURES_DIR $HOME/media
 
+set -x LOCALE_ARCHIVE /usr/lib/locale/locale-archive
 set -x npm_config_prefix $HOME/.node_modules 
 set -x EDITOR (which nvim)
 set -x LC_ALL en_US.UTF-8
