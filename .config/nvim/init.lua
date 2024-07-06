@@ -563,6 +563,7 @@ opt.showmode = false
 opt.scrolloff = 30 -- min number of lines to keep above and below cursor
 opt.signcolumn = 'number'
 opt.conceallevel = 2
+opt.exrc = true
 
 -- TODO make command based and move into config, func dep on `opt.background`
 ---- Theme
