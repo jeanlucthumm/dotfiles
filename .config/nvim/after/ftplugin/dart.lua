@@ -22,4 +22,16 @@ local function goto_test()
   end
 end
 
+local function outline()
+  vim.cmd('FlutterOutlineOpen')
+  local wins = vim.api.nvim_tabpage_list_wins(0)
+  for _, win in ipairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_buf_get_name(buf):find('Flutter Outline') then
+      vim.api.nvim_set_current_win(win)
+    end
+  end
+end
+
 nmap('git', goto_test)
+nmap('<Leader>s', outline)
