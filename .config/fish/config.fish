@@ -7,12 +7,13 @@ function importIfExists
     if string match "*.fish" $file_name > /dev/null
       source $file_name
     else
-      bass $file_name
+      bass (cat $file_name)
     end
   end
 end
 
 importIfExists $HOME/.cargo/env
+importIfExists $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
 
 ### ===========================================================================
 ### Alias
