@@ -24,6 +24,7 @@ end
 local auformat = vim.api.nvim_create_augroup('LspFormatting', {})
 local auhigh = vim.api.nvim_create_augroup('LspHighlighting', {})
 
+---@param bufnr number|nil
 local lsp_formatting = function(bufnr)
   local clients = vim.lsp.get_clients { bufnr = bufnr, name = 'null-ls' }
   if #clients == 0 then
@@ -33,6 +34,20 @@ local lsp_formatting = function(bufnr)
   end
 end
 
+---@param clients table<number, vim.lsp.Client>
+---@param capability string
+---@return boolean
+local function any_client_has_capability(clients, capability)
+  for _, client in ipairs(clients) do
+    if client.server_capabilities[capability] then
+      return true
+    end
+  end
+  return false
+end
+
+---@param client vim.lsp.Client
+---@param bufnr number
 function M.on_attach(client, bufnr)
   local nmap = M.nmap
   local ncmap = M.ncmap
@@ -56,7 +71,8 @@ function M.on_attach(client, bufnr)
   nmap('<Leader>f', function() lsp_formatting(nil) end)
 
   -- Capability specific commands
-  if client.server_capabilities.documentHighlightProvider then
+  local clients = vim.lsp.get_clients { bufnr = bufnr }
+  if any_client_has_capability(clients, 'documentHighlightProvider') then
     api.nvim_clear_autocmds({ group = auhigh, buffer = bufnr })
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
     api.nvim_create_autocmd('CursorHold', {
@@ -74,12 +90,14 @@ function M.on_attach(client, bufnr)
       end,
     })
   end
-  if client.server_capabilities.codeLensProvider then
+
+  if any_client_has_capability(clients, 'codeLensProvider') then
     -- CodeLens provides extra actions like "Run Test"
     -- under lang specific unit tests
     ncmap('<F11>', 'lua vim.lsp.codelens.run()', opts)
   end
-  if client.server_capabilities.documentFormattingProvider then
+
+  if any_client_has_capability(clients, 'documentFormattingProvider') then
     -- Format on save
     api.nvim_clear_autocmds({ group = auformat, buffer = bufnr })
     api.nvim_create_autocmd('BufWritePre', {
