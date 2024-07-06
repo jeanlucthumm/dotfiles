@@ -8,6 +8,8 @@ config_version: 2
 settings:
   bindings.commands:
     global:
+      insert:
+        <Ctrl+c>: mode-enter normal
       normal:
         <Ctrl+Shift+j>: tab-move -
         <Ctrl+Shift+k>: tab-move +
@@ -23,7 +25,6 @@ settings:
       <Ctrl+6>: <Ctrl+^>
       <Ctrl+Enter>: <Ctrl+Return>
       <Ctrl+[>: <Escape>
-      <Ctrl+c>: <Escape>
       <Ctrl+i>: <Tab>
       <Ctrl+j>: <Return>
       <Ctrl+m>: <Return>
