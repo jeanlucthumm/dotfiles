@@ -98,8 +98,10 @@ local plugin_spec = {
           n.builtins.formatting.buf,
           n.builtins.formatting.prettier,
           n.builtins.formatting.dart_format,
+          n.builtins.formatting.isort,
           n.builtins.diagnostics.fish,
           n.builtins.diagnostics.actionlint,
+          n.builtins.diagnostics.mypy,
         },
       }
     end,
