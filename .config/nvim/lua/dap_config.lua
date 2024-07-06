@@ -62,17 +62,6 @@ table.insert(dap.configurations.go,
       return { host = host, port = port }
     end,
   })
-table.insert(dap.configurations.go,
-  {
-    type = 'delve_docker',
-    name = 'Yarn Docker',
-    request = 'launch',
-    mode = 'debug',
-    substitutePath = {
-      { from = '${workspaceFolder}', to = '/usr/src/app/server' },
-    },
-    program = 'cmd/server/main.go',
-  })
 
 vim.fn.sign_define('DapBreakpoint',
   { text = '🧘', texthl = '', linehl = '', numhl = '' })
