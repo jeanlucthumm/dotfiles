@@ -98,6 +98,12 @@
     };
   };
 
+  fonts.packages = with pkgs; [
+    (nerdfonts.override {
+      fonts = [ "JetBrainsMono" "FiraCode" ];
+    })
+  ];
+
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
