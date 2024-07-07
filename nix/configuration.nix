@@ -73,6 +73,8 @@
       ripgrep
       flutter
       android-tools
+      alejandra
+      statix
     ];
   };
 
@@ -95,6 +97,7 @@
     yadm            # dotfile manager
     gh              # GitHub CLI
     git
+    git-lfs
     gnupg
     pinentry-tty    # enter password in terminal
     gnumake
