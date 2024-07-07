@@ -17,6 +17,8 @@
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
+  hardware.pulseaudio.enable = true;
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -42,7 +44,7 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Configure keymap in X11
+  # Configure keymap in X11;
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -62,8 +64,18 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # Terminal
     manix neovim tmux yadm gnome.gnome-keyring
-    gh git fish gnupg gnumake delta hyprland kitty
+    gh git fish gnupg gnumake delta 
+    bat gcc wofi
+
+    # Desktop
+    gammastep
+    cinnamon.nemo
+    mako
+    brightnessctl
+    wl-clipboard
+    kitty
     qutebrowser
   ];
 
@@ -74,7 +86,16 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-  programs.hyprland.enable = true;
+  programs = {
+    hyprland.enable = true;
+    hyprlock.enable = true;
+    waybar.enable = true;
+
+    firefox = {
+      enable = true;
+      package = pkgs.firefox-bin;
+    };
+  };
 
   # List services that you want to enable:
 
