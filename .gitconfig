@@ -34,8 +34,6 @@
   side-by-side = true
   navigate = true
   width = 300
-[commit]
-  gpgsign = true
 [gpg]
   program = gpg
 [credential "https://github.com"]
