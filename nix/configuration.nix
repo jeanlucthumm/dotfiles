@@ -4,6 +4,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      <home-manager/nixos>
     ];
 
   # Bootloader.
@@ -73,6 +74,14 @@
       flutter
       android-tools
     ];
+  };
+
+  # Home manager config. Manages user dotfiles.
+  home-manager.users.jeanluc = { pkgs, ... }: {
+
+    # The state version is required and should stay at the version you
+    # originally installed.
+    home.stateVersion = "24.05";
   };
 
   # Allow unfree packages
