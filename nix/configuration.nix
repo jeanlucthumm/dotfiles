@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
@@ -14,24 +10,15 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
   hardware.pulseaudio.enable = true;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
+  # Networking
+  networking.hostName = "laptop";
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
+  # Timezone and locale
   time.timeZone = "America/Los_Angeles";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -50,72 +37,109 @@
     variant = "";
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Users
   users.users.jeanluc = {
     isNormalUser = true;
     description = "Jean-Luc Thumm";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
+    extraGroups = [ 
+      "networkmanager"  # manage internet connections with nmcli
+      "wheel"           # access sudo
+      "adbusers"        # access adb for android dev
+    ];
+    shell = pkgs.fish;
+
+    # User specific packages. System wide packages are in
+    # environment.systemPackages and programs.
+    packages = with pkgs; [
+      # Devex
+      sumneko-lua-language-server
+      gopls
+      black
+      delve
+      impl
+      gotools
+      luajitPackages.jsregexp
+      mdformat
+      clang-tools
+      buf
+      buf-language-server
+      prettierd
+      isort
+      actionlint
+      mypy
+      tree-sitter
+      nodejs_22
+      ripgrep
+      flutter
+      android-tools
+    ];
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # Basic sytem wide packages
   environment.systemPackages = with pkgs; [
-    # Terminal
-    manix neovim tmux yadm gnome.gnome-keyring
-    gh git fish gnupg gnumake delta 
-    bat gcc wofi eza
+    manix           # CLI for nix docs
+    neovim          # IDE (tExT eDiToR)
+    tmux
+    yadm            # dotfile manager
+    gh              # GitHub CLI
+    git
+    gnupg
+    pinentry-tty    # enter password in terminal
+    gnumake
+    delta           # pretty diffs
+    bat             # cat replacement
+    gcc
+    wofi            # program launcher
+    pls             # ls replacement
 
     # Desktop
-    gammastep
-    cinnamon.nemo
-    mako
-    brightnessctl
-    wl-clipboard
-    kitty
-    qutebrowser
-    bitwarden-desktop
+    gammastep       # redshifting at night
+    cinnamon.nemo   # file browser
+    mako            # notifications
+    brightnessctl   # screen brightness controls
+    wl-clipboard    # copy paste in wayland
+    kitty           # terminal
+    qutebrowser     # keyboard-centric browser
+    bitwarden-desktop # password management
+    signal-desktop  # messaging
+    grim            # screenshots
+    slurp           # for selecting screen regions
+
+    # Devex
+    go              # the language Go
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  # Programs with more config than systemPackages
   programs = {
     hyprland.enable = true;
     hyprlock.enable = true;
     waybar.enable = true;
-
+    fish.enable = true;
     firefox = {
       enable = true;
       package = pkgs.firefox-bin;
     };
   };
 
+  # Fonts
   fonts.packages = with pkgs; [
+    # Nerd fonts are patched fonts that add more icons.
+    # Neovim makes use of this.
     (nerdfonts.override {
+      # Narrow down since all of nerdfonts is a lot.
       fonts = [ "JetBrainsMono" "FiraCode" ];
     })
+    font-awesome  # for icons
   ];
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  services.gnome.gnome-keyring.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  # Services
+  services = {
+    # Manages ssh and gpg keys. Enables ssh-add.
+    gnome.gnome-keyring.enable = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -123,6 +147,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
-
+  system.stateVersion = "24.05";
 }
