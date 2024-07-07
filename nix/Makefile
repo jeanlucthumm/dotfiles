@@ -3,3 +3,6 @@ build:
 
 qemu_serial:
 	@QEMU_KERNEL_PARAMS=console=ttyS0 ./result/bin/run-nixos-vm -nographic; reset
+
+rebuild:
+	sudo cp ./*.nix /etc/nixos/ && sudo nixos-rebuild switch
