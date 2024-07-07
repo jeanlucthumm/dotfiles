@@ -62,18 +62,9 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    manix
-    neovim
-    tmux
-    yadm
-    gnome.gnome-keyring
-    gh
-    git
-    fish
-    gnupg
-    gnumake
-    delta
-    hyprland
+    manix neovim tmux yadm gnome.gnome-keyring
+    gh git fish gnupg gnumake delta hyprland kitty
+    qutebrowser
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
