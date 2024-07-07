@@ -67,7 +67,7 @@
     # Terminal
     manix neovim tmux yadm gnome.gnome-keyring
     gh git fish gnupg gnumake delta 
-    bat gcc wofi
+    bat gcc wofi eza
 
     # Desktop
     gammastep
@@ -77,6 +77,7 @@
     wl-clipboard
     kitty
     qutebrowser
+    bitwarden-desktop
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
