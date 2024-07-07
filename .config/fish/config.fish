@@ -57,7 +57,8 @@ if status is-interactive
   # Default overrides
   alias vim="nvim"
   alias cat="bat"
-  alias ls="eza"
+  alias ls="pls"
+  alias docker="sudo docker"
   alias ssh="TERM=xterm-256color /usr/bin/ssh"
 
   alias cdf='cd (fd -t d . ~ | fzf)'
