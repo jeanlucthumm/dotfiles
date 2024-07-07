@@ -122,6 +122,14 @@
       enable = true;
       package = pkgs.firefox-bin;
     };
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-tty;
+      settings = {
+        default-cache-ttl = 14400;
+        max-cache-ttl = 14400;
+      };
+    };
   };
 
   # Fonts

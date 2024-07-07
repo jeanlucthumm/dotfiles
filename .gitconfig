@@ -1,6 +1,7 @@
 [user]
   email = jeanlucthumm@gmail.com
   name = Jean-Luc Thumm
+  signingkey = FA8C90AF54ACAE76
 [core]
   pager = delta --line-numbers-zero-style black
   excludesfile = ~/.config/.gitignore
@@ -28,6 +29,8 @@
 [delta]
   side-by-side = false
   navigate = true
+[commit]
+  gpgsign = true
 [gpg]
   program = gpg
 [credential "https://github.com"]
