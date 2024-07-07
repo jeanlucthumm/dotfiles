@@ -73,6 +73,7 @@
     gnupg
     gnumake
     delta
+    hyprland
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -82,15 +83,14 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+  programs.hyprland.enable = true;
 
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  services = {
-    gnome.gnome-keyring.enable = true;
-  };
+  services.gnome.gnome-keyring.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
