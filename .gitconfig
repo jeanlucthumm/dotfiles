@@ -33,7 +33,6 @@
 [delta]
   side-by-side = true
   navigate = true
-  width = 300
 [gpg]
   program = gpg
 [credential "https://github.com"]
