@@ -1,11 +1,13 @@
-{ config, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      <home-manager/nixos>
-    ];
+  config,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    <home-manager/nixos>
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -42,10 +44,10 @@
   users.users.jeanluc = {
     isNormalUser = true;
     description = "Jean-Luc Thumm";
-    extraGroups = [ 
-      "networkmanager"  # manage internet connections with nmcli
-      "wheel"           # access sudo
-      "adbusers"        # access adb for android dev
+    extraGroups = [
+      "networkmanager" #  manage internet connections with nmcli
+      "wheel" #           access sudo
+      "adbusers" #        access adb for android dev
     ];
     shell = pkgs.fish;
 
@@ -73,14 +75,13 @@
       ripgrep
       flutter
       android-tools
-      alejandra
       statix
+      nixfmt-classic
     ];
   };
 
   # Home manager config. Manages user dotfiles.
-  home-manager.users.jeanluc = { pkgs, ... }: {
-
+  home-manager.users.jeanluc = {pkgs, ...}: {
     # The state version is required and should stay at the version you
     # originally installed.
     home.stateVersion = "24.05";
@@ -91,37 +92,37 @@
 
   # Basic sytem wide packages
   environment.systemPackages = with pkgs; [
-    manix           # CLI for nix docs
-    neovim          # IDE (tExT eDiToR)
-    tmux
-    yadm            # dotfile manager
-    gh              # GitHub CLI
-    git
-    git-lfs
-    gnupg
-    pinentry-tty    # enter password in terminal
-    gnumake
-    delta           # pretty diffs
-    bat             # cat replacement
-    gcc
-    wofi            # program launcher
-    pls             # ls replacement
+    manix #         CLI for nix docs
+    neovim #        IDE (tExT eDiToR)
+    tmux #          Terminal multiplexer
+    yadm #          Dotfile manager
+    gh #            GitHub CLI
+    git #           Version control system
+    git-lfs #       Git extension for large files
+    gnupg #         GNU Privacy Guard
+    pinentry-tty #  Enter password in terminal
+    gnumake #       Build automation tool
+    delta #         Pretty diffs
+    bat #           Cat replacement
+    gcc #           GNU Compiler Collection
+    wofi #          Program launcher
+    pls #           ls replacement
 
     # Desktop
-    gammastep       # redshifting at night
-    cinnamon.nemo   # file browser
-    mako            # notifications
-    brightnessctl   # screen brightness controls
-    wl-clipboard    # copy paste in wayland
-    kitty           # terminal
-    qutebrowser     # keyboard-centric browser
-    bitwarden-desktop # password management
-    signal-desktop  # messaging
-    grim            # screenshots
-    slurp           # for selecting screen regions
+    gammastep #     Redshifting at night
+    cinnamon.nemo # File browser
+    mako #          Notifications
+    brightnessctl # Screen brightness controls
+    wl-clipboard #  Copy paste in Wayland
+    kitty #         Terminal
+    qutebrowser #   Keyboard-centric browser
+    bitwarden-desktop # Password management
+    signal-desktop #    Messaging
+    grim #          Screenshots
+    slurp #         For selecting screen regions
 
     # Devex
-    go              # the language Go
+    go #            The language Go
   ];
 
   # Programs with more config than systemPackages
@@ -150,9 +151,9 @@
     # Neovim makes use of this.
     (nerdfonts.override {
       # Narrow down since all of nerdfonts is a lot.
-      fonts = [ "JetBrainsMono" "FiraCode" ];
+      fonts = ["JetBrainsMono" "FiraCode"];
     })
-    font-awesome  # for icons
+    font-awesome # for icons
   ];
 
   # Services
