@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "bottom",
-  "modules-right": ["custom/task", "custom/timew", "clock"],
+  "modules-right": ["custom/task", "custom/timew", "battery", "clock"],
   "modules-left": ["hyprland/workspaces"],
   "clock": {
     "format": "{:%H:%M}",
