@@ -105,6 +105,8 @@
     gcc #           GNU Compiler Collection
     wofi #          Program launcher
     pls #           ls replacement
+    fd #            find replacement
+    fzf #           multi-purpose fuzzy finder
 
     # Desktop
     gammastep #     Redshifting at night
