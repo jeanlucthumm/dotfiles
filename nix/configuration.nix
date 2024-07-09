@@ -13,8 +13,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  hardware.pulseaudio.enable = true;
-
   # Networking
   networking.hostName = "laptop";
   networking.networkmanager.enable = true;
@@ -48,6 +46,7 @@
       "networkmanager" #  manage internet connections with nmcli
       "wheel" #           access sudo
       "adbusers" #        access adb for android dev
+      "audio" #           access to pulseaudio devices
     ];
     shell = pkgs.fish;
 
@@ -76,7 +75,6 @@
       flutter
       android-tools
       statix
-      nixfmt-classic
     ];
   };
 
@@ -120,6 +118,7 @@
     signal-desktop #    Messaging
     grim #          Screenshots
     slurp #         For selecting screen regions
+    pavucontrol #   GUI for PiperWire
 
     # Devex
     go #            The language Go
@@ -160,6 +159,14 @@
   services = {
     # Manages ssh and gpg keys. Enables ssh-add.
     gnome.gnome-keyring.enable = true;
+
+    # Audio management. Modern version of PulseAudio.
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
   };
 
   # This value determines the NixOS release from which the default
