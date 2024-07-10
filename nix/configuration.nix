@@ -83,6 +83,27 @@
     # The state version is required and should stay at the version you
     # originally installed.
     home.stateVersion = "24.05";
+
+    programs = {
+      kitty = {
+        enable = true;
+        font.name = "JetBrainsMono Nerd Font";
+        shellIntegration.enableFishIntegration = true;
+        shellIntegration.mode = "no-cursor";
+        theme = "zenbones_dark";
+        settings = {
+          enable_audio_bell = true;
+          window_padding_width = 8;
+          allow_remote_control = false;
+          repaint_delay = 6;
+          input_delay = 1;
+          cursor_shape = "blocK";
+          macos_option_as_alt = true;
+          scrollback_pager = "nvim -c 'set ft=sh' -";
+          paste_actions = "quote-urls-at-prompt";
+        };
+      };
+    };
   };
 
   # Allow unfree packages
