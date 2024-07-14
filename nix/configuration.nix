@@ -79,7 +79,7 @@
   };
 
   # Home manager config. Manages user dotfiles.
-  home-manager.users.jeanluc = {pkgs, ...}: {
+  home-manager.users.jeanluc = {config, pkgs, ...}: {
     # The state version is required and should stay at the version you
     # originally installed.
     home.stateVersion = "24.05";
@@ -102,6 +102,20 @@
           scrollback_pager = "nvim -c 'set ft=sh' -";
           paste_actions = "quote-urls-at-prompt";
         };
+      };
+      taskwarrior = let
+        configDir = "${config.xdg.configHome}/task";
+      in {
+        enable = true;
+        dataLocation = "${config.xdg.dataHome}/task";
+        extraConfig = ''
+          uda.blocks.type=string
+          uda.blocks.label=Blocks
+
+          # Put contexts defined with `task context define` in this file
+          include ${configDir}/context.config
+          hooks.location=${configDir}/hooks
+        '';
       };
     };
   };
