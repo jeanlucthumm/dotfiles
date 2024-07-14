@@ -127,7 +127,9 @@
     wofi #          Program launcher
     pls #           ls replacement
     fd #            find replacement
-    fzf #           multi-purpose fuzzy finder
+    fzf #           Multi-purpose fuzzy finder
+    libinput #      Inspect HID input
+    jq #            CLI for json manipulation
 
     # Desktop
     gammastep #     Redshifting at night
@@ -142,6 +144,7 @@
     grim #          Screenshots
     slurp #         For selecting screen regions
     pavucontrol #   GUI for PiperWire
+    wev #           Shows keycodes in wayland
 
     # Devex
     go #            The language Go
@@ -165,6 +168,7 @@
         max-cache-ttl = 14400;
       };
     };
+    ssh.startAgent = true;
   };
 
   # Fonts
