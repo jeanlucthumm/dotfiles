@@ -68,6 +68,7 @@ settings:
     global:
       DEFAULT: https://www.google.com/search?hl=en&q={}
       g: https://pkg.go.dev/search?q={}
+      np: https://search.nixos.org/packages?from=0&size=50&sort=relevance&type=packages&query={}
       r: https://doc.rust-lang.org/std/index.html?search={}
   url.start_pages:
     global: https://www.google.com
