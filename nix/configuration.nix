@@ -144,6 +144,7 @@
     fzf #           Multi-purpose fuzzy finder
     libinput #      Inspect HID input
     jq #            CLI for json manipulation
+    python3 #        The language python
 
     # Desktop
     gammastep #     Redshifting at night
