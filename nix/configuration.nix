@@ -111,6 +111,7 @@
         extraConfig = ''
           uda.blocks.type=string
           uda.blocks.label=Blocks
+          news.version=2.6.0
 
           # Put contexts defined with `task context define` in this file
           include ${configDir}/context.config
