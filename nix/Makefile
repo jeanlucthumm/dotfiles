@@ -10,4 +10,4 @@ rebuild:
 	sudo cp ./*.nix /etc/nixos/ && sudo nixos-rebuild switch
 
 home_manager:
-	systemctl status home-manager-jeanluc
+	sudo systemctl restart home-manager-jeanluc
