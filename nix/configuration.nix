@@ -185,6 +185,7 @@
       };
     };
     ssh.startAgent = true;
+    seahorse.enable = true;
   };
 
   # Fonts
@@ -211,6 +212,8 @@
       pulse.enable = true;
     };
   };
+
+  security.pam.services.login.enableGnomeKeyring = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
