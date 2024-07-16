@@ -144,10 +144,12 @@
           docker = "sudo docker";
           ga = "git a";
           gm = "git com";
+          ym = "yadm com";
           gs = "git stat";
           gt = "git tree";
           gd = "git d";
           gda = "git a && git d";
+          yda = "yadm add -u -p && yadm d";
           clear-nvim-swap = "rm -rf ~/.local/state/nvim/swap";
           ta = "task active";
           tr = "task ready";
