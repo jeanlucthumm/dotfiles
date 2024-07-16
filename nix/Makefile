@@ -7,7 +7,7 @@ qemu_serial:
 	@QEMU_KERNEL_PARAMS=console=ttyS0 ./result/bin/run-nixos-vm -nographic; reset
 
 rebuild:
-	sudo cp ./*.nix /etc/nixos/ && sudo nixos-rebuild switch
+	sudo nixos-rebuild switch --flake .\#laptop
 
 home_manager:
 	sudo systemctl restart home-manager-jeanluc
