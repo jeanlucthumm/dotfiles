@@ -160,6 +160,7 @@
           vim = "nvim";
           cat = "bat";
           ls = "pls";
+          cd = "z";
           ssh = "TERM=xterm-256color /usr/bin/ssh";
         };
         interactiveShellInit = ''
@@ -176,6 +177,12 @@
             exec tmux attach
           end
         '';
+      };
+      # cd replacement
+      zoxide = {
+        enable = true;
+        # Inserts required startup code
+        enableFishIntegration = true;
       };
     };
 
@@ -257,10 +264,11 @@
     wofi #          Program launcher
     pls #           ls replacement
     fd #            find replacement
+    zoxide #        cd replacement
     fzf #           Multi-purpose fuzzy finder
     libinput #      Inspect HID input
     jq #            CLI for json manipulation
-    python3 #        The language python
+    python3 #       The language python
 
     ## Desktop
     gammastep #     Redshifting at night
