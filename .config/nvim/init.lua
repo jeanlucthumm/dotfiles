@@ -755,20 +755,20 @@ ncmap('<C-p>', 'Telescope commands')
 ncmap('<C-e>',
   'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 nmap('<C-q>', '<C-^>')
-ncmap('<M-e>', 'Telescope find_files')
 ncmap('<M-r>', 'Telescope grep_string')
-ncmap('<C-e>', 'Telescope buffers')
-ncmap('<M-f>', 'NvimTreeFindFile')
-nmap('<M-t>', function()
-  require'telescope.builtin'.find_files({
-    cwd = fn.expand('%:h'),
-  })
-end)
 ncmap('<C-w>d', 'lua OpenInRight()')
 -- <F*>
 ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
+
+ncmap('E', 'Telescope buffers')
+ncmap('<C-e>', 'Telescope find_files')
+nmap('<Leader>e', function()
+  require'telescope.builtin'.find_files({
+    cwd = fn.expand('%:h'),
+  })
+end)
 
 ---- Util
 
