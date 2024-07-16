@@ -25,7 +25,7 @@ local auformat = vim.api.nvim_create_augroup('LspFormatting', {})
 local auhigh = vim.api.nvim_create_augroup('LspHighlighting', {})
 
 ---@param bufnr number|nil
-local lsp_formatting = function(bufnr)
+function M.lsp_formatting(bufnr)
   local clients = vim.lsp.get_clients { bufnr = bufnr, name = 'null-ls' }
   if #clients == 0 then
     vim.lsp.buf.format { bufnr = bufnr }
@@ -68,8 +68,6 @@ function M.on_attach(client, bufnr)
   ncmap('<Leader>kk', 'lua vim.diagnostic.open_float()', opts)
   vim.keymap.set({ 'v', 'n' }, '<Leader>a', require('actions-preview').code_actions)
 
-  nmap('<Leader>f', function() lsp_formatting(nil) end)
-
   -- Capability specific commands
   local clients = vim.lsp.get_clients { bufnr = bufnr }
   if any_client_has_capability(clients, 'documentHighlightProvider') then
@@ -104,7 +102,7 @@ function M.on_attach(client, bufnr)
       group = auformat,
       buffer = bufnr,
       callback = function()
-        lsp_formatting(bufnr)
+        M.lsp_formatting(bufnr)
       end,
     })
   end

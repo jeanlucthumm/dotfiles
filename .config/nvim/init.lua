@@ -702,6 +702,7 @@ ncmap('<Leader>s', 'ChatGPT')
 ncmap('<Leader>q', 'qall')
 ncmap('<Leader>o', 'Telescope lsp_document_symbols')
 ncmap('<Leader>O', 'Telescope lsp_dynamic_workspace_symbols')
+nmap('<Leader>f', function() require'common'.lsp_formatting(nil) end)
 nmap('<Leader>S', function()
   local symbols = require'symbols-outline'
   symbols.open_outline()
@@ -812,3 +813,6 @@ function Inspect(tbl) print(vim.inspect(tbl)) end
 
 -- TODO move into lazy.nvim
 if HasGoogle then Google.setup() end
+
+-- Formatting
+local auformat = vim.api.nvim_create_augroup('Formatting', {})
