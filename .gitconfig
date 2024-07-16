@@ -51,3 +51,5 @@
 [include]
   path = .gitconfig-key
   path = .config/delta/themes.gitconfig
+[rebase]
+	merges = true
