@@ -78,17 +78,21 @@
       flutter
       android-tools
       statix
+      alejandra
     ];
   };
 
   # Home manager config. Manages user dotfiles.
-  home-manager.users.jeanluc = {config, pkgs, ...}:
-  let
-      isLinux = pkgs.stdenv.isLinux;
-      isDarwin = pkgs.stdenv.isDarwin;
-      isArch = builtins.pathExists "/etc/arch-release";
-      homeDir = config.home.homeDirectory;
-      configDir = config.xdg.configHome;
+  home-manager.users.jeanluc = {
+    config,
+    pkgs,
+    ...
+  }: let
+    isLinux = pkgs.stdenv.isLinux;
+    isDarwin = pkgs.stdenv.isDarwin;
+    isArch = builtins.pathExists "/etc/arch-release";
+    homeDir = config.home.homeDirectory;
+    configDir = config.xdg.configHome;
   in {
     programs = {
       kitty = {
@@ -125,8 +129,14 @@
       fish = {
         enable = true;
         plugins = with pkgs.fishPlugins; [
-          { name = "fzf"; src = fzf; }
-          { name = "grc"; src = grc; }
+          {
+            name = "fzf";
+            src = fzf;
+          }
+          {
+            name = "grc";
+            src = grc;
+          }
         ];
         shellAbbrs = {
           g = "git";
@@ -170,27 +180,38 @@
     };
 
     home = {
-      sessionVariables = {
-        EDITOR = "${pkgs.neovim}/bin/nvim";
-        MANPAGER = "sh -c 'sed -e s/.\\\\x08//g | bat -l man -p'";
-        CONF = configDir;
-        CODE = "${homeDir}/Code";
-        # Shell prompts tend to manage venvs themselves
-        VIRTUAL_ENV_DISABLE_PROMPT = 1;
-      } // (if isLinux then {
-        ANDROID_SDK_ROOT = "${homeDir}/Android/Sdk";
-        ANDROID_HOME = config.home.sessionVariables.ANDROID_SDK_ROOT;
-        CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}";
-      } else if isDarwin then {
-        ANDROID_HOME = "/Users/${config.home.username}/Library/Android/sdk";
-      } else {});
+      sessionVariables =
+        {
+          EDITOR = "${pkgs.neovim}/bin/nvim";
+          MANPAGER = "sh -c 'sed -e s/.\\\\x08//g | bat -l man -p'";
+          CONF = configDir;
+          CODE = "${homeDir}/Code";
+          # Shell prompts tend to manage venvs themselves
+          VIRTUAL_ENV_DISABLE_PROMPT = 1;
+        }
+        // (
+          if isLinux
+          then {
+            ANDROID_SDK_ROOT = "${homeDir}/Android/Sdk";
+            ANDROID_HOME = config.home.sessionVariables.ANDROID_SDK_ROOT;
+            CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}";
+          }
+          else if isDarwin
+          then {
+            ANDROID_HOME = "/Users/${config.home.username}/Library/Android/sdk";
+          }
+          else {}
+        );
 
       # Extra stuff to add to $PATH
-      sessionPath = if isDarwin then [
-        # homebrew puts all its stuff in this directory instead
-        # of /usr/bin or otherwise
-        "/opt/homebrew/bin"
-      ] else [];
+      sessionPath =
+        if isDarwin
+        then [
+          # homebrew puts all its stuff in this directory instead
+          # of /usr/bin or otherwise
+          "/opt/homebrew/bin"
+        ]
+        else [];
 
       preferXdgDirectories = true;
     };
@@ -255,7 +276,7 @@
     slurp #         For selecting screen regions
     pavucontrol #   GUI for PiperWire
     wev #           Shows keycodes in wayland
-    ungoogled-chromium  # Only used for Flutter dev
+    ungoogled-chromium # Only used for Flutter dev
 
     ## Devex
     go #            The language Go
