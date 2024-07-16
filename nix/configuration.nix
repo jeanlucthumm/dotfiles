@@ -165,6 +165,10 @@
           cd = "z";
           ssh = "TERM=xterm-256color /usr/bin/ssh";
         };
+        shellInit = ''
+          # Required for zoxide
+          ${pkgs.zoxide}/bin/zoxide init fish | source
+        '';
         interactiveShellInit = ''
           # Jump around words easier
           bind \ch backward-word
@@ -179,12 +183,6 @@
             exec tmux attach
           end
         '';
-      };
-      # cd replacement
-      zoxide = {
-        enable = true;
-        # Inserts required startup code
-        enableFishIntegration = true;
       };
     };
 
@@ -203,7 +201,7 @@
           then {
             ANDROID_SDK_ROOT = "${homeDir}/Android/Sdk";
             ANDROID_HOME = config.home.sessionVariables.ANDROID_SDK_ROOT;
-            CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}";
+            CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
           }
           else if isDarwin
           then {
