@@ -64,13 +64,13 @@ in {
         g = "git";
         t = "task";
         docker = "sudo docker";
-        ga = "git a";
-        gm = "git com";
-        ym = "yadm com";
+        ga = "git add -A";
+        gm = "git commit -m";
+        ym = "yadm commit -m";
         gs = "git stat";
         gt = "git tree";
         gd = "git d";
-        gda = "git a && git d";
+        gda = "git add -A && git d";
         yda = "yadm add -u -p && yadm d";
         clear-nvim-swap = "rm -rf ~/.local/state/nvim/swap";
         ta = "task active";
