@@ -211,6 +211,9 @@
         };
         name = "JetBrainsMono Nerd Font";
       };
+      sizes = {
+        terminal = 11;
+      };
     };
   };
 
