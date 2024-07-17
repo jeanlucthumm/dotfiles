@@ -12,15 +12,13 @@ in {
   programs = {
     kitty = {
       enable = true;
-      font.name = "JetBrainsMono Nerd Font";
       shellIntegration.enableFishIntegration = true;
       shellIntegration.mode = "no-cursor";
-      theme = "zenbones_dark";
       settings = {
         enable_audio_bell = true;
         window_padding_width = 8;
         allow_remote_control = false;
-        repaint_delay = 6;
+        repaint_delay = 5;
         input_delay = 1;
         cursor_shape = "blocK";
         macos_option_as_alt = true;
@@ -51,6 +49,15 @@ in {
         {
           name = "grc";
           src = grc;
+        }
+        {
+          name = "agnoster";
+          src = pkgs.fetchFromGitHub {
+            owner = "jeanlucthumm";
+            repo = "theme-agnoster";
+            rev = "502ff4f34224c9aa90a8d0a3ad517940eaf4d4fd";
+            sha256 = "12gc6mw5cb3pdqp8haqx9abgjw64v3960g0f0hgb122xa3z7qldm";
+          };
         }
       ];
       shellAbbrs = {
@@ -89,10 +96,9 @@ in {
         bind \ch backward-word
         bind \cl forward-word
 
-        # Theme
+        # Theme (majority is set by stylix)
         set -g theme_nerd_fonts yes
-        set -g theme_color_scheme dark
-        fish_config theme choose Lava
+        set -g theme_virtual_env_prompt_enabled no
 
         if is_ssh_session; and not set -q TMUX
           exec tmux attach
@@ -154,6 +160,8 @@ in {
       templates = null;
     };
   };
+
+  services.hyprpaper.enable = true;
 
   # The state version is required and should stay at the version you
   # originally installed.
