@@ -110,6 +110,8 @@
     libinput #      Inspect HID input
     jq #            CLI for json manipulation
     python3 #       The language python
+    file #          Figure out what a certain file is
+    nix-prefetch-git # Utility for populating nix fetchgit expressions
 
     ## Desktop
     gammastep #     Redshifting at night
@@ -117,7 +119,6 @@
     mako #          Notifications
     brightnessctl # Screen brightness controls
     wl-clipboard #  Copy paste in Wayland
-    kitty #         Terminal
     qutebrowser #   Keyboard-centric browser
     bitwarden-desktop # Password management
     signal-desktop #    Messaging
@@ -126,6 +127,9 @@
     pavucontrol #   GUI for PiperWire
     wev #           Shows keycodes in wayland
     ungoogled-chromium # Only used for Flutter dev
+    hyprpaper #     Wallpaper for hyprland
+    swayosd #       Responsive UI for changing volume and such
+    xdg-utils #     Open files in right prorgram
 
     ## Devex
     go #            The language Go
