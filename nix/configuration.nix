@@ -195,6 +195,21 @@
     };
   };
 
+  stylix = {
+    enable = true;
+    image = ./wallpaper.jpg;
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-light-soft.yaml";
+    fonts = {
+      monospace = {
+        package = pkgs.nerdfonts.override {
+          # Narrow down since all of nerdfonts is a lot.
+          fonts = ["JetBrainsMono" "FiraCode"];
+        };
+        name = "JetBrainsMono Nerd Font";
+      };
+    };
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
