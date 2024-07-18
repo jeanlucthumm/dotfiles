@@ -87,15 +87,25 @@ in {
         acc = "task end.after:today completed";
       };
       # Like shellAbbrs but doesn't auto expand when typing
-      shellAliases = {
-        vim = "nvim";
-        cat = "bat";
-        ls = "pls";
-        cd = "z";
-        ssh = "TERM=xterm-256color /usr/bin/ssh";
-      };
+      shellAliases =
+        {
+          vim = "nvim";
+          cat = "bat";
+          ls = "pls";
+          cd = "z";
+          ssh = "TERM=xterm-256color /usr/bin/ssh";
+        }
+        // (
+          if isArch
+          then {
+            pacman = "paru";
+          }
+          else {}
+        );
       shellInit = ''
-        # Required for zoxide
+        # Required for zoxide.
+        # Do not put in interactiveShellInit due to bug.
+        # Needs to be first.
         ${pkgs.zoxide}/bin/zoxide init fish | source
       '';
       interactiveShellInit = ''
@@ -106,6 +116,11 @@ in {
         # Theme (majority is set by stylix)
         set -g theme_nerd_fonts yes
         set -g theme_virtual_env_prompt_enabled no
+
+        if [ "$TERM" = "xterm-kitty" ]
+            abbr --add -- icat 'kitty +kitten icat'
+            alias newterm='kitty --detach --directory (pwd)'
+        end
 
         if is_ssh_session; and not set -q TMUX
           exec tmux attach
