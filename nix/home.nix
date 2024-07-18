@@ -8,7 +8,13 @@
   isArch = builtins.pathExists "/etc/arch-release";
   homeDir = config.home.homeDirectory;
   configDir = config.xdg.configHome;
+  themeName = config.theme.name;
+  themeVariant = config.theme.variant;
 in {
+  imports = [
+    ./theme.nix
+  ];
+
   programs = {
     kitty = {
       enable = true;
@@ -116,6 +122,10 @@ in {
         CODE = "${homeDir}/Code";
         # Shell prompts tend to manage venvs themselves
         VIRTUAL_ENV_DISABLE_PROMPT = 1;
+        BAT_THEME =
+          if themeName == "gruvbox"
+          then "gruvbox-${themeVariant}"
+          else "base16";
       }
       // (
         if isLinux

@@ -206,6 +206,7 @@
     variant = "dark";
   };
 
+  # image and base16Scheme are set by theme module
   stylix = {
     enable = true;
     fonts = {
