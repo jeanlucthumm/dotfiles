@@ -6,6 +6,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./theme.nix
   ];
 
   # Enable flakes
@@ -199,10 +200,14 @@
     };
   };
 
+  theme = {
+    enable = true;
+    name = "gruvbox";
+    variant = "dark";
+  };
+
   stylix = {
     enable = true;
-    image = ./wallpaper.jpg;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-light-soft.yaml";
     fonts = {
       monospace = {
         package = pkgs.nerdfonts.override {
