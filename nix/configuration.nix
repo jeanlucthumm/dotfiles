@@ -181,8 +181,8 @@
   services = {
     # Manages program secrets.
     gnome.gnome-keyring.enable = true;
-
     hypridle.enable = true; #   Idle manager for Hyprland
+    geoclue2.enable = true; #   Location services
 
     # Audio management. Modern version of PulseAudio.
     pipewire = {

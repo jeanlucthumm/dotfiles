@@ -266,7 +266,6 @@ in {
       };
 
       exec-once = [
-        "gammastep"
         "kitty --detach --title=\"scratchpad\" --override initial_window_width=235c --override initial_window_height=83c"
       ];
 
@@ -404,6 +403,17 @@ in {
   services = {
     hyprpaper.enable = true;
     swayosd.enable = true;
+    # Redlight shifting at night
+    gammastep = {
+      enable = true;
+      dawnTime = "06:00";
+      duskTime = "22:00";
+      temperature = {
+        day = 6500;
+        night = 3000;
+      };
+      provider = "geoclue2";
+    };
   };
 
   # The state version is required and should stay at the version you
