@@ -131,6 +131,7 @@
     hyprpaper #     Wallpaper for hyprland
     swayosd #       Responsive UI for changing volume and such
     xdg-utils #     Open files in right prorgram
+    polkit_gnome #  UI for Polkit authentication
 
     ## Devex
     go #            The language Go
@@ -181,6 +182,8 @@
     # Manages program secrets.
     gnome.gnome-keyring.enable = true;
 
+    hypridle.enable = true; #   Idle manager for Hyprland
+
     # Audio management. Modern version of PulseAudio.
     pipewire = {
       enable = true;
@@ -194,9 +197,28 @@
     # Unlock gnome-keyring on tty login
     pam.services.login.enableGnomeKeyring = true;
 
+    # Privilege escalation for user programs
+    polkit.enable = true;
+
     sudo = {
       execWheelOnly = true;
       wheelNeedsPassword = false;
+    };
+  };
+
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
     };
   };
 
