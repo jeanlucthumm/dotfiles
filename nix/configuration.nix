@@ -40,6 +40,7 @@
     layout = "us";
     variant = "";
   };
+  services.blueman.enable = true;
 
   # Users
   users.users.jeanluc = {
@@ -227,6 +228,13 @@
     enable = true;
     name = "gruvbox";
     variant = "dark";
+  };
+
+  hardware = {
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
   };
 
   # image and base16Scheme are set by theme module
