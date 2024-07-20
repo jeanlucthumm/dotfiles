@@ -132,11 +132,16 @@ in {
       if n == "gruvbox"
       then "GruvboxTheme"
       else "GruvboxTheme";
+    fontName = config.stylix.fonts.monospace.name;
+    fontSize = config.stylix.fonts.sizes.terminal;
   in ''
     local M = {}
 
     function M.setup()
       ${func}('${config.theme.variant}')
+      if vim.g.neovide then
+        vim.o.guifont = "${fontName}:h${toString fontSize}"
+      end
     end
 
     return M

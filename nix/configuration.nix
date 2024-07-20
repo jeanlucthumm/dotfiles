@@ -132,6 +132,7 @@
     swayosd #       Responsive UI for changing volume and such
     xdg-utils #     Open files in right prorgram
     polkit_gnome #  UI for Polkit authentication
+    neovide #       GUI wrapper for nvim
 
     ## Devex
     go #            The language Go
