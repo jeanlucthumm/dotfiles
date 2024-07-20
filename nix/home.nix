@@ -125,6 +125,23 @@ in {
     };
   };
 
+  # Neovim theme
+  xdg.configFile."nvim/lua/theme.lua".text = let
+    n = config.theme.name;
+    func =
+      if n == "gruvbox"
+      then "GruvboxTheme"
+      else "GruvboxTheme";
+  in ''
+    local M = {}
+
+    function M.setup()
+      ${func}('${config.theme.variant}')
+    end
+
+    return M
+  '';
+
   # The state version is required and should stay at the version you
   # originally installed.
   home.stateVersion = "24.05";
