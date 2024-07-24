@@ -114,6 +114,7 @@
     python3 #       The language python
     file #          Figure out what a certain file is
     nix-prefetch-git # Utility for populating nix fetchgit expressions
+    tree #          List directory contents
 
     ## Desktop
     gammastep #     Redshifting at night
@@ -141,7 +142,7 @@
 
   # Programs with more config than systemPackages
   programs = {
-    fish.enable = true;
+    fish.enable = true; #         Shell
 
     # Manages GPG keys for signing stuff like git commits
     gnupg.agent = {
