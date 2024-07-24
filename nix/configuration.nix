@@ -165,7 +165,6 @@
     };
     hyprland.enable = true; #     Window manager
     hyprlock.enable = true; #     Lockscreen
-    waybar.enable = true; #       Bottom bar
     seahorse.enable = true; #     GUI for gnome-keyring
   };
 
