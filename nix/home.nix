@@ -52,8 +52,27 @@ in {
       enable = true;
       loadAutoconfig = true;
     };
+    # Bottom bar
     waybar = lib.mkIf isLinux {
       enable = true;
+    };
+    # Program launcher
+    wofi = lib.mkIf isLinux {
+      enable = true;
+      settings = {
+        width = 420;
+        height = 550;
+        location = "center";
+        allow_images = true; #    Icons for entries
+        allow_markup = true;
+        prompt = "Program";
+        matching = "fuzzy";
+        no_actions = true; #      No expandable list under certain programs
+        halign = "fill";
+        orientation = "vertical";
+        insensitive = true;
+        image_size = 28;
+      };
     };
   };
 
