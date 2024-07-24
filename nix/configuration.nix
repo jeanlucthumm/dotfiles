@@ -104,7 +104,6 @@
     delta #         Pretty diffs
     bat #           Cat replacement
     gcc #           GNU Compiler Collection
-    wofi #          Program launcher
     pls #           ls replacement
     fd #            find replacement
     zoxide #        cd replacement
