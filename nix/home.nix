@@ -47,6 +47,11 @@ in {
       '';
     };
     fish = import ./home/fish.nix {inherit config pkgs isArch;};
+    qutebrowser = {
+      # Uses VCS dotfiles
+      enable = true;
+      loadAutoconfig = true;
+    };
   };
 
   home = {
