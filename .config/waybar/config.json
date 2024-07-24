@@ -23,7 +23,7 @@
   "custom/timew": {
     "format": "{}",
     "interval": 5,
-    "exec": "$HOME/Code/bin/task-timew-status.fish",
+    "exec": "$HOME/Code/bin/task-timew-status.fish"
   },
   "hyprland/workspaces": {
     "format": " {icon} ",

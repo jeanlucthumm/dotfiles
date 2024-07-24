@@ -52,6 +52,9 @@ in {
       enable = true;
       loadAutoconfig = true;
     };
+    waybar = lib.mkIf isLinux {
+      enable = true;
+    };
   };
 
   home = {
