@@ -6,7 +6,8 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./theme.nix
+
+    ./theme-setting.nix
   ];
 
   # Enable flakes
@@ -114,11 +115,11 @@
     file #          Figure out what a certain file is
     nix-prefetch-git # Utility for populating nix fetchgit expressions
     tree #          List directory contents
+    libnotify
 
     ## Desktop
     gammastep #     Redshifting at night
     cinnamon.nemo # File browser
-    mako #          Notifications
     brightnessctl # Screen brightness controls
     wl-clipboard #  Copy paste in Wayland
     qutebrowser #   Keyboard-centric browser
@@ -221,12 +222,6 @@
         TimeoutStopSec = 10;
       };
     };
-  };
-
-  theme = {
-    enable = true;
-    name = "gruvbox";
-    variant = "dark";
   };
 
   hardware = {

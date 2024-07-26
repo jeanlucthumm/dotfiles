@@ -13,7 +13,7 @@
   themeVariant = config.theme.variant;
 in {
   imports = [
-    ./theme.nix
+    ./theme-setting.nix
   ];
 
   programs = {
@@ -150,6 +150,7 @@ in {
       };
       provider = "geoclue2";
     };
+    mako.enable = true;
   };
 
   # Neovim theme
