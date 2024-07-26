@@ -150,7 +150,13 @@ in {
       };
       provider = "geoclue2";
     };
-    mako.enable = true;
+    mako = {
+      enable = true;
+      markup = true;
+      borderRadius = 10;
+      icons = true;
+      padding = "10";
+    };
   };
 
   # Neovim theme
