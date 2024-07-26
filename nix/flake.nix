@@ -22,8 +22,8 @@
     nixosConfigurations."laptop" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        stylix.nixosModules.stylix
         ./configuration.nix
+        stylix.nixosModules.stylix
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;

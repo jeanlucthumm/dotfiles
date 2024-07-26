@@ -25,8 +25,8 @@ in {
       base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-${cfg.variant}-soft.yaml";
       image =
         if cfg.variant == "light"
-        then ./wallpaper.jpg
-        else ./gruvbox-dark-rainbow.png;
+        then ./wallpapers/gruvbox-light-rainbow.png
+        else ./wallpapers/gruvbox-dark-rainbow.png;
     }
     else {}
   );
