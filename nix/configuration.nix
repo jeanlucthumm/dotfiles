@@ -88,29 +88,8 @@
 
   # Basic sytem wide packages
   environment.systemPackages = with pkgs; [
-    manix # CLI for nix docs
-    neovim # IDE (tExT eDiToR)
-    tmux # Terminal multiplexer
-    yadm # Dotfile manager
-    gh # GitHub CLI
-    git # Version control system
-    git-lfs # Git extension for large files
-    gnupg # GNU Privacy Guard
-    pinentry-tty # Enter password in terminal
-    gnumake # Build automation tool
-    delta # Pretty diffs
-    bat # Cat replacement
-    gcc # GNU Compiler Collection
-    pls # ls replacement
-    fd # find replacement
-    zoxide # cd replacement
-    fzf # Multi-purpose fuzzy finder
     libinput # Inspect HID input
-    jq # CLI for json manipulation
-    python3 # The language python
     file # Figure out what a certain file is
-    nix-prefetch-git # Utility for populating nix fetchgit expressions
-    tree # List directory contents
     libnotify
 
     ## Desktop
