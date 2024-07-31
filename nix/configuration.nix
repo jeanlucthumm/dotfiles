@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{ config, pkgs, ... }: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -11,7 +7,7 @@
   ];
 
   # Enable flakes
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -48,18 +44,18 @@
     isNormalUser = true;
     description = "Jean-Luc Thumm";
     extraGroups = [
-      "networkmanager" #  manage internet connections with nmcli
-      "wheel" #           access sudo
-      "adbusers" #        access adb for android dev
-      "audio" #           access to pulseaudio devices
+      "networkmanager" # manage internet connections with nmcli
+      "wheel" # access sudo
+      "adbusers" # access adb for android dev
+      "audio" # access to pulseaudio devices
     ];
     shell = pkgs.fish;
 
     # User specific packages. System wide packages are in
     # environment.systemPackages and programs.
     packages = with pkgs; [
-      timewarrior #       time tracker
-      grc #               colorizes CLI output
+      timewarrior # time tracker
+      grc # colorizes CLI output
 
       ## Devex
       sumneko-lua-language-server
@@ -92,57 +88,57 @@
 
   # Basic sytem wide packages
   environment.systemPackages = with pkgs; [
-    manix #         CLI for nix docs
-    neovim #        IDE (tExT eDiToR)
-    tmux #          Terminal multiplexer
-    yadm #          Dotfile manager
-    gh #            GitHub CLI
-    git #           Version control system
-    git-lfs #       Git extension for large files
-    gnupg #         GNU Privacy Guard
-    pinentry-tty #  Enter password in terminal
-    gnumake #       Build automation tool
-    delta #         Pretty diffs
-    bat #           Cat replacement
-    gcc #           GNU Compiler Collection
-    pls #           ls replacement
-    fd #            find replacement
-    zoxide #        cd replacement
-    fzf #           Multi-purpose fuzzy finder
-    libinput #      Inspect HID input
-    jq #            CLI for json manipulation
-    python3 #       The language python
-    file #          Figure out what a certain file is
+    manix # CLI for nix docs
+    neovim # IDE (tExT eDiToR)
+    tmux # Terminal multiplexer
+    yadm # Dotfile manager
+    gh # GitHub CLI
+    git # Version control system
+    git-lfs # Git extension for large files
+    gnupg # GNU Privacy Guard
+    pinentry-tty # Enter password in terminal
+    gnumake # Build automation tool
+    delta # Pretty diffs
+    bat # Cat replacement
+    gcc # GNU Compiler Collection
+    pls # ls replacement
+    fd # find replacement
+    zoxide # cd replacement
+    fzf # Multi-purpose fuzzy finder
+    libinput # Inspect HID input
+    jq # CLI for json manipulation
+    python3 # The language python
+    file # Figure out what a certain file is
     nix-prefetch-git # Utility for populating nix fetchgit expressions
-    tree #          List directory contents
+    tree # List directory contents
     libnotify
 
     ## Desktop
-    gammastep #     Redshifting at night
+    gammastep # Redshifting at night
     cinnamon.nemo # File browser
     brightnessctl # Screen brightness controls
-    wl-clipboard #  Copy paste in Wayland
-    qutebrowser #   Keyboard-centric browser
+    wl-clipboard # Copy paste in Wayland
+    qutebrowser # Keyboard-centric browser
     bitwarden-desktop # Password management
-    signal-desktop #    Messaging
-    grim #          Screenshots
-    slurp #         For selecting screen regions
-    pavucontrol #   GUI for PiperWire
-    wev #           Shows keycodes in wayland
+    signal-desktop # Messaging
+    grim # Screenshots
+    slurp # For selecting screen regions
+    pavucontrol # GUI for PiperWire
+    wev # Shows keycodes in wayland
     ungoogled-chromium # Only used for Flutter dev
-    hyprpaper #     Wallpaper for hyprland
-    swayosd #       Responsive UI for changing volume and such
-    xdg-utils #     Open files in right prorgram
-    polkit_gnome #  UI for Polkit authentication
-    neovide #       GUI wrapper for nvim
+    hyprpaper # Wallpaper for hyprland
+    swayosd # Responsive UI for changing volume and such
+    xdg-utils # Open files in right prorgram
+    polkit_gnome # UI for Polkit authentication
+    neovide # GUI wrapper for nvim
 
     ## Devex
-    go #            The language Go
+    go # The language Go
   ];
 
   # Programs with more config than systemPackages
   programs = {
-    fish.enable = true; #         Shell
+    fish.enable = true; # Shell
 
     # Manages GPG keys for signing stuff like git commits
     gnupg.agent = {
@@ -163,9 +159,9 @@
       enable = true;
       package = pkgs.firefox-bin;
     };
-    hyprland.enable = true; #     Window manager
-    hyprlock.enable = true; #     Lockscreen
-    seahorse.enable = true; #     GUI for gnome-keyring
+    hyprland.enable = true; # Window manager
+    hyprlock.enable = true; # Lockscreen
+    seahorse.enable = true; # GUI for gnome-keyring
   };
 
   # Fonts
@@ -174,7 +170,7 @@
     # Neovim makes use of this.
     (nerdfonts.override {
       # Narrow down since all of nerdfonts is a lot.
-      fonts = ["JetBrainsMono" "FiraCode"];
+      fonts = [ "JetBrainsMono" "FiraCode" ];
     })
     font-awesome # for icons
   ];
@@ -183,8 +179,8 @@
   services = {
     # Manages program secrets.
     gnome.gnome-keyring.enable = true;
-    hypridle.enable = true; #   Idle manager for Hyprland
-    geoclue2.enable = true; #   Location services
+    hypridle.enable = true; # Idle manager for Hyprland
+    geoclue2.enable = true; # Location services
 
     # Audio management. Modern version of PulseAudio.
     pipewire = {
@@ -211,12 +207,13 @@
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {
       description = "polkit-gnome-authentication-agent-1";
-      wantedBy = ["graphical-session.target"];
-      wants = ["graphical-session.target"];
-      after = ["graphical-session.target"];
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        ExecStart =
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
         Restart = "on-failure";
         RestartSec = 1;
         TimeoutStopSec = 10;
@@ -238,13 +235,11 @@
       monospace = {
         package = pkgs.nerdfonts.override {
           # Narrow down since all of nerdfonts is a lot.
-          fonts = ["JetBrainsMono" "FiraCode"];
+          fonts = [ "JetBrainsMono" "FiraCode" ];
         };
         name = "JetBrainsMono Nerd Font";
       };
-      sizes = {
-        terminal = 11;
-      };
+      sizes = { terminal = 11; };
     };
   };
 
