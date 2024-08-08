@@ -1,7 +1,7 @@
 [user]
   email = jeanlucthumm@gmail.com
   name = Jean-Luc Thumm
-  signingkey = FA8C90AF54ACAE76
+#  signingkey = FA8C90AF54ACAE76
 [core]
   pager = delta --line-numbers-zero-style black
   excludesfile = ~/.config/.gitignore

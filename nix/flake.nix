@@ -11,12 +11,15 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    darwin.url = "github:lnl7/nix-darwin";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
     nixpkgs,
     home-manager,
     stylix,
+    darwin,
     ...
   }: {
     nixosConfigurations."laptop" = nixpkgs.lib.nixosSystem {
@@ -28,7 +31,28 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.jeanluc = import ./home.nix;
+          home-manager.users.jeanluc = import ./home;
+        }
+      ];
+    };
+    darwinConfigurations."macbook" = darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      modules = [
+        ./theme.nix
+        ./theme-setting.nix
+        ./hosts/macbook/configuration.nix
+        home-manager.darwinModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.jeanluc = {
+            config,
+            pkgs,
+            ...
+          }: {
+            imports = [./home];
+            _module.args.theme = config.theme;
+          };
         }
       ];
     };
