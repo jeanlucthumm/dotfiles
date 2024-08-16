@@ -125,6 +125,7 @@ local plugin_spec = {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    dependencies = { 'nushell/tree-sitter-nu' },
     config = function()
       require'nvim-treesitter.configs'.setup {
         ensure_installed = {
