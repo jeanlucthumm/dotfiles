@@ -377,7 +377,7 @@ local plugin_spec = {
       local actions = require'telescope.actions'
       require'telescope'.setup {
         defaults = {
-          path_display = { 'smart' },
+          path_display = { 'filename_first' },
           mappings = {
             i = {
               ['<C-k>'] = 'move_selection_previous',
@@ -404,8 +404,8 @@ local plugin_spec = {
       g.startify_session_autoload = 1 -- automatically source session if Session.vim is found
     end,
   },
-  { 'rcarriga/nvim-notify' },      -- pretty notifications
-  { 'xiyaowong/virtcolumn.nvim' }, -- makes virtual column a pixel wide
+  { 'rcarriga/nvim-notify' }, -- pretty notifications
+  { 'Bekaboo/deadcolumn.nvim' },
   {
     'stevearc/dressing.nvim',
     opts = {},
@@ -706,8 +706,9 @@ ncmap('gt', 'lua require"harpoon.term".gotoTerminal(1)')
 ncmap('gr', 'Telescope lsp_references')
 ncmap('gio', 'Telescope oldfiles')
 ncmap('gii', 'Telescope lsp_implementations')
--- c
-ncmap('<Leader>s', 'ChatGPT')
+-- y
+nmap('yf', 'ggVG"+y')      -- yank entire file to system clipboard
+ncmap('yc', 'let @+ = @"') -- copy to system clipboard
 -- <Leader>
 ncmap('<Leader>q', 'qall')
 ncmap('<Leader>o', 'Telescope lsp_document_symbols')
@@ -744,6 +745,8 @@ ncmap('<Leader>dt', 'lua require"dap".terminate()')
 ncmap('<Leader>dc', 'lua require"dap".continue()')
 ncmap('<Leader>dr', 'lua require"dap".restart()')
 ncmap('<Leader>dp', 'Trouble diagnostics')
+-- <Leader>l    LLMs
+ncmap('<Leader>lf', 'lua require"incubator".copy_file_to_clipboard()')
 -- <Leader>w    running
 ncmap('<Leader>ww', 'RunCode')
 ncmap('<Leader>wc', 'RunClose')
@@ -765,10 +768,10 @@ ncmap('<C-p>', 'Telescope commands')
 ncmap('<C-e>',
   'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 nmap('<C-q>', '<C-^>')
+ncmap('<M-o>', 'Bdelete')
 ncmap('<M-r>', 'Telescope grep_string')
 ncmap('<C-w>d', 'lua OpenInRight()')
 -- <F*>
-ncmap('<F4>', 'Bdelete')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
