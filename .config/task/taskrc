@@ -25,6 +25,8 @@ include ~/.config/task/theme.config
 news.version=2.6.0
 uda.blocks.type=string
 uda.blocks.label=Blocks
+uda.ticket.type=string
+uda.ticket.label=Ticket
 urgency.uda.priority.L.coefficient=0.8
 
 # Put contexts defined with `task context define` in this file
