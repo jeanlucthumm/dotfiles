@@ -18,13 +18,9 @@ if [ $OS = "Linux" ]
   set -x PATH $PATH $HOME/go/bin $HOME/.gem/ruby/3.0.0/bin
 
 else if [ $OS = "Darwin" ]
-
-  set -x PATH /opt/homebrew/bin /opt/homebrew/opt/llvm/bin $PATH
-
+  set -x PATH /opt/homebrew/bin /opt/homebrew/opt/llvm/bin /nix/var/nix/profiles/default/bin $PATH
   set -x ANDROID_HOME /Users/$USER/Library/Android/sdk
-
-  status --is-interactive; and rbenv init - fish | source
-
+  set -x CHROME_EXECUTABLE /Applications/Chromium.app/Contents/MacOS/Chromium
 end
 
 function get_theme

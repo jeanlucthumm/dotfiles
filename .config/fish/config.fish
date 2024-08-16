@@ -20,7 +20,7 @@ importIfExists $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
 
 if status is-interactive
   if [ "$OS" = "Linux" ]
-    alias fixkeyb="source $HOME/.xprofile && xmodmap $CONF/capsrebind.Xmodmap"
+    alias docker="sudo docker"
   end
   if [ "$OS" = "Linux" -a "$DISTRO" = "Arch" ]
     alias pacman="paru"
