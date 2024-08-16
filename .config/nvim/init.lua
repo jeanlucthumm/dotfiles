@@ -367,6 +367,7 @@ local plugin_spec = {
     dependencies = { 'rktjmp/lush.nvim' },
   },
   { 'maxmx03/solarized.nvim' },
+  { 'sainnhe/everforest' },
 
   --- UI
   { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install' },
@@ -638,6 +639,14 @@ function ZenbonesTheme(background)
   opt.background = background
   lualine_theme = 'auto'
   cmd('colorscheme zenbones')
+end
+
+function EverForestTheme(background)
+  opt.background = background
+  lualine_theme = 'everforest'
+  vim.g.everforest_enable_italic = true
+  vim.g.everforest_background = 'soft'
+  cmd('colorscheme everforest')
 end
 
 local function fallbackTheme() RosePineTheme('light') end
