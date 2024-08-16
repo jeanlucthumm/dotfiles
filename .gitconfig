@@ -11,11 +11,6 @@
   conflictstyle = diff3
 [mergetool "meld"]
   cmd = meld --auto-merge "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
-[filter "lfs"]
-  required = true
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
 [credential]
   helper = cache
 [alias]
