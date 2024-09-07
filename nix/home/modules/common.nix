@@ -5,7 +5,6 @@
   ...
 }: let
   isLinux = pkgs.stdenv.isLinux;
-  isArch = builtins.pathExists "/etc/arch-release";
   homeDir = config.home.homeDirectory;
   configDir = config.xdg.configHome;
   theme = config.theme;
@@ -154,29 +153,18 @@ in {
   };
 
   home = {
-    sessionVariables =
-      {
-        EDITOR = "${pkgs.neovim}/bin/nvim";
-        MANPAGER = "sh -c 'sed -e s/.\\\\x08//g | bat -l man -p'";
-        CONF = configDir;
-        CODE = "${homeDir}/Code";
-        # Shell prompts tend to manage venvs themselves
-        VIRTUAL_ENV_DISABLE_PROMPT = 1;
-        BAT_THEME =
-          if theme.name == "gruvbox"
-          then "gruvbox-${themeDarkMode}"
-          else "base16";
-      }
-      // (
-        if isLinux
-        then {
-          OS = "Linux";
-          ANDROID_SDK_ROOT = "${homeDir}/Android/Sdk";
-          ANDROID_HOME = config.home.sessionVariables.ANDROID_SDK_ROOT;
-          CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
-        }
-        else {}
-      );
+    sessionVariables = {
+      EDITOR = "${pkgs.neovim}/bin/nvim";
+      MANPAGER = "sh -c 'sed -e s/.\\\\x08//g | bat -l man -p'";
+      CONF = configDir;
+      CODE = "${homeDir}/Code";
+      # Shell prompts tend to manage venvs themselves
+      VIRTUAL_ENV_DISABLE_PROMPT = 1;
+      BAT_THEME =
+        if theme.name == "gruvbox"
+        then "gruvbox-${themeDarkMode}"
+        else "base16";
+    };
     preferXdgDirectories = true;
   };
 

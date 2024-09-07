@@ -46,7 +46,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.jeanluc = import ./home;
+          home-manager.users.jeanluc = import ./home/linux.nix;
         }
       ];
     };

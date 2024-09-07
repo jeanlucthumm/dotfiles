@@ -3,7 +3,14 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+  homeDir = config.home.homeDirectory;
+in {
+  imports = [
+    ./modules/common.nix
+    ./modules/hyprland.nix
+  ];
+
   programs = {
     # Bottom bar
     waybar.enable = true;
@@ -79,6 +86,13 @@
       icons = true;
       padding = "10";
     };
+  };
+
+  home.sessionVariables = {
+    OS = "Linux";
+    ANDROID_SDK_ROOT = "${homeDir}/Android/Sdk";
+    ANDROID_HOME = config.home.sessionVariables.ANDROID_SDK_ROOT;
+    CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
   };
 
   # The state version is required and should stay at the version you
