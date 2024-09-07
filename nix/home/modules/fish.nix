@@ -73,6 +73,10 @@
           alias newterm='kitty --detach --directory (pwd)'
       end
 
+      # For git signing since it spawns gpg in a non-interactive session so gpg
+      # doesn't know what tty to display pinentry on.
+      set -gx GPG_TTY (tty)
+
       if is_ssh_session; and not set -q TMUX
         exec tmux attach
       end
