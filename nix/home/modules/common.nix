@@ -93,12 +93,63 @@ in {
       extraConfig = ''
         uda.blocks.type=string
         uda.blocks.label=Blocks
+        uda.ticket.type=string
+        uda.ticket.label=Ticket
         news.version=2.6.0
 
         # Put contexts defined with `task context define` in this file
         include ${configDir}/task/context.config
         hooks.location=${configDir}/task/hooks
       '';
+    };
+    git = {
+      enable = true;
+      userEmail = "jeanlucthumm@gmail.com";
+      userName = "Jean-Luc Thumm";
+      signing = {
+        key = "6887D29E72EBFA1A0785A02A6717084E580D97E0";
+        signByDefault = true;
+      };
+      delta = {
+        enable = true;
+      };
+      aliases = {
+        de = "diff";
+        s = "status";
+        stat = "status";
+        d = "diff --cached";
+        tree = "log --graph --decorate --oneline --all -n 25";
+        check = "checkout";
+      };
+      extraConfig = {
+        merge = {
+          tool = "meld";
+          conflictstyle = "diff3";
+        };
+        "mergetool \"meld\"" = {
+          cmd = ''meld --auto-merge "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"'';
+        };
+        credential.helper = "cache";
+        safe.directory = "/opt/flutter";
+        pull.rebase = true;
+        rebase.merges = true;
+        init.defaultBranch = "master";
+      };
+      includes = [
+        {
+          path = "${configDir}/delta/themes.gitconfig";
+        }
+      ];
+    };
+    gh = {
+      enable = true;
+      gitCredentialHelper = {
+        enable = true;
+        hosts = [
+          "https://github.com"
+          "https://gist.github.com"
+        ];
+      };
     };
   };
 
@@ -148,28 +199,39 @@ in {
   xdg.enable = true;
 
   # Neovim theme
-  home.file."${configDir}/nvim/lua/theme.lua".text = let
-    n = theme.name;
-    func =
-      if n == "gruvbox"
-      then "GruvboxTheme"
-      else "GruvboxTheme";
-    # fontName = config.stylix.fonts.monospace.name;
-    # fontSize = config.stylix.fonts.sizes.terminal;
-    fontName = "Monaco";
-    fontSize = 11;
-  in ''
-    local M = {}
+  home.file =
+    {
+      "${configDir}/nvim/lua/theme.lua".text = let
+        n = theme.name;
+        func =
+          if n == "gruvbox"
+          then "GruvboxTheme"
+          else "GruvboxTheme";
+        # fontName = config.stylix.fonts.monospace.name;
+        # fontSize = config.stylix.fonts.sizes.terminal;
+        fontName = "Monaco";
+        fontSize = 11;
+      in ''
+        local M = {}
 
-    function M.setup()
-      ${func}('${themeDarkMode}')
-      if vim.g.neovide then
-        vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
-      end
-    end
+        function M.setup()
+          ${func}('${themeDarkMode}')
+          if vim.g.neovide then
+            vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
+          end
+        end
 
-    return M
-  '';
+        return M
+      '';
+    }
+    // lib.mkIf isDarwin {
+      "${homeDir}/.gnupg/gpg-agent.conf".text = ''
+        pinentry-program ${pkgs.pinentry-tty}
+        # In seconds
+        default-cache-ttl ${toString (4 * 60 * 60)}
+        max-cache-ttl ${toString (4 * 60 * 60)}
+      '';
+    };
 
   # The state version is required and should stay at the version you
   # originally installed.
