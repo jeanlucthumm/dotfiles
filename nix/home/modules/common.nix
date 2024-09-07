@@ -70,22 +70,42 @@ in {
   ];
 
   programs = {
-    kitty = {
-      enable = true;
-      shellIntegration.enableFishIntegration = true;
-      shellIntegration.mode = "no-cursor";
-      settings = {
-        enable_audio_bell = true;
-        window_padding_width = 8;
-        allow_remote_control = false;
-        repaint_delay = 5;
-        input_delay = 1;
-        cursor_shape = "blocK";
-        macos_option_as_alt = true;
-        scrollback_pager = "nvim -c 'set ft=sh' -";
-        paste_actions = "quote-urls-at-prompt";
-      };
-    };
+    kitty =
+      {
+        enable = true;
+        shellIntegration.enableFishIntegration = true;
+        shellIntegration.mode = "no-cursor";
+
+        settings = {
+          enable_audio_bell = true;
+          window_padding_width = 8;
+          allow_remote_control = false;
+          repaint_delay = 5;
+          input_delay = 1;
+          cursor_shape = "blocK";
+          macos_option_as_alt = true;
+          scrollback_pager = "nvim -c 'set ft=sh' -";
+          paste_actions = "quote-urls-at-prompt";
+        };
+      }
+      // (let
+        n = theme.name;
+        name =
+          if n == "gruvbox"
+          then "Gruvbox"
+          else throw "Unsupported kitty theme: ${n}";
+        dark =
+          if theme.darkMode
+          then "Dark"
+          else "Light";
+        kittyTheme = "${name} ${dark}";
+      in {
+        theme = kittyTheme;
+        font = {
+          name = theme.fontCoding.name;
+          size = 10.0;
+        };
+      });
     taskwarrior = {
       enable = true;
       dataLocation = "${config.xdg.dataHome}/task";
@@ -177,11 +197,7 @@ in {
       func =
         if n == "gruvbox"
         then "GruvboxTheme"
-        else "GruvboxTheme";
-      # fontName = config.stylix.fonts.monospace.name;
-      # fontSize = config.stylix.fonts.sizes.terminal;
-      fontName = "Monaco";
-      fontSize = 11;
+        else throw "Unsupported nvim theme: ${n}";
     in ''
       local M = {}
 

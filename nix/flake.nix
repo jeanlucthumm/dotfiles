@@ -60,7 +60,7 @@
             name = "gruvbox";
             darkMode = false;
             fontCoding = {
-              name = "JetBrainsMono Nerd Font";
+              name = "JetBrainsMono Nerd Font Mono";
               size = 11;
             };
           };

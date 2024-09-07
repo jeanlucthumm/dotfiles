@@ -14,6 +14,7 @@ with lib; let
       size = mkOption {
         type = types.int;
       };
+      # TODO: package providing the font
     };
   };
 in {
