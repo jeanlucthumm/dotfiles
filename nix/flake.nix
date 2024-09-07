@@ -89,6 +89,10 @@
             statix
             alejandra
           ];
+
+          shellHook = ''
+            exec $SHELL
+          '';
         };
       }
     );
