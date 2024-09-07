@@ -13,7 +13,7 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    darwin = {
+    nix-darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -23,7 +23,7 @@
     nixpkgs,
     home-manager,
     stylix,
-    darwin,
+    nix-darwin,
     ...
   } @ inputs: let
     systems = [
@@ -50,24 +50,26 @@
         }
       ];
     };
-    darwinConfigurations."macbook" = darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
+    darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
       modules = [
-        ./theme.nix
-        ./theme-setting.nix
         ./hosts/macbook/configuration.nix
+        ./theme.nix
+        {
+          theme = {
+            enable = true;
+            name = "gruvbox";
+            darkMode = false;
+            fontCoding = {
+              name = "JetBrainsMono Nerd Font";
+              size = 11;
+            };
+          };
+        }
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.jeanluc = {
-            config,
-            pkgs,
-            ...
-          }: {
-            imports = [./home];
-            _module.args.theme = config.theme;
-          };
+          home-manager.users.jeanluc = import ./home/darwin.nix;
         }
       ];
     };

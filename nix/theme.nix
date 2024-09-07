@@ -6,28 +6,41 @@
 }:
 with lib; let
   cfg = config.theme;
+  fontType = types.submodule {
+    options = {
+      name = mkOption {
+        type = types.str;
+      };
+      size = mkOption {
+        type = types.int;
+      };
+    };
+  };
 in {
   options.theme = {
     enable = mkEnableOption "theme";
     name = mkOption {
+      description = "Name of the theme to use (gruvbox)";
       type = types.str;
       default = "gruvbox";
     };
+    darkMode = mkOption {
+      description = "Whether to enable dark mode (T) or light mode (F).";
+      type = types.bool;
+      default = false;
+    };
     variant = mkOption {
+      description = "Optional variant of a theme.";
       type = types.str;
-      default = "dark";
+      default = "";
+    };
+    fontCoding = mkOption {
+      description = "Font used for coding.";
+      type = fontType;
+      default = {
+        name = "FiraCode Nerd Font";
+        size = 12;
+      };
     };
   };
-
-  # config.stylix = mkIf cfg.enable (
-  #   if cfg.name == "gruvbox"
-  #   then {
-  #     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-${cfg.variant}-soft.yaml";
-  #     image =
-  #       if cfg.variant == "light"
-  #       then ./wallpapers/gruvbox-light-rainbow.png
-  #       else ./wallpapers/gruvbox-dark-rainbow.png;
-  #   }
-  #   else {}
-  # );
 }
