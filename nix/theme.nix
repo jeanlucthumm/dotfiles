@@ -23,7 +23,6 @@ in {
     name = mkOption {
       description = "Name of the theme to use (gruvbox)";
       type = types.str;
-      default = "gruvbox";
     };
     darkMode = mkOption {
       description = "Whether to enable dark mode (T) or light mode (F).";
@@ -38,10 +37,6 @@ in {
     fontCoding = mkOption {
       description = "Font used for coding.";
       type = fontType;
-      default = {
-        name = "FiraCode Nerd Font";
-        size = 12;
-      };
     };
   };
 }

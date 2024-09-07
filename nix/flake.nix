@@ -1,8 +1,7 @@
 {
   description = "Jean-Luc Thumm normal systems configuration";
 
-  # Default to pinning nixpkgs to one version to avoid evaluating multiple
-  # versions.
+  # Pin nixpkgs for every imput to avoid multiple evaluations.
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
@@ -37,6 +36,7 @@
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
+    # System configurations for NixOS hosts.
     nixosConfigurations."laptop" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
@@ -50,26 +50,21 @@
         }
       ];
     };
+
+    # System configurations for Darwin hosts.
     darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
       modules = [
         ./hosts/macbook/configuration.nix
-        ./theme.nix
-        {
-          theme = {
-            enable = true;
-            name = "gruvbox";
-            darkMode = false;
-            fontCoding = {
-              name = "JetBrainsMono Nerd Font Mono";
-              size = 11;
-            };
-          };
-        }
+        # The system module tree is different than the Home Manager one,
+        # so we import theme settings in both to ensure they're available.
+        ./hosts/macbook/theme-setting.nix
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.jeanluc = import ./home/darwin.nix;
+          home-manager.users.jeanluc = {...}: {
+            imports = [./home/darwin.nix ./hosts/macbook/theme-setting.nix];
+          };
         }
       ];
     };
@@ -91,6 +86,8 @@
           ];
 
           shellHook = ''
+            # Enter shell to the same one user is using, otherwise it would
+            # just open bash. Note you have to exit twice to leave the shell.
             exec $SHELL
           '';
         };
