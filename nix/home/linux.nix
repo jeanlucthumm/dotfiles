@@ -5,6 +5,7 @@
   ...
 }: let
   homeDir = config.home.homeDirectory;
+  isArch = builtins.pathExists "/etc/arch-release";
 in {
   imports = [
     ./modules/common.nix
@@ -31,6 +32,10 @@ in {
         insensitive = true;
         image_size = 28;
       };
+    };
+
+    fish.shellAliases = lib.mkIf isArch {
+      pacman = "paru";
     };
   };
 

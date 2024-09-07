@@ -3,9 +3,7 @@
   pkgs,
   lib,
   ...
-}: let
-  isArch = builtins.pathExists "/etc/arch-release";
-in {
+}: {
   programs.fish = {
     enable = true;
     plugins = with pkgs.fishPlugins; [
@@ -47,18 +45,14 @@ in {
       acc = "task end.after:today completed";
     };
     # Like shellAbbrs but doesn't auto expand when typing
-    shellAliases =
-      {
-        vim = "nvim";
-        cat = "bat";
-        ls = "pls --exclude '^\\..*'";
-        lsa = "pls";
-        cd = "z";
-        ssh = "TERM=xterm-256color /usr/bin/ssh";
-      }
-      // lib.mkIf isArch {
-        pacman = "paru";
-      };
+    shellAliases = {
+      vim = "nvim";
+      cat = "bat";
+      ls = "pls --exclude '^\\..*'";
+      lsa = "pls";
+      cd = "z";
+      ssh = "TERM=xterm-256color /usr/bin/ssh";
+    };
     shellInit = ''
       # Required for zoxide.
       # Do not put in interactiveShellInit due to bug.
