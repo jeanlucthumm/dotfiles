@@ -1,5 +1,9 @@
-{ config, pkgs, ... }:
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   isArch = builtins.pathExists "/etc/arch-release";
 in {
   programs.fish = {
@@ -52,13 +56,9 @@ in {
         cd = "z";
         ssh = "TERM=xterm-256color /usr/bin/ssh";
       }
-      // (
-        if isArch
-        then {
-          pacman = "paru";
-        }
-        else {}
-      );
+      // lib.mkIf isArch {
+        pacman = "paru";
+      };
     shellInit = ''
       # Required for zoxide.
       # Do not put in interactiveShellInit due to bug.
@@ -83,6 +83,5 @@ in {
         exec tmux attach
       end
     '';
-
-    };
+  };
 }

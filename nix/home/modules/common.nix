@@ -5,7 +5,6 @@
   ...
 }: let
   isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
   isArch = builtins.pathExists "/etc/arch-release";
   homeDir = config.home.homeDirectory;
   configDir = config.xdg.configHome;
@@ -17,6 +16,7 @@
 in {
   imports = [
     ../../theme.nix
+    ./fish.nix
   ];
 
   home.packages = with pkgs; [
@@ -175,63 +175,38 @@ in {
           ANDROID_HOME = config.home.sessionVariables.ANDROID_SDK_ROOT;
           CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
         }
-        else if isDarwin
-        then {
-          OS = "Darwin";
-          ANDROID_HOME = "/Users/${config.home.username}/Library/Android/sdk";
-        }
         else {}
       );
-
-    # Extra stuff to add to $PATH
-    sessionPath =
-      if isDarwin
-      then [
-        # homebrew puts all its stuff in this directory instead
-        # of /usr/bin or otherwise
-        "/opt/homebrew/bin"
-      ]
-      else [];
-
     preferXdgDirectories = true;
   };
 
   xdg.enable = true;
 
   # Neovim theme
-  home.file =
-    {
-      "${configDir}/nvim/lua/theme.lua".text = let
-        n = theme.name;
-        func =
-          if n == "gruvbox"
-          then "GruvboxTheme"
-          else "GruvboxTheme";
-        # fontName = config.stylix.fonts.monospace.name;
-        # fontSize = config.stylix.fonts.sizes.terminal;
-        fontName = "Monaco";
-        fontSize = 11;
-      in ''
-        local M = {}
+  home.file = {
+    "${configDir}/nvim/lua/theme.lua".text = let
+      n = theme.name;
+      func =
+        if n == "gruvbox"
+        then "GruvboxTheme"
+        else "GruvboxTheme";
+      # fontName = config.stylix.fonts.monospace.name;
+      # fontSize = config.stylix.fonts.sizes.terminal;
+      fontName = "Monaco";
+      fontSize = 11;
+    in ''
+      local M = {}
 
-        function M.setup()
-          ${func}('${themeDarkMode}')
-          if vim.g.neovide then
-            vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
-          end
+      function M.setup()
+        ${func}('${themeDarkMode}')
+        if vim.g.neovide then
+          vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
         end
+      end
 
-        return M
-      '';
-    }
-    // lib.mkIf isDarwin {
-      "${homeDir}/.gnupg/gpg-agent.conf".text = ''
-        pinentry-program ${pkgs.pinentry-tty}
-        # In seconds
-        default-cache-ttl ${toString (4 * 60 * 60)}
-        max-cache-ttl ${toString (4 * 60 * 60)}
-      '';
-    };
+      return M
+    '';
+  };
 
   # The state version is required and should stay at the version you
   # originally installed.
