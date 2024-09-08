@@ -82,6 +82,15 @@ local plugin_spec = {
       })
       lspconfig.pyright.setup(extend {})
       lspconfig.gopls.setup(extend {})
+      lspconfig.sourcekit.setup(extend {
+        capabilities = {
+          workspace = {
+            didChangeWatchedFiles = {
+              dynamicRegistration = true,
+            },
+          },
+        },
+      })
     end,
   },
   {
