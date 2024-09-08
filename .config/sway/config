@@ -14,7 +14,6 @@
 
 set $mod Mod4
 set $wallpaper "/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png"
-set $browser "google-chrome-stable"
 
 # =============================================================================
 # PERIPHERALS
@@ -22,11 +21,13 @@ set $browser "google-chrome-stable"
 output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
 output eDP-1 pos 0 0
-output "Unknown U2790B 0x00009BC0" pos 0 0
 
-output "Unknown U34G2G4R3 0x00000D1F" {
-  mode 3440x1440@120Hz
+output DP-1 {
   pos 0 0
+}
+
+output DP-3 {
+  pos 3840 500
 }
 
 # You can get the names of your inputs by running: swaymsg -t get_inputs
@@ -49,9 +50,6 @@ font pango:DejaVu Sans Mono 8
 
 # window customization
 default_border pixel 2
-# gaps inner 20
-# gaps outer 5
-# smart_borders no_gaps
 
 # colors
 set $text #FFFFFF
@@ -214,9 +212,6 @@ bindsym $mod+Shift+e exec "i3-msg exit"
 
 # Random shit
 mode "custom" {
-    bindsym $mod+l exec "swaymsg output eDP-1 toggle"; mode "default"
-    bindsym $mod+f exec ~/.local/bin/neovide; mode "default"
-
     bindsym $mod+Return mode "default"
     bindsym $mod+Escape mode "default"
 }
@@ -249,19 +244,19 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3%
 
 # brightness
-bindsym XF86MonBrightnessUp exec --no-startup-id "$HOME/Code/bin/brightness.fish" up 20
-bindsym XF86MonBrightnessDown exec --no-startup-id "$HOME/Code/bin/brightness.fish" down 20
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set -5%
 
 # screenshotting to clipboard
 bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 
 # TODO
-#bindsym $mod+d exec rofi -show drun -width 20 -dpi 144
+bindsym $mod+d exec wofi -show drun
 bindsym $mod+Return exec kitty
 bindsym $mod+Shift+n exec sway-input -F 'rename workspace to "%s"'
-bindsym $mod+c exec $browser
-bindsym $mod+x exec firefox
-bindsym $mod+n exec nautilus
+bindsym $mod+c exec firefox
+bindsym $mod+x exec qutebrowser
+bindsym $mod+n exec nemo
 bindsym $mod+backslash exec makoctl dismiss
 
 # =============================================================================
@@ -285,11 +280,7 @@ bar {
 }
 
 # system
-exec --no-startup-id "$HOME/Code/bin/mouse-profile.sh"
-exec --no-startup-id /usr/lib/geoclue-2.0/demos/agent
 
 # scratchpad
-exec --no-startup-id /usr/bin/kitty --title "scratchpad" tmux
-exec --no-startup-id spotify
-exec --no-startup-id /usr/bin/dex /usr/share/applications/workflowy.desktop
+exec --no-startup-id kitty --title "scratchpad" tmux
 exec --no-startup-id mako
