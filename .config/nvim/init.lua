@@ -357,8 +357,9 @@ local plugin_spec = {
   --- Theme
   { 'nvim-tree/nvim-web-devicons' },
   {
-    'ellisonleao/gruvbox.nvim',
-    config = function() require'gruvbox'.setup { bold = false } end,
+    'sainnhe/gruvbox-material',
+    lazy = false,
+    priority = 1000,
   },
   { 'marko-cerovac/material.nvim' },
   {
@@ -601,8 +602,10 @@ end
 
 function GruvboxTheme(background)
   opt.background = background
-  lualine_theme = 'gruvbox_' .. background
-  cmd('colorscheme gruvbox')
+  lualine_theme = 'gruvbox-material'
+  g.gruvbox_material_background = 'soft'
+  g.gruvbox_maetrial_better_performance = 1
+  cmd('colorscheme gruvbox-material')
 end
 
 function MaterialTheme(background) -- prefer 'deep ocean'
