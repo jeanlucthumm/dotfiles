@@ -91,6 +91,7 @@ local plugin_spec = {
           },
         },
       })
+      lspconfig.nil_ls.setup(extend {})
     end,
   },
   {

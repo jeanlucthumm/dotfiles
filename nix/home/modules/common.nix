@@ -42,8 +42,10 @@ in {
     # ripgrep
     # flutter
     # android-tools
-    statix
-    alejandra
+
+    statix # Nix linter
+    alejandra # Nix formatter
+    nil # Nix language server
 
     ## CLI
     manix # CLI for nix docs
