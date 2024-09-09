@@ -37,18 +37,35 @@
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
     # System configurations for NixOS hosts.
-    nixosConfigurations."laptop" = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./configuration.nix
-        stylix.nixosModules.stylix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.jeanluc = import ./home/linux.nix;
-        }
-      ];
+    nixosConfigurations = {
+      "laptop" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./configuration.nix
+          stylix.nixosModules.stylix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jeanluc = import ./home/linux.nix;
+          }
+        ];
+      };
+
+      "virtualbox" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/virtualbox
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jeanluc = {...}: {
+              imports = [./home/linux.nix ./hosts/virtualbox/theme-setting.nix];
+            };
+          }
+        ];
+      };
     };
 
     # System configurations for Darwin hosts.

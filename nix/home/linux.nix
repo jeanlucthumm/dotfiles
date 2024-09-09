@@ -37,12 +37,12 @@ in {
     fish.shellAliases = lib.mkIf isArch {
       pacman = "paru";
     };
-  };
 
-  qutebrowser = {
-    # Uses VCS dotfiles
-    enable = true;
-    loadAutoconfig = true;
+    qutebrowser = {
+      # Uses VCS dotfiles
+      enable = true;
+      loadAutoconfig = true;
+    };
   };
 
   xdg = {
@@ -71,7 +71,8 @@ in {
   };
 
   services = {
-    hyprpaper.enable = true;
+    # TODO configure with stylix
+    # hyprpaper.enable = true;
     swayosd.enable = true;
     # Redlight shifting at night
     gammastep = {

@@ -1,11 +1,4 @@
 { config, pkgs, ... }: {
-  imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-
-    ./theme-setting.nix
-  ];
-
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -14,7 +7,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Networking
-  networking.hostName = "laptop";
   networking.networkmanager.enable = true;
 
   # Timezone and locale
@@ -208,19 +200,19 @@
   };
 
   # image and base16Scheme are set by theme module
-  stylix = {
-    enable = true;
-    fonts = {
-      monospace = {
-        package = pkgs.nerdfonts.override {
-          # Narrow down since all of nerdfonts is a lot.
-          fonts = [ "JetBrainsMono" "FiraCode" ];
-        };
-        name = "JetBrainsMono Nerd Font";
-      };
-      sizes = { terminal = 11; };
-    };
-  };
+  # stylix = {
+  #   enable = true;
+  #   fonts = {
+  #     monospace = {
+  #       package = pkgs.nerdfonts.override {
+  #         # Narrow down since all of nerdfonts is a lot.
+  #         fonts = [ "JetBrainsMono" "FiraCode" ];
+  #       };
+  #       name = "JetBrainsMono Nerd Font";
+  #     };
+  #     sizes = { terminal = 11; };
+  #   };
+  # };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

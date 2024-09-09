@@ -226,5 +226,5 @@
       bind = $mod, R, submap, reset
       submap = reset
     '';
-  }
+  };
 }
