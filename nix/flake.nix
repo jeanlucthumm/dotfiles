@@ -19,6 +19,7 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
     home-manager,
     stylix,
@@ -108,6 +109,12 @@
             exec $SHELL
           '';
         };
+      }
+    );
+
+    packages = forAllSystems (
+      system: {
+          virtualbox-vm = self.nixosConfigurations.virtualbox.config.system.build.vm;
       }
     );
   };

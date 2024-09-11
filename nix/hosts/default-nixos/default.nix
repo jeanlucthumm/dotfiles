@@ -31,50 +31,6 @@
   };
   services.blueman.enable = true;
 
-  # Users
-  users.users.jeanluc = {
-    isNormalUser = true;
-    description = "Jean-Luc Thumm";
-    extraGroups = [
-      "networkmanager" # manage internet connections with nmcli
-      "wheel" # access sudo
-      "adbusers" # access adb for android dev
-      "audio" # access to pulseaudio devices
-    ];
-    shell = pkgs.fish;
-
-    # User specific packages. System wide packages are in
-    # environment.systemPackages and programs.
-    packages = with pkgs; [
-      timewarrior # time tracker
-      grc # colorizes CLI output
-
-      ## Devex
-      sumneko-lua-language-server
-      gopls
-      black
-      delve
-      impl
-      gotools
-      luajitPackages.jsregexp
-      mdformat
-      clang-tools
-      buf
-      buf-language-server
-      prettierd
-      isort
-      actionlint
-      mypy
-      tree-sitter
-      nodejs_22
-      ripgrep
-      flutter
-      android-tools
-      statix
-      alejandra
-    ];
-  };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
