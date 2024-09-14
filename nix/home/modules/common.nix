@@ -1,10 +1,8 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: let
-  isLinux = pkgs.stdenv.isLinux;
   homeDir = config.home.homeDirectory;
   configDir = config.xdg.configHome;
   theme = config.theme;
@@ -46,6 +44,8 @@ in {
     statix # Nix linter
     alejandra # Nix formatter
     nil # Nix language server
+    ripgrep # Fast grep search tool
+    nodejs_22 # A bunch of tools (including Copilot) rely on this
 
     ## CLI
     manix # CLI for nix docs
