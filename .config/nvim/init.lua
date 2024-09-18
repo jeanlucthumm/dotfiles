@@ -797,7 +797,7 @@ ncmap('<C-w>d', 'lua OpenInRight()')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
-ncmap('E', 'Telescope buffers')
+-- ncmap('E', 'Telescope buffers')
 ncmap('<C-e>', 'Telescope find_files')
 nmap('<Leader>e', function()
   require'telescope.builtin'.find_files({

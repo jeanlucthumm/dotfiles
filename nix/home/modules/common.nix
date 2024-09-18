@@ -143,6 +143,7 @@ in {
         stat = "status";
         d = "diff --cached";
         tree = "log --graph --decorate --oneline --all -n 25";
+        treel = "log --graph --decorate --oneline --all";
         check = "checkout";
       };
       extraConfig = {
