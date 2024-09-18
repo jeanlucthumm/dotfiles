@@ -136,6 +136,9 @@ in {
       };
       delta = {
         enable = true;
+        options = {
+          side-by-side = false;
+        };
       };
       aliases = {
         de = "diff";
