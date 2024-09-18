@@ -55,6 +55,7 @@
 
       "virtualbox" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit nixpkgs; };
         modules = [
           ./hosts/virtualbox
           home-manager.nixosModules.home-manager
@@ -101,6 +102,7 @@
           packages = with pkgs; [
             statix
             alejandra
+            manix
           ];
 
           shellHook = ''
