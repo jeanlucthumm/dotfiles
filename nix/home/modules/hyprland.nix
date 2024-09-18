@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
+{lib, ...}: {
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -47,7 +42,8 @@
       };
 
       monitor = [
-        ",preferred,auto,1.0"
+        "DP-1,3840x2160@144,0x0,1"
+        "DP-3,preferred,3840x0,1.0,transform,3"
       ];
 
       decoration = {
@@ -57,16 +53,20 @@
         shadow_render_power = 3;
       };
 
-      animations = {
+      animations = let
+        # Default speeds for animations
+        primary = 1.5;
+        secondary = 10;
+      in {
         enabled = true;
         bezier = ["myBezier, 0.05, 0.9, 0.1, 1.05"];
         animation = [
-          "windows, 1, 5, myBezier"
-          "windowsOut, 1, 5, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 5, default"
-          "workspaces, 1, 4, default"
+          "windows, 1, ${primary}, myBezier"
+          "windowsOut, 1, ${primary}, default, popin 80%"
+          "border, 1, ${secondary}, default"
+          "borderangle, 1, ${secondary} default"
+          "fade, 1, ${primary}, default"
+          "workspaces, 1, ${secondary} default"
         ];
       };
 
@@ -75,6 +75,12 @@
         # mod + P in the keybinds section below.
         pseudotile = true;
         use_active_for_splits = false;
+      };
+
+      master = {
+        new_status = "slave";
+        orientation = "right";
+        always_center_master = false;
       };
 
       gestures = {
@@ -151,7 +157,9 @@
             10)
         )
         ++ (
-          # Move focus and windows with mod + vim directions
+          # Move focus with vim directions
+          # Move windows with SHIFT + vim directions
+          # Swap windows with SHIFT + arrows
           builtins.concatLists (
             lib.lists.forEach ["H" "L" "K" "J"] (x: let
               dir =
@@ -162,9 +170,18 @@
                 else if x == "K"
                 then "u"
                 else "d";
+              arrow =
+                if x == "H"
+                then "LEFT"
+                else if x == "L"
+                then "RIGHT"
+                else if x == "K"
+                then "UP"
+                else "DOWN";
             in [
               "$mod, ${x}, movefocus, ${dir}"
               "$mod SHIFT, ${x}, movewindow, ${dir}"
+              "$mode SHIFT, ${arrow}, swapwindow, ${dir}"
             ])
           )
         );
