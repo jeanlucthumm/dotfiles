@@ -27,12 +27,6 @@
   },
   "hyprland/workspaces": {
     "format": " {icon} ",
-    "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "9": ""
-    }
   },
   "battery": {
    	"bat": "BAT1",
