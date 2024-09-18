@@ -62,3 +62,4 @@ local function flutter_copy_user_id()
 end
 
 vim.api.nvim_create_user_command('FlutterCopyUserId', flutter_copy_user_id, {})
+vim.o.cc = '100'
