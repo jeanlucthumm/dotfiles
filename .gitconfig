@@ -26,7 +26,7 @@
 [safe]
   directory = /opt/flutter
 [delta]
-  side-by-side = true
+  side-by-side = false
   navigate = true
 [commit]
   gpgsign = true
