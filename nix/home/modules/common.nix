@@ -69,6 +69,9 @@ in {
     python3 # The language python
     nix-prefetch-git # Utility for populating nix fetchgit expressions
     tree # List directory contents
+
+    ## GUI
+    neovide # Neovim GUI
   ];
 
   programs = {
