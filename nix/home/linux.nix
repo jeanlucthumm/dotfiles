@@ -39,7 +39,7 @@ in {
 
     fish.shellAliases = lib.mkMerge [
       {
-        udpate = "sudo nixos-rebuild switch --flake $HOME/nix#${hostName}";
+        update = "sudo nixos-rebuild switch --flake $HOME/nix#${hostName}";
       }
       (lib.mkIf
         isArch
