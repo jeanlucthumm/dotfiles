@@ -2,6 +2,8 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ../default-nixos
+    ./theme-setting.nix
   ];
 
   networking.hostName = "desktop"; # Define your hostname.
