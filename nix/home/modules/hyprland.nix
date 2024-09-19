@@ -244,4 +244,15 @@
       submap = reset
     '';
   };
+
+  # Wallpaper manager from same org as Hyprland
+  services.hyprpaper = {
+    enable = true;
+    settings = let
+      wallpaper = ../../wallpapers/gruvbox-dark-rainbow.png;
+    in {
+      preload = ["${wallpaper}"];
+      wallpaper = [",${wallpaper}"];
+    };
+  };
 }
