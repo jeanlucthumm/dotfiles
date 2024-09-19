@@ -55,8 +55,8 @@
 
       animations = let
         # Default speeds for animations
-        primary = "1.5";
-        secondary = "10";
+        primary = toString 1.5;
+        secondary = toString 4;
       in {
         enabled = true;
         bezier = ["myBezier, 0.05, 0.9, 0.1, 1.05"];
@@ -64,9 +64,9 @@
           "windows, 1, ${primary}, myBezier"
           "windowsOut, 1, ${primary}, default, popin 80%"
           "border, 1, ${secondary}, default"
-          "borderangle, 1, ${secondary} default"
+          "borderangle, 1, ${secondary}, default"
           "fade, 1, ${primary}, default"
-          "workspaces, 1, ${secondary} default"
+          "workspaces, 1, ${primary}, default"
         ];
       };
 
