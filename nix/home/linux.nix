@@ -2,9 +2,12 @@
   config,
   pkgs,
   lib,
+  # Passed via extraSpecialArgs
+  hostName,
   ...
 }: let
   homeDir = config.home.homeDirectory;
+  # TODO: HomeManager doesn't seem to have access to paths
   isArch = builtins.pathExists "/etc/arch-release";
 in {
   imports = [
@@ -34,9 +37,16 @@ in {
       };
     };
 
-    fish.shellAliases = lib.mkIf isArch {
-      pacman = "paru";
-    };
+    fish.shellAliases = lib.mkMerge [
+      {
+        udpate = "sudo nixos-rebuild switch --flake $HOME/nix#${hostName}";
+      }
+      (lib.mkIf
+        isArch
+        {
+          pacman = "paru";
+        })
+    ];
 
     qutebrowser = {
       # Uses VCS dotfiles

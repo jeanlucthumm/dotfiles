@@ -61,8 +61,12 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs.hostName = "desktop";
             home-manager.users.jeanluc = {...}: {
-              imports = [./home/linux.nix ./hosts/desktop/theme-setting.nix];
+              imports = [
+                ./home/linux.nix
+                ./hosts/desktop/theme-setting.nix
+              ];
             };
           }
         ];
@@ -96,6 +100,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs.hostName = "macbook";
           home-manager.users.jeanluc = {...}: {
             imports = [./home/darwin.nix ./hosts/macbook/theme-setting.nix];
           };

@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  lib,
+  hostName,
   ...
 }: let
   homeDir = config.home.homeDirectory;
@@ -23,6 +23,10 @@ in {
       # of /usr/bin or otherwise
       "/opt/homebrew/bin"
     ];
+  };
+
+  programs.fish.shellAliases = {
+    udpate = "nix run nix-darwin -- switch --flake $HOME/nix#${hostName}";
   };
 
   home.file = {
