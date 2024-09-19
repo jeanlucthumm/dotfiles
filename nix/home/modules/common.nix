@@ -169,14 +169,22 @@ in {
         }
       ];
     };
+    # GitHub CLI
     gh = {
       enable = true;
+      # Allows git to defer to gh for authenticating with GitHub repoes
       gitCredentialHelper = {
         enable = true;
         hosts = [
           "https://github.com"
           "https://gist.github.com"
         ];
+      };
+      settings = {
+        git_protocol = "ssh";
+        aliases = {
+          watch = "pr checks --watch";
+        };
       };
     };
   };
