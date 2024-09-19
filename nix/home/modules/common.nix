@@ -182,7 +182,9 @@ in {
       };
       settings = {
         git_protocol = "ssh";
+        # Run with `gh [alias]`
         aliases = {
+          # Wait until PR checks return with success or error
           watch = "pr checks --watch";
         };
       };
