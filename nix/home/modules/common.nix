@@ -19,33 +19,13 @@ in {
   home.packages = with pkgs; [
     timewarrior # time tracker
 
-    ## Devex
-    # sumneko-lua-language-server
-    # gopls
-    # black
-    # delve
-    # impl
-    # gotools
-    # luajitPackages.jsregexp
-    # mdformat
-    # clang-tools
-    # buf
-    # buf-language-server
-    # prettierd
-    # isort
-    # actionlint
-    # mypy
-    # tree-sitter
-    # nodejs_22
-    # ripgrep
-    # flutter
-    # android-tools
-
     statix # Nix linter
     alejandra # Nix formatter
     nil # Nix language server
     ripgrep # Fast grep search tool
     nodejs_22 # A bunch of tools (including Copilot) rely on this
+    sumneko-lua-language-server # Lua language server
+    tree-sitter # Syntax parser extensively used by NeoVim
 
     ## CLI
     manix # CLI for nix docs
