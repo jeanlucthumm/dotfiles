@@ -249,7 +249,7 @@
   services.hyprpaper = {
     enable = true;
     settings = let
-      wallpaper = ../../wallpapers/gruvbox-dark-rainbow.png;
+      wallpaper = ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png;
     in {
       preload = ["${wallpaper}"];
       wallpaper = [",${wallpaper}"];
