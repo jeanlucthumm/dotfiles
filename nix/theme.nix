@@ -1,11 +1,5 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
+{lib, ...}:
 with lib; let
-  cfg = config.theme;
   fontType = types.submodule {
     options = {
       name = mkOption {

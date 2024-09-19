@@ -55,42 +55,23 @@ in {
   ];
 
   programs = {
-    kitty =
-      {
-        enable = true;
-        shellIntegration.enableFishIntegration = true;
-        shellIntegration.mode = "no-cursor";
+    kitty = {
+      enable = true;
+      shellIntegration.enableFishIntegration = true;
+      shellIntegration.mode = "no-cursor";
 
-        settings = {
-          enable_audio_bell = true;
-          window_padding_width = 8;
-          allow_remote_control = false;
-          repaint_delay = 5;
-          input_delay = 1;
-          cursor_shape = "blocK";
-          macos_option_as_alt = true;
-          scrollback_pager = "nvim -c 'set ft=sh' -";
-          paste_actions = "quote-urls-at-prompt";
-        };
-      }
-      // (let
-        n = theme.name;
-        name =
-          if n == "gruvbox"
-          then "Gruvbox"
-          else throw "Unsupported kitty theme: ${n}";
-        dark =
-          if theme.darkMode
-          then "Dark"
-          else "Light";
-        kittyTheme = "${name} ${dark}";
-      in {
-        theme = kittyTheme;
-        font = {
-          name = theme.fontCoding.name;
-          size = 10.0;
-        };
-      });
+      settings = {
+        enable_audio_bell = true;
+        window_padding_width = 8;
+        allow_remote_control = false;
+        repaint_delay = 5;
+        input_delay = 1;
+        cursor_shape = "blocK";
+        macos_option_as_alt = true;
+        scrollback_pager = "nvim -c 'set ft=sh' -";
+        paste_actions = "quote-urls-at-prompt";
+      };
+    };
     taskwarrior = {
       enable = true;
       dataLocation = "${config.xdg.dataHome}/task";
@@ -179,10 +160,6 @@ in {
       CODE = "${homeDir}/Code";
       # Shell prompts tend to manage venvs themselves
       VIRTUAL_ENV_DISABLE_PROMPT = 1;
-      BAT_THEME =
-        if theme.name == "gruvbox"
-        then "gruvbox-${themeDarkMode}"
-        else "base16";
     };
     preferXdgDirectories = true;
   };

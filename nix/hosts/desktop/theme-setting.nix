@@ -1,14 +1,14 @@
-{config, ...}: {
+{...}: {
   imports = [
     ../../theme.nix
   ];
   theme = {
     enable = true;
     name = "gruvbox";
-    darkMode = false;
+    darkMode = true;
     fontCoding = {
       name = "JetBrainsMono Nerd Font Mono";
-      size = 11;
+      size = 10;
     };
   };
 }
