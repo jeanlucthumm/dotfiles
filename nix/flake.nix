@@ -53,6 +53,21 @@
         ];
       };
 
+      "desktop" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/desktop
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jeanluc = {...}: {
+              imports = [./home/linux.nix ./hosts/desktop/theme-setting.nix];
+            };
+          }
+        ];
+      };
+
       "virtualbox" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {inherit nixpkgs;};
