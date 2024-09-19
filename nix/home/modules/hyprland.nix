@@ -55,8 +55,8 @@
 
       animations = let
         # Default speeds for animations
-        primary = toString 1.5;
-        secondary = toString 10;
+        primary = "1.5";
+        secondary = "10";
       in {
         enabled = true;
         bezier = ["myBezier, 0.05, 0.9, 0.1, 1.05"];
