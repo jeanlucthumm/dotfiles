@@ -25,7 +25,7 @@
     stylix,
     nix-darwin,
     ...
-  } @ inputs: let
+  }: let
     systems = [
       "aarch64-linux"
       "i686-linux"
@@ -55,7 +55,7 @@
 
       "virtualbox" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit nixpkgs; };
+        specialArgs = {inherit nixpkgs;};
         modules = [
           ./hosts/virtualbox
           home-manager.nixosModules.home-manager
@@ -116,7 +116,7 @@
 
     packages = forAllSystems (
       system: {
-          virtualbox-vm = self.nixosConfigurations.virtualbox.config.system.build.vm;
+        virtualbox-vm = self.nixosConfigurations.virtualbox.config.system.build.vm;
       }
     );
   };
