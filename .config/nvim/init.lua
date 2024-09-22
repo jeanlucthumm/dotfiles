@@ -371,6 +371,14 @@ local plugin_spec = {
     lazy = false,
     priority = 1000,
   },
+  {
+    'ellisonleao/gruvbox.nvim',
+    lazy = false,
+    priority = 1000,
+    opt = {
+      contrast = 'soft',
+    },
+  },
   { 'marko-cerovac/material.nvim' },
   {
     'rose-pine/neovim',
@@ -610,12 +618,18 @@ function SolarizedLuaTheme(background)
   cmd('colorscheme solarized')
 end
 
-function GruvboxTheme(background)
+function GruvboxMaterialTheme(background)
   opt.background = background
   lualine_theme = 'gruvbox-material'
   g.gruvbox_material_background = 'soft'
   g.gruvbox_maetrial_better_performance = 1
   cmd('colorscheme gruvbox-material')
+end
+
+function GruvboxTheme(background)
+  opt.background = background
+  lualine_theme = 'gruvbox'
+  cmd('colorscheme gruvbox')
 end
 
 function MaterialTheme(background) -- prefer 'deep ocean'
@@ -797,7 +811,7 @@ ncmap('<C-w>d', 'lua OpenInRight()')
 ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
--- ncmap('E', 'Telescope buffers')
+ncmap('E', 'Telescope buffers')
 ncmap('<C-e>', 'Telescope find_files')
 nmap('<Leader>e', function()
   require'telescope.builtin'.find_files({
