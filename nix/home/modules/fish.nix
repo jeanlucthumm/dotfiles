@@ -23,7 +23,6 @@
     shellAbbrs = {
       g = "git";
       t = "task";
-      docker = "sudo docker";
       ga = "git add -A";
       gm = "git commit -m";
       ym = "yadm commit -m";

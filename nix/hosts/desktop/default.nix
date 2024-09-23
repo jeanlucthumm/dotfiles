@@ -21,7 +21,6 @@
   users.users.jeanluc = {
     isNormalUser = true;
     description = "Jean-Luc Thumm";
-    shell = pkgs.fish;
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -30,6 +29,7 @@
       # Docker without sudo
       "docker"
     ];
+    shell = pkgs.nushell;
   };
 
   programs.adb.enable = true;

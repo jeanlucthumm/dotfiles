@@ -48,6 +48,68 @@ in {
   ];
 
   programs = {
+    nushell = {
+      enable = true;
+      shellAliases = {
+        vim = "nvim";
+        cd = "z";
+        nd = "nix develop";
+        cat = "bat";
+        gt = " git tree";
+        gs = " git status";
+      };
+      configFile.text = ''
+        def gda [] { git add -A; git d }
+        def yda [] { yadm add -u -p; yadm d }
+        def gm [msg: string] { git commit -m $msg }
+        def ym [msg: string] { yadm commit -m $msg }
+        alias core-ls = ls
+        def ls [] { core-ls | sort-by type }
+
+        $env.config = {
+          edit_mode: "emacs"
+          keybindings: [
+            {
+              name: backward_word
+              modifier: control
+              keycode: char_h
+              mode: [emacs, vi, vi_insert]
+              event: {
+                send: left
+                until: [
+                  { edit: wordstart }
+                ]
+              }
+            }
+            {
+              name: forward_word
+              modifier: control
+              keycode: char_l
+              mode: [emacs, vi, vi_insert]
+              event: {
+                send: right
+                until: [
+                  { edit: wordend }
+                ]
+              }
+            }
+          ]
+        }
+      '';
+      environmentVariables = {
+        nix = ''"${homeDir}/nix"'';
+        nixha = ''"${homeDir}/nix/home"'';
+        conf = ''"${configDir}"'';
+        # For git signing since it spawns gpg in a non-interactive session so gpg
+        # doesn't know what tty to display pinentry on.
+        GPG_TTY = "^tty";
+        EDITOR = ''"${pkgs.neovim}/bin/nvim"'';
+      };
+    };
+    carapace.enable = true;
+    carapace.enableNushellIntegration = true;
+    starship.enable = true;
+
     # cd replacement
     zoxide = {
       enable = true;
