@@ -42,16 +42,12 @@ in {
       };
     };
 
-    fish.shellAliases = lib.mkMerge [
-      {
-        update = "sudo nixos-rebuild switch --flake $HOME/nix#${hostName}";
+    fish.shellAliases.nrs = "sudo nixos-rebuild switch --flake $HOME/nix#${hostName}";
+    nushell.configFile.text = ''
+      def nrs [] {
+          sudo nixos-rebuild switch --flake $"($env.HOME)/nix#${hostName}"
       }
-      (lib.mkIf
-        isArch
-        {
-          pacman = "paru";
-        })
-    ];
+    '';
 
     qutebrowser = {
       # Uses VCS dotfiles
