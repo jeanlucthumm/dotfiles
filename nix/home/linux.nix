@@ -1,14 +1,11 @@
 {
   config,
   pkgs,
-  lib,
-  # Passed via extraSpecialArgs
+  # Passed via extraSpecialArgs in flake.nix
   hostName,
   ...
 }: let
   homeDir = config.home.homeDirectory;
-  # TODO: HomeManager doesn't seem to have access to paths
-  isArch = builtins.pathExists "/etc/arch-release";
 in {
   imports = [
     ./modules/common.nix
