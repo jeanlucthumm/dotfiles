@@ -44,6 +44,13 @@
 
   programs.adb.enable = true;
 
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 32 * 1024; # 32 GiB
+    }
+  ];
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
