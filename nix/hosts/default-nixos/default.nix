@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Enable flakes
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
@@ -46,7 +42,7 @@
 
     ## Desktop
     gammastep # Redshifting at night
-    cinnamon.nemo # File browser
+    nemo # File browser
     brightnessctl # Screen brightness controls
     wl-clipboard # Copy paste in Wayland
     qutebrowser # Keyboard-centric browser
