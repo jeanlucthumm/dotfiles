@@ -5,14 +5,8 @@
 }: let
   homeDir = config.home.homeDirectory;
   configDir = config.xdg.configHome;
-  theme = config.theme;
-  themeDarkMode =
-    if theme.darkMode
-    then "dark"
-    else "light";
 in {
   imports = [
-    ../../theme.nix
     ./fish.nix
   ];
 
@@ -165,28 +159,6 @@ in {
   };
 
   xdg.enable = true;
-
-  # Neovim theme
-  home.file = {
-    "${configDir}/nvim/lua/theme.lua".text = let
-      n = theme.name;
-      func =
-        if n == "gruvbox"
-        then "GruvboxTheme"
-        else throw "Unsupported nvim theme: ${n}";
-    in ''
-      local M = {}
-
-      function M.setup()
-        ${func}('${themeDarkMode}')
-        if vim.g.neovide then
-          vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
-        end
-      end
-
-      return M
-    '';
-  };
 
   # The state version is required and should stay at the version you
   # originally installed.

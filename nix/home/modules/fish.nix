@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   programs.fish = {
     enable = true;
     plugins = with pkgs.fishPlugins; [
@@ -58,20 +54,10 @@
       # Needs to be first.
       ${pkgs.zoxide}/bin/zoxide init fish | source
     '';
-    interactiveShellInit = let
-      darkMode =
-        if config.theme.darkMode
-        then "dark"
-        else "light";
-    in ''
+    interactiveShellInit = ''
       # Jump around words easier
       bind \ch backward-word
       bind \cl forward-word
-
-      # Theme (majority is set by stylix)
-      set -g theme_nerd_fonts yes
-      set -g theme_virtual_env_prompt_enabled no
-      set -x BAT_THEME ${config.theme.name}-${darkMode}
 
       if [ "$TERM" = "xterm-kitty" ]
           abbr --add -- icat 'kitty +kitten icat'
