@@ -37,7 +37,6 @@ in {
     gcc # GNU Compiler Collection
     pls # ls replacement
     fd # find replacement
-    zoxide # cd replacement
     fzf # Multi-purpose fuzzy finder
     jq # CLI for json manipulation
     python3 # The language python
@@ -49,6 +48,13 @@ in {
   ];
 
   programs = {
+    # cd replacement
+    zoxide = {
+      enable = true;
+      enableNushellIntegration = true;
+      enableFishIntegration = true;
+    };
+
     kitty = {
       enable = true;
       shellIntegration.enableFishIntegration = true;

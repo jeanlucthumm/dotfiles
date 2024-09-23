@@ -48,12 +48,6 @@
       cd = "z";
       ssh = "TERM=xterm-256color /usr/bin/ssh";
     };
-    shellInit = ''
-      # Required for zoxide.
-      # Do not put in interactiveShellInit due to bug.
-      # Needs to be first.
-      ${pkgs.zoxide}/bin/zoxide init fish | source
-    '';
     interactiveShellInit = ''
       # Jump around words easier
       bind \ch backward-word
