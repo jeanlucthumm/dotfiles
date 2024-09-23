@@ -73,25 +73,15 @@ in {
               name: backward_word
               modifier: control
               keycode: char_h
-              mode: [emacs, vi, vi_insert]
-              event: {
-                send: left
-                until: [
-                  { edit: wordstart }
-                ]
-              }
+              mode: [emacs, vi_normal, vi_insert]
+              event: { edit: movewordleft }
             }
             {
               name: forward_word
               modifier: control
               keycode: char_l
-              mode: [emacs, vi, vi_insert]
-              event: {
-                send: right
-                until: [
-                  { edit: wordend }
-                ]
-              }
+              mode: [emacs, vi_normal, vi_insert]
+              event: { edit: movewordright }
             }
           ]
         }
