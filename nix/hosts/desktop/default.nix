@@ -11,6 +11,16 @@
   ];
 
   networking.hostName = "desktop"; # Define your hostname.
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      22 # SSH
+    ];
+    allowedUDPPorts = [
+      41641 # Tailscale
+    ];
+    checkReversePath = false; # Set to false to allow Tailscale
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -41,11 +51,7 @@
     enable = true;
     settings.PasswordAuthentication = true;
   };
-
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [22];
-  };
+  services.tailscale.enable = true;
 
   environment.systemPackages = with pkgs; [
     neovim
