@@ -14,6 +14,12 @@ in {
     ./theme-home.nix
   ];
 
+  home.packages = with pkgs; [
+    android-studio
+    signal-desktop
+    meld
+  ];
+
   programs = {
     # Bottom bar
     waybar.enable = true;
@@ -105,8 +111,6 @@ in {
 
   home.sessionVariables = {
     OS = "Linux";
-    ANDROID_SDK_ROOT = "${homeDir}/Android/Sdk";
-    ANDROID_HOME = config.home.sessionVariables.ANDROID_SDK_ROOT;
     CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
   };
 

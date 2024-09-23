@@ -21,9 +21,18 @@
   users.users.jeanluc = {
     isNormalUser = true;
     description = "Jean-Luc Thumm";
-    extraGroups = ["networkmanager" "wheel"];
     shell = pkgs.fish;
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      # Android Debug Bridge unprivileged access
+      "adbusers"
+      # Docker without sudo
+      "docker"
+    ];
   };
+
+  programs.adb.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -84,6 +93,8 @@
       };
     };
   };
+
+  virtualisation.docker.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
