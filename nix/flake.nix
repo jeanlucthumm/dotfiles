@@ -154,8 +154,8 @@
 
           shellHook = ''
             # Enter shell to the same one user is using, otherwise it would
-            # just open bash. Note you have to exit twice to leave the shell.
-            exec $SHELL
+            # just open bash. Also exit with correct status when we're done.
+            bash -c "$SHELL"; exit $?
           '';
         };
       }
