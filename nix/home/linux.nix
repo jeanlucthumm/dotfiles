@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   # Passed via extraSpecialArgs in flake.nix
   hostName,

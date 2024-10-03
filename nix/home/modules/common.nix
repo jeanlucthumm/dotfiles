@@ -64,7 +64,13 @@ in {
         def gm [msg: string] { git commit -m $msg }
         def ym [msg: string] { yadm commit -m $msg }
         alias core-ls = ls
-        def ls [] { core-ls | sort-by type }
+        def ls [...args] {
+            if ($args | is-empty) {
+                core-ls | sort-by type
+            } else {
+                core-ls ...$args | sort-by type
+            }
+        }
 
         $env.config = {
           edit_mode: "emacs"
@@ -93,6 +99,7 @@ in {
         # For git signing since it spawns gpg in a non-interactive session so gpg
         # doesn't know what tty to display pinentry on.
         GPG_TTY = "^tty";
+        SSH_AUTH_SOCK = ''$"($env.XDG_RUNTIME_DIR)/ssh-agent"'';
         EDITOR = ''"${pkgs.neovim}/bin/nvim"'';
       };
     };
