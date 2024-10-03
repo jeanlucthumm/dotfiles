@@ -11,6 +11,7 @@
 in {
   imports = [
     ../theme.nix
+    ./ls-colors-hack.nix
   ];
 
   stylix.targets = {
