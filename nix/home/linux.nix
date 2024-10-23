@@ -17,6 +17,7 @@ in {
     android-studio
     signal-desktop
     meld
+    lsof
   ];
 
   programs = {
