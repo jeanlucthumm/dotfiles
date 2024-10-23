@@ -59,6 +59,7 @@
     settings.PasswordAuthentication = true;
   };
   services.tailscale.enable = true;
+  services.udisks2.enable = true;
 
   environment.systemPackages = with pkgs; [
     neovim
