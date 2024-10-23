@@ -8,6 +8,7 @@
 in {
   imports = [
     ./fish.nix
+    ./nushell
   ];
 
   home.packages = with pkgs; [
@@ -50,63 +51,7 @@ in {
   ];
 
   programs = {
-    nushell = {
-      enable = true;
-      shellAliases = {
-        vim = "nvim";
-        cd = "z";
-        nd = "nix develop";
-        cat = "bat";
-        gt = " git tree";
-        gs = " git status";
-      };
-      configFile.text = ''
-        def gda [] { git add -A; git d }
-        def yda [] { yadm add -u -p; yadm d }
-        def gm [msg: string] { git commit -m $msg }
-        def ym [msg: string] { yadm commit -m $msg }
-        alias core-ls = ls
-        def ls [...args] {
-            if ($args | is-empty) {
-                core-ls | sort-by type
-            } else {
-                core-ls ...$args | sort-by type
-            }
-        }
-
-        $env.config = {
-          edit_mode: "emacs"
-          keybindings: [
-            {
-              name: backward_word
-              modifier: control
-              keycode: char_h
-              mode: [emacs, vi_normal, vi_insert]
-              event: { edit: movewordleft }
-            }
-            {
-              name: forward_word
-              modifier: control
-              keycode: char_l
-              mode: [emacs, vi_normal, vi_insert]
-              event: { edit: movewordright }
-            }
-          ]
-        }
-      '';
-      environmentVariables = {
-        nix = ''"${homeDir}/nix"'';
-        nixha = ''"${homeDir}/nix/home"'';
-        conf = ''"${configDir}"'';
-        # For git signing since it spawns gpg in a non-interactive session so gpg
-        # doesn't know what tty to display pinentry on.
-        GPG_TTY = "^tty";
-        SSH_AUTH_SOCK = ''$"($env.XDG_RUNTIME_DIR)/ssh-agent"'';
-        EDITOR = ''"${pkgs.neovim}/bin/nvim"'';
-      };
-    };
     carapace.enable = true;
-    carapace.enableNushellIntegration = true;
     starship.enable = true;
 
     # cd replacement
