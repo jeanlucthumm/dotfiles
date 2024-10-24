@@ -61,6 +61,11 @@
   services.tailscale.enable = true;
   services.udisks2.enable = true;
 
+  # This is a systemd service that delays system boot until network connectivity is established.
+  # Disabling speeds up boot time, but need to make sure nothing requires immediate network
+  # connectivity
+  systemd.services.NetworkManager-wait-online.enable = false;
+
   environment.systemPackages = with pkgs; [
     neovim
     yadm
