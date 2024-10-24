@@ -74,17 +74,28 @@
         ];
       };
 
-      "virtualbox" = nixpkgs.lib.nixosSystem {
+      # System configuration for VM.
+      # Do:
+      #   nixos-rebuild build-vm --flake .#virtual
+      #   ./result/bin/run-virtual-vm
+      #
+      # If you're not on NixOS then:
+      #   nix run .#virtual-vm
+      # That works because of the `packages` attr below.
+      "virtual" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {inherit nixpkgs;};
         modules = [
-          ./hosts/virtualbox
+          stylix.nixosModules.stylix
+          ./hosts/theme-setting.nix
+          ./hosts/virtual
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs.hostName = "virtual";
             home-manager.users.jeanluc = {...}: {
-              imports = [./home/linux.nix ./hosts/virtualbox/theme-setting.nix];
+              imports = [./home/linux.nix ./hosts/virtual/theme-setting.nix];
             };
           }
         ];
@@ -138,7 +149,7 @@
 
     packages = forAllSystems (
       system: {
-        virtualbox-vm = self.nixosConfigurations.virtualbox.config.system.build.vm;
+        virtual-vm = self.nixosConfigurations.virtual.config.system.build.vm;
       }
     );
   };
