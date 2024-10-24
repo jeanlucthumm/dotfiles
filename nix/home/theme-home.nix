@@ -20,7 +20,7 @@ in {
   };
 
   programs.nushell.environmentVariables = {
-    BAT_THEME = ''"${config.theme.name}-${themeDarkMode}"'';
+    BAT_THEME = ''${config.theme.name}-${themeDarkMode}'';
   };
   programs.fish.interactiveShellInit = ''
     set -g theme_nerd_fonts yes
