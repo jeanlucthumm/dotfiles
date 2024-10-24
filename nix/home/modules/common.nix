@@ -92,6 +92,7 @@ in {
         include ${configDir}/task/context.config
         hooks.location=${configDir}/task/hooks
       '';
+      package = pkgs.taskwarrior3;
     };
     git = {
       enable = true;
