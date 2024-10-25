@@ -1,12 +1,11 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
-    # Include the results of the hardware scan.
+    ../modules/nixos-foundation.nix
+    ../modules/nixos-graphical.nix
+    ../modules/graphical.nix
+    ../modules/bluetooth.nix
+    ../modules/security.nix
     ./hardware-configuration.nix
-    ../default-nixos
     ./theme-setting.nix
   ];
 
@@ -21,12 +20,6 @@
     ];
     checkReversePath = false; # Set to false to allow Tailscale
   };
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "America/Los_Angeles";
 
   users.users.jeanluc = {
     isNormalUser = true;
@@ -51,12 +44,9 @@
     }
   ];
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   services.openssh = {
     enable = true;
-    settings.PasswordAuthentication = true;
+    settings.PasswordAuthentication = false;
   };
   services.tailscale.enable = true;
   services.udisks2.enable = true;
@@ -65,14 +55,6 @@
   # Disabling speeds up boot time, but need to make sure nothing requires immediate network
   # connectivity
   systemd.services.NetworkManager-wait-online.enable = false;
-
-  environment.systemPackages = with pkgs; [
-    neovim
-    yadm
-    tmux
-    fish
-    git
-  ];
 
   virtualisation.docker.enable = true;
 

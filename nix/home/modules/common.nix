@@ -46,6 +46,7 @@ in {
     wget # Download files from the web
     entr # Run arbitrary commands when files change
     aichat # AI chatbot for the terminal
+
     ## GUI
     neovide # Neovim GUI
   ];

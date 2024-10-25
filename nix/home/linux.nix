@@ -14,10 +14,25 @@ in {
   ];
 
   home.packages = with pkgs; [
-    android-studio
-    signal-desktop
-    meld
-    lsof
+    # Desktop
+    android-studio # Android development
+    signal-desktop # Encrypted messaging
+    meld # Diff tool
+    gammastep # Redshifting at night
+    nemo # File browser
+    brightnessctl # Screen brightness controls
+    wl-clipboard # Copy paste in Wayland
+    qutebrowser # Keyboard-centric browser
+    bitwarden-desktop # Password management
+    grim # Screenshots
+    slurp # For selecting screen regions
+    pavucontrol # GUI for PiperWire
+    wev # Shows keycodes in wayland
+    swayosd # Responsive UI for changing volume and such
+    xdg-utils # Open files in right prorgram
+    polkit_gnome # UI for Polkit authentication
+    libnotify # Notifications
+    libinput # Input device management
   ];
 
   programs = {
