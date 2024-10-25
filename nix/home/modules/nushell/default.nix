@@ -11,6 +11,7 @@ in {
     enable = true;
     shellAliases = {
       vim = "nvim";
+      nv = "neovide --fork";
       cd = "z";
       nd = "nix develop";
       cat = "bat";
