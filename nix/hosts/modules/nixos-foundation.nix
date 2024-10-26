@@ -25,10 +25,14 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Configure keymap in X11;
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+  services = {
+    # Configure keymap in X11;
+    xserver.xkb = {
+      layout = "us";
+      variant = "";
+    };
+    # Enables UPower which provides power info and control via dbus to applications
+    upower.enable = true;
   };
 
   # Allow unfree packages
