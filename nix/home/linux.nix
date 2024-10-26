@@ -33,6 +33,7 @@ in {
     polkit_gnome # UI for Polkit authentication
     libnotify # Notifications
     libinput # Input device management
+    firefox # Web browser
   ];
 
   programs = {
