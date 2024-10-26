@@ -25,6 +25,7 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  # Stuff that runs in the background
   services = {
     # Configure keymap in X11;
     xserver.xkb = {
