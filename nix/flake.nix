@@ -28,6 +28,7 @@
     home-manager,
     stylix,
     nix-darwin,
+    zen-browser,
     ...
   }: let
     systems = [
@@ -59,10 +60,20 @@
 
       "desktop" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = {inherit zen-browser;};
         modules = [
           stylix.nixosModules.stylix
           ./hosts/theme-setting.nix
           ./hosts/desktop
+          ({
+            config,
+            zen-browser,
+            ...
+          }: {
+            environment.systemPackages = [
+              zen-browser.packages.${config.nixpkgs.system}.specific
+            ];
+          })
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
