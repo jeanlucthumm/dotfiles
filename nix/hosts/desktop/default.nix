@@ -53,18 +53,33 @@
     }
   ];
 
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = false;
+  # Software that runs in the background
+  services = {
+    # Widely used SSH client/server
+    openssh = {
+      enable = true;
+      settings.PasswordAuthentication = false;
+    };
+    # Easy to use VPN for all your devices
+    tailscale.enable = true;
+    # Handles storage devices and provides D-bus interface
+    udisks2.enable = true;
+    # Platform agnostic pkg manager. Useful for installing stuff that has poor Nix support.
+    flatpak.enable = true;
   };
-  services.tailscale.enable = true;
-  services.udisks2.enable = true;
+
+  xdg.portal = {
+    # Desktop integration portal for sandboxed apps (flatpak) to work correctly
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    config.common.default = "gtk";
+  };
 
   # This is a systemd service that delays system boot until network connectivity is established.
   # Disabling speeds up boot time, but need to make sure nothing requires immediate network
   # connectivity
   systemd.services.NetworkManager-wait-online.enable = false;
 
+  # Docker is a container platform
   virtualisation.docker.enable = true;
 
   # This value determines the NixOS release from which the default
