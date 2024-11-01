@@ -34,6 +34,7 @@ in {
     libnotify # Notifications
     libinput # Input device management
     firefox # Web browser
+    discord # Chat
   ];
 
   programs = {
