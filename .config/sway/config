@@ -13,21 +13,23 @@
 # USER VARS
 
 set $mod Mod4
-set $wallpaper "/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png"
 
 # =============================================================================
 # PERIPHERALS
 
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-
 output eDP-1 pos 0 0
 
 output DP-1 {
-  pos 0 0
+    # mode 3840x2160@144Hz
+    position 0,0
+    # scale 1
 }
 
 output DP-3 {
-  pos 3840 500
+    # mode 3840x2160@60Hz
+    position 3840,-900
+    # scale 1
+    transform 90
 }
 
 # You can get the names of your inputs by running: swaymsg -t get_inputs
@@ -205,7 +207,7 @@ for_window [class="Org.gnome.Nautilus"] floating enable
 
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-msg exit"
+bindsym $mod+Shift+e exec "sway-msg exit"
 
 # =============================================================================
 # FUNCTIONAL
@@ -254,8 +256,7 @@ bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 bindsym $mod+d exec wofi -show drun
 bindsym $mod+Return exec kitty
 bindsym $mod+Shift+n exec sway-input -F 'rename workspace to "%s"'
-bindsym $mod+c exec firefox
-bindsym $mod+x exec qutebrowser
+bindsym $mod+c exec zen
 bindsym $mod+n exec nemo
 bindsym $mod+backslash exec makoctl dismiss
 
