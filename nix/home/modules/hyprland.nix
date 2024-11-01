@@ -53,7 +53,7 @@
 
       monitor = [
         "DP-1,3840x2160@144,0x0,1"
-        "DP-3,preferred,3840x-900,1.0,transform,3"
+        "DP-3,3840x2160@60.00,3840x-900,1,transform,3"
       ];
 
       decoration = {

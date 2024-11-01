@@ -9,7 +9,15 @@
     ./theme-setting.nix
   ];
 
-  networking.hostName = "desktop"; # Define your hostname.
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+
+    # Disables AMDGPU Scatter/Gather display functionality to fix screen
+    # flickering issues on Ryzen systems (especially 7000 series APUs).
+    kernelParams = ["amdgpu.sg_display=0"];
+  };
+
+  networking.hostName = "desktop";
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
@@ -35,6 +43,7 @@
     shell = pkgs.nushell;
   };
 
+  # Android Debug Bridge (ADB) for Android development
   programs.adb.enable = true;
 
   swapDevices = [
