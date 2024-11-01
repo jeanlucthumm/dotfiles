@@ -1,4 +1,14 @@
-{lib, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
+  home.packages = with pkgs; [
+    hyprlock # Lockscreen
+    # TODO use nix service
+    hypridle # Idle manager
+  ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -101,6 +111,7 @@
 
       exec-once = [
         "kitty --detach --title=\"scratchpad\" --override initial_window_width=235c --override initial_window_height=83c"
+        "hypridle"
       ];
 
       bind =
@@ -141,6 +152,7 @@
           ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
         ]
         ++ (
+          # TODO don't generate, just explicitly list the nums
           # workspaces
           # binds $mod + [shift +] {1..9, 0} to [move to] workspace {1..10}
           builtins.concatLists (builtins.genList (
@@ -157,6 +169,7 @@
             10)
         )
         ++ (
+          # TODO just iterate of attrs instead of strings for this
           # Move focus with vim directions
           # Move windows with SHIFT + vim directions
           # Swap windows with SHIFT + arrows
@@ -246,7 +259,7 @@
   };
 
   # Wallpaper manager from same org as Hyprland
-  services.hyprpaper = {
-    enable = true;
+  services = {
+    hyprpaper.enable = true;
   };
 }
