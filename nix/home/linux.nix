@@ -19,7 +19,7 @@ in {
     signal-desktop # Encrypted messaging
     meld # Diff tool
     gammastep # Redshifting at night
-    nemo # File browser
+    nautilus # File browser
     brightnessctl # Screen brightness controls
     wl-clipboard # Copy paste in Wayland
     qutebrowser # Keyboard-centric browser

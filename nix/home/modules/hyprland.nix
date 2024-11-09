@@ -118,7 +118,7 @@
         [
           # Software launching
           "$mod, RETURN, exec, kitty"
-          "$mod, N, exec, nemo"
+          "$mod, N, exec, nautilus"
           "$mod, C, exec, zen"
           "$mod, X, exec, qutebrowser"
           "$mod SHIFT, space, togglefloating,"
@@ -209,7 +209,7 @@
       windowrulev2 = [
         # Floating
         "float, class:^(kitty)$, title:^(scratchpad)$"
-        "float, class:(nemo)"
+        "float, class:^(org.gnome.Nautilus)$"
 
         # Default to special workspace
         "workspace special, class:^(kitty)$, title:^(scratchpad)$"
