@@ -5,11 +5,20 @@ def ym [msg: string] { yadm commit -m $msg }
 
 alias __ls = ls
 def ls [...args] {
-    if ($args | is-empty) {
-        __ls | sort-by type
-    } else {
-        __ls ...$args | sort-by type
-    }
+  let args = if $args == [] {
+    ["."]
+  } else {
+    $args
+  }
+  __ls ...$args | sort-by type -i | grid -c -i -s "\n"
+}
+def la [...args] {
+  let args = if $args == [] {
+    ["."]
+  } else {
+    $args
+  }
+  __ls -a ...$args | sort-by type -i | grid -c -i -s "\n"
 }
 
 alias __ssh = ssh
