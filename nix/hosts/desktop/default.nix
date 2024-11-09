@@ -66,6 +66,11 @@
     udisks2.enable = true;
     # Platform agnostic pkg manager. Useful for installing stuff that has poor Nix support.
     flatpak.enable = true;
+    # Schedule tasks to run at specific times using `at` command
+    atd = {
+      enable = true;
+      allowEveryone = true;
+    };
   };
 
   xdg.portal = {

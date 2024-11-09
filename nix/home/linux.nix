@@ -35,6 +35,7 @@ in {
     libinput # Input device management
     firefox # Web browser
     discord # Chat
+    gimp # Image editing
   ];
 
   programs = {
