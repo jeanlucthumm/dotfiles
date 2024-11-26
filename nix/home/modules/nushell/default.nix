@@ -15,8 +15,6 @@ in {
       cd = "z";
       nd = "nix develop";
       cat = "bat";
-      gt = " git tree";
-      gs = " git status";
     };
     configFile.text = builtins.readFile ./config.nu;
     environmentVariables = {
