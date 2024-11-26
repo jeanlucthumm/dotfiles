@@ -78,6 +78,18 @@ in {
     };
   };
 
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Tela-circle";
+      package = pkgs.tela-circle-icon-theme;
+    };
+    cursorTheme = {
+      name = "Oreo Blue Cursors";
+      package = pkgs.oreo-cursors-plus;
+    };
+  };
+
   xdg = {
     enable = true;
 
