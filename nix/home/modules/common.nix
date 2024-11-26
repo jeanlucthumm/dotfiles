@@ -47,6 +47,7 @@ in {
     entr # Run arbitrary commands when files change
     aichat # AI chatbot for the terminal
     unzip # Unzip files
+    dig # DNS lookup utility
 
     ## GUI
     neovide # Neovim GUI

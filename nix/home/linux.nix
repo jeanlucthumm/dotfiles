@@ -36,9 +36,13 @@ in {
     firefox # Web browser
     discord # Chat
     gimp # Image editing
+
+    lmstudio # LLM experimentation
+    tor-browser # Privacy browser
   ];
 
   programs = {
+    mpv.enable = true;
     # Bottom bar
     waybar.enable = true;
     # Program launcher
