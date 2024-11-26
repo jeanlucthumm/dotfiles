@@ -58,9 +58,6 @@
 
       decoration = {
         rounding = 10;
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
       };
 
       animations = let
