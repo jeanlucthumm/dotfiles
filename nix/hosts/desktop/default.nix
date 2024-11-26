@@ -12,21 +12,56 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
 
-    # Disables AMDGPU Scatter/Gather display functionality to fix screen
-    # flickering issues on Ryzen systems (especially 7000 series APUs).
-    kernelParams = ["amdgpu.sg_display=0"];
+    kernelParams = [
+      # Disables AMDGPU Scatter/Gather display functionality to fix screen
+      # flickering issues on Ryzen systems (especially 7000 series APUs).
+      "amdgpu.sg_display=0"
+
+      # Needed for VPNs
+      "net.ipv4.ip_forward=1"
+    ];
+
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        edk2-uefi-shell.enable = true;
+      };
+    };
   };
 
-  networking.hostName = "desktop";
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [
-      22 # SSH
-    ];
-    allowedUDPPorts = [
-      41641 # Tailscale
-    ];
-    checkReversePath = false; # Set to false to allow Tailscale
+  networking = {
+    hostName = "desktop";
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [
+        22 # SSH
+      ];
+      allowedUDPPorts = [
+        41641 # Tailscale
+        1194 # OpenVPN
+      ];
+      checkReversePath = false; # Set to false to allow Tailscale
+    };
+    useDHCP = false;
+    interfaces."eno1" = {
+      useDHCP = false;
+      ipv4.addresses = [
+        {
+          address = "192.168.1.10";
+          prefixLength = 24;
+        }
+      ];
+      ipv6.addresses = [
+        {
+          address = "fdb6:88cb:ee90::10";
+          prefixLength = 64;
+        }
+      ];
+    };
+    defaultGateway = "192.168.1.1";
+    defaultGateway6 = "fdb6:88cb:ee90::1";
+    nameservers = ["192.168.1.1" "fdb6:88cb:ee90::1"];
   };
 
   users.users.jeanluc = {
