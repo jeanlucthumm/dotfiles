@@ -31,10 +31,7 @@
         else "${pkgs.base16-schemes}/share/themes/gruvbox-material-light-soft.yaml"
       else throw "unknown theme ${t}";
     fonts = let
-      fontPkg = pkgs.nerdfonts.override {
-        # Narrow down since all of nerdfonts is a lot.
-        fonts = ["JetBrainsMono" "FiraCode"];
-      };
+      fontPkg = pkgs.nerd-fonts.jetbrains-mono;
     in {
       monospace = {
         package = fontPkg;

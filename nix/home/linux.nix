@@ -39,6 +39,7 @@ in {
 
     lmstudio # LLM experimentation
     tor-browser # Privacy browser
+    google-cloud-sdk # Google Cloud CLI
   ];
 
   programs = {

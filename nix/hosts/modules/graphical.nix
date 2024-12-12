@@ -2,12 +2,9 @@
 {pkgs, ...}: {
   # Fonts
   fonts.packages = with pkgs; [
-    # Nerd fonts are patched fonts that add more icons.
-    # Neovim makes use of this.
-    (nerdfonts.override {
-      # Narrow down since all of nerdfonts is a lot.
-      fonts = ["JetBrainsMono" "FiraCode"];
-    })
+    # builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts)
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
     font-awesome # for icons
   ];
 }
