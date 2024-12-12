@@ -15,6 +15,7 @@ in {
       cd = "z";
       nd = "nix develop";
       cat = "bat";
+      t = "task";
     };
     configFile.text = builtins.readFile ./config.nu;
     environmentVariables = {

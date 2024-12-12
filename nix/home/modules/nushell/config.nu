@@ -89,6 +89,8 @@ let abbreviations = {
   gda: 'git add -A; git d'
   yda: 'yadm add -u -p; yadm d'
   ym: 'yadm commit -m'
+  tr: 'task ready'
+  ta: 'task active'
 }
 
 $env.config = {
