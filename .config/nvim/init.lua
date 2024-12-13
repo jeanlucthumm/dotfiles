@@ -183,7 +183,8 @@ local plugin_spec = {
         region_check_events = 'InsertEnter',
         delete_check_events = 'InsertLeave',
       })
-      require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets' } })
+      require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets/lua-snippets' } })
+      require'luasnip.loaders.from_vscode'.lazy_load({ paths = { './snippets/flutter-riverpod-snippets' } })
     end,
   },
   {

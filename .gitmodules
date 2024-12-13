@@ -1,3 +1,6 @@
 [submodule ".config/alacritty/alacritty-theme"]
 	path = .config/alacritty/alacritty-theme
 	url = https://github.com/eendroroy/alacritty-theme.git
+[submodule ".config/nvim/snippets/flutter-riverpod-snippets"]
+	path = .config/nvim/snippets/flutter-riverpod-snippets
+	url = git@github.com:RobertBrunhage/flutter-riverpod-snippets.git
