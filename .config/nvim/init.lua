@@ -92,6 +92,7 @@ local plugin_spec = {
         },
       })
       lspconfig.nil_ls.setup(extend {})
+      lspconfig.ts_ls.setup(extend {})
     end,
   },
   {
@@ -106,7 +107,7 @@ local plugin_spec = {
           n.builtins.formatting.mdformat,
           n.builtins.formatting.clang_format,
           n.builtins.formatting.buf,
-          n.builtins.formatting.prettier,
+          n.builtins.formatting.prettierd,
           n.builtins.formatting.dart_format,
           n.builtins.formatting.isort,
           n.builtins.formatting.alejandra,
@@ -322,7 +323,7 @@ local plugin_spec = {
   {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig', 'nvim-lua/lsp-status.nvim' },
-    enabled = not HasGoogle,
+    enabled = false,
     config = function()
       require'typescript-tools'.setup {
         on_attach = require'common'.on_attach,
