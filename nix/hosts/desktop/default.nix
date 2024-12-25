@@ -43,25 +43,6 @@
       ];
       checkReversePath = false; # Set to false to allow Tailscale
     };
-    useDHCP = false;
-    interfaces."eno1" = {
-      useDHCP = false;
-      ipv4.addresses = [
-        {
-          address = "192.168.1.10";
-          prefixLength = 24;
-        }
-      ];
-      ipv6.addresses = [
-        {
-          address = "fdb6:88cb:ee90::10";
-          prefixLength = 64;
-        }
-      ];
-    };
-    defaultGateway = "192.168.1.1";
-    defaultGateway6 = "fdb6:88cb:ee90::1";
-    nameservers = ["192.168.1.1" "fdb6:88cb:ee90::1"];
   };
 
   users.users.jeanluc = {
