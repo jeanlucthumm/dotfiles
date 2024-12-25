@@ -127,6 +127,7 @@
           "$mod, mouse:277, workspace, previous"
           "$mod, G, togglegroup"
           "$mod SHIFT, G, moveoutofgroup"
+          "$mod SHIFT, I, swapactiveworkspaces, 0 1"
           "$mod, I, changegroupactive"
           "$mod, P, pseudo, # dwindle"
           "$mod, E, layoutmsg, togglesplit, # dwindle"
@@ -190,8 +191,8 @@
                 else "DOWN";
             in [
               "$mod, ${x}, movefocus, ${dir}"
-              "$mod SHIFT, ${x}, movewindow, ${dir}"
-              "$mode SHIFT, ${arrow}, swapwindow, ${dir}"
+              "$mod SHIFT, ${x}, swapwindow, ${dir}"
+              "$mod SHIFT, ${arrow}, movewindow, ${dir}"
             ])
           )
         );
