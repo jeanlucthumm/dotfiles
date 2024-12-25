@@ -18,7 +18,6 @@
     };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -71,7 +70,7 @@
             ...
           }: {
             environment.systemPackages = [
-              zen-browser.packages.${config.nixpkgs.system}.specific
+              zen-browser.packages.${config.nixpkgs.system}.default
             ];
           })
           home-manager.nixosModules.home-manager
