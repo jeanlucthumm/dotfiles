@@ -381,6 +381,7 @@ local plugin_spec = {
     },
   },
   { 'marko-cerovac/material.nvim' },
+  { 'EdenEast/nightfox.nvim' },
   {
     'rose-pine/neovim',
     config = function()
@@ -684,6 +685,17 @@ function EverForestTheme(background)
   vim.g.everforest_enable_italic = true
   vim.g.everforest_background = 'soft'
   cmd('colorscheme everforest')
+end
+
+function NightfoxTheme(background)
+  opt.background = background
+  lualine_theme = 'nightfox'
+  if background == 'dark' then
+    cmd('colorscheme terafox')
+  else
+    cmd('colorscheme dawnfox')
+  end
+  cmd('colorscheme nightfox')
 end
 
 local function fallbackTheme() RosePineTheme('light') end
