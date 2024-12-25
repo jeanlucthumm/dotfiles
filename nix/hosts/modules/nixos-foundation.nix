@@ -4,8 +4,15 @@
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    systemd-boot = {
+      enable = true;
+      # Limits the amount of previous generations in the boot menu. If this is set to unlimited,
+      # the /boot partition can fill up.
+      configurationLimit = 20;
+    };
+    efi.canTouchEfiVariables = true;
+  };
 
   # Timezone and locale
   time.timeZone = "America/Los_Angeles";
@@ -49,6 +56,13 @@
     git # Version control
     nushell # Shell so I don't have to use bash for sysadmin
   ];
+
+  # Nix store gets full of old stuff, so clean it up periodically.
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
