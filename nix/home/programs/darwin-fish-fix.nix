@@ -1,10 +1,5 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
-  # FIXME: This is needed to address bug where the $PATH is re-ordered by
+{lib, ...}: {
+  # This is needed to address bug where the $PATH is re-ordered by
   # the `path_helper` tool, prioritising Apple’s tools over the ones we’ve
   # installed with nix.
   #
