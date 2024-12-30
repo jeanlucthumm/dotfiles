@@ -38,6 +38,8 @@
     };
     # Enables UPower which provides power info and control via dbus to applications
     upower.enable = true;
+    # Handles storage devices and provides D-bus interface
+    udisks2.enable = true;
   };
 
   # Allow unfree packages

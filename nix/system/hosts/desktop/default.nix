@@ -1,11 +1,13 @@
 {pkgs, ...}: {
   imports = [
+    ../../modules/bluetooth.nix
+    ../../modules/graphical.nix
     ../../modules/nixos-foundation.nix
     ../../modules/nixos-graphical.nix
-    ../../modules/graphical.nix
-    ../../modules/bluetooth.nix
     ../../modules/security.nix
-    ../../theme-setting.nix
+    ../../modules/ssh.nix
+    ../../modules/tailscale.nix
+    ../../modules/user-jeanluc.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
   ];
@@ -17,9 +19,6 @@
       # Disables AMDGPU Scatter/Gather display functionality to fix screen
       # flickering issues on Ryzen systems (especially 7000 series APUs).
       "amdgpu.sg_display=0"
-
-      # Needed for VPNs
-      "net.ipv4.ip_forward=1"
     ];
 
     loader = {
@@ -35,29 +34,10 @@
     hostName = "desktop";
     firewall = {
       enable = true;
-      allowedTCPPorts = [
-        22 # SSH
-      ];
       allowedUDPPorts = [
-        41641 # Tailscale
         1194 # OpenVPN
       ];
-      checkReversePath = false; # Set to false to allow Tailscale
     };
-  };
-
-  users.users.jeanluc = {
-    isNormalUser = true;
-    description = "Jean-Luc Thumm";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      # Android Debug Bridge unprivileged access
-      "adbusers"
-      # Docker without sudo
-      "docker"
-    ];
-    shell = pkgs.nushell;
   };
 
   # Android Debug Bridge (ADB) for Android development
@@ -72,15 +52,6 @@
 
   # Software that runs in the background
   services = {
-    # Widely used SSH client/server
-    openssh = {
-      enable = true;
-      settings.PasswordAuthentication = false;
-    };
-    # Easy to use VPN for all your devices
-    tailscale.enable = true;
-    # Handles storage devices and provides D-bus interface
-    udisks2.enable = true;
     # Platform agnostic pkg manager. Useful for installing stuff that has poor Nix support.
     flatpak.enable = true;
     # Schedule tasks to run at specific times using `at` command
