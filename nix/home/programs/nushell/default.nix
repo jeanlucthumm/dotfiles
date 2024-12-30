@@ -25,7 +25,6 @@ in {
       # For git signing since it spawns gpg in a non-interactive session so gpg
       # doesn't know what tty to display pinentry on.
       GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
-      SSH_AUTH_SOCK = lib.hm.nushell.mkNushellInline ''$"($env.XDG_RUNTIME_DIR)/ssh-agent"'';
       EDITOR = ''${pkgs.neovim}/bin/nvim'';
     };
   };

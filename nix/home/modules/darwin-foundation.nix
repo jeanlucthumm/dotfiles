@@ -4,7 +4,8 @@
     fish.shellAliases.nrs = "nix run nix-darwin -- switch --flake $HOME/nix#${hostName}";
     nushell.configFile.text = ''
       def nrs []: [nothing -> nothing] {
-        nix run nix-darwin -- switch --flake $HOME/nix#${hostName}
+        let flake = "$($env.HOME)/nix#${hostName}"
+        nix run nix-darwin -- switch --flake $flake
       }
     '';
   };
