@@ -1,7 +1,8 @@
 {...}: {
   imports = [
-    ../modules/cli.nix
+    ../modules/foundation.nix
     ../modules/nixos-foundation.nix
+    ../modules/cli.nix
     ../modules/nixos-graphical.nix
     ../modules/graphical.nix
     ../modules/theme-home.nix
