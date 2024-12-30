@@ -1,10 +1,11 @@
 {pkgs, ...}: {
   imports = [
-    ../modules/nixos-foundation.nix
-    ../modules/nixos-graphical.nix
-    ../modules/graphical.nix
-    ../modules/bluetooth.nix
-    ../modules/security.nix
+    ../../modules/nixos-foundation.nix
+    ../../modules/nixos-graphical.nix
+    ../../modules/graphical.nix
+    ../../modules/bluetooth.nix
+    ../../modules/security.nix
+    ../../theme-setting.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
   ];

@@ -107,8 +107,6 @@
         };
         modules = [
           stylix.nixosModules.stylix
-          ./hosts/theme-setting.nix
-          ./hosts/desktop
           maptheme.nixosModules.maptheme
           ({config, ...}: {
             maptheme.console = {
@@ -125,6 +123,7 @@
               zen-browser.packages.${config.nixpkgs.system}.default
             ];
           })
+          ./system/hosts/desktop
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
