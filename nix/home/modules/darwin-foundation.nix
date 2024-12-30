@@ -9,8 +9,10 @@
     '';
   };
 
-  home.sessionVariables = {
-    OS = "Darwin";
+  home = {
+    sessionVariables = {
+      OS = "Darwin";
+    };
 
     # Extra stuff to add to $PATH
     sessionPath = [
