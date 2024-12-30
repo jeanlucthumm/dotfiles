@@ -1,21 +1,16 @@
+# NixOS specific GUI config
 {
   config,
   pkgs,
-  # Passed via extraSpecialArgs in flake.nix
-  hostName,
   ...
 }: let
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ./modules/cli
-    ./programs/common.nix
-    ./programs/hyprland.nix
-    ./theme-home.nix
+    ../programs/hyprland.nix
   ];
 
   home.packages = with pkgs; [
-    # Desktop
     android-studio # Android development
     signal-desktop # Encrypted messaging
     meld # Diff tool
@@ -23,7 +18,6 @@ in {
     nautilus # File browser
     brightnessctl # Screen brightness controls
     wl-clipboard # Copy paste in Wayland
-    qutebrowser # Keyboard-centric browser
     bitwarden-desktop # Password management
     grim # Screenshots
     slurp # For selecting screen regions
@@ -41,6 +35,7 @@ in {
     lmstudio # LLM experimentation
     tor-browser # Privacy browser
     google-cloud-sdk # Google Cloud CLI
+    ungoogled-chromium # For Dart dev
   ];
 
   programs = {
@@ -65,14 +60,7 @@ in {
         image_size = 28;
       };
     };
-
-    fish.shellAliases.nrs = "sudo nixos-rebuild switch --flake $HOME/nix#${hostName}";
-    nushell.configFile.text = ''
-      def nrs [] {
-          sudo nixos-rebuild switch --flake $"($env.HOME)/nix#${hostName}"
-      }
-    '';
-
+    # Keyboard-centric browser
     qutebrowser = {
       # Uses VCS dotfiles
       enable = true;
@@ -118,8 +106,6 @@ in {
   };
 
   services = {
-    # TODO configure with stylix
-    # hyprpaper.enable = true;
     swayosd.enable = true;
     # Redlight shifting at night
     gammastep = {
@@ -140,13 +126,7 @@ in {
       padding = "10";
     };
   };
-
   home.sessionVariables = {
-    OS = "Linux";
     CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
   };
-
-  # The state version is required and should stay at the version you
-  # originally installed.
-  home.stateVersion = "24.05";
 }

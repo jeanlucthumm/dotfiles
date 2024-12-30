@@ -130,12 +130,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs.hostName = "desktop";
-            home-manager.users.jeanluc = {...}: {
-              imports = [
-                ./home/linux.nix
-                ./hosts/desktop/theme-setting.nix
-              ];
-            };
+            home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
           }
         ];
       };
