@@ -86,20 +86,6 @@
   in {
     # System configurations for NixOS hosts.
     nixosConfigurations = {
-      "laptop" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./configuration.nix
-          stylix.nixosModules.stylix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.jeanluc = import ./home/linux.nix;
-          }
-        ];
-      };
-
       "desktop" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
