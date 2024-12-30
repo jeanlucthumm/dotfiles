@@ -7,8 +7,8 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ./modules/common.nix
-    ./modules/darwin-fish-fix.nix
+    ./programs/common.nix
+    ./programs/darwin-fish-fix.nix
   ];
 
   home = {
