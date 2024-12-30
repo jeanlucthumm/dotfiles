@@ -3,6 +3,7 @@
     ../modules/cli.nix
     ../modules/nixos-foundation.nix
     ../modules/nixos-graphical.nix
+    ../modules/graphical.nix
     ../../hosts/desktop/theme-setting.nix
   ];
 

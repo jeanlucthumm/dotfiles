@@ -8,6 +8,7 @@ in {
   imports = [
     ../modules/darwin-foundation.nix
     ../modules/cli.nix
+    ../modules/graphical.nix
     ../modules/darwin-fish-fix.nix
   ];
 

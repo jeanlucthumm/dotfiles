@@ -17,6 +17,9 @@ in {
     alejandra # Nix formatter
     nil # Nix language server
     ripgrep # Fast grep search tool
+    nodejs_22 # A bunch of tools (including Copilot) rely on this
+    sumneko-lua-language-server # Lua language server
+    tree-sitter # Syntax parser extensively used by NeoVim
     timewarrior # time tracker
     manix # CLI for nix docs
     neovim # IDE (tExT eDiToR)
