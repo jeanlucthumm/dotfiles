@@ -139,6 +139,8 @@
       };
     };
 
+    # nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin -- switch --flake '.#macbook'
+
     # System configurations for Darwin hosts.
     darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
       modules = [
@@ -148,9 +150,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs.hostName = "macbook";
-          home-manager.users.jeanluc = {...}: {
-            imports = [./home/darwin.nix ./hosts/macbook/theme-setting.nix];
-          };
+          home-manager.users.jeanluc = import ./home/hosts/macbook.nix;
         }
       ];
     };
