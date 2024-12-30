@@ -100,15 +100,6 @@
               colors = nordColors;
             };
           })
-          ({
-            config,
-            zen-browser,
-            ...
-          }: {
-            environment.systemPackages = [
-              zen-browser.packages.${config.nixpkgs.system}.default
-            ];
-          })
           ./system/hosts/desktop
           home-manager.nixosModules.home-manager
           {
