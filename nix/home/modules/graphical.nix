@@ -8,6 +8,11 @@
     # Terminal with GPU acceleration
     kitty = {
       enable = true;
+      # See https://github.com/kovidgoyal/kitty/issues/8167
+      package =
+        if pkgs.stdenv.hostPlatform.isDarwin
+        then pkgs.emptyDirectory
+        else pkgs.kitty;
       shellIntegration.enableFishIntegration = true;
       shellIntegration.mode = "no-cursor";
 
