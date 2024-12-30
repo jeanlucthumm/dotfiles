@@ -4,6 +4,7 @@
     ../modules/nixos-foundation.nix
     ../modules/nixos-graphical.nix
     ../modules/graphical.nix
+    ../modules/theme-home.nix
     ../../hosts/desktop/theme-setting.nix
   ];
 

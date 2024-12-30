@@ -10,7 +10,7 @@
     else "light";
 in {
   imports = [
-    ../theme.nix
+    ../../theme.nix
     ./ls-colors-hack.nix
   ];
 

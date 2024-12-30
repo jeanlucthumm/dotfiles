@@ -1,4 +1,4 @@
-# System agnostig GUI programs
+# System agnostic GUI programs
 {pkgs, ...}: {
   home.packages = with pkgs; [
     neovide # Neovim GUI
