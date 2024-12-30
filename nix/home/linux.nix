@@ -8,6 +8,7 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
+    ./modules/cli
     ./programs/common.nix
     ./programs/hyprland.nix
     ./theme-home.nix
