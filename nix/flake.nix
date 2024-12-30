@@ -165,10 +165,7 @@
     # System configurations for Darwin hosts.
     darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
       modules = [
-        ./hosts/macbook/configuration.nix
-        # The system module tree is different than the Home Manager one,
-        # so we import theme settings in both to ensure they're available.
-        ./hosts/macbook/theme-setting.nix
+        ./system/hosts/macbook
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
