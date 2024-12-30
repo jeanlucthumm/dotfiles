@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ../../theme.nix
+    ../../../theme.nix
   ];
   theme = {
     enable = true;

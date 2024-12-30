@@ -5,7 +5,9 @@
   ...
 }: {
   imports = [
-    ../default-nixos
+    ../../modules/nixos-foundation.nix
+    ../../modules/security.nix
+    ../../theme-setting.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
     "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
