@@ -3,7 +3,7 @@
   programs = {
     fish.shellAliases.nrs = "sudo nixos-rebuild switch --flake $HOME/nix#${hostName}";
     nushell.configFile.text = ''
-      def nrs [] {
+      def nrs []: [nothing -> nothing] {
           sudo nixos-rebuild switch --flake $"($env.HOME)/nix#${hostName}"
       }
     '';
