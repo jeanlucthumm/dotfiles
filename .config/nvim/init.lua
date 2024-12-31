@@ -466,57 +466,17 @@ local plugin_spec = {
   },
   { 'ThePrimeagen/harpoon' },
   {
-    'ggandor/leap.nvim',
-    config = function()
-      require'leap'.add_default_mappings()
-    end,
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    opts = {},
+    keys = {
+      { 's',     mode = { 'n', 'x', 'o' }, function() require('flash').jump() end,              desc = 'Flash' },
+      { 'S',     mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end,        desc = 'Flash Treesitter' },
+      { 'r',     mode = 'o',               function() require('flash').remote() end,            desc = 'Remote Flash' },
+      { 'R',     mode = { 'o', 'x' },      function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
+      { '<c-s>', mode = { 'c' },           function() require('flash').toggle() end,            desc = 'Toggle Flash Search' },
+    },
   },
-  {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require'nvim-treesitter.configs'.setup {
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['ab'] = '@block.outer',
-              ['ib'] = '@block.inner',
-              ['ip'] = '@parameter.inner',
-              ['ap'] = '@parameter.outer',
-              ['ic'] = '@call.inner',
-              ['ac'] = '@call.outer',
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true,
-            goto_next_start = {
-              [']f'] = { query = { '@function.outer', '@class.outer' } },
-              [']b'] = '@block.outer',
-            },
-            goto_previous_start = {
-              ['[f'] = { query = { '@function.outer', '@class.outer' } },
-              ['[b'] = '@block.outer',
-            },
-            goto_next_end = {
-              [']F'] = '@function.outer',
-              [']B'] = '@block.outer',
-            },
-            goto_previous_end = {
-              ['[F'] = '@function.outer',
-              ['[B'] = '@block.outer',
-            },
-          },
-        },
-      }
-    end,
-  },
-
   -- Functional
   {
     '907th/vim-auto-save',
@@ -556,6 +516,7 @@ local plugin_spec = {
     version = '*',
     config = function()
       require'mini.files'.setup {}
+      require'mini.ai'.setup {}
       require'mini.indentscope'.setup {
         draw = {
           delay = 100,
