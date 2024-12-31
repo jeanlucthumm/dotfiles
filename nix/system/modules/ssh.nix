@@ -5,5 +5,5 @@
     # Forces SSH keys which is more secure than passwords
     settings.PasswordAuthentication = false;
   };
-  firewall.allowedTCPPorts = [22];
+  networking.firewall.allowedTCPPorts = [22];
 }
