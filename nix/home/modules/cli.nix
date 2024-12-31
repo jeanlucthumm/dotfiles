@@ -32,7 +32,6 @@ in {
     pinentry-tty # Enter password in terminal
     gnumake # Build automation tool
     delta # Pretty diffs
-    bat # Cat replacement
     gcc # GNU Compiler Collection
     pls # ls replacement
     fd # find replacement
@@ -51,6 +50,7 @@ in {
   programs = {
     carapace.enable = true;
     starship.enable = true;
+    bat.enable = true; # Cat replacement
 
     # cd replacement
     zoxide = {
