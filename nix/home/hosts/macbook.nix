@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  colors,
   ...
 }: let
   homeDir = config.home.homeDirectory;
@@ -26,4 +27,11 @@ in {
   # The state version is required and should stay at the version you
   # originally installed.
   home.stateVersion = "24.05";
+
+  maptheme = {
+    bat = {
+      enable = true;
+      colors = colors.solarized-light;
+    };
+  };
 }

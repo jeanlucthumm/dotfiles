@@ -51,45 +51,22 @@
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
-    base16lib = base16.lib {
-      inherit (nixpkgs.legacyPackages.x86_64-linux) pkgs lib;
-    };
-    nordColors = let
-      scheme = base16lib.mkSchemeAttrs "${tt-schemes}/base16/nord.yaml";
-    in {
-      inherit
-        (scheme)
-        base00
-        base01
-        base02
-        base03
-        base04
-        base05
-        base06
-        base07
-        base08
-        base09
-        base0A
-        base0B
-        base0C
-        base0D
-        base0E
-        base0F
-        red
-        green
-        yellow
-        blue
-        cyan
-        magenta
-        ;
-    };
+    colors = forAllSystems (
+      system: let
+        base16lib = base16.lib {inherit (nixpkgs.legacyPackages.${system}) pkgs lib;};
+      in {
+        nord = base16lib.mkSchemeAttrs "${tt-schemes}/base16/nord.yaml";
+        solarized-light = base16lib.mkSchemeAttrs "${tt-schemes}/base16/solarized-light.yaml";
+      }
+    );
   in {
     # System configurations for NixOS hosts.
     nixosConfigurations = {
-      "desktop" = nixpkgs.lib.nixosSystem {
+      "desktop" = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {
-          inherit zen-browser tt-schemes nordColors;
+          inherit zen-browser tt-schemes;
+          colors = colors.${system};
         };
         modules = [
           stylix.nixosModules.stylix
@@ -97,7 +74,7 @@
           ({config, ...}: {
             maptheme.console = {
               enable = true;
-              colors = nordColors;
+              colors = colors.${system}.nord;
             };
           })
           ./system/hosts/desktop
@@ -146,10 +123,14 @@
       modules = [
         ./system/hosts/macbook
         home-manager.darwinModules.home-manager
+        maptheme.darwinModules.maptheme
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs.hostName = "macbook";
+          home-manager.extraSpecialArgs = {
+            hostName = "macbook";
+            colors = colors.aarch64-darwin;
+          };
           home-manager.users.jeanluc = import ./home/hosts/macbook.nix;
         }
       ];
