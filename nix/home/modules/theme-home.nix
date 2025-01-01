@@ -19,13 +19,9 @@ in {
     wofi.enable = false;
   };
 
-  programs.nushell.environmentVariables = {
-    BAT_THEME = ''${config.theme.name}-${themeDarkMode}'';
-  };
   programs.fish.interactiveShellInit = ''
     set -g theme_nerd_fonts yes
     set -g theme_virtual_env_prompt_enabled no
-    set -x BAT_THEME ${config.theme.name}-${themeDarkMode}
   '';
 
   programs.wofi.style = with config.lib.stylix.colors; ''

@@ -19,26 +19,15 @@
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
     };
-    maptheme = {
-      url = "path:/Users/jeanluc/Code/nix-maptheme";
-    };
-    tt-schemes = {
-      url = "github:tinted-theming/schemes";
-      flake = false;
-    };
-    base16.url = "github:SenchoPens/base16.nix";
   };
 
-  outputs = {
+  outputs = inputs @ {
     self,
     nixpkgs,
     home-manager,
     stylix,
     nix-darwin,
     zen-browser,
-    maptheme,
-    tt-schemes,
-    base16,
     ...
   }: let
     systems = [
@@ -51,57 +40,18 @@
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
-    base16lib = base16.lib {
-      inherit (nixpkgs.legacyPackages.x86_64-linux) pkgs lib;
-    };
-    nordColors = let
-      scheme = base16lib.mkSchemeAttrs "${tt-schemes}/base16/nord.yaml";
-    in {
-      inherit
-        (scheme)
-        base00
-        base01
-        base02
-        base03
-        base04
-        base05
-        base06
-        base07
-        base08
-        base09
-        base0A
-        base0B
-        base0C
-        base0D
-        base0E
-        base0F
-        red
-        green
-        yellow
-        blue
-        cyan
-        magenta
-        ;
-    };
   in {
     # System configurations for NixOS hosts.
     nixosConfigurations = {
       "desktop" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
-          inherit zen-browser tt-schemes nordColors;
+          inherit zen-browser;
         };
         modules = [
           stylix.nixosModules.stylix
-          maptheme.nixosModules.maptheme
-          ({config, ...}: {
-            maptheme.console = {
-              enable = true;
-              colors = nordColors;
-            };
-          })
-          ./system/hosts/desktop
           home-manager.nixosModules.home-manager
+          ./system/hosts/desktop
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -143,9 +93,11 @@
 
     # System configurations for Darwin hosts.
     darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
+      specialArgs = {inherit inputs;};
       modules = [
-        ./system/hosts/macbook
+        stylix.darwinModules.stylix
         home-manager.darwinModules.home-manager
+        ./system/hosts/macbook
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -181,10 +133,13 @@
       }
     );
 
-    packages = forAllSystems (
-      system: {
-        virtual-vm = self.nixosConfigurations.virtual.config.system.build.vm;
-      }
-    );
+    packages = let
+      vm = self.nixosConfigurations.virtual.config.system.build.vm;
+    in {
+      # NixOS VM is only available on Linux.
+      "aarch64-linux".virtual-vm = vm;
+      "i686-linux".virtual-vm = vm;
+      "x86_64-linux".virtual-vm = vm;
+    };
   };
 }

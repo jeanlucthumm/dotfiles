@@ -11,6 +11,7 @@ in {
     ../modules/cli.nix
     ../modules/graphical.nix
     ../modules/darwin-fish-fix.nix
+    ../modules/theme-home.nix
   ];
 
   home.file = {

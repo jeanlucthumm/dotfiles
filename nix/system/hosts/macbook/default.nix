@@ -1,4 +1,7 @@
-{pkgs, ...}: {
+{...}: {
+  imports = [
+    ./theme-setting.nix
+  ];
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
@@ -25,4 +28,6 @@
     name = "jeanluc";
     home = "/Users/jeanluc";
   };
+
+  home-manager.sharedModules = [./theme-setting.nix];
 }
