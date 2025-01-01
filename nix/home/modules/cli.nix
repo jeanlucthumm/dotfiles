@@ -4,12 +4,12 @@
   pkgs,
   ...
 }: let
-  homeDir = config.home.homeDirectory;
   configDir = config.xdg.configHome;
 in {
   imports = [
     ../programs/fish.nix
     ../programs/nushell
+    ../extra/aichat.nix
   ];
 
   home.packages = with pkgs; [
@@ -57,6 +57,40 @@ in {
       enable = true;
       enableNushellIntegration = true;
       enableFishIntegration = true;
+    };
+
+    # LLM client
+    aichat = {
+      enable = true;
+
+      settings = {
+        model = "claude";
+        light_theme = true;
+        compress_threshold = 40000;
+        save_session = true;
+        clients = [
+          {
+            type = "claude";
+            api_key = "redacted";
+            models = [
+              {
+                name = "claude-3-5-sonnet-20241022";
+                max_input_tokens = 200000;
+                max_output_tokens = 8192;
+                require_max_tokens = true;
+                input_price = 3;
+                output_price = 15;
+                supports_vision = true;
+                supports_function_calling = true;
+              }
+            ];
+          }
+          {
+            type = "openai";
+            api_key = "redacted";
+          }
+        ];
+      };
     };
 
     taskwarrior = {
