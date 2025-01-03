@@ -1,5 +1,9 @@
 # Foundation settings for Darwin.
-{hostName, ...}: {
+{
+  config,
+  hostName,
+  ...
+}: {
   programs = {
     fish.shellAliases.nrs = "nix run nix-darwin -- switch --flake $HOME/nix#${hostName}";
     nushell.configFile.text = ''
@@ -20,6 +24,8 @@
       # homebrew puts all its stuff in this directory instead
       # of /usr/bin or otherwise
       "/opt/homebrew/bin"
+      # Any Dart dev requires this in path
+      "${config.home.homeDirectory}/.pub-cache/bin"
     ];
   };
 }
