@@ -120,6 +120,7 @@
             statix
             alejandra
             manix
+            pastel # For color querying and stuff
           ];
 
           shellHook = ''
