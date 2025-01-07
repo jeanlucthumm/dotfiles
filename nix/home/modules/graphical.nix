@@ -1,8 +1,11 @@
 # System agnostic GUI programs
 {pkgs, ...}: {
-  home.packages = with pkgs; [
-    neovide # Neovim GUI
-  ];
+  home.packages = with pkgs;
+    if stdenv.hostPlatform.isDarwin
+    then []
+    else [
+      neovide # Neovim GUI
+    ];
 
   programs = {
     # Terminal with GPU acceleration
