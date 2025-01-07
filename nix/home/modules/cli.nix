@@ -9,6 +9,7 @@ in {
   imports = [
     ../programs/fish.nix
     ../programs/nushell
+    ../programs/starship.nix
     ../extra/aichat.nix
   ];
 
@@ -49,7 +50,6 @@ in {
 
   programs = {
     carapace.enable = true;
-    starship.enable = true;
     bat.enable = true; # Cat replacement
 
     # cd replacement
