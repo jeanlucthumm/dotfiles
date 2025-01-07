@@ -67,15 +67,15 @@ def label-files []: [list<path> -> string] {
 # Copy piped in contents to clipboard.
 def clip []: [string -> nothing] {
   if ($env | get -i TMUX | is-not-empty) {
-    tmux loadb -
+    $in | tmux loadb -
   } else if ($nu.os-info.name == "linux") {
     if ($env.XDG_SESSION_TYPE == "wayland") {
-      wl-copy
+      $in | wl-copy
     } else {
-      xclip -selection clipboard
+      $in | xclip -selection clipboard
     }
   } else if ($nu.os-info.name == "macos") {
-    pbcopy
+    $in | pbcopy
   } else {
     echo "Unsupported OS"
   }
