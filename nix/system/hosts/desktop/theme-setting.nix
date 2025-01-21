@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   imports = [
     ../../../theme.nix
   ];
@@ -16,6 +16,7 @@
     fontCoding = {
       name = "JetBrainsMono Nerd Font Mono";
       size = 10;
+      package = pkgs.nerd-fonts.jetbrains-mono;
     };
   };
 }

@@ -29,5 +29,6 @@
     home = "/Users/jeanluc";
   };
 
+  # Allows home manager modules to access theme
   home-manager.sharedModules = [./theme-setting.nix];
 }
