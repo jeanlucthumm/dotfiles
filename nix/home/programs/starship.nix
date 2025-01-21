@@ -58,6 +58,7 @@
           "$haskell"
           "$java"
           "$julia"
+          "$nix_shell"
           "$nodejs"
           "$nim"
           "$rust"
@@ -93,6 +94,12 @@
         git_status = {
           style = "bg:${c3} fg:${fg}";
           format = "[$all_status$ahead_behind ]($style)";
+        };
+
+        nix_shell = {
+          symbol = "󱄅";
+          style = "bg:${c4} fg:${fg}";
+          format = "[ $symbol ]($style)";
         };
       }
       // builtins.mapAttrs makeLanguageConfig langSymbols;
