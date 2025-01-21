@@ -87,6 +87,11 @@ def clip []: [string -> nothing] {
   }
 }
 
+# Takes git diff output and wraps it in a code block with diff syntax highlighting.
+def label-diff []: [string -> string] {
+  $"```diff\n($in)\n```"
+}
+
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
 let abbreviations = {
   gt: 'git tree'
