@@ -66,7 +66,7 @@ def label-files []: [list<path> -> string] {
 }
 
 # Git status
-def ngit-status []: [nothing -> list<path>] {
+def ngit-status []: [nothing -> table<status: string, file: string>] {
   git status --porcelain | from ssv -m 1 -n | rename status file
 }
 
