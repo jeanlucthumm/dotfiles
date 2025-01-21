@@ -425,6 +425,12 @@ local plugin_spec = {
       require'telescope'.load_extension('flutter')
     end,
   },
+  {
+    'folke/snacks.nvim',
+    opts = {
+      picker = { enabled = true },
+    },
+  },
   -- TODO look at config for this for lazy.nvim
   { 'nvim-lualine/lualine.nvim' }, -- configured in the theme section
   {
@@ -477,6 +483,8 @@ local plugin_spec = {
       { '<c-s>', mode = { 'c' },           function() require('flash').toggle() end,            desc = 'Toggle Flash Search' },
     },
   },
+
+
   -- Functional
   {
     '907th/vim-auto-save',
@@ -722,9 +730,11 @@ nmap('yf', 'ggVG"+y')      -- yank entire file to system clipboard
 ncmap('yc', 'let @+ = @"') -- copy to system clipboard
 -- <Leader>
 ncmap('<Leader>q', 'qall')
-ncmap('<Leader>o', 'Telescope lsp_document_symbols')
+nmap('<Leader>o', function() Snacks.picker.lsp_symbols() end)
+nmap('<Leader>g', function() Snacks.picker.grep() end)
 ncmap('<Leader>O', 'Telescope lsp_dynamic_workspace_symbols')
 nmap('<Leader>f', function() require'common'.lsp_formatting(nil) end)
+nmap('<Leader>F', function() Snacks.picker.lines() end)
 nmap('<Leader>S', function()
   local symbols = require'symbols-outline'
   symbols.open_outline()
@@ -787,7 +797,9 @@ ncmap('<F7>', 'lua require"dap".step_into()')
 ncmap('<F6>', 'lua require"dap".step_over()')
 
 ncmap('E', 'Telescope buffers')
-ncmap('<C-e>', 'Telescope find_files')
+nmap('<C-e>', function()
+  Snacks.picker.pick({ finder = 'smart', matcher = { sort_empty = true } })
+end)
 nmap('<Leader>e', function()
   require'telescope.builtin'.find_files({
     cwd = fn.expand('%:h'),
