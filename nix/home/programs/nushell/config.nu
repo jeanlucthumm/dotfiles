@@ -59,9 +59,15 @@ def ssh --wrapped [...rest]: [nothing -> nothing] {
 # Concatenate file contents with labels.
 def label-files []: [list<path> -> string] {
   each { |file|
-    $"Contents of ($file):\n```\n(open $file --raw | str trim)\n```\n\n"
+    let ext = ($file | path parse | get extension)
+    $"Contents of ($file):\n```($ext)\n(open $file --raw | str trim)\n```\n\n"
   } |
   str join
+}
+
+# Git status
+def ngit-status []: [nothing -> list<path>] {
+  git status --porcelain | from ssv -m 1 -n | rename status file
 }
 
 # Copy piped in contents to clipboard.
