@@ -110,9 +110,7 @@ in {
 
       function M.setup()
         ${func}('${themeDarkMode}')
-        if vim.g.neovide then
-          vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
-        end
+        vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
       end
 
       return M
