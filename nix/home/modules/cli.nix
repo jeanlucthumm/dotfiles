@@ -116,6 +116,9 @@ in {
           path = "${configDir}/delta/themes.gitconfig";
         }
       ];
+      ignores = [
+        ".DS_Store"
+      ];
     };
     # GitHub CLI
     gh = {
