@@ -12,4 +12,8 @@
     ];
     shell = pkgs.nushell;
   };
+
+  # Allows jeanluc additional rights when connecting to the daemon, like managing caches.
+  # This is useful for devenv.
+  nix.settings.trusted-users = ["jeanluc"];
 }

@@ -45,6 +45,7 @@ in {
     aichat # AI chatbot for the terminal
     unzip # Unzip files
     dig # DNS lookup utility
+    devenv # Development environment manager
   ];
 
   programs = {

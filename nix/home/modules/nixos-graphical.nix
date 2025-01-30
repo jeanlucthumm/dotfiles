@@ -36,6 +36,10 @@ in {
     tor-browser # Privacy browser
     google-cloud-sdk # Google Cloud CLI
     ungoogled-chromium # For Dart dev
+
+    vscode # Literally only using this for Cline
+    zed-editor # IDE
+    code-cursor
   ];
 
   programs = {
