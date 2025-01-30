@@ -52,8 +52,13 @@ def lss [
     ) | sort-by -i type name
 }
 
-def ssh --wrapped [...rest]: [nothing -> nothing] {
+def ssh --wrapped [...rest] {
   with-env { TERM: xterm-256color } { ^ssh ...$rest }
+}
+
+# Wrapper around timew so that we log on the home-server
+def timew --wrapped [...rest] {
+  ssh server timew ...$rest
 }
 
 # Concatenate file contents with labels.
