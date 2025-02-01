@@ -87,7 +87,7 @@
       master = {
         new_status = "slave";
         orientation = "right";
-        always_center_master = false;
+        slave_count_for_center_master = 0;
       };
 
       gestures = {
