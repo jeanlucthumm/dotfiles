@@ -429,6 +429,7 @@ local plugin_spec = {
   },
   {
     'folke/snacks.nvim',
+    priority = 1000,
     opts = {
       picker = { enabled = true },
     },
@@ -800,7 +801,7 @@ ncmap('<F6>', 'lua require"dap".step_over()')
 
 ncmap('E', 'Telescope buffers')
 nmap('<C-e>', function()
-  Snacks.picker.pick({ finder = 'smart', matcher = { sort_empty = true } })
+  Snacks.picker.smart()
 end)
 nmap('<Leader>e', function()
   require'telescope.builtin'.find_files({
