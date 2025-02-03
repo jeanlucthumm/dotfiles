@@ -90,6 +90,9 @@ local plugin_spec = {
             },
           },
         },
+        root_dir = function(fname)
+          return lspconfig.util.root_pattern('Package.swift', 'project.pbxproj', '.git')(fname)
+        end,
       })
       lspconfig.nil_ls.setup(extend {})
       lspconfig.ts_ls.setup(extend {})
@@ -113,7 +116,6 @@ local plugin_spec = {
           n.builtins.formatting.alejandra,
           n.builtins.diagnostics.fish,
           n.builtins.diagnostics.actionlint,
-          n.builtins.diagnostics.mypy,
           n.builtins.code_actions.statix,
         },
       }
