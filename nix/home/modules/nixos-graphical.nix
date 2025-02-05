@@ -39,7 +39,8 @@ in {
 
     vscode # Literally only using this for Cline
     zed-editor # IDE
-    code-cursor
+    code-cursor # Agentic IDE
+    whatsapp-for-linux # Chat
   ];
 
   programs = {
