@@ -97,6 +97,11 @@ def label-diff []: [string -> string] {
   $"```diff\n($in)\n```"
 }
 
+# Searches Bitwarden for password
+def bw-list [search: string]: [nothing -> table<name: string, user: string, pass: string>] {
+  bw list items --search $search | from json | select name login.username login.password | rename name user pass
+}
+
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
 let abbreviations = {
   gt: 'git tree'

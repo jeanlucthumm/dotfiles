@@ -46,6 +46,7 @@ in {
     unzip # Unzip files
     dig # DNS lookup utility
     devenv # Development environment manager
+    bitwarden-cli # Bitwarden CLI
   ];
 
   programs = {
