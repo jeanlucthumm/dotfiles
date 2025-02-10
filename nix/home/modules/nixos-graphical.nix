@@ -42,6 +42,7 @@ in {
     zed-editor # IDE
     code-cursor # Agentic IDE
     whatsapp-for-linux # Chat
+    obsidian # Note taking
   ];
 
   programs = {
