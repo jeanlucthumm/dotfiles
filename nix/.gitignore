@@ -1,5 +1,5 @@
 result
 # Used for frequently changing theme settings so we don't get dirty repo
 # constantly.
-hosts/*/theme-setting-local.nix
+system/hosts/*/theme-setting-local.nix
 *.qcow2
