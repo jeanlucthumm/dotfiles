@@ -77,10 +77,11 @@ in {
 
   gtk = {
     enable = true;
-    iconTheme = {
-      name = "Tela-circle";
-      package = pkgs.tela-circle-icon-theme;
-    };
+    # TODO: add again once resolved: https://github.com/NixOS/nixpkgs/issues/380227
+    # iconTheme = {
+    #   name = "Tela-circle";
+    #   package = pkgs.tela-circle-icon-theme;
+    # };
     cursorTheme = {
       name = "Oreo Blue Cursors";
       package = pkgs.oreo-cursors-plus;
