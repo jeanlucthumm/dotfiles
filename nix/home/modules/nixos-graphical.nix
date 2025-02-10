@@ -5,6 +5,7 @@
   ...
 }: let
   homeDir = config.home.homeDirectory;
+  configDir = config.xdg.configHome;
 in {
   imports = [
     ../programs/hyprland.nix
@@ -106,6 +107,44 @@ in {
         "x-scheme-handler/https" = ["zen.desktop"];
         "text/html" = ["zen.desktop"];
         "application/xhtml+xml" = ["zen.desktop"];
+      };
+    };
+
+    desktopEntries = {
+      qutebrowser-work = {
+        name = "Qutebrowser (Work)";
+        genericName = "Web Browser";
+        comment = "A keyboard-driven, vim-like browser based on Python and Qt (Work Profile)";
+        icon = "qutebrowser";
+        type = "Application";
+        categories = ["Network" "WebBrowser"];
+        exec = "qutebrowser --basedir ${configDir}/qutebrowser/profiles/work --untrusted-args %u";
+        terminal = false;
+        startupNotify = true;
+        mimeType = [
+          "text/html"
+          "text/xml"
+          "application/xhtml+xml"
+          "application/xml"
+          "application/rdf+xml"
+          "image/gif"
+          "image/webp"
+          "image/jpeg"
+          "image/png"
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+          "x-scheme-handler/qute"
+        ];
+        actions = {
+          "new-window" = {
+            name = "New Window";
+            exec = "qutebrowser --basedir ${configDir}/qutebrowser/profiles/work";
+          };
+          "preferences" = {
+            name = "Preferences";
+            exec = "qutebrowser --basedir ${configDir}/qutebrowser/profiles/work qute://settings";
+          };
+        };
       };
     };
   };
