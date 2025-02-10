@@ -60,6 +60,8 @@
         rounding = 10;
       };
 
+      ecosystem.no_update_news = true;
+
       animations = let
         # Default speeds for animations
         primary = toString 1.5;
