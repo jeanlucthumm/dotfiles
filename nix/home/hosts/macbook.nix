@@ -12,6 +12,7 @@ in {
     ../modules/graphical.nix
     ../modules/darwin-fish-fix.nix
     ../modules/theme-home.nix
+    ../modules/syncing.nix
   ];
 
   home.file = {
