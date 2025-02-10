@@ -17,7 +17,6 @@ in {
       cat = "bat";
       t = "task";
     };
-    configFile.text = builtins.readFile ./config.nu;
     environmentVariables = {
       nix = ''${homeDir}/nix'';
       nixha = ''${homeDir}/nix/home'';
@@ -27,6 +26,8 @@ in {
       GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
       EDITOR = ''${pkgs.neovim}/bin/nvim'';
     };
+    extraConfig = builtins.readFile ./config.nu;
+    extraEnv = builtins.readFile ./env.nu;
   };
   programs.carapace.enableNushellIntegration = true;
 }
