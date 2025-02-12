@@ -2,14 +2,14 @@
   imports = [
     ./theme-setting.nix
   ];
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
-  nix.settings = {
-    experimental-features = "nix-command flakes";
-    # Allows jeanluc additional rights when connecting to the daemon, like managing caches.
-    # This is useful for devenv.
-    trusted-users = ["jeanluc"];
+  nix = {
+    enable = true;
+    settings = {
+      experimental-features = "nix-command flakes";
+      # Allows jeanluc additional rights when connecting to the daemon, like managing caches.
+      # This is useful for devenv.
+      trusted-users = ["jeanluc"];
+    };
   };
 
   # System level fish config so that we get access to nix commands
