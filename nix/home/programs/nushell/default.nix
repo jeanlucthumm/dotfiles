@@ -27,7 +27,7 @@ in {
       EDITOR = ''${pkgs.neovim}/bin/nvim'';
     };
     extraConfig = builtins.readFile ./config.nu;
-    extraEnv = builtins.readFile ./env.nu;
+    # extraEnv = builtins.readFile ./env.nu;
   };
   programs.carapace.enableNushellIntegration = true;
 }
