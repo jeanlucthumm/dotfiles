@@ -130,5 +130,7 @@
                 "workbench.actions.view.problems"
             ]
         }
-    ]
+    ],
+    "git.confirmSync": false,
+    "git.autofetch": true
 }
