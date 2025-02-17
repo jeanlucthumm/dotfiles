@@ -1,11 +1,14 @@
 {
-    "window.commandCenter": 1,
+    "editor.formatOnSave": true,
+    "window.commandCenter": true,
     "workbench.colorTheme": "Default Light Modern",
     "git.openRepositoryInParentFolders": "always",
     "vim.handleKeys": {
         "<C-d>": true,
         "<C-s>": false,
-        "<C-z>": false
+        "<C-z>": false,
+        "<C-f>": false,
+        "<C-S-k>": true
     },
     "vim.leader": "<Space>",
     "vim.normalModeKeyBindings": [
@@ -79,6 +82,52 @@
             ],
             "commands": [
                 "editor.action.quickFix"
+            ]
+        },
+        {
+            "before": [
+                "K"
+            ],
+            "commands": [
+                "editor.action.showHover"
+            ]
+        },
+        {
+            "before": [
+                "<C-e>"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "k",
+                "n"
+            ],
+            "commands": [
+                "editor.action.marker.next"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "k",
+                "p"
+            ],
+            "commands": [
+                "editor.action.marker.previous"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "d",
+                "p"
+            ],
+            "commands": [
+                "workbench.actions.view.problems"
             ]
         }
     ]
