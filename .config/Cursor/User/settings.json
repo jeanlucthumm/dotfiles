@@ -129,6 +129,15 @@
             "commands": [
                 "workbench.actions.view.problems"
             ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "r"
+            ],
+            "commands": [
+                "editor.action.rename"
+            ]
         }
     ],
     "git.confirmSync": false,
