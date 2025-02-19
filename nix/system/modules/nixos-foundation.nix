@@ -3,16 +3,8 @@
   # Enable flakes
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  # Bootloader.
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      # Limits the amount of previous generations in the boot menu. If this is set to unlimited,
-      # the /boot partition can fill up.
-      configurationLimit = 20;
-    };
-    efi.canTouchEfiVariables = true;
-  };
+  # Modules will add ports as needed to firewall config
+  networking.firewall.enable = true;
 
   # Timezone and locale
   time.timeZone = "America/Los_Angeles";

@@ -1,7 +1,9 @@
 # Tailscale is a VPN that makes it easy to connect your devices to your home network.
 {...}: {
-  networking.firewall.allowedUDPPorts = [41641];
-  networking.firewall.checkReversePath = false;
+  networking.firewall = {
+    allowedUDPPorts = [3478 41641];
+    checkReversePath = false;
+  };
   services.tailscale.enable = true;
   boot.kernelParams = [
     # Allows a Linux system to forward packets from one network interface to another,

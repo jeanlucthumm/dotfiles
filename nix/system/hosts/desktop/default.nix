@@ -8,37 +8,21 @@
     ../../modules/ssh.nix
     ../../modules/tailscale.nix
     ../../modules/user-jeanluc.nix
+    ../../modules/boot.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
   ];
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
-
     kernelParams = [
       # Disables AMDGPU Scatter/Gather display functionality to fix screen
       # flickering issues on Ryzen systems (especially 7000 series APUs).
       "amdgpu.sg_display=0"
     ];
-
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot = {
-        enable = true;
-        edk2-uefi-shell.enable = true;
-      };
-    };
   };
 
-  networking = {
-    hostName = "desktop";
-    firewall = {
-      enable = true;
-      allowedUDPPorts = [
-        1194 # OpenVPN
-      ];
-    };
-  };
+  networking.hostName = "desktop";
 
   # Android Debug Bridge (ADB) for Android development
   programs.adb.enable = true;
