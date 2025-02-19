@@ -3,6 +3,8 @@
     "window.commandCenter": true,
     "workbench.colorTheme": "Default Light Modern",
     "git.openRepositoryInParentFolders": "always",
+    "nix.formatterPath": "alejandra",
+    "nix.enableLanguageServer": true,
     "vim.handleKeys": {
         "<C-d>": true,
         "<C-s>": false,
@@ -137,6 +139,14 @@
             ],
             "commands": [
                 "editor.action.rename"
+            ]
+        },
+        {
+            "before": [
+                "/"
+            ],
+            "commands": [
+                "actions.find"
             ]
         }
     ],
