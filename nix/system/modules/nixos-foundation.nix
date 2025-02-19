@@ -49,6 +49,7 @@
     tmux # Terminal multiplexer
     git # Version control
     nushell # Shell so I don't have to use bash for sysadmin
+    yadm # Dotfile manager
   ];
 
   # Nix store gets full of old stuff, so clean it up periodically.
