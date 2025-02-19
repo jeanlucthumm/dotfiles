@@ -59,6 +59,23 @@
         ];
       };
 
+      # System configuration for my server.
+      # This is headless 24/7 system.
+      "server" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit nixpkgs;};
+        modules = [
+          home-manager.nixosModules.home-manager
+          ./system/hosts/server
+          {
+            home-manager.useGlobalPkgs = false;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs.hostName = "server";
+            home-manager.users.jeanluc = import ./home/hosts/server.nix;
+          }
+        ];
+      };
+
       # System configuration for VM.
       # Do:
       #   nixos-rebuild build-vm --flake .#virtual
