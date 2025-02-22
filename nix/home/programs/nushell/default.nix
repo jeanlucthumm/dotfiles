@@ -26,6 +26,9 @@ in {
       GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
       EDITOR = ''${pkgs.neovim}/bin/nvim'';
     };
+    settings = {
+      completions.algorithm = "fuzzy";
+    };
     extraConfig = builtins.readFile ./config.nu;
     # extraEnv = builtins.readFile ./env.nu;
   };
