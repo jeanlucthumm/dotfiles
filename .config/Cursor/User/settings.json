@@ -5,11 +5,13 @@
     "git.openRepositoryInParentFolders": "always",
     "nix.formatterPath": "alejandra",
     "nix.enableLanguageServer": true,
+    "nix.serverPath": "nixd",
     "vim.handleKeys": {
         "<C-d>": true,
         "<C-s>": false,
         "<C-z>": false,
         "<C-f>": false,
+        "<C-y>": false,
         "<C-S-k>": true
     },
     "vim.leader": "<Space>",
@@ -147,6 +149,25 @@
             ],
             "commands": [
                 "actions.find"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "r"
+            ],
+            "commands": [
+                "editor.action.goToReferences"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "i",
+                "t"
+            ],
+            "commands": [
+                "editor.action.goToTest"
             ]
         }
     ],
