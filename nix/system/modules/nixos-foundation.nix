@@ -34,9 +34,6 @@
     udisks2.enable = true;
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   security.sudo = {
     execWheelOnly = true;
     wheelNeedsPassword = false;

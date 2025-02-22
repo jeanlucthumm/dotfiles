@@ -46,12 +46,16 @@
         specialArgs = {
           inherit zen-browser;
         };
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
         modules = [
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           ./system/hosts/desktop
           {
-            home-manager.useGlobalPkgs = false;
+            home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs.hostName = "desktop";
             home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
