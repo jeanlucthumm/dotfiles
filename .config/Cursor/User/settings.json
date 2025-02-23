@@ -1,7 +1,7 @@
 {
     "editor.formatOnSave": true,
     "window.commandCenter": true,
-    "workbench.colorTheme": "Default Light Modern",
+    "workbench.colorTheme": "Zenbones Light",
     "git.openRepositoryInParentFolders": "always",
     "nix.formatterPath": "alejandra",
     "nix.enableLanguageServer": true,
