@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ../../../theme.nix
+    ../../modules/theme.nix
   ];
   theme = let
     # Externalizes some theme settings outside of VCS.

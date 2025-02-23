@@ -57,7 +57,7 @@ in {
         if t == "gruvbox"
         then
           # Always dark wallpaper since we want contrast
-          ./wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
         else throw "unknown theme ${t}";
       polarity =
         if d

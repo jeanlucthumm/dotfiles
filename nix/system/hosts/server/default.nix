@@ -6,9 +6,13 @@
     ../../modules/tailscale.nix
     ../../modules/user-jeanluc.nix
     ../../modules/boot.nix
+    ./theme-setting.nix
   ];
 
   networking.hostName = "server";
+
+  # Allows home manager modules to access theme
+  home-manager.sharedModules = [./theme-setting.nix];
 
   swapDevices = [
     {

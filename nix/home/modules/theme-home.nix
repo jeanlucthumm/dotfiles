@@ -1,7 +1,6 @@
-# Sets Home Assistant configs based on the top level theme.nix module.
-# We can't put this directly into theme.nix because theme.nix is used both in
-# the Home Assistant and host (NixOS/Darwin) config tree which have different
-# available settings.
+# Additional home manager configs not done through stylix.
+# Theme module is available due to home-manager.sharedModules despite
+# it being defined as a system module.
 {config, ...}: let
   theme = config.theme;
   themeDarkMode =
@@ -10,7 +9,6 @@
     else "light";
 in {
   imports = [
-    ../../theme.nix
     ./ls-colors-hack.nix
   ];
 
