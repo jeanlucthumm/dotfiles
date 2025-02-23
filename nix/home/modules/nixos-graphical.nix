@@ -38,8 +38,6 @@ in {
     google-cloud-sdk # Google Cloud CLI
     ungoogled-chromium # For Dart dev
 
-    vscode # Literally only using this for Cline
-    zed-editor # IDE
     code-cursor # Agentic IDE
     whatsapp-for-linux # Chat
     obsidian # Note taking
