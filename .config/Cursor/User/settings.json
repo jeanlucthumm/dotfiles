@@ -6,6 +6,9 @@
     "nix.formatterPath": "alejandra",
     "nix.enableLanguageServer": true,
     "nix.serverPath": "nixd",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
     "vim.handleKeys": {
         "<C-d>": true,
         "<C-s>": false,
