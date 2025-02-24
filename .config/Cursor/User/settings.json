@@ -1,7 +1,7 @@
 {
     "editor.formatOnSave": true,
     "window.commandCenter": true,
-    "workbench.colorTheme": "Zenbones Light",
+    "workbench.colorTheme": "Solarized Light",
     "git.openRepositoryInParentFolders": "always",
     "nix.formatterPath": "alejandra",
     "nix.enableLanguageServer": true,
@@ -176,5 +176,15 @@
     ],
     "git.confirmSync": false,
     "git.autofetch": true,
-    "workbench.activityBar.orientation": "vertical"
+    "workbench.activityBar.orientation": "vertical",
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "off"
+    }
 }
