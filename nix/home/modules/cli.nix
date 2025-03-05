@@ -64,7 +64,7 @@ in {
 
     taskwarrior = {
       enable = true;
-      dataLocation = "${config.xdg.dataHome}/task";
+      dataLocation = "${config.home.homeDirectory}/Sync/taskwarrior";
       extraConfig = ''
         uda.blocks.type=string
         uda.blocks.label=Blocks
