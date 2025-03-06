@@ -148,14 +148,6 @@
         },
         {
             "before": [
-                "/"
-            ],
-            "commands": [
-                "actions.find"
-            ]
-        },
-        {
-            "before": [
                 "g",
                 "r"
             ],
@@ -179,6 +171,7 @@
     "workbench.activityBar.orientation": "vertical",
     "[dart]": {
         "editor.formatOnSave": true,
+        "editor.formatOnType": true,
         "editor.rulers": [
             100
         ],
