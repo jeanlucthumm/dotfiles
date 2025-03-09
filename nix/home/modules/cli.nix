@@ -85,6 +85,7 @@ in {
         tree = "log --graph --decorate --oneline --all -n 25";
         treel = "log --graph --decorate --oneline --all";
         check = "checkout";
+        head = "symbolic-ref --short HEAD";
       };
       extraConfig = {
         merge = {
