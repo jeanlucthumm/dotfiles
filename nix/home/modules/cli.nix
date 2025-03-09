@@ -10,6 +10,7 @@ in {
     ../programs/fish.nix
     ../programs/nushell
     ../programs/starship.nix
+    ../programs/taskwarrior
   ];
 
   home.packages = with pkgs; [
@@ -62,22 +63,6 @@ in {
       enableFishIntegration = true;
     };
 
-    taskwarrior = {
-      enable = true;
-      dataLocation = "${config.home.homeDirectory}/Sync/taskwarrior";
-      extraConfig = ''
-        uda.blocks.type=string
-        uda.blocks.label=Blocks
-        uda.ticket.type=string
-        uda.ticket.label=Ticket
-        news.version=2.6.0
-
-        # Put contexts defined with `task context define` in this file
-        include ${configDir}/task/context.config
-        hooks.location=${configDir}/task/hooks
-      '';
-      package = pkgs.taskwarrior3;
-    };
     git = {
       enable = true;
       userEmail = "jeanlucthumm@gmail.com";

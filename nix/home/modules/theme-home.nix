@@ -10,6 +10,7 @@
 in {
   imports = [
     ./ls-colors-hack.nix
+    ../programs/taskwarrior/theme.nix
   ];
 
   stylix.targets = {
