@@ -1,9 +1,11 @@
 10x
+Bitwarden
 Blobstore
 Differentiators
 L3
 L4
 SWE
+Soylent
 TPM
 UI
 UX
@@ -11,11 +13,13 @@ VSCode
 backend
 codebase
 javascript
+keyctl
 onboarding
 oncall
 oncallers
+qutebrowser
 standups
 tooltips
 vscode
 webviews
-checksum_v1 = 9e3401e811dbfa44b6616e287048d0f2
+checksum_v1 = 83ba0eb9f5bd37932ce1e1bb53bf5380
