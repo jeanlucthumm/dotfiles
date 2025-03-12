@@ -1,7 +1,7 @@
 {
     "editor.formatOnSave": true,
     "window.commandCenter": true,
-    "workbench.colorTheme": "Solarized Light",
+    "workbench.colorTheme": "Visual Studio Light",
     "git.openRepositoryInParentFolders": "always",
     "nix.formatterPath": "alejandra",
     "nix.enableLanguageServer": true,
@@ -180,5 +180,6 @@
         "editor.wordBasedSuggestions": "off"
     },
     "lldb.launch.expressions": "native",
-    "dart.openDevTools": "flutter"
+    "dart.openDevTools": "flutter",
+    "editor.inlayHints.enabled": "offUnlessPressed"
 }
