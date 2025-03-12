@@ -41,6 +41,7 @@ in {
     code-cursor # Agentic IDE
     whatsapp-for-linux # Chat
     obsidian # Note taking
+    smile # emoji picker
   ];
 
   programs = {
