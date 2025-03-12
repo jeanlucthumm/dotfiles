@@ -56,6 +56,62 @@ def ssh --wrapped [...rest] {
   with-env { TERM: xterm-256color } { ^ssh ...$rest }
 }
 
+# Taskwarrior: Stop active task
+def tstop []: [nothing -> string] {
+  task +ACTIVE stop
+}
+
+# Taskwarrior: Add a child task to the active task, inheriting all properties
+def tchild [
+  parent: int,    # Which parent to add the child to
+  desc: string,   # Description of the child task
+]: [nothing -> string] {
+  let parent_task_list = task $parent export | from json
+  if ($parent_task_list | is-empty) {
+    error make {
+      msg: "Parent not found"
+      label: {
+        text: "parent id"
+        span: (metadata $parent).span
+      }
+    }
+    return
+  }
+  let parent_task = $parent_task_list.0
+
+  # Copy over common props
+  let skip_list = [
+    "id" "description" "entry" "modified" "status" "uuid" "urgency" "depends" "start"
+  ]
+  let common_props = $parent_task | columns | where not ($it in $skip_list)
+  let args = $common_props | each { |prop|
+    $"($prop):($parent_task | get $prop)"
+  }
+  let args = $args ++ [$"blocks:($parent)", $"description:($desc)"]
+
+  # Create the child task
+  task add ...$args
+}
+
+# Taskwarrior: Break down an active task into a smaller one and start it
+def tbreak [
+  desc: string,   # Description of the child task
+]: [nothing -> string] {
+  let active_list = task +ACTIVE export | from json
+  if ($active_list | is-empty) {
+    print -e "No active task"
+    return
+  }
+  let active = $active_list.0
+
+  tchild $active.id $desc
+
+  # Stop current task and start the new one
+  let new_task = task export newest | from json | get 0
+  task stop $active.id
+  task start $new_task.id
+}
+
 # Concatenate file contents with labels.
 def label-files []: [list<path> -> string] {
   each { |file|
