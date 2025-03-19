@@ -164,6 +164,36 @@
             "commands": [
                 "editor.action.goToTest"
             ]
+        },
+        {
+            "before": [
+                "g",
+                "i",
+                "i"
+            ],
+            "commands": [
+                "editor.action.goToImplementation"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "h",
+                "u"
+            ],
+            "commands": [
+                "git.revertSelectedRanges"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "h",
+                "d"
+            ],
+            "commands": [
+                "git.openChange"
+            ]
         }
     ],
     "git.confirmSync": false,
@@ -181,5 +211,8 @@
     },
     "lldb.launch.expressions": "native",
     "dart.openDevTools": "flutter",
-    "editor.inlayHints.enabled": "offUnlessPressed"
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "[proto3]": {
+        "editor.defaultFormatter": "zxh404.vscode-proto3"
+    },
 }
