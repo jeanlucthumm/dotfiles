@@ -222,16 +222,6 @@ local plugin_spec = {
           ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
-            elseif not HasGoogle and require'copilot.suggestion'.is_visible() then
-              require'copilot.suggestion'.accept()
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-          ['<C-Tab>'] = cmp.mapping(function(fallback)
-            local copilot = require'copilot.suggestion'
-            if not HasGoogle and copilot.is_visible() then
-              copilot.accept_line()
             else
               fallback()
             end
@@ -343,20 +333,6 @@ local plugin_spec = {
         width = 40,
       })
     end,
-  },
-  {
-    'zbirenbaum/copilot.lua',
-    enabled = not HasGoogle,
-    cmd = 'Copilot',
-    event = 'InsertEnter',
-    opts = {
-      panel = {
-        auto_refresh = true,
-      },
-      suggestion = {
-        auto_trigger = true,
-      },
-    },
   },
   {
     'NeogitOrg/neogit',
