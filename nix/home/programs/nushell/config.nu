@@ -97,12 +97,7 @@ def tchild [
 def tbreak [
   desc: string,   # Description of the child task
 ]: [nothing -> string] {
-  let active_list = task +ACTIVE export | from json
-  if ($active_list | is-empty) {
-    print -e "No active task"
-    return
-  }
-  let active = $active_list.0
+  let active = tactive
 
   tchild $active.id $desc
 
@@ -110,6 +105,58 @@ def tbreak [
   let new_task = task export newest | from json | get 0
   task stop $active.id
   task start $new_task.id
+}
+
+# Taskwarrior: Complete current task and start the parent
+def tparent []: [nothing -> string] {
+  let active = tactive
+  let parent = $active.uuid | __tparent
+
+  if ($parent.status != "pending") {
+    print -e $"Parent not pending. UUID: ($parent.uuid)"
+    return
+  }
+
+  task done $active.id
+  task start $parent.id
+}
+
+# Taskwarrior: Add task as children to the active's parent
+def tsibling [
+  desc: string,   # Description of the sibling task
+]: [nothing -> string] {
+  let parent = tactive | get uuid | __tparent
+
+  if ($parent.status != "pending") {
+    print -e $"Parent not pending. UUID: ($parent.uuid)"
+    return
+  }
+  
+  tchild $parent.id $desc
+}
+
+def tactive []: [nothing -> record] {
+  let active_list = task +ACTIVE export | from json
+  if ($active_list | is-empty) {
+    error make -u {
+      msg: "No active task"
+    }
+  }
+  $active_list.0
+}
+
+def __tparent []: [string -> record] {
+  let uuid = $in
+  let parents = task export |
+    from json |
+    default [] depends |
+    where $uuid in $it.depends
+  if ($parents | is-empty) {
+    error make -u {
+      msg: "No parents"
+    }
+  }
+  $parents.0
 }
 
 # Concatenate file contents with labels.
