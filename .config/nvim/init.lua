@@ -771,8 +771,6 @@ map('t', '<C-q>', '<C-\\><C-n><C-^>')
 map('t', '<C-w><C-w>', '<C-\\><C-l><C-w>:tabn<C-w>')
 map('t', '<C-\\><C-\\>', '<C-\\><C-n>')
 ncmap('<C-p>', 'Telescope commands')
-ncmap('<C-e>',
-  'lua require"telescope.builtin".buffers({ sort_lastused = true, ignore_current_buffer = true })')
 nmap('<C-q>', '<C-^>')
 ncmap('<M-o>', 'Bdelete')
 ncmap('<M-r>', 'Telescope grep_string')
@@ -786,9 +784,7 @@ nmap('<C-e>', function()
   Snacks.picker.smart()
 end)
 nmap('<Leader>e', function()
-  require'telescope.builtin'.find_files({
-    cwd = fn.expand('%:h'),
-  })
+  Snacks.picker.buffers()
 end)
 
 ---- Util
