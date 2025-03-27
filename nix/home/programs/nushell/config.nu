@@ -200,6 +200,25 @@ def bw-list [search: string]: [nothing -> table<name: string, user: string, pass
   bw list items --search $search | from json | select name login.username login.password | rename name user pass
 }
 
+# Create PR context for LLMs
+def ngit-prcontext [
+  revrange: string # Revision range this applies to e.g. `master..HEAD`
+  ticket_title: string # Title of the ticket of this PR
+  ticket_desc: string # Description fo the ticket of this PR
+]: [nothing -> string] {
+  $"(git diff $revrange | label-diff)
+
+  <commit_messages>
+  (git log $revrange --oneline)
+  </commit_messages>
+
+  <ticket>
+  Title: ($ticket_title)
+  Description: ($ticket_desc)
+  </ticket>
+  "
+}
+
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
 let abbreviations = {
   gt: 'git tree'
