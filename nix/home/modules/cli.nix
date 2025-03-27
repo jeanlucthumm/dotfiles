@@ -50,6 +50,7 @@ in {
     # TODO: add again once resolved: https://github.com/NixOS/nixpkgs/issues/380227
     # bitwarden-cli # Bitwarden CLI
     ffmpeg
+    usbutils # USB utilities
   ];
 
   programs = {
