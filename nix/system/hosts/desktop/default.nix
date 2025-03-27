@@ -9,6 +9,7 @@
     ../../modules/tailscale.nix
     ../../modules/user-jeanluc.nix
     ../../modules/boot.nix
+    ../../modules/amd-gpu.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
   ];
