@@ -38,7 +38,6 @@ in {
     google-cloud-sdk # Google Cloud CLI
     ungoogled-chromium # For Dart dev
 
-    code-cursor # Agentic IDE
     whatsapp-for-linux # Chat
     obsidian # Note taking
     smile # emoji picker
