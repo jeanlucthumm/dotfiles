@@ -9,5 +9,9 @@
         "key": "ctrl+w",
         "command": "-workbench.action.closeActiveEditor",
         "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+i",
+        "command": "composerMode.agent"
     }
 ]
