@@ -14,7 +14,11 @@ in {
       uda.blocks.label=Blocks
       uda.ticket.type=string
       uda.ticket.label=Ticket
-      news.version=3.3.0
+      news.version=3.4.1
+
+      urgency.uda.priority.H.coefficient=6.0
+      urgency.uda.priority.M.coefficient=3.9
+      urgency.uda.priority.L.coefficient=-1.8
 
       # Put contexts defined with `task context define` in this file
       include ${configDir}/task/context.config
