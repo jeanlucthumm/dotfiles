@@ -124,8 +124,13 @@ def tparent []: [nothing -> string] {
 # Taskwarrior: Add task as children to the active's parent
 def tsibling [
   desc: string,   # Description of the sibling task
+  id?: int, # Optional id of the task to add a sibling to. Default to active task.
 ]: [nothing -> string] {
-  let parent = tactive | get uuid | __tparent
+  let parent = if (id == null) {
+    tactive | get uuid | __tparent
+  } else {
+    $id | __tlookup | get uuid | __tparent
+  }
 
   if ($parent.status != "pending") {
     print -e $"Parent not pending. UUID: ($parent.uuid)"
@@ -145,6 +150,13 @@ def tactive []: [nothing -> record] {
   $active_list.0
 }
 
+# Stop active task and immediately start planning project in timew.
+def tplan []: [nothing -> string] {
+  let active = tactive
+  task done $active.id
+  timew start plan
+}
+
 def __tparent []: [string -> record] {
   let uuid = $in
   let parents = task export |
@@ -157,6 +169,18 @@ def __tparent []: [string -> record] {
     }
   }
   $parents.0
+}
+
+def __tlookup []: [int -> record] {
+  let result = task $in export | from json
+
+  if ($result | is-empty) {
+    error make -u {
+      msg: "No such id"
+    }
+  }
+
+  $result.0
 }
 
 # Concatenate file contents with labels.
