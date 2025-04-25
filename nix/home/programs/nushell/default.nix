@@ -16,6 +16,8 @@ in {
       nd = "nix develop";
       cat = "bat";
       t = "task";
+      a = "aichat";
+      fg = "job unfreeze";
     };
     environmentVariables = {
       nix = ''${homeDir}/nix'';
