@@ -32,6 +32,7 @@ in {
     firefox # Web browser
     discord # Chat
     gimp # Image editing
+    neovide # NeoVim GUI
 
     lmstudio # LLM experimentation
     tor-browser # Privacy browser

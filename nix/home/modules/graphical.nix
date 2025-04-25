@@ -1,12 +1,5 @@
 # System agnostic GUI programs
 {pkgs, ...}: {
-  home.packages = with pkgs;
-    if stdenv.hostPlatform.isDarwin
-    then []
-    else [
-      neovide # Neovim GUI
-    ];
-
   programs = {
     # Terminal with GPU acceleration
     kitty = {
@@ -26,10 +19,13 @@
         repaint_delay = 5;
         input_delay = 1;
         cursor_shape = "block";
-        macos_option_as_alt = true;
         scrollback_pager = "nvim -c 'set ft=sh' -";
         paste_actions = "quote-urls-at-prompt";
+        enabled_layouts = "tall:bias=50;full_size=1;mirrored=false";
       };
     };
+
+    # Enables using Kitty's new key handling protocol in nushell
+    nushell.settings.use_kitty_protocol = true;
   };
 }

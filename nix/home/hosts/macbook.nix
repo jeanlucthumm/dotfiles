@@ -10,6 +10,7 @@ in {
     ../modules/darwin-foundation.nix
     ../modules/cli.nix
     ../modules/graphical.nix
+    ../modules/darwin/graphical.nix
     ../modules/darwin-fish-fix.nix
     ../modules/theme-home.nix
   ];
