@@ -51,6 +51,7 @@ in {
     # bitwarden-cli # Bitwarden CLI
     ffmpeg
     usbutils # USB utilities
+    # aider-chat-full
   ];
 
   programs = {

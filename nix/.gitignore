@@ -3,3 +3,4 @@ result
 # constantly.
 system/hosts/*/theme-setting-local.nix
 *.qcow2
+*.aider*
