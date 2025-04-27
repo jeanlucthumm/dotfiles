@@ -219,11 +219,6 @@ def label-diff []: [string -> string] {
   $"```diff\n($in)\n```"
 }
 
-# Searches Bitwarden for password
-def bw-list [search: string]: [nothing -> table<name: string, user: string, pass: string>] {
-  bw list items --search $search | from json | select name login.username login.password | rename name user pass
-}
-
 # Create PR context for LLMs
 def ngit-prcontext [
   revrange: string # Revision range this applies to e.g. `master..HEAD`

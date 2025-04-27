@@ -1,6 +1,10 @@
 # NixOS CLI setup
 {pkgs, ...}: {
+  imports = [
+    ../../programs/nushell/nixos.nix
+  ];
+
   home.packages = with pkgs; [
-    keyutils
+    keyutils # Kernel key services
   ];
 }
