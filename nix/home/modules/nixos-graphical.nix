@@ -164,12 +164,13 @@ in {
       };
       provider = "geoclue2";
     };
+    # Notification manager
     mako = {
       enable = true;
       settings = {
         markup = true;
-        borderRadius = 10;
         icons = true;
+        borderRadius = 10;
         padding = "10";
       };
     };
