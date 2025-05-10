@@ -1,5 +1,16 @@
 # Crypto, auth, SSH, security, etc.
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
+  # Agenix manages secrets
+  environment.systemPackages = [inputs.agenix.packages.${pkgs.system}.default];
+  age.secrets = {
+    openai.file = ../../secrets/openai.age;
+    anthropic.file = ../../secrets/anthropic.age;
+  };
+
   programs = {
     # Manages GPG keys for signing stuff like git commits
     gnupg.agent = {

@@ -5,6 +5,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+    agenix.url = "github:ryantm/agenix";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -24,6 +25,7 @@
     self,
     nixpkgs,
     nixpkgs-master,
+    agenix,
     home-manager,
     stylix,
     nix-darwin,
@@ -60,6 +62,7 @@
         modules = [
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
+          agenix.nixosModules.default
           ./system/hosts/desktop
           {
             home-manager.useGlobalPkgs = true;
@@ -80,6 +83,7 @@
         modules = [
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
+          agenix.nixosModules.default
           ./system/hosts/server
           {
             home-manager.useGlobalPkgs = false;
@@ -101,6 +105,7 @@
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
+          agenix.nixosModules.default
           ./system/hosts/server
           {
             home-manager.useGlobalPkgs = false;
@@ -128,6 +133,7 @@
           stylix.nixosModules.stylix
           ./hosts/theme-setting.nix
           ./hosts/virtual
+          agenix.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = false;
@@ -149,6 +155,7 @@
       modules = [
         stylix.darwinModules.stylix
         home-manager.darwinModules.home-manager
+        agenix.darwinModules.default
         ./system/hosts/macbook
         {
           home-manager.useGlobalPkgs = true;
