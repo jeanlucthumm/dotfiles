@@ -69,6 +69,7 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs.hostName = "desktop";
             home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
+            home-manager.sharedModules = [agenix.homeManagerModules.default];
           }
         ];
       };
