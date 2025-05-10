@@ -4,6 +4,7 @@
   # Pin nixpkgs for every imput to avoid multiple evaluations.
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,6 +23,7 @@
   outputs = inputs @ {
     self,
     nixpkgs,
+    nixpkgs-master,
     home-manager,
     stylix,
     nix-darwin,
@@ -49,6 +51,11 @@
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
+          overlays = [
+            (final: prev: {
+              aider-chat-full = nixpkgs-master.legacyPackages.${prev.system}.aider-chat-full;
+            })
+          ];
         };
         modules = [
           stylix.nixosModules.stylix
