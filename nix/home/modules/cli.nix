@@ -47,8 +47,6 @@ in {
     unzip # Unzip files
     dig # DNS lookup utility
     devenv # Development environment manager
-    # TODO: add again once resolved: https://github.com/NixOS/nixpkgs/issues/380227
-    bitwarden-cli # Bitwarden CLI
     ffmpeg
     usbutils # USB utilities
     # aider-chat-full
