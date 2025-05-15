@@ -61,7 +61,7 @@ function M.on_attach(client, bufnr)
   local opts = { noremap = true, silent = true, buffer = bufnr }
   ncmap('gd', 'lua vim.lsp.buf.definition()', opts)
   ncmap('K', 'lua vim.lsp.buf.hover()', opts)
-  ncmap('<Leader>r', 'lua vim.lsp.buf.rename()', opts)
+  ncmap('<Leader>R', 'lua vim.lsp.buf.rename()', opts)
   ncmap('<Leader>ks', 'lua vim.lsp.buf.signature_help()', opts)
   ncmap('<Leader>kp', 'lua vim.diagnostic.goto_prev()', opts)
   ncmap('<Leader>kn', 'lua vim.diagnostic.goto_next()', opts)
@@ -102,7 +102,8 @@ function M.on_attach(client, bufnr)
       group = auformat,
       buffer = bufnr,
       callback = function()
-        M.lsp_formatting(bufnr)
+        -- M.lsp_formatting(bufnr)
+        vim.lsp.buf.format()
       end,
     })
   end
