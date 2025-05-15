@@ -96,6 +96,7 @@ local plugin_spec = {
       })
       lspconfig.nil_ls.setup(extend {})
       lspconfig.ts_ls.setup(extend {})
+      lspconfig.ruff.setup(extend {})
     end,
   },
   {
@@ -105,17 +106,16 @@ local plugin_spec = {
       local n = require('null-ls')
       n.setup {
         sources = {
-          n.builtins.formatting.black,
           n.builtins.formatting.fish_indent,
           n.builtins.formatting.mdformat,
           n.builtins.formatting.clang_format,
           n.builtins.formatting.buf,
           n.builtins.formatting.prettierd,
           n.builtins.formatting.dart_format,
-          n.builtins.formatting.isort,
           n.builtins.formatting.alejandra,
           n.builtins.diagnostics.fish,
           n.builtins.diagnostics.actionlint,
+          n.builtins.diagnostics.mypy,
           n.builtins.code_actions.statix,
         },
       }
