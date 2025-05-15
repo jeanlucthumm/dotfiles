@@ -35,4 +35,5 @@ in {
     # extraEnv = builtins.readFile ./env.nu;
   };
   programs.carapace.enableNushellIntegration = true;
+  programs.direnv.enableNushellIntegration = true;
 }

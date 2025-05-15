@@ -49,12 +49,12 @@ in {
     devenv # Development environment manager
     ffmpeg
     usbutils # USB utilities
-    # aider-chat-full
   ];
 
   programs = {
     carapace.enable = true;
     bat.enable = true; # Cat replacement
+    direnv.enable = true;
 
     # cd replacement
     zoxide = {
