@@ -86,6 +86,7 @@ in {
         treel = "log --graph --decorate --oneline --all";
         check = "checkout";
         head = "symbolic-ref --short HEAD";
+        ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
       };
       extraConfig = {
         merge = {
