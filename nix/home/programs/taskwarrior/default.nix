@@ -7,6 +7,7 @@
   contextLabels = [
     "cora"
     "cora-validation"
+    "cora-mcp"
     "nix"
     "chore"
   ];
