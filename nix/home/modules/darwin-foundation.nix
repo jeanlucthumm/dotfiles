@@ -10,7 +10,7 @@
     nushell.configFile.text = ''
       def nrs []: [nothing -> nothing] {
         let flake = $"($env.HOME)/nix#${hostName}"
-        nix run nix-darwin -- switch --flake $flake
+        sudo nix run nix-darwin -- switch --flake $flake
       }
     '';
 
