@@ -44,7 +44,7 @@
       "desktop" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
-          inherit zen-browser;
+          inherit inputs;
         };
         pkgs = import nixpkgs {
           system = "x86_64-linux";
@@ -67,7 +67,9 @@
       # This is headless 24/7 system.
       "server" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit nixpkgs;};
+        specialArgs = {
+          inherit inputs;
+        };
         modules = [
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
@@ -84,7 +86,9 @@
       # Server ISO configuration for creating bootable USB
       "server-iso" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit nixpkgs;};
+        specialArgs = {
+          inherit inputs;
+        };
         modules = [
           # Include the installation media module
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
@@ -110,7 +114,9 @@
       # That works because of the `packages` attr below.
       "virtual" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit nixpkgs;};
+        specialArgs = {
+          inherit inputs;
+        };
         modules = [
           stylix.nixosModules.stylix
           ./hosts/theme-setting.nix

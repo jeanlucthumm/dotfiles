@@ -2,7 +2,7 @@
 {
   config,
   pkgs,
-  zen-browser,
+  inputs,
   ...
 }: {
   # Fonts
@@ -14,6 +14,6 @@
   ];
 
   environment.systemPackages = [
-    zen-browser.packages.${config.nixpkgs.system}.default
+    inputs.zen-browser.packages.${config.nixpkgs.system}.default
   ];
 }

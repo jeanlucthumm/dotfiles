@@ -1,7 +1,7 @@
 {
   pkgs,
   lib,
-  nixpkgs,
+  inputs,
   ...
 }: {
   imports = [
@@ -10,7 +10,7 @@
     ../../theme-setting.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
-    "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
+    "${inputs.nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
   ];
 
   networking.hostName = "virtual";
