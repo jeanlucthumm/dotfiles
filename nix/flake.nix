@@ -138,9 +138,6 @@
         home-manager.darwinModules.home-manager
         ./system/hosts/macbook
         {
-          stylix.enableReleaseChecks = false;
-        }
-        {
           home-manager.useGlobalPkgs = false;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs.hostName = "macbook";
