@@ -9,9 +9,12 @@
     enableZshIntegration = true;
     enableNushellIntegration = true;
 
-    settings = with config.lib.stylix.colors.withHashtag; let
+    settings = let
+      fg =
+        if config.stylix.enable
+        then config.lib.stylix.colors.base00
+        else "#FBF1C7";
       # Colors
-      fg = base00;
       c1 = "#9A348E";
       c2 = "#DA627D";
       c3 = "#FCA17D";

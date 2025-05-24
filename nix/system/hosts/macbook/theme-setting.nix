@@ -4,7 +4,7 @@
   ];
 
   theme = {
-    enable = true;
+    enable = false;
     name = "gruvbox";
     darkMode = false;
   };

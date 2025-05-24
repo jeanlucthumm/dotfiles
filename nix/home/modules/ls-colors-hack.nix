@@ -102,7 +102,7 @@ with lib; let
   in
     concatStringsSep ":" (mapAttrsToList (k: v: "${k}=${v}") colorMap);
 in {
-  programs.nushell.environmentVariables = {
+  programs.nushell.environmentVariables = lib.mkIf config.theme.enable {
     LS_COLORS = ''"${generateLsColors config.lib.stylix.colors}"'';
   };
 }
