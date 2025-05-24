@@ -11,9 +11,8 @@ in {
     enable = true;
     shellAliases = {
       vim = "nvim";
-      nv = "neovide --fork";
+      nv = "neovide --fork --frame transparent";
       cd = "z";
-      nd = "nix develop";
       cat = "bat";
       t = "task";
       a = "aichat";
@@ -32,7 +31,6 @@ in {
       completions.algorithm = "fuzzy";
     };
     extraConfig = builtins.readFile ./config.nu;
-    # extraEnv = builtins.readFile ./env.nu;
   };
   programs.carapace.enableNushellIntegration = true;
   programs.direnv.enableNushellIntegration = true;
