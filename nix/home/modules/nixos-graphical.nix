@@ -166,10 +166,12 @@ in {
     };
     mako = {
       enable = true;
-      markup = true;
-      borderRadius = 10;
-      icons = true;
-      padding = "10";
+      settings = {
+        markup = true;
+        borderRadius = 10;
+        icons = true;
+        padding = "10";
+      };
     };
   };
   home.sessionVariables = {
