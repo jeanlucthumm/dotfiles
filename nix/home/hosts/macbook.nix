@@ -6,7 +6,6 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ../modules/foundation.nix
     ../modules/darwin-foundation.nix
     ../modules/cli.nix
     ../modules/graphical.nix
