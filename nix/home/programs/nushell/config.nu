@@ -267,7 +267,7 @@ $env.config = {
       mode: [emacs, vi_normal, vi_insert]
       event: { edit: movewordright }
     }
-    # Hack for fish-like abbreviations
+    # Keybinds for fish-like abbreviations
     {
       name: abbr_menu
       modifier: none
@@ -288,9 +288,10 @@ $env.config = {
           { edit: insertchar value: ' '}
       ]
     }
+    # End fish
   ]
-    # End of hack
   menus: [
+    # Menu for fish like abbreviations
     {
       name: abbr_menu
       only_buffer_difference: false
