@@ -49,6 +49,7 @@ in {
     devenv # Development environment manager
     ffmpeg
     usbutils # USB utilities
+    claude-code # CLI LLM coding utility
   ];
 
   programs = {
