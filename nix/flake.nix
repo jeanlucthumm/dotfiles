@@ -144,7 +144,7 @@
         home-manager.darwinModules.home-manager
         ./system/hosts/macbook
         {
-          home-manager.useGlobalPkgs = false;
+          home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs.hostName = "macbook";
           home-manager.users.jeanluc = import ./home/hosts/macbook.nix;
