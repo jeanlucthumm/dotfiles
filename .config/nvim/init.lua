@@ -100,6 +100,23 @@ local plugin_spec = {
     end,
   },
   {
+    'milanglacier/minuet-ai.nvim',
+    config = function()
+      require'minuet'.setup {
+        auto_trigger_ft = { 'lua', 'go', 'proto', 'python' },
+        provider = 'codestral',
+        provider_options = {
+          codestral = {
+            optional = {
+              max_tokens = 256,
+              stop = { '\n\n' },
+            },
+          },
+        },
+      }
+    end,
+  },
+  {
     'nvimtools/none-ls.nvim',
     enabled = not HasGoogle,
     config = function()
@@ -205,6 +222,7 @@ local plugin_spec = {
     config = function()
       local cmp = require'cmp'
       local luasnip = require'luasnip'
+      local minuet = require'minuet.virtualtext'
       local conf = {
         snippet = {
           expand = function(args)
@@ -222,6 +240,8 @@ local plugin_spec = {
           ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
+            elseif minuet.action.is_visible() then
+              minuet.action.accept()
             else
               fallback()
             end
@@ -738,9 +758,14 @@ vim.cmd('hi! link pythonSpaceError Normal')
 
 local function lsp_status_component() return require'lsp-status'.status() end
 require'lualine'.setup {
-  options = { theme = lualine_theme, extensions = { 'quickfix', 'nvim-tree' } },
+  options = { theme = lualine_theme, extensions = { 'quickfix' } },
   sections = {
-    lualine_x = { lsp_status_component, 'encoding', 'fileformat', 'filetype' },
+    lualine_x = {
+      lsp_status_component,
+      require'minuet.lualine',
+      'fileformat',
+      'filetype',
+    },
   },
 }
 
