@@ -3,7 +3,6 @@
   pkgs,
   ...
 }: let
-  configDir = config.xdg.configHome;
   contextLabels = [
     "cora"
     "cora-validation"
@@ -21,7 +20,7 @@ in {
   # Taskwarrior is a cli task tracking tool.
   programs.taskwarrior = {
     enable = true;
-    dataLocation = "${config.home.homeDirectory}/Sync/taskwarrior";
+    dataLocation = "${config.xdg.dataHome}/task";
     extraConfig =
       ''
         uda.blocks.type=string
@@ -34,7 +33,7 @@ in {
         urgency.uda.priority.M.coefficient=3.9
         urgency.uda.priority.L.coefficient=-1.8
 
-        hooks.location=${configDir}/task/hooks
+        hooks.location=${config.xdg.configHome}/task/hooks
 
       ''
       + builtins.concatStringsSep "\n" (builtins.map makeContext contextLabels);
