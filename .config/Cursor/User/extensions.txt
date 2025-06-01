@@ -1,0 +1,17 @@
+anysphere.pyright
+biomejs.biome
+dart-code.dart-code
+dart-code.flutter
+github.vscode-github-actions
+golang.go
+mkhl.direnv
+ms-azuretools.vscode-docker
+ms-python.black-formatter
+ms-python.debugpy
+ms-python.python
+ms-python.vscode-pylance
+ms-vscode.makefile-tools
+swiftlang.swift-vscode
+vadimcn.vscode-lldb
+vscodevim.vim
+zxh404.vscode-proto3
