@@ -17,6 +17,7 @@ in {
     statix # Nix linter
     alejandra # Nix formatter
     nixd # Nix LSP
+    nil # Nix LSP
     ripgrep # Fast grep search tool
     nodejs_22 # A bunch of tools (including Copilot) rely on this
     sumneko-lua-language-server # Lua language server
