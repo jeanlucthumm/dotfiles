@@ -1,6 +1,5 @@
 {
     "editor.formatOnSave": true,
-    "window.commandCenter": true,
     "workbench.colorTheme": "Visual Studio Light",
     "git.openRepositoryInParentFolders": "always",
     "nix.formatterPath": "alejandra",
@@ -208,7 +207,6 @@
     ],
     "git.confirmSync": false,
     "git.autofetch": true,
-    "workbench.activityBar.orientation": "vertical",
     "[dart]": {
         "editor.formatOnSave": true,
         "editor.formatOnType": true,
