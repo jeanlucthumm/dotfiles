@@ -12,6 +12,7 @@
       "cmd+shift+n" = "new_os_window";
       "cmd+h" = "previous_window";
       "cmd+l" = "next_window";
+      "cmd+enter" = "new_window_with_cwd";
     };
   };
 }
