@@ -1,6 +1,5 @@
 {
     "editor.formatOnSave": true,
-    "workbench.colorTheme": "Visual Studio Light",
     "git.openRepositoryInParentFolders": "always",
     "nix.formatterPath": "alejandra",
     "nix.enableLanguageServer": true,
@@ -224,4 +223,5 @@
         "editor.defaultFormatter": "zxh404.vscode-proto3"
     },
     "makefile.configureOnOpen": false,
+    "workbench.colorTheme": "Zenbones Nordbones Dark",
 }
