@@ -2,8 +2,8 @@
   imports = [
     ../../modules/bluetooth.nix
     ../../modules/graphical.nix
-    ../../modules/nixos-foundation.nix
-    ../../modules/nixos-graphical.nix
+    ../../modules/foundation.nix
+    ../../modules/graphical.nix
     ../../modules/security.nix
     ../../modules/ssh.nix
     ../../modules/tailscale.nix

@@ -1,9 +1,9 @@
 {...}: {
   imports = [
-    ../modules/nixos-foundation.nix
+    ../modules/nixos/foundation.nix
     ../modules/cli.nix
     ../modules/nixos/cli.nix
-    ../modules/nixos-graphical.nix
+    ../modules/nixos/graphical.nix
     ../modules/graphical.nix
     ../modules/ssh.nix
     ../modules/theme-home.nix

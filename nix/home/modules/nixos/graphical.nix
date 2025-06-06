@@ -8,7 +8,7 @@
   configDir = config.xdg.configHome;
 in {
   imports = [
-    ../programs/hyprland.nix
+    ../../programs/hyprland.nix
   ];
 
   home.packages = with pkgs; [

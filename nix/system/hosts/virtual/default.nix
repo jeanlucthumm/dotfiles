@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ../../modules/nixos-foundation.nix
+    ../../modules/foundation.nix
     ../../modules/security.nix
     ../../theme-setting.nix
     ./hardware-configuration.nix

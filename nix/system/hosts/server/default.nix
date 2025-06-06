@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ../../modules/nixos-foundation.nix
+    ../../modules/foundation.nix
     ../../modules/security.nix
     ../../modules/ssh.nix
     ../../modules/tailscale.nix
