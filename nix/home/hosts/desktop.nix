@@ -8,6 +8,7 @@
     ../modules/ssh.nix
     ../modules/theme-home.nix
     ../modules/syncing.nix
+    ../modules/security.nix
   ];
 
   # The state version is required and should stay at the version you
