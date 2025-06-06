@@ -50,15 +50,6 @@
         specialArgs = {
           inherit inputs;
         };
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-          overlays = [
-            (final: prev: {
-              aider-chat-full = nixpkgs-master.legacyPackages.${prev.system}.aider-chat-full;
-            })
-          ];
-        };
         modules = [
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager

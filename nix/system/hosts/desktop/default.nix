@@ -25,6 +25,8 @@
 
   networking.hostName = "desktop";
 
+  nixpkgs.config.allowUnfree = true;
+
   # Android Debug Bridge (ADB) for Android development
   programs.adb.enable = true;
 
