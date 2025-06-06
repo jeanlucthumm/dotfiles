@@ -163,16 +163,11 @@ local plugin_spec = {
         ensure_installed = {
           'c',
           'lua',
-          'rust',
-          'fish',
           'markdown',
           'markdown_inline',
         },
         highlight = { enable = true },
-        indent = {
-          enable = true,
-          disable = { 'dart' },
-        },
+        indent = { enable = true },
       }
       vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
       vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
@@ -277,7 +272,7 @@ local plugin_spec = {
       provider = 'claude',
       providers = {
         claude = {
-          model = 'claude-sonnet-4-20250514'
+          model = 'claude-sonnet-4-20250514',
         },
       },
     },
