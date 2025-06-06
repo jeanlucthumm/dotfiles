@@ -105,10 +105,20 @@ local plugin_spec = {
     'milanglacier/minuet-ai.nvim',
     config = function()
       require'minuet'.setup {
-        auto_trigger_ft = { 'lua', 'go', 'proto', 'python' },
+        virtualtext = {
+          auto_trigger_ft = { 'lua', 'go', 'proto', 'python' },
+          show_on_completion_menu = true,
+        },
         provider = 'codestral',
         provider_options = {
           codestral = {
+            api_key = function()
+              local result = vim.system({ 'get-key-codestral' }, { text = true }):wait()
+              if result.code ~= 0 then
+                vim.notify('Failed to get API key for Codestral', vim.log.levels.ERROR)
+              end
+              return vim.trim(result.stdout or '')
+            end,
             optional = {
               max_tokens = 256,
               stop = { '\n\n' },
