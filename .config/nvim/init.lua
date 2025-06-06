@@ -283,6 +283,7 @@ local plugin_spec = {
       providers = {
         claude = {
           model = 'claude-sonnet-4-20250514',
+          api_key_name = { 'get-key-anthropic' },
         },
       },
     },
