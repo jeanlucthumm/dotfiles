@@ -154,6 +154,7 @@
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs.hostName = "macbook";
           home-manager.users.jeanluc = import ./home/hosts/macbook.nix;
+          home-manager.sharedModules = [agenix.homeManagerModules.default];
         }
       ];
     };
