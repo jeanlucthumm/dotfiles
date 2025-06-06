@@ -7,4 +7,6 @@ in {
   # Define your secrets here
   "jeanluc-openai.age".publicKeys = jeanluc;
   "jeanluc-anthropic.age".publicKeys = jeanluc;
+  "jeanluc-tavily.age".publicKeys = jeanluc;
+  "jeanluc-codestral.age".publicKeys = jeanluc;
 }
