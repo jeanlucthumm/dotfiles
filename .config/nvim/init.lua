@@ -8,6 +8,8 @@ local cmd = vim.cmd
 
 g.mapleader = ' ' -- sets <Leader> to <space>
 
+g.root_spec = { { '.git' }, 'lsp', 'cwd' }
+
 local function file_exists(path)
   local stat = vim.loop.fs_stat(path)
   return stat or false
