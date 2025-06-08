@@ -106,8 +106,14 @@ local plugin_spec = {
     config = function()
       require'minuet'.setup {
         virtualtext = {
-          auto_trigger_ft = { 'lua', 'go', 'proto', 'python' },
+          auto_trigger_ft = { 'lua', 'go', 'proto', 'python', 'nix' },
           show_on_completion_menu = true,
+          keymap = {
+            accept_line = '<A-l>',
+            prev = '<A-[>',
+            next = '<A-]>',
+            dismiss = '<A-e>',
+          },
         },
         provider = 'codestral',
         provider_options = {
