@@ -225,4 +225,5 @@
     "makefile.configureOnOpen": false,
     "workbench.colorTheme": "Atom One Light",
     "workbench.iconTheme": "material-icon-theme",
+    "terminal.integrated.fontLigatures": true,
 }
