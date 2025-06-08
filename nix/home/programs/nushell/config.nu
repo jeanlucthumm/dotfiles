@@ -1,3 +1,9 @@
+# Asks an AI to find a suitable nushell command
+def aihelp [query: string]: [nothing -> string] {
+  let msg = $"Recommend a nushell command for the following query: ($query)"
+  help commands | select name description | to csv | aichat $msg
+}
+
 alias __ls = ls
 
 # ls wrapper with pretty output
