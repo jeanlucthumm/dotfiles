@@ -134,33 +134,6 @@
       ];
     };
 
-    # Development environment to work on this flake.
-    # Since the format is `devShells.<system>.<shell_name>`, we generate the same
-    # attrs for each default system.
-    devShells = forAllSystems (
-      system:
-      # Recommended way to access nixpkgs for a specific system.
-      # Otherwise need to call nixpkgs with a specific system param.
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        default = pkgs.mkShell {
-          packages = with pkgs; [
-            statix
-            alejandra
-            manix
-            pastel # For color querying and stuff
-          ];
-
-          shellHook = ''
-            # Enter shell to the same one user is using, otherwise it would
-            # just open bash. Also exit with correct status when we're done.
-            bash -c "$SHELL"; exit $?
-          '';
-        };
-      }
-    );
-
     packages = let
       vm = self.nixosConfigurations.virtual.config.system.build.vm;
     in {
