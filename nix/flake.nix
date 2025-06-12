@@ -101,8 +101,8 @@
         };
         modules = [
           stylix.nixosModules.stylix
-          ./hosts/theme-setting.nix
-          ./hosts/virtual
+          ./system/hosts/theme-setting.nix
+          ./system/hosts/virtual
           agenix.nixosModules.default
           home-manager.nixosModules.home-manager
           {
