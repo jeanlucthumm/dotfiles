@@ -32,7 +32,6 @@
   }: let
     systems = [
       "aarch64-linux"
-      "i686-linux"
       "x86_64-linux"
       "aarch64-darwin"
       "x86_64-darwin"
@@ -167,7 +166,6 @@
     in {
       # NixOS VM is only available on Linux.
       "aarch64-linux".virtual-vm = vm;
-      "i686-linux".virtual-vm = vm;
       "x86_64-linux".virtual-vm = vm;
     };
   };
