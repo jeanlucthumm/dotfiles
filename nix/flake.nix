@@ -4,7 +4,6 @@
   # Pin nixpkgs for every imput to avoid multiple evaluations.
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     agenix.url = "github:ryantm/agenix";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -24,7 +23,6 @@
   outputs = inputs @ {
     self,
     nixpkgs,
-    nixpkgs-master,
     agenix,
     home-manager,
     stylix,
