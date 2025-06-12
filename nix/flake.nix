@@ -29,17 +29,7 @@
     nix-darwin,
     zen-browser,
     ...
-  }: let
-    systems = [
-      "aarch64-linux"
-      "x86_64-linux"
-      "aarch64-darwin"
-      "x86_64-darwin"
-    ];
-    # This is a function that generates an attribute by calling a function you
-    # pass to it, with each system as an argument
-    forAllSystems = nixpkgs.lib.genAttrs systems;
-  in {
+  }: {
     # System configurations for NixOS hosts.
     nixosConfigurations = {
       "desktop" = nixpkgs.lib.nixosSystem {
