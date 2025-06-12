@@ -86,28 +86,6 @@
         ];
       };
 
-      # Server ISO configuration for creating bootable USB
-      "server-iso" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-        };
-        modules = [
-          # Include the installation media module
-          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-          stylix.nixosModules.stylix
-          home-manager.nixosModules.home-manager
-          agenix.nixosModules.default
-          ./system/hosts/server
-          {
-            home-manager.useGlobalPkgs = false;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs.hostName = "server";
-            home-manager.users.jeanluc = import ./home/hosts/server.nix;
-          }
-        ];
-      };
-
       # System configuration for VM.
       # Do:
       #   nixos-rebuild build-vm --flake .#virtual
