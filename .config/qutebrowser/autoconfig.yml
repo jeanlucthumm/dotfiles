@@ -33,6 +33,8 @@ settings:
       <Shift+Return>: <Return>
   colors.completion.category.bg:
     global: black
+  colors.webpage.preferred_color_scheme:
+    global: auto
   content.javascript.clipboard:
     global: access
   content.media.audio_capture:
