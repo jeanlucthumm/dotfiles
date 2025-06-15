@@ -40,39 +40,34 @@
     nixosConfigurations = {
       "desktop" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-        };
+        specialArgs = {inherit inputs;};
         modules = [
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           agenix.nixosModules.default
+          ./system/modules/home-manager.nix
           ./system/hosts/desktop
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs.hostName = "desktop";
             home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
-            home-manager.sharedModules = [agenix.homeManagerModules.default];
           }
         ];
       };
 
       # System configuration for my server.
-      # This is headless 24/7 system.
+      # This is a headless 24/7 system.
       "server" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-        };
+        specialArgs = {inherit inputs;};
         modules = [
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           agenix.nixosModules.default
+          ./system/modules/home-manager.nix
           ./system/hosts/server
           {
-            home-manager.useGlobalPkgs = false;
-            home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs.hostName = "server";
             home-manager.users.jeanluc = import ./home/hosts/server.nix;
           }
@@ -89,18 +84,14 @@
       # That works because of the `packages` attr below.
       "virtual" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-        };
+        specialArgs = {inherit inputs;};
         modules = [
           stylix.nixosModules.stylix
-          ./system/hosts/theme-setting.nix
+          ./system/modules/home-manager.nix
           ./system/hosts/virtual
           agenix.nixosModules.default
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = false;
-            home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs.hostName = "virtual";
             home-manager.users.jeanluc = {...}: {
               imports = [./home/linux.nix ./hosts/virtual/theme-setting.nix];
@@ -119,13 +110,11 @@
         stylix.darwinModules.stylix
         home-manager.darwinModules.home-manager
         agenix.darwinModules.default
+        ./system/modules/home-manager.nix
         ./system/hosts/macbook
         {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs.hostName = "macbook";
           home-manager.users.jeanluc = import ./home/hosts/macbook.nix;
-          home-manager.sharedModules = [agenix.homeManagerModules.default];
         }
       ];
     };

@@ -7,9 +7,7 @@
   imports = [
     ../../modules/foundation.nix
     ../../modules/security.nix
-    ../../theme-setting.nix
     ./hardware-configuration.nix
-    ./theme-setting.nix
     "${inputs.nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
   ];
 
