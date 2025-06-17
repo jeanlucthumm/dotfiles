@@ -102,37 +102,17 @@ local plugin_spec = {
     end,
   },
   {
-    'milanglacier/minuet-ai.nvim',
-    config = function()
-      require'minuet'.setup {
-        virtualtext = {
-          auto_trigger_ft = { 'lua', 'go', 'proto', 'python', 'nix' },
-          show_on_completion_menu = true,
-          keymap = {
-            accept_line = '<A-l>',
-            prev = '<A-[>',
-            next = '<A-]>',
-            dismiss = '<A-e>',
-          },
-        },
-        provider = 'codestral',
-        provider_options = {
-          codestral = {
-            api_key = function()
-              local result = vim.system({ 'get-key-codestral' }, { text = true }):wait()
-              if result.code ~= 0 then
-                vim.notify('Failed to get API key for Codestral', vim.log.levels.ERROR)
-              end
-              return vim.trim(result.stdout or '')
-            end,
-            optional = {
-              max_tokens = 256,
-              stop = { '\n\n' },
-            },
-          },
-        },
-      }
-    end,
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    opts = {
+      panel = {
+        enabled = false,
+      },
+      suggestion = {
+        auto_trigger = true,
+      },
+    },
   },
   {
     'nvimtools/none-ls.nvim',
@@ -235,7 +215,7 @@ local plugin_spec = {
     config = function()
       local cmp = require'cmp'
       local luasnip = require'luasnip'
-      local minuet = require'minuet.virtualtext'
+      local suggestion = require'copilot.suggestion'
       local conf = {
         snippet = {
           expand = function(args)
@@ -253,8 +233,8 @@ local plugin_spec = {
           ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
-            elseif minuet.action.is_visible() then
-              minuet.action.accept()
+            elseif suggestion.is_visible() then
+              suggestion.accept()
             else
               fallback()
             end
@@ -262,6 +242,13 @@ local plugin_spec = {
           ['<S-Tab>'] = cmp.mapping(function(fallback)
             if luasnip.jumpable(-1) then
               luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<C-Tab>'] = cmp.mapping(function(fallback)
+            if suggestion.is_visible() then
+              suggestion.accept_line()
             else
               fallback()
             end
@@ -771,7 +758,6 @@ require'lualine'.setup {
   sections = {
     lualine_x = {
       lsp_status_component,
-      require'minuet.lualine',
       'fileformat',
       'filetype',
     },
