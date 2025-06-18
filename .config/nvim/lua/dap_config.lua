@@ -6,7 +6,8 @@ dap.adapters.lldb = {
   name = 'lldb',
 }
 
-dap.adapters.delve_docker = {
+-- For debugging dlv remote server
+dap.adapters.delve_remote = {
   type = 'server',
   host = 'localhost',
   port = 40000,
@@ -39,29 +40,19 @@ dap.configurations.cpp = {
   },
 }
 
--- Append a dap configuration for Go
--- TODO: this is not working yet
-if not dap.configurations.go then
-  dap.configurations.go = {}
-end
-table.insert(dap.configurations.go,
+-- TODO: This is project specific, should be moved to a project specific file
+dap.configurations.go = {
   {
-    type = 'delve_docker',
-    name = 'Delve Docker',
+    type = 'delve_remote',
+    name = 'Cora Docker',
     request = 'launch',
     mode = 'debug',
     substitutePath = {
       { from = '${workspaceFolder}', to = '/usr/src/app/server' },
     },
-    program = '${relativeFile}',
-    connect = function()
-      local host = vim.fn.input('Host [localhost]: ')
-      host = host ~= '' and host or 'localhost'
-      local port = vim.fn.input('Port [40000]: ')
-      port = port ~= '' and port or '40000'
-      return { host = host, port = port }
-    end,
-  })
+    program = 'cmd/server/main.go',
+  },
+}
 
 vim.fn.sign_define('DapBreakpoint',
   { text = '🧘', texthl = '', linehl = '', numhl = '' })
