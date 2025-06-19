@@ -10,6 +10,7 @@
       "cmd+n" = "next_tab";
       "cmd+k" = "focus_visible_window";
       "cmd+shift+n" = "new_os_window";
+      "cmd+shift+r" = "set_tab_title";
       "cmd+h" = "previous_window";
       "cmd+l" = "next_window";
       "cmd+enter" = "new_window_with_cwd";
