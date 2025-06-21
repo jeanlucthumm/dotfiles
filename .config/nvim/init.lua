@@ -325,7 +325,23 @@ local plugin_spec = {
   { 'mhinz/vim-signify' }, -- TODO look into nvim version
   {
     'theHamsta/nvim-dap-virtual-text',
-    opts = {},
+    opts = {
+      display_callback = function(variable, _, _, _, options)
+        -- by default, strip out new line characters
+        local value = ''
+        if options.virt_text_pos == 'inline' then
+          value = ' = ' .. variable.value:gsub('%s+', ' ')
+        else
+          value = variable.name .. ' = ' .. variable.value:gsub('%s+', ' ')
+        end
+        -- truncate the value if it is too long
+        local max = 50
+        if #value > max then
+          value = value:sub(1, max) .. '...'
+        end
+        return value
+      end,
+    },
   },
   {
     'simrat39/rust-tools.nvim',
