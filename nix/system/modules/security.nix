@@ -17,15 +17,7 @@
     ssh.startAgent = true;
   };
 
-  services = {
-    # Manages program secrets.
-    gnome.gnome-keyring.enable = true;
-  };
-
   security = {
-    # Unlock gnome-keyring on tty login
-    pam.services.login.enableGnomeKeyring = true;
-
     # Privilege escalation for user programs
     polkit.enable = true;
   };
