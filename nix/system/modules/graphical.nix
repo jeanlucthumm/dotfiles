@@ -5,24 +5,6 @@
   inputs,
   ...
 }: {
-  systemd = {
-    # Shows graphical prompts for privilege escalation.
-    # This means a user can run programs with root access on demand and safely
-    user.services.polkit-gnome-authentication-agent-1 = {
-      description = "polkit-gnome-authentication-agent-1";
-      wantedBy = ["graphical-session.target"];
-      wants = ["graphical-session.target"];
-      after = ["graphical-session.target"];
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
-      };
-    };
-  };
-
   # Fonts
   fonts.packages = with pkgs; [
     # builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts)
