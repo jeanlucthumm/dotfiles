@@ -11,6 +11,7 @@
       cat = "bat";
       t = "task";
       fg = "job unfreeze";
+      y = "yazi";
     };
     environmentVariables = {
       # For git signing since it spawns gpg in a non-interactive session so gpg

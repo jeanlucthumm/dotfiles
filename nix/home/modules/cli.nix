@@ -52,6 +52,7 @@ in {
     usbutils # USB utilities
     claude-code # CLI LLM coding utility
     dust # du replacement
+    yazi # Terminal file manager
   ];
 
   programs = {
