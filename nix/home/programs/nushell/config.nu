@@ -1,3 +1,12 @@
+# rg wrapper
+def nrg [pattern: string]: [nothing -> table<file: string, line: int, text: string>] {
+  $'[(rg --json $pattern)]' |
+    from json |
+    where type == "match" |
+    select data.path.text data.line_number data.lines.text |
+    rename file line text
+}
+
 # Asks an AI to find a suitable nushell command
 def aihelp [query: string]: [nothing -> string] {
   let msg = $"Recommend a nushell command for the following query: ($query)"
