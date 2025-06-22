@@ -2,24 +2,35 @@
 Bitwarden
 Blobstore
 Differentiators
+Eleftheriou
+FiDi
 L3
 L4
+Mithani
 SWE
+Sakina
+Sakina’s
+Salesforse
 Soylent
 TPM
+Thiseas
 UI
 UX
 VSCode
+WeWork
+a16z
 backend
 codebase
 javascript
 keyctl
+moto
 onboarding
 oncall
 oncallers
 qutebrowser
+speedrun
 standups
 tooltips
 vscode
 webviews
-checksum_v1 = 83ba0eb9f5bd37932ce1e1bb53bf5380
+checksum_v1 = 1cf0d4931deeca76aa8216ee578ed81e
