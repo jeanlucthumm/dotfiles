@@ -94,7 +94,10 @@
           {
             home-manager.extraSpecialArgs.hostName = "virtual";
             home-manager.users.jeanluc = {...}: {
-              imports = [./home/linux.nix ./hosts/virtual/theme-setting.nix];
+              imports = [
+                ./home/linux.nix
+                ./hosts/virtual/theme-setting.nix
+              ];
             };
           }
         ];
