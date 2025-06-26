@@ -1,11 +1,5 @@
 # Crypto, auth, SSH, security, etc.
-{
-  pkgs,
-  inputs,
-  ...
-}: {
-  environment.systemPackages = [inputs.agenix.packages.${pkgs.system}.default];
-
+{pkgs, ...}: {
   programs = {
     # Manages GPG keys for signing stuff like git commits
     gnupg.agent = {

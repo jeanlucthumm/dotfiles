@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ../../modules/agenix.nix
     ./theme-setting.nix
   ];
   nix = {

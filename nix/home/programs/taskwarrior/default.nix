@@ -21,6 +21,15 @@ in {
   programs.taskwarrior = {
     enable = true;
     dataLocation = "${config.xdg.dataHome}/task";
+    config = {
+      sync = {
+        gcp = {
+          bucket = "taskwarrior-23423478";
+          credential_path = config.age.secrets.taskwarrior.path;
+        };
+        encryption_secret = "not-required";
+      };
+    };
     extraConfig =
       ''
         uda.blocks.type=string

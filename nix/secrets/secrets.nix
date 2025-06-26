@@ -9,4 +9,5 @@ in {
   "jeanluc-anthropic.age".publicKeys = jeanluc;
   "jeanluc-tavily.age".publicKeys = jeanluc;
   "jeanluc-codestral.age".publicKeys = jeanluc;
+  "jeanluc-taskwarrior.age".publicKeys = jeanluc;
 }
