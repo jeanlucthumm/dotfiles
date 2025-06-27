@@ -54,7 +54,7 @@ in {
       };
       news.version = "3.4.1";
       # L isn't low enough by default. The rest are default values.
-      usrgency.uda.priority = {
+      urgency.uda.priority = {
         H.coefficient = 6.0;
         M.coefficient = 3.9;
         L.coefficient = -1.8;
