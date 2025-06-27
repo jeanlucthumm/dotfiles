@@ -52,7 +52,6 @@ in {
     usbutils # USB utilities
     claude-code # CLI LLM coding utility
     dust # du replacement
-    yazi # Terminal file manager
   ];
 
   programs = {
@@ -63,8 +62,21 @@ in {
     # cd replacement
     zoxide = {
       enable = true;
-      enableNushellIntegration = true;
       enableFishIntegration = true;
+    };
+
+    yazi = {
+      enable = true;
+      plugins = {
+        "rsync" = pkgs.yaziPlugins.rsync;
+      };
+      keymap.mgr.prepend_keymap = [
+        {
+          on = ["R"];
+          run = "plugin rsync";
+          desc = "Copy files using rsync";
+        }
+      ];
     };
 
     git = {
