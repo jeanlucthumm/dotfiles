@@ -2,7 +2,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   home.packages = with pkgs; [
     hyprlock # Lockscreen
     # TODO use nix service
@@ -62,22 +63,24 @@
 
       ecosystem.no_update_news = true;
 
-      animations = let
-        # Default speeds for animations
-        primary = toString 1.5;
-        secondary = toString 4;
-      in {
-        enabled = true;
-        bezier = ["myBezier, 0.05, 0.9, 0.1, 1.05"];
-        animation = [
-          "windows, 1, ${primary}, myBezier"
-          "windowsOut, 1, ${primary}, default, popin 80%"
-          "border, 1, ${secondary}, default"
-          "borderangle, 1, ${secondary}, default"
-          "fade, 1, ${primary}, default"
-          "workspaces, 1, ${primary}, default"
-        ];
-      };
+      animations =
+        let
+          # Default speeds for animations
+          primary = toString 1.5;
+          secondary = toString 4;
+        in
+        {
+          enabled = true;
+          bezier = [ "myBezier, 0.05, 0.9, 0.1, 1.05" ];
+          animation = [
+            "windows, 1, ${primary}, myBezier"
+            "windowsOut, 1, ${primary}, default, popin 80%"
+            "border, 1, ${secondary}, default"
+            "borderangle, 1, ${secondary}, default"
+            "fade, 1, ${primary}, default"
+            "workspaces, 1, ${primary}, default"
+          ];
+        };
 
       dwindle = {
         # Master switch for pseudotiling. Enabling is bound to
@@ -155,18 +158,22 @@
           # TODO don't generate, just explicitly list the nums
           # workspaces
           # binds $mod + [shift +] {1..9, 0} to [move to] workspace {1..10}
-          builtins.concatLists (builtins.genList (
-              x: let
-                ws = let
-                  c = (x + 1) / 10;
-                in
+          builtins.concatLists (
+            builtins.genList (
+              x:
+              let
+                ws =
+                  let
+                    c = (x + 1) / 10;
+                  in
                   builtins.toString (x + 1 - (c * 10));
-              in [
+              in
+              [
                 "$mod, ${ws}, workspace, ${toString (x + 1)}"
                 "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
               ]
-            )
-            10)
+            ) 10
+          )
         )
         ++ (
           # TODO just iterate of attrs instead of strings for this
@@ -174,28 +181,34 @@
           # Move windows with SHIFT + vim directions
           # Swap windows with SHIFT + arrows
           builtins.concatLists (
-            lib.lists.forEach ["H" "L" "K" "J"] (x: let
-              dir =
-                if x == "H"
-                then "l"
-                else if x == "L"
-                then "r"
-                else if x == "K"
-                then "u"
-                else "d";
-              arrow =
-                if x == "H"
-                then "LEFT"
-                else if x == "L"
-                then "RIGHT"
-                else if x == "K"
-                then "UP"
-                else "DOWN";
-            in [
-              "$mod, ${x}, movefocus, ${dir}"
-              "$mod SHIFT, ${x}, swapwindow, ${dir}"
-              "$mod SHIFT, ${arrow}, movewindow, ${dir}"
-            ])
+            lib.lists.forEach [ "H" "L" "K" "J" ] (
+              x:
+              let
+                dir =
+                  if x == "H" then
+                    "l"
+                  else if x == "L" then
+                    "r"
+                  else if x == "K" then
+                    "u"
+                  else
+                    "d";
+                arrow =
+                  if x == "H" then
+                    "LEFT"
+                  else if x == "L" then
+                    "RIGHT"
+                  else if x == "K" then
+                    "UP"
+                  else
+                    "DOWN";
+              in
+              [
+                "$mod, ${x}, movefocus, ${dir}"
+                "$mod SHIFT, ${x}, swapwindow, ${dir}"
+                "$mod SHIFT, ${arrow}, movewindow, ${dir}"
+              ]
+            )
           )
         );
 
