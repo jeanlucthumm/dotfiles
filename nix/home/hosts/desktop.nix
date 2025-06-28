@@ -1,4 +1,4 @@
-{...}: {
+{lib, ...}: {
   imports = [
     ../modules/nixos/foundation.nix
     ../modules/cli.nix
@@ -15,4 +15,8 @@
   # The state version is required and should stay at the version you
   # originally installed.
   home.stateVersion = "24.05";
+
+  # TODO remove this once build failure is resolved.
+  # https://github.com/NixOS/nixpkgs/issues/418689
+  programs.qutebrowser.enable = lib.mkForce false;
 }
