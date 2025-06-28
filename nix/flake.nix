@@ -50,7 +50,10 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs.hostName = "desktop";
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              hostName = "desktop";
+            };
             home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
           }
         ];

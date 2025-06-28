@@ -1,5 +1,6 @@
 # NixOS specific GUI config
 {
+  inputs,
   config,
   pkgs,
   ...
@@ -8,6 +9,7 @@
   configDir = config.xdg.configHome;
 in {
   imports = [
+    inputs.zen-browser.homeModules.beta
     ../../programs/hyprland.nix
   ];
 
@@ -71,6 +73,11 @@ in {
       # Uses VCS dotfiles
       enable = true;
       loadAutoconfig = true;
+    };
+
+    # New-age Firefox based browser
+    zen-browser = {
+      enable = true;
     };
   };
 
