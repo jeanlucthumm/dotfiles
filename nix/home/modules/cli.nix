@@ -53,6 +53,10 @@ in {
     dust # du replacement
   ];
 
+  home.sessionVariables = {
+    NH_FLAKE = config.home.homeDirectory + "/nix";
+  };
+
   programs = {
     carapace.enable = true;
     bat.enable = true; # Cat replacement
