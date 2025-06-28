@@ -19,6 +19,7 @@
       # doesn't know what tty to display pinentry on.
       GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
       EDITOR = ''${pkgs.neovim}/bin/nvim'';
+      # For the nh command to not require flake path
       NH_FLAKE = config.home.homeDirectory + "/nix";
     };
     settings = {
