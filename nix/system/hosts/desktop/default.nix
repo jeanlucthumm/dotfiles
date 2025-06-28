@@ -16,7 +16,6 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       # Disables AMDGPU Scatter/Gather display functionality to fix screen
       # flickering issues on Ryzen systems (especially 7000 series APUs).
