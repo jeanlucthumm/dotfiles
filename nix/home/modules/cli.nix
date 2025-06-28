@@ -51,6 +51,7 @@ in {
     usbutils # USB utilities
     claude-code # CLI LLM coding utility
     dust # du replacement
+    mdformat # Markdown formatter
   ];
 
   programs = {

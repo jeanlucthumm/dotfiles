@@ -139,9 +139,16 @@ local plugin_spec = {
         timeout_ms = 500,
       },
     },
-    -- TODO: Migrate these diagnostics to nvim-lint:
-    -- - actionlint (GitHub Actions linting)
-    -- Previous code action removed: statix (now using LSP code actions)
+  },
+  {
+    'mfussenegger/nvim-lint',
+    config = function()
+      require'lint'.linters_by_ft = {
+        python = { 'ruff' },
+        proto = { 'buf_lint' },
+        rust = { 'clippy' },
+      }
+    end,
   },
   { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end },
