@@ -7,7 +7,6 @@
   configDir = config.xdg.configHome;
 in {
   imports = [
-    ../programs/fish.nix
     ../programs/nushell
     ../programs/starship.nix
     ../programs/taskwarrior
