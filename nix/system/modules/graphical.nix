@@ -1,6 +1,5 @@
 # NixOS specific config for a personal computer with graphical interface
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Fonts
   fonts.packages = with pkgs; [
     # builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts)
