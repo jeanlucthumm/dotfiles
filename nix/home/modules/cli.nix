@@ -58,6 +58,12 @@ in {
     bat.enable = true; # Cat replacement
     direnv.enable = true;
 
+    # Modern nix CLI wrapper
+    nh = {
+      enable = true;
+      flake = config.home.homeDirectory + "/nix";
+    };
+
     # cd replacement
     zoxide = {
       enable = true;
