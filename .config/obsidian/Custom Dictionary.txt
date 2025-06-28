@@ -1,26 +1,33 @@
 10x
 Bitwarden
 Blobstore
+Cazadores
+Delah
 Differentiators
 Eleftheriou
 FiDi
 L3
 L4
 Mithani
+Nishant
 SWE
 Sakina
 Sakina’s
 Salesforse
 Soylent
 TPM
+Taqueria
 Thiseas
 UI
 UX
+VC
 VSCode
 WeWork
+Witcher
 a16z
 backend
 codebase
+grinded
 javascript
 keyctl
 moto
@@ -34,4 +41,4 @@ standups
 tooltips
 vscode
 webviews
-checksum_v1 = 7db93dbdf1203e9405a50bd0ed359867
+checksum_v1 = 537a7d7cd2aa8d900fdef4c895b14f6c
