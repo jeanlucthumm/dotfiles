@@ -24,6 +24,7 @@
   };
 
   networking.hostName = "desktop";
+  networking.hostId = "17646629";
 
   nixpkgs.config.allowUnfree = true;
 

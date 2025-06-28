@@ -13,6 +13,8 @@
       "adbusers"
       # Docker without sudo
       "docker"
+      # Access to storage devices and related functionality
+      "storage"
     ];
     shell = pkgs.nushell;
     openssh.authorizedKeys.keys = [

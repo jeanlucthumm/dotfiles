@@ -14,5 +14,6 @@
         configurationLimit = 20;
       };
     };
+    supportedFilesystems = ["zfs" "ntfs"];
   };
 }
