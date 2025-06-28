@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   ...
@@ -18,6 +19,7 @@
       # doesn't know what tty to display pinentry on.
       GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
       EDITOR = ''${pkgs.neovim}/bin/nvim'';
+      NH_FLAKE = config.home.homeDirectory + "/nix";
     };
     settings = {
       completions.algorithm = "fuzzy";
