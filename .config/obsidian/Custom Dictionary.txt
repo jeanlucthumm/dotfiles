@@ -27,10 +27,11 @@ moto
 onboarding
 oncall
 oncallers
+painpoints
 qutebrowser
 speedrun
 standups
 tooltips
 vscode
 webviews
-checksum_v1 = 1cf0d4931deeca76aa8216ee578ed81e
+checksum_v1 = 7db93dbdf1203e9405a50bd0ed359867
