@@ -275,4 +275,10 @@
   services = {
     hyprpaper.enable = true;
   };
+
+  home.pointerCursor = {
+    hyprcursor.enable = true;
+    package = pkgs.rose-pine-hyprcursor;
+    name = "rose-pine-hyprcursor";
+  };
 }
