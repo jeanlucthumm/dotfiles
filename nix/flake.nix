@@ -24,6 +24,10 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -34,6 +38,7 @@
     stylix,
     nix-darwin,
     zen-browser,
+    niri,
     ...
   }: {
     # System configurations for NixOS hosts.
@@ -45,6 +50,7 @@
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           agenix.nixosModules.default
+          niri.nixosModules.niri
           ./system/modules/home-manager.nix
           ./system/hosts/desktop
           {

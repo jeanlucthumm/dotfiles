@@ -23,6 +23,7 @@
   # xdg-desktop-portal-hyprland, graphics drivers, fonts, dconf, xwayland, and adding a proper
   # Desktop Entry to the Display Manager.
   programs.hyprland.enable = true;
+  programs.niri.enable = true;
 
   # Sway is a window manager.
   programs.sway.enable = true;
