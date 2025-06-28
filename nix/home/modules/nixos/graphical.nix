@@ -111,10 +111,10 @@ in {
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "x-scheme-handler/http" = ["zen.desktop"];
-        "x-scheme-handler/https" = ["zen.desktop"];
-        "text/html" = ["zen.desktop"];
-        "application/xhtml+xml" = ["zen.desktop"];
+        "x-scheme-handler/http" = ["zen-beta.desktop"];
+        "x-scheme-handler/https" = ["zen-beta.desktop"];
+        "text/html" = ["zen-beta.desktop"];
+        "application/xhtml+xml" = ["zen-beta.desktop"];
       };
     };
 
