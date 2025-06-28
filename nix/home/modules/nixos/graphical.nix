@@ -125,7 +125,10 @@ in {
         comment = "A keyboard-driven, vim-like browser based on Python and Qt (Work Profile)";
         icon = "qutebrowser";
         type = "Application";
-        categories = ["Network" "WebBrowser"];
+        categories = [
+          "Network"
+          "WebBrowser"
+        ];
         exec = "qutebrowser --basedir ${configDir}/qutebrowser/profiles/work --untrusted-args %u";
         terminal = false;
         startupNotify = true;
