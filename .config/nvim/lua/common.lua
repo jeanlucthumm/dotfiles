@@ -24,15 +24,6 @@ end
 local auformat = vim.api.nvim_create_augroup('LspFormatting', {})
 local auhigh = vim.api.nvim_create_augroup('LspHighlighting', {})
 
----@param bufnr number|nil
-function M.lsp_formatting(bufnr)
-  local clients = vim.lsp.get_clients { bufnr = bufnr, name = 'null-ls' }
-  if #clients == 0 then
-    vim.lsp.buf.format { bufnr = bufnr }
-  else
-    vim.lsp.buf.format { bufnr = bufnr, name = 'null-ls' }
-  end
-end
 
 ---@param clients table<number, vim.lsp.Client>
 ---@param capability string
@@ -95,18 +86,7 @@ function M.on_attach(client, bufnr)
     ncmap('<F11>', 'lua vim.lsp.codelens.run()', opts)
   end
 
-  if any_client_has_capability(clients, 'documentFormattingProvider') then
-    -- Format on save
-    api.nvim_clear_autocmds({ group = auformat, buffer = bufnr })
-    api.nvim_create_autocmd('BufWritePre', {
-      group = auformat,
-      buffer = bufnr,
-      callback = function()
-        -- M.lsp_formatting(bufnr)
-        vim.lsp.buf.format()
-      end,
-    })
-  end
+  -- Format on save is now handled by conform.nvim's format_on_save option
 end
 
 function M.capabilities()

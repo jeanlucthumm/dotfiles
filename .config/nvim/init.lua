@@ -115,26 +115,33 @@ local plugin_spec = {
     },
   },
   {
-    'nvimtools/none-ls.nvim',
-    enabled = not HasGoogle,
-    config = function()
-      local n = require('null-ls')
-      n.setup {
-        sources = {
-          n.builtins.formatting.fish_indent,
-          n.builtins.formatting.mdformat,
-          n.builtins.formatting.clang_format,
-          n.builtins.formatting.buf,
-          n.builtins.formatting.prettierd,
-          n.builtins.formatting.dart_format,
-          n.builtins.formatting.alejandra,
-          n.builtins.diagnostics.fish,
-          n.builtins.diagnostics.actionlint,
-          n.builtins.diagnostics.mypy,
-          n.builtins.code_actions.statix,
-        },
-      }
-    end,
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        markdown = { 'mdformat' },
+        c = { 'clang-format' },
+        cpp = { 'clang-format' },
+        proto = { 'buf' },
+        javascript = { 'prettierd' },
+        typescript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        json = { 'prettierd' },
+        html = { 'prettierd' },
+        css = { 'prettierd' },
+        scss = { 'prettierd' },
+        yaml = { 'prettierd' },
+        dart = { 'dart_format' },
+        nix = { 'alejandra' },
+      },
+      format_on_save = {
+        lsp_format = 'fallback',
+        timeout_ms = 500,
+      },
+    },
+    -- TODO: Migrate these diagnostics to nvim-lint:
+    -- - actionlint (GitHub Actions linting)
+    -- Previous code action removed: statix (now using LSP code actions)
   },
   { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end },
