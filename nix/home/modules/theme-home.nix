@@ -1,15 +1,20 @@
 # Additional home manager configs not done through stylix.
 # Theme module is available due to home-manager.sharedModules despite
 # it being defined as a system module.
-{config, ...}: let
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}: let
   theme = config.theme;
+  n = theme.name;
   themeDarkMode =
     if theme.darkMode
     then "dark"
     else "light";
 in {
   imports = [
-    ./ls-colors-hack.nix
     ../programs/taskwarrior/theme.nix
   ];
 
@@ -113,6 +118,18 @@ in {
       end
 
       return M
+    '';
+  };
+
+  # Nushell doesn't have vivid integration yet
+  programs.nushell.environmentVariables = let
+    name =
+      if n == "gruvbox"
+      then "gruvbox-${themeDarkMode}-soft"
+      else throw "Unsupported nushell theme: ${n}";
+  in {
+    LS_COLORS = lib.hm.nushell.mkNushellInline ''
+      ${pkgs.vivid}/bin/vivid generate ${name}
     '';
   };
 }

@@ -47,39 +47,41 @@ in {
   };
 
   # Delegate to Stylix for majority of themeing.
-  config = lib.mkIf config.theme.enable {
-    stylix = let
+  config = lib.mkIf config.theme.enable (
+    let
       t = config.theme.name;
       d = config.theme.darkMode;
     in {
-      enable = true;
-      image =
-        if t == "gruvbox"
-        then
-          # Always dark wallpaper since we want contrast
-          ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
-        else throw "unknown theme ${t}";
-      polarity =
-        if d
-        then "dark"
-        else "light";
-      base16Scheme =
-        if t == "gruvbox"
-        then
+      stylix = {
+        enable = true;
+        image =
+          if t == "gruvbox"
+          then
+            # Always dark wallpaper since we want contrast
+            ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          else throw "unknown theme ${t}";
+        polarity =
           if d
-          then "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-soft.yaml"
-          else "${pkgs.base16-schemes}/share/themes/gruvbox-material-light-soft.yaml"
-        else throw "unknown theme ${t}";
-      fonts = {
-        monospace = {
-          package = config.theme.fontCoding.package;
-          name = config.theme.fontCoding.name;
-        };
-        sizes = {
-          applications = 10;
-          terminal = config.theme.fontCoding.size;
+          then "dark"
+          else "light";
+        base16Scheme =
+          if t == "gruvbox"
+          then
+            if d
+            then "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-soft.yaml"
+            else "${pkgs.base16-schemes}/share/themes/gruvbox-material-light-soft.yaml"
+          else throw "unknown theme ${t}";
+        fonts = {
+          monospace = {
+            package = config.theme.fontCoding.package;
+            name = config.theme.fontCoding.name;
+          };
+          sizes = {
+            applications = 10;
+            terminal = config.theme.fontCoding.size;
+          };
         };
       };
-    };
-  };
+    }
+  );
 }

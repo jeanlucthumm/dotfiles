@@ -11,6 +11,7 @@
     ../../modules/boot.nix
     ../../modules/amd-gpu.nix
     ../../modules/agenix.nix
+    ../../modules/theme-system.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
   ];
