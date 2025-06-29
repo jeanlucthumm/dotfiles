@@ -116,14 +116,18 @@ binds {
     // Focus movement
     Mod+H { focus-column-left; }
     Mod+L { focus-column-right; }
-    Mod+K { focus-workspace-up; }
-    Mod+J { focus-workspace-down; }
+    Mod+K { focus-window-up; }
+    Mod+J { focus-window-down; }
+
+    // Monitor focus switching
+    Mod+Shift+H { focus-monitor-left; }
+    Mod+Shift+L { focus-monitor-right; }
 
     // Window movement
-    Mod+Shift+H { move-column-left; }
-    Mod+Shift+L { move-column-right; }
-    Mod+Shift+K { move-workspace-up; }
-    Mod+Shift+J { move-workspace-down; }
+    Mod+Ctrl+H { move-column-left; }
+    Mod+Ctrl+L { move-column-right; }
+    Mod+Ctrl+K { move-window-up; }
+    Mod+Ctrl+J { move-window-down; }
 
     // Workspace switching
     Mod+1 { focus-workspace 1; }
@@ -149,16 +153,11 @@ binds {
     Mod+Shift+9 { move-column-to-workspace 9; }
     Mod+Shift+0 { move-column-to-workspace 10; }
 
-    // Previous workspace
-    Mod+Tab { focus-workspace-previous; }
-
     // Screenshots
     // Mod+Shift+S { spawn "sh" "-c" "fish ~/.config/hypr/screencap.fish"; }
 
     // System controls
     Mod+Shift+E { quit; }
-    Mod+B { spawn "killall" "-SIGUSR1" "waybar"; }
-    // Mod+V { spawn "sh" "-c" "timew stop; pidof hyprlock || hyprlock"; }
     Mod+Backslash { spawn "makoctl" "dismiss"; }
 
     // Audio controls
@@ -174,6 +173,10 @@ binds {
     Mod+R { switch-preset-column-width; }
     Mod+Shift+R { reset-window-height; }
 
+    // Vertical splits within columns
+    Mod+V { consume-window-into-column; }
+    Mod+Shift+V { expel-window-from-column; }
+
     // Mouse workspace switching
     Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
     Mod+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
@@ -185,6 +188,7 @@ binds {
 
 // Startup commands
 spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+spawn-at-startup "swaybg" "-m" "fill" "-i" "/home/jeanluc/nix/wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png"
 // spawn-at-startup "systemctl" "--user" "start" "hyprland-session.target"
 // spawn-at-startup "kitty" "--detach" "--title=scratchpad" "--override" "initial_window_width=235c" "--override" "initial_window_height=83c"
 // spawn-at-startup "hypridle"
