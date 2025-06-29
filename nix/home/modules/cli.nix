@@ -52,6 +52,7 @@ in {
     claude-code # CLI LLM coding utility
     dust # du replacement
     mdformat # Markdown formatter
+    eza # ls replacement
   ];
 
   programs = {
