@@ -26,6 +26,7 @@ WeWork
 Witcher
 a16z
 backend
+carb
 codebase
 grinded
 javascript
@@ -41,4 +42,4 @@ standups
 tooltips
 vscode
 webviews
-checksum_v1 = 537a7d7cd2aa8d900fdef4c895b14f6c
+checksum_v1 = 34b7c750c4d3cf734c971042060f994f
