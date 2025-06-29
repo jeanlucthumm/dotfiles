@@ -33,9 +33,7 @@ in {
     pinentry-tty # Enter password in terminal
     gnumake # Build automation tool
     gcc # GNU Compiler Collection
-    pls # ls replacement
     fzf # Multi-purpose fuzzy finder
-    jq # CLI for json manipulation
     python3 # The language python
     nix-prefetch-git # Utility for populating nix fetchgit expressions
     tree # List directory contents
