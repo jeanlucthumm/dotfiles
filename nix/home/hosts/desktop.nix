@@ -9,6 +9,7 @@
     ../modules/theme-home.nix
     ../modules/syncing.nix
     ../modules/security.nix
+    ../modules/llm.nix
     ../modules/nixos/security.nix
   ];
 

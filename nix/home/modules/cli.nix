@@ -28,7 +28,6 @@ in {
     tree # List directory contents
     wget # Download files from the web
     entr # Run arbitrary commands when files change
-    aichat # AI chatbot for the terminal
     unzip # Unzip files
     dig # DNS lookup utility
     devenv # Development environment manager
@@ -49,7 +48,6 @@ in {
     sumneko-lua-language-server # Lua language server
     tree-sitter # Syntax parser extensively used by NeoVim
     mdformat # Markdown formatter
-    claude-code # CLI LLM coding utility
     gcc # GNU Compiler Collection
   ];
 

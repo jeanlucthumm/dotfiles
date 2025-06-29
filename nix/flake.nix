@@ -61,6 +61,7 @@
               hostName = "desktop";
             };
             home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
+            nixpkgs.overlays = import ./overlays;
           }
         ];
       };

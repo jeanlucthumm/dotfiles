@@ -12,6 +12,7 @@ in {
     ../modules/darwin/graphical.nix
     ../modules/darwin/fish-fix.nix
     ../modules/darwin/cli.nix
+    ../modules/llm.nix
     ../modules/theme-home.nix
     ../modules/security.nix
   ];
