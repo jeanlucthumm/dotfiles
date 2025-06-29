@@ -13,14 +13,6 @@ in {
   ];
 
   home.packages = with pkgs; [
-    statix # Nix linter
-    alejandra # Nix formatter
-    nixd # Nix LSP
-    nil # Nix LSP
-    ripgrep # Fast grep search tool
-    nodejs_22 # A bunch of tools (including Copilot) rely on this
-    sumneko-lua-language-server # Lua language server
-    tree-sitter # Syntax parser extensively used by NeoVim
     timewarrior # time tracker
     manix # CLI for nix docs
     neovim # IDE (tExT eDiToR)
@@ -29,10 +21,7 @@ in {
     gh # GitHub CLI
     git # Version control system
     git-lfs # Git extension for large files
-    gnupg # GNU Privacy Guard
-    pinentry-tty # Enter password in terminal
     gnumake # Build automation tool
-    gcc # GNU Compiler Collection
     fzf # Multi-purpose fuzzy finder
     python3 # The language python
     nix-prefetch-git # Utility for populating nix fetchgit expressions
@@ -45,14 +34,23 @@ in {
     devenv # Development environment manager
     ffmpeg
     usbutils # USB utilities
-    claude-code # CLI LLM coding utility
-    mdformat # Markdown formatter
 
     # Modern replacements for common tools
     delta # Pretty diffs
     fd # find replacement
     dust # du replacement
     eza # ls replacement
+    ripgrep # grep replacement
+
+    # Global dev tools
+    alejandra # Nix formatter
+    nil # Nix LSP
+    nodejs_22 # A bunch of tools (including Copilot) rely on this
+    sumneko-lua-language-server # Lua language server
+    tree-sitter # Syntax parser extensively used by NeoVim
+    mdformat # Markdown formatter
+    claude-code # CLI LLM coding utility
+    gcc # GNU Compiler Collection
   ];
 
   programs = {

@@ -3,8 +3,7 @@
   pkgs,
   config,
   ...
-}:
-{
+}: {
   age = {
     secrets = {
       openai = {
@@ -39,18 +38,21 @@
     ];
   };
 
-  home.packages =
-    let
-      s = config.age.secrets;
-      makeKeyGetter = path: ''
-        umask 077 # Ensure any possible temp files are private
-        cat ${path}
-      '';
-    in
-    [
+  home.packages = let
+    s = config.age.secrets;
+    makeKeyGetter = path: ''
+      umask 077 # Ensure any possible temp files are private
+      cat ${path}
+    '';
+  in
+    with pkgs; [
+      # Key Getters
       (pkgs.writeShellScriptBin "get-key-anthropic" (makeKeyGetter s.anthropic.path))
       (pkgs.writeShellScriptBin "get-key-openai" (makeKeyGetter s.openai.path))
       (pkgs.writeShellScriptBin "get-key-tavily" (makeKeyGetter s.tavily.path))
       (pkgs.writeShellScriptBin "get-key-codestral" (makeKeyGetter s.codestral.path))
+
+      gnupg # GNU Privacy Guard
+      pinentry-tty # Enter password in terminal
     ];
 }
