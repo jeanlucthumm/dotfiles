@@ -32,10 +32,8 @@ in {
     gnupg # GNU Privacy Guard
     pinentry-tty # Enter password in terminal
     gnumake # Build automation tool
-    delta # Pretty diffs
     gcc # GNU Compiler Collection
     pls # ls replacement
-    fd # find replacement
     fzf # Multi-purpose fuzzy finder
     jq # CLI for json manipulation
     python3 # The language python
@@ -50,8 +48,12 @@ in {
     ffmpeg
     usbutils # USB utilities
     claude-code # CLI LLM coding utility
-    dust # du replacement
     mdformat # Markdown formatter
+
+    # Modern replacements for common tools
+    delta # Pretty diffs
+    fd # find replacement
+    dust # du replacement
     eza # ls replacement
   ];
 
