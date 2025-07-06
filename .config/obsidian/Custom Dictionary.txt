@@ -9,6 +9,7 @@ FiDi
 L3
 L4
 Mithani
+Nippard
 Nishant
 SWE
 Sakina
@@ -42,4 +43,4 @@ standups
 tooltips
 vscode
 webviews
-checksum_v1 = 34b7c750c4d3cf734c971042060f994f
+checksum_v1 = 58050ad4b450a906d750d2c37d40b1ed

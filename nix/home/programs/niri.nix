@@ -158,6 +158,7 @@
 
       spawn-at-startup = [
         {command = ["${pkgs.xwayland-satellite}/bin/xwayland-satellite"];}
+        {command = ["${pkgs.swayosd}/bin/swayosd-server"];}
       ];
 
       environment = {
@@ -184,4 +185,8 @@
       ${grim}/bin/grim -g "$(${slurp}/bin/slurp)" - | ${wl-clipboard}/bin/wl-copy
     '')
   ];
+
+  services = {
+    swayosd.enable = true;
+  };
 }
