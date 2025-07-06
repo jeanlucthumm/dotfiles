@@ -168,6 +168,8 @@
   };
 
   home.packages = with pkgs; [
+    xwayland-satellite # For apps that need Xwayland
+
     # Custom script for toggling between monitors
     (writeShellScriptBin "niri-toggle-monitor" ''
       if niri msg focused-output | grep -q "(DP-1)"; then
