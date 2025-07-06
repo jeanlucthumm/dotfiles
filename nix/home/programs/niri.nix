@@ -24,6 +24,10 @@
         mouse = {
           accel-speed = 0.0;
         };
+        focus-follows-mouse = {
+          enable = true;
+          max-scroll-amount = "10%";
+        };
       };
 
       # TODO: Make outputs independent of WM
@@ -39,6 +43,7 @@
             y = 0;
           };
           scale = 1.0;
+          focus-at-startup = true;
         };
         "DP-3" = {
           mode = {
@@ -83,20 +88,18 @@
         "Mod+Q".action = close-window;
         "Mod+F".action = maximize-column;
         "Mod+Shift+Space".action = toggle-window-floating;
-        "Mod+I".action = toggle-column-tabbed-display;
+        "Mod+T".action = toggle-column-tabbed-display;
+        "Mod+I".action.spawn = ["niri-toggle-monitor"];
 
         "Mod+H".action = focus-column-left;
         "Mod+L".action = focus-column-right;
         "Mod+K".action = focus-window-up;
         "Mod+J".action = focus-window-down;
 
-        "Mod+Shift+H".action = focus-monitor-left;
-        "Mod+Shift+L".action = focus-monitor-right;
-
-        "Mod+Ctrl+H".action = move-column-left;
-        "Mod+Ctrl+L".action = move-column-right;
-        "Mod+Ctrl+K".action = move-window-up;
-        "Mod+Ctrl+J".action = move-window-down;
+        "Mod+Shift+H".action = move-column-left;
+        "Mod+Shift+L".action = move-column-right;
+        "Mod+Shift+K".action = move-window-up;
+        "Mod+Shift+J".action = move-window-down;
 
         "Mod+1".action.focus-workspace = 1;
         "Mod+2".action.focus-workspace = 2;
@@ -154,16 +157,26 @@
       };
 
       spawn-at-startup = [
-        {command = ["xwayland-satellite"];}
+        {command = ["${pkgs.xwayland-satellite}/bin/xwayland-satellite"];}
       ];
 
       environment = {
         DISPLAY = ":0"; # Connects to xwalyand-satellite
+        XDG_SESSION_TYPE = "wayland";
       };
     };
   };
 
   home.packages = with pkgs; [
-    xwayland-satellite # For apps that need Xwayland
+    # xwayland-satellite # For apps that need Xwayland
+
+    # Custom script for toggling between monitors
+    (writeShellScriptBin "niri-toggle-monitor" ''
+      if niri msg focused-output | grep -q "(DP-1)"; then
+        niri msg action focus-monitor-right
+      else
+        niri msg action focus-monitor-left
+      fi
+    '')
   ];
 }
