@@ -123,7 +123,7 @@
         "Mod+Shift+9".action.move-column-to-workspace = 9;
         "Mod+Shift+0".action.move-column-to-workspace = 10;
 
-        "Mod+Shift+S".action.spawn = ["sh" "-c" "fish ~/.config/hypr/screencap.fish"];
+        "Mod+Shift+S".action.spawn = ["niri-screenshot"];
 
         "Mod+Shift+E".action = quit;
         "Mod+Backslash".action.spawn = ["makoctl" "dismiss"];
@@ -153,7 +153,7 @@
 
       cursor = {
         hide-after-inactive-ms = 5000;
-        size = 12;
+        size = 16;
       };
 
       spawn-at-startup = [
@@ -168,8 +168,6 @@
   };
 
   home.packages = with pkgs; [
-    # xwayland-satellite # For apps that need Xwayland
-
     # Custom script for toggling between monitors
     (writeShellScriptBin "niri-toggle-monitor" ''
       if niri msg focused-output | grep -q "(DP-1)"; then
@@ -177,6 +175,11 @@
       else
         niri msg action focus-monitor-left
       fi
+    '')
+
+    # Custom script for taking screenshots
+    (writeShellScriptBin "niri-screenshot" ''
+      ${grim}/bin/grim -g "$(${slurp}/bin/slurp)" - | ${wl-clipboard}/bin/wl-copy
     '')
   ];
 }
