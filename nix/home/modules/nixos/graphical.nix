@@ -11,6 +11,7 @@ in {
   imports = [
     inputs.zen-browser.homeModules.beta
     ../../programs/hyprland.nix
+    ../../programs/niri.nix
   ];
 
   home.packages = with pkgs; [

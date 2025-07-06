@@ -1,0 +1,169 @@
+{
+  config,
+  pkgs,
+  ...
+}: {
+  programs.niri = {
+    # Enabling happens at system level.
+    settings = {
+      input = {
+        keyboard = {
+          xkb = {
+            layout = "us";
+            options = "caps:super";
+          };
+          repeat-delay = 150;
+          repeat-rate = 80;
+        };
+        touchpad = {
+          tap = true;
+          natural-scroll = true;
+          scroll-factor = 0.3;
+          click-method = "clickfinger";
+        };
+        mouse = {
+          accel-speed = 0.0;
+        };
+      };
+
+      # TODO: Make outputs independent of WM
+      outputs = {
+        "DP-1" = {
+          mode = {
+            width = 3840;
+            height = 2160;
+            refresh = 144.000;
+          };
+          position = {
+            x = 0;
+            y = 0;
+          };
+          scale = 1.0;
+        };
+        "DP-3" = {
+          mode = {
+            width = 3840;
+            height = 2160;
+            refresh = 60.000;
+          };
+          position = {
+            x = 3840;
+            y = -900;
+          };
+          scale = 1.0;
+          transform.rotation = 270;
+        };
+      };
+
+      layout = {
+        gaps = 20;
+        always-center-single-column = true;
+      };
+
+      window-rules = [
+        {
+          geometry-corner-radius = let
+            val = 12.0;
+          in {
+            top-left = val;
+            top-right = val;
+            bottom-left = val;
+            bottom-right = val;
+          };
+          clip-to-geometry = true;
+        }
+      ];
+
+      binds = with config.lib.niri.actions; {
+        "Mod+Return".action.spawn = ["kitty"];
+        "Mod+C".action.spawn = ["zen-beta"];
+        "Mod+X".action.spawn = ["qutebrowser"];
+        "Mod+D".action.spawn = ["wofi" "--show" "drun"];
+
+        "Mod+Q".action = close-window;
+        "Mod+F".action = maximize-column;
+        "Mod+Shift+Space".action = toggle-window-floating;
+        "Mod+I".action = toggle-column-tabbed-display;
+
+        "Mod+H".action = focus-column-left;
+        "Mod+L".action = focus-column-right;
+        "Mod+K".action = focus-window-up;
+        "Mod+J".action = focus-window-down;
+
+        "Mod+Shift+H".action = focus-monitor-left;
+        "Mod+Shift+L".action = focus-monitor-right;
+
+        "Mod+Ctrl+H".action = move-column-left;
+        "Mod+Ctrl+L".action = move-column-right;
+        "Mod+Ctrl+K".action = move-window-up;
+        "Mod+Ctrl+J".action = move-window-down;
+
+        "Mod+1".action.focus-workspace = 1;
+        "Mod+2".action.focus-workspace = 2;
+        "Mod+3".action.focus-workspace = 3;
+        "Mod+4".action.focus-workspace = 4;
+        "Mod+5".action.focus-workspace = 5;
+        "Mod+6".action.focus-workspace = 6;
+        "Mod+7".action.focus-workspace = 7;
+        "Mod+8".action.focus-workspace = 8;
+        "Mod+9".action.focus-workspace = 9;
+        "Mod+0".action.focus-workspace = 10;
+
+        "Mod+Shift+1".action.move-column-to-workspace = 1;
+        "Mod+Shift+2".action.move-column-to-workspace = 2;
+        "Mod+Shift+3".action.move-column-to-workspace = 3;
+        "Mod+Shift+4".action.move-column-to-workspace = 4;
+        "Mod+Shift+5".action.move-column-to-workspace = 5;
+        "Mod+Shift+6".action.move-column-to-workspace = 6;
+        "Mod+Shift+7".action.move-column-to-workspace = 7;
+        "Mod+Shift+8".action.move-column-to-workspace = 8;
+        "Mod+Shift+9".action.move-column-to-workspace = 9;
+        "Mod+Shift+0".action.move-column-to-workspace = 10;
+
+        "Mod+Shift+S".action.spawn = ["sh" "-c" "fish ~/.config/hypr/screencap.fish"];
+
+        "Mod+Shift+E".action = quit;
+        "Mod+Backslash".action.spawn = ["makoctl" "dismiss"];
+
+        "XF86AudioRaiseVolume".action.spawn = ["swayosd-client" "--output-volume" "raise"];
+        "XF86AudioLowerVolume".action.spawn = ["swayosd-client" "--output-volume" "lower"];
+        "XF86AudioMute".action.spawn = ["swayosd-client" "--output-volume" "mute-toggle"];
+
+        "XF86MonBrightnessUp".action.spawn = ["swayosd-client" "--brightness" "raise"];
+        "XF86MonBrightnessDown".action.spawn = ["swayosd-client" "--brightness" "lower"];
+
+        "Mod+R".action = switch-preset-column-width;
+        "Mod+V".action = consume-window-into-column;
+        "Mod+Shift+V".action = expel-window-from-column;
+
+        "Mod+WheelScrollDown" = {
+          cooldown-ms = 150;
+          action = focus-workspace-down;
+        };
+        "Mod+WheelScrollUp" = {
+          cooldown-ms = 150;
+          action = focus-workspace-up;
+        };
+      };
+
+      prefer-no-csd = true;
+
+      cursor = {
+        hide-after-inactive-ms = 5000;
+        size = 12;
+      };
+
+      spawn-at-startup = [
+        {command = ["xwayland-satellite"];}
+      ];
+
+      environment = {
+        DISPLAY = ":0"; # Connects to xwalyand-satellite
+      };
+    };
+  };
+
+  home.packages = with pkgs; [
+    xwayland-satellite # For apps that need Xwayland
+  ];
+}
