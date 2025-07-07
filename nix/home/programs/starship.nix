@@ -11,7 +11,7 @@
 
     settings = let
       fg =
-        if config.stylix.enable
+        if config ? stylix && config.stylix.enable
         then config.lib.stylix.colors.withHashtag.base00
         else "#FBF1C7";
       # Colors

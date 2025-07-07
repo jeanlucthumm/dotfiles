@@ -9,7 +9,6 @@ in {
   imports = [
     ../programs/nushell
     ../programs/starship.nix
-    ../programs/taskwarrior
   ];
 
   home.packages = with pkgs; [

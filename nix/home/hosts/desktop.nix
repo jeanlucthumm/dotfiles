@@ -11,6 +11,7 @@
     ../modules/security.nix
     ../modules/llm.nix
     ../modules/nixos/security.nix
+    ../modules/programs/taskwarrior
   ];
 
   # The state version is required and should stay at the version you

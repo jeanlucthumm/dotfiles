@@ -15,6 +15,7 @@ in {
     ../modules/llm.nix
     ../modules/theme-home.nix
     ../modules/security.nix
+    ../modules/programs/taskwarrior
   ];
 
   home.file = {

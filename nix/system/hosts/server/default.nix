@@ -9,6 +9,7 @@
   ];
 
   networking.hostName = "server";
+  networking.hostId = "17646629";
 
   swapDevices = [
     {
