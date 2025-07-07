@@ -116,6 +116,7 @@ in {
         "x-scheme-handler/https" = ["zen-beta.desktop"];
         "text/html" = ["zen-beta.desktop"];
         "application/xhtml+xml" = ["zen-beta.desktop"];
+        "application/pdf" = ["zen-beta.desktop"];
       };
     };
 
