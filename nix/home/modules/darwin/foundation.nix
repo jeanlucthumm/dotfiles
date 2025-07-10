@@ -1,15 +1,13 @@
 # Foundation settings for Darwin.
-{
-  config,
-  hostName,
-  ...
-}: {
+{config, ...}: {
   programs = {
-    fish.shellAliases.nrs = "nix run nix-darwin -- switch --flake $HOME/nix#${hostName}";
     nushell.configFile.text = ''
       def nrs []: [nothing -> nothing] {
-        let flake = $"($env.HOME)/nix#${hostName}"
-        sudo nix run nix-darwin -- switch --flake $flake
+          nh darwin switch
+      }
+
+      def nra []: [nothing -> nothing] {
+          nh darwin -u
       }
     '';
   };
