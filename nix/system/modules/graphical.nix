@@ -27,4 +27,10 @@
 
   # Sway is a window manager.
   programs.sway.enable = true;
+
+  environment.loginShellInit = ''
+    if [ "$TTY" = "/dev/tty1" ] && [ -z "$DISPLAY" ]; then
+      exec niri
+    fi
+  '';
 }
