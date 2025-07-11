@@ -71,12 +71,18 @@ in {
       enable = true;
       plugins = {
         "rsync" = pkgs.yaziPlugins.rsync;
+        "smart-filter" = pkgs.yaziPlugins.smart-filter;
       };
       keymap.mgr.prepend_keymap = [
         {
           on = ["R"];
           run = "plugin rsync";
           desc = "Copy files using rsync";
+        }
+        {
+          on = ["F"];
+          run = "plugin smart-filter";
+          desc = "Filter files using smart filter";
         }
       ];
     };
