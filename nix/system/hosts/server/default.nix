@@ -6,6 +6,8 @@
     ../../modules/tailscale.nix
     ../../modules/user-jeanluc.nix
     ../../modules/boot.nix
+    ../../modules/containers.nix
+    ../../modules/home-assistant.nix
   ];
 
   networking.hostName = "server";
