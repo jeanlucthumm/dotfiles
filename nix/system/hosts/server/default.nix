@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./disko-config.nix
     ../../modules/foundation.nix
     ../../modules/security.nix
     ../../modules/ssh.nix
@@ -11,7 +12,7 @@
   ];
 
   networking.hostName = "server";
-  networking.hostId = "17646629";
+  networking.hostId = "1d9f895e";
 
   swapDevices = [
     {

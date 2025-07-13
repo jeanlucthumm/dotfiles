@@ -28,6 +28,10 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -39,6 +43,7 @@
     nix-darwin,
     zen-browser,
     niri,
+    disko,
     ...
   }: {
     # System configurations for NixOS hosts.
@@ -75,6 +80,7 @@
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           agenix.nixosModules.default
+          disko.nixosModules.disko
           ./system/modules/home-manager.nix
           ./system/hosts/server
           {
