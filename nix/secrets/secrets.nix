@@ -1,13 +1,10 @@
 let
-  jeanluc = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKSY9ngqsMwi97aC1GM6gTnChfUl22aXzE9wzt0TXJB"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP66W+zH1wVKLB/fXdWF5VIHR5ggphdRMtWzd26uL7I3"
-  ];
+  keys = import ./pubkeys.nix;
+  acc = [keys.desktop keys.macbook];
 in {
-  # Define your secrets here
-  "jeanluc-openai.age".publicKeys = jeanluc;
-  "jeanluc-anthropic.age".publicKeys = jeanluc;
-  "jeanluc-tavily.age".publicKeys = jeanluc;
-  "jeanluc-codestral.age".publicKeys = jeanluc;
-  "jeanluc-taskwarrior.age".publicKeys = jeanluc;
+  "jeanluc-openai.age".publicKeys = acc;
+  "jeanluc-anthropic.age".publicKeys = acc;
+  "jeanluc-tavily.age".publicKeys = acc;
+  "jeanluc-codestral.age".publicKeys = acc;
+  "jeanluc-taskwarrior.age".publicKeys = acc;
 }
