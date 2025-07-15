@@ -3,7 +3,7 @@
     backend = "podman";
     containers.homeassistant = {
       volumes = ["/var/lib/home-assistant:/config"];
-      environment.TZ = "America/Los_Angeles"; # Adjust timezone as needed
+      environment.TZ = "America/Los_Angeles";
       image = "ghcr.io/home-assistant/home-assistant:stable";
       extraOptions = [
         "--network=host"
