@@ -17,10 +17,7 @@
       "storage"
     ];
     shell = pkgs.nushell;
-    openssh.authorizedKeys.keys = [
-      # Desktop
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP66W+zH1wVKLB/fXdWF5VIHR5ggphdRMtWzd26uL7I3"
-    ];
+    openssh.authorizedKeys.keys = (import ../../secrets/pubkeys.nix).all;
     hashedPassword = "$y$j9T$olPxnw3sjt6/HFw.1SKyT/$GVqznhguvSLErdAQxNW0O6CKxVuUc6trVrxvj2pJLw1";
   };
 
