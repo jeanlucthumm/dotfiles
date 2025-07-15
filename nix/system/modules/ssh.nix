@@ -2,7 +2,7 @@
 {lib, ...}: {
   services.openssh = {
     enable = true;
-    # Forces SSH keys which is more secure than passwords
+    # Forces SSH keys
     settings.PasswordAuthentication = false;
   };
   networking.firewall.allowedTCPPorts = [22];

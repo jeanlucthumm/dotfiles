@@ -1,6 +1,7 @@
 {...}: {
   imports = [
     ./disko-config.nix
+    ./hardware-configuration.nix
     ../../modules/foundation.nix
     ../../modules/security.nix
     ../../modules/ssh.nix
@@ -13,6 +14,10 @@
 
   networking.hostName = "server";
   networking.hostId = "1d9f895e";
+
+  users.users.root = {
+    openssh.authorizedKeys.keys = (import ../../../secrets/pubkeys.nix).all;
+  };
 
   swapDevices = [
     {
