@@ -7,7 +7,7 @@
       }
 
       def nra []: [nothing -> nothing] {
-          nh darwin -u
+          nh darwin switch -u
       }
     '';
   };
