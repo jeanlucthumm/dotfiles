@@ -29,6 +29,11 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  environment.systemPackages = with pkgs; [
+    # Desktop host is the only one doing deployments.
+    deploy-rs
+  ];
+
   # Android Debug Bridge (ADB) for Android development
   programs.adb.enable = true;
 

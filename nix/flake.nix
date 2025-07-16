@@ -32,6 +32,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -44,6 +48,7 @@
     zen-browser,
     niri,
     disko,
+    deploy-rs,
     ...
   }: {
     # System configurations for NixOS hosts.
@@ -108,6 +113,16 @@
       ];
     };
 
+    deploy.nodes.server = {
+      hostname = "server.lan";
+      sshUser = "jeanluc";
+      user = "root";
+      interactiveSudo = true;
+      profiles.system = {
+        path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
+      };
     };
+
+    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
   };
 }
