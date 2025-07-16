@@ -20,6 +20,10 @@
     openssh.authorizedKeys.keys = (import ../../../secrets/pubkeys.nix).all;
   };
 
+  environment.systemPackages = with pkgs; [
+    smartmontools # for disk health monitoring
+  ];
+
   swapDevices = [
     {
       device = "/swapfile";
