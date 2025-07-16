@@ -11,6 +11,7 @@ This is a NixOS/Nix flake configuration repository managing system and home conf
 ### Building and Switching Configurations
 
 - **NixOS rebuild**: `sudo nixos-rebuild switch --flake .#<hostname>`
+
   - Available hostnames: `desktop`, `server`, `virtual`
   - Current Makefile uses `laptop` (may need updating)
 
@@ -18,15 +19,19 @@ This is a NixOS/Nix flake configuration repository managing system and home conf
 
 - **Home Manager restart**: `sudo systemctl restart home-manager-jeanluc`
 
-- **Virtual VM**: 
+- **Deploy server**: `deploy .#server` (deploys remotely to server.lan)
+
+- **Deploy all nodes**: `deploy .` (deploys all configured nodes)
+
+- **Virtual VM**:
+
   - Build: `nixos-rebuild build-vm --flake .#virtual`
   - Run: `./result/bin/run-virtual-vm`
   - From non-NixOS: `nix run .#virtual-vm`
 
 ### Development Commands
 
-- **Make rebuild**: `make rebuild` (uses flake `.#laptop`)
-- **Make qemu_serial**: `make qemu_serial` (runs VM with serial console)
+- **Check deployment config**: `nix flake check` (validates deploy-rs configuration)
 
 ## Architecture
 
@@ -37,7 +42,7 @@ This is a NixOS/Nix flake configuration repository managing system and home conf
   - `hosts/`: Host-specific configurations (desktop, server, macbook, virtual)
   - `modules/`: Reusable NixOS system modules
 - **`home/`**: Home Manager configurations
-  - `hosts/`: Host-specific home configurations  
+  - `hosts/`: Host-specific home configurations
   - `modules/`: Logical collections of home configuration (e.g., CLI, graphical)
   - `programs/`: Individual program configurations
 - **`secrets/`**: Age-encrypted secrets managed by agenix
@@ -58,10 +63,11 @@ This is a NixOS/Nix flake configuration repository managing system and home conf
 ### Host Types
 
 - **desktop**: Full graphical NixOS system (x86_64-linux)
-- **server**: Headless 24/7 system (x86_64-linux)  
+- **server**: Headless 24/7 system (x86_64-linux)
 - **macbook**: Darwin/macOS configuration
 - **virtual**: VM configuration for testing
 
 ## Secret Management
 
 Secrets are managed using agenix with SSH public keys defined in `secrets/secrets.nix`. Available secrets include API keys for OpenAI, Anthropic, Tavily, and Codestral.
+
