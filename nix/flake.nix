@@ -89,38 +89,7 @@
           }
         ];
       };
-
-      # System configuration for VM.
-      # Do:
-      #   nixos-rebuild build-vm --flake .#virtual
-      #   ./result/bin/run-virtual-vm
-      #
-      # If you're not on NixOS then:
-      #   nix run .#virtual-vm
-      # That works because of the `packages` attr below.
-      "virtual" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
-        modules = [
-          stylix.nixosModules.stylix
-          ./system/modules/home-manager.nix
-          ./system/hosts/virtual
-          agenix.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs.hostName = "virtual";
-            home-manager.users.jeanluc = {...}: {
-              imports = [
-                ./home/linux.nix
-                ./hosts/virtual/theme-setting.nix
-              ];
-            };
-          }
-        ];
-      };
     };
-
-    # nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin -- switch --flake '.#macbook'
 
     # System configurations for Darwin hosts.
     darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
@@ -139,12 +108,6 @@
       ];
     };
 
-    packages = let
-      vm = self.nixosConfigurations.virtual.config.system.build.vm;
-    in {
-      # NixOS VM is only available on Linux.
-      "aarch64-linux".virtual-vm = vm;
-      "x86_64-linux".virtual-vm = vm;
     };
   };
 }
