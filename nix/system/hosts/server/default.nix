@@ -1,7 +1,8 @@
-{...}: {
+{pkgs, ...}: {
   imports = [
     ./disko-config.nix
     ./hardware-configuration.nix
+    ./nginx.nix
     ../../modules/foundation.nix
     ../../modules/security.nix
     ../../modules/ssh.nix
