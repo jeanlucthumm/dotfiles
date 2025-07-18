@@ -10,8 +10,8 @@
     group = "media";
     settings = {
       # Directories
-      download-dir = "/srv/movies";
-      incomplete-dir = "/var/lib/transmission/incomplete";
+      download-dir = "/srv/media/movies";
+      incomplete-dir = "/srv/tmp";
       incomplete-dir-enabled = true;
 
       # File permissions (002 = group write access)
@@ -27,7 +27,7 @@
       seed-queue-enabled = true;
       seed-queue-size = 10;
 
-      # Speed limits (0 = unlimited)
+      # Speed limits
       speed-limit-down-enabled = false;
       speed-limit-up-enabled = false;
 
@@ -57,11 +57,6 @@
       idle-seeding-limit = 30; # minutes
     };
   };
-
-  # Ensure transmission incomplete directory exists with proper permissions
-  systemd.tmpfiles.rules = [
-    "d /var/lib/transmission/incomplete 0775 transmission media - -"
-  ];
 
   # Open firewall ports for Transmission
   networking.firewall.allowedTCPPorts = [
