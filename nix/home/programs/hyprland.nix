@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -50,10 +51,37 @@
         };
       };
 
-      monitor = [
-        "DP-1,3840x2160@144,0x0,1"
-        "DP-3,3840x2160@60.00,3840x-900,1,transform,3"
-      ];
+      monitor = let
+        name = monitor: "${monitor.manufacturer} - ${monitor.model}";
+        # Hyprland uses a weird rotation system, so we need to convert
+        mkTransform = rotation:
+          {
+            "0" = "0";
+            "90" = "1";
+            "180" = "2";
+            "270" = "3";
+          }.${
+            toString rotation
+          } or "0";
+        s = toString;
+        cfg = monitor:
+          builtins.concatStringsSep "," [
+            "${name monitor}"
+            "${s monitor.width}x${s monitor.height}@${s monitor.refresh}"
+            "${s monitor.position_x}x${s monitor.position_y}"
+            "1" # scale
+            "transform"
+            "${mkTransform monitor.rotation}"
+          ];
+      in
+        [
+          (cfg config.monitors.primary)
+        ]
+        ++ lib.optionals (
+          config.monitors.secondary != null
+        ) [
+          (cfg config.monitors.secondary)
+        ];
 
       decoration = {
         rounding = 10;

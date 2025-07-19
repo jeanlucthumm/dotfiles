@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   programs.niri = {
@@ -30,35 +31,37 @@
         };
       };
 
-      # TODO: Make outputs independent of WM
-      outputs = {
-        "DP-1" = {
+      # Monitor configuration is pulled from the nix/modules/monitors.nix module
+      outputs = with config.monitors; let
+        name = monitor: "${monitor.manufacturer} ${monitor.model} ${monitor.serial}";
+        cfg = monitor: {
           mode = {
-            width = 3840;
-            height = 2160;
-            refresh = 144.000;
+            width = monitor.width;
+            height = monitor.height;
+            refresh = monitor.refresh;
           };
           position = {
-            x = 0;
-            y = 0;
+            x = monitor.position_x;
+            y = monitor.position_y;
           };
-          scale = 1.0;
-          focus-at-startup = true;
+          transform.rotation = monitor.rotation;
         };
-        "DP-3" = {
-          mode = {
-            width = 3840;
-            height = 2160;
-            refresh = 60.000;
-          };
-          position = {
-            x = 3840;
-            y = -900;
-          };
-          scale = 1.0;
-          transform.rotation = 270;
+      in
+        {
+          "${name primary}" =
+            cfg primary
+            // {
+              scale = 1.0;
+              focus-at-startup = true;
+            };
+        }
+        // lib.optionalAttrs (config.monitors.secondary != null) {
+          "${name secondary}" =
+            cfg secondary
+            // {
+              scale = 1.0;
+            };
         };
-      };
 
       layout = {
         gaps = 20;

@@ -1,5 +1,6 @@
 {lib, ...}: {
   imports = [
+    ./desktop_monitors.nix
     ../modules/nixos/foundation.nix
     ../modules/cli.nix
     ../modules/nixos/cli.nix
