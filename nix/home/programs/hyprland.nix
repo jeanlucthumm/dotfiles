@@ -4,11 +4,6 @@
   pkgs,
   ...
 }: {
-  home.packages = with pkgs; [
-    # TODO use nix service
-    hypridle # Idle manager
-  ];
-
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -137,7 +132,6 @@
 
       exec-once = [
         "kitty --detach --title=\"scratchpad\" --override initial_window_width=235c --override initial_window_height=83c"
-        "hypridle"
       ];
 
       bind =

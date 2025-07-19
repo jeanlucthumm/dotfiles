@@ -186,6 +186,36 @@ in {
         padding = "10";
       };
     };
+    # Idle management daemon
+    hypridle = {
+      enable = true;
+      settings = {
+        general = {
+          lock_cmd = "pidof hyprlock || hyprlock";
+          before_sleep_cmd = "loginctl lock-session";
+          after_sleep_cmd = ''niri msg output "*" on'';
+        };
+        listener = [
+          # Dim brightness at 2:50 (warning)
+          {
+            timeout = 2 * 60 + 50;
+            on-timeout = "brightnessctl -s set 10";
+            on-resume = "brightnessctl -r";
+          }
+          # Lock screen at 3:00
+          {
+            timeout = 3 * 60;
+            on-timeout = "loginctl lock-session";
+          }
+          # Turn off monitors at 8:00 (5min after lock)
+          {
+            timeout = 8 * 60;
+            on-timeout = ''niri msg output "*" off'';
+            on-resume = ''niri msg output "*" on'';
+          }
+        ];
+      };
+    };
   };
   home.sessionVariables = {
     CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
