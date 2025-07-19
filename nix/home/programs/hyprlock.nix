@@ -87,7 +87,7 @@ in {
         # Weather
         {
           monitor = primary;
-          text = ''cmd[update:18000000] echo "<b>Feels like<big> $(curl -s 'wttr.in?format=%t' | tr -d '+') </big></b>"'';
+          text = ''cmd[update:18000000] echo "<b>Feels like<big> $(curl -s 'wttr.in?format=%t&m' | tr -d '+') </big></b>"'';
           color = "rgb(${base05})";
           font_size = 18;
           font_family = "Geist Mono 10";
