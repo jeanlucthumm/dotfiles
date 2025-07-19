@@ -4,7 +4,6 @@
   ...
 }: {
   home.packages = with pkgs; [
-    hyprlock # Lockscreen
     # TODO use nix service
     hypridle # Idle manager
   ];

@@ -124,6 +124,7 @@
         "Mod+Shift+0".action.move-column-to-workspace = 10;
 
         "Mod+Shift+S".action.spawn = ["niri-screenshot"];
+        "Mod+Shift+P".action.spawn = ["hyprlock"];
 
         "Mod+Shift+E".action = quit;
         "Mod+Backslash".action.spawn = ["makoctl" "dismiss"];

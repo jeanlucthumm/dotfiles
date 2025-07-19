@@ -21,6 +21,7 @@ in {
   stylix.targets = {
     qutebrowser.enable = false;
     wofi.enable = false;
+    hyprlock.enable = false;
   };
 
   programs.fish.interactiveShellInit = ''
