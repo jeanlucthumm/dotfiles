@@ -25,6 +25,8 @@
     smartmontools # for disk health monitoring
   ];
 
+  services.atd.enable = true; # Enable the at daemon for scheduled tasks
+
   swapDevices = [
     {
       device = "/swapfile";
