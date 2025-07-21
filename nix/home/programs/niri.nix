@@ -155,6 +155,10 @@
 
       prefer-no-csd = true;
 
+      hotkey-overlay = {
+        skip-at-startup = true;
+      };
+
       cursor = {
         hide-after-inactive-ms = 5000;
         size = 16;
