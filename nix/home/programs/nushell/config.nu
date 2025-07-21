@@ -1,9 +1,11 @@
 # Pipe in .env file and load into environment variables.
 def from-dotenv []: [string -> record] {
+    lines |
     split column -n 2 '=' |
     rename key value |
     update value { str trim --char '"' } |
-    reduce -f {} {|it, acc| $acc | upsert $it.key $it.value}
+    transpose --header-row |
+    into record
 }
 
 # rg wrapper
