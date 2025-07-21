@@ -36,6 +36,10 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    reddit-easy-post = {
+      url = "github:jeanlucthumm/reddit-easy-post";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -49,6 +53,7 @@
     niri,
     disko,
     deploy-rs,
+    reddit-easy-post,
     ...
   }: {
     # System configurations for NixOS hosts.
@@ -71,7 +76,7 @@
               hostName = "desktop";
             };
             home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
-            nixpkgs.overlays = import ./overlays;
+            nixpkgs.overlays = import ./overlays inputs;
           }
         ];
       };
@@ -91,6 +96,7 @@
           {
             home-manager.extraSpecialArgs.hostName = "server";
             home-manager.users.jeanluc = import ./home/hosts/server.nix;
+            nixpkgs.overlays = import ./overlays inputs;
           }
         ];
       };
@@ -108,7 +114,7 @@
         {
           home-manager.extraSpecialArgs.hostName = "macbook";
           home-manager.users.jeanluc = import ./home/hosts/macbook.nix;
-          nixpkgs.overlays = import ./overlays;
+          nixpkgs.overlays = import ./overlays inputs;
         }
       ];
     };
