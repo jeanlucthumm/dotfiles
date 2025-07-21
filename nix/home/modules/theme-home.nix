@@ -31,7 +31,6 @@ in {
 
   programs.wofi.style = with config.lib.stylix.colors; ''
     window {
-      border-radius: 20px;
       border: solid 2px;
     }
 
