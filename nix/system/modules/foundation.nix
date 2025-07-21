@@ -2,6 +2,8 @@
 {pkgs, ...}: {
   # Enable flakes
   nix.settings.experimental-features = ["nix-command" "flakes"];
+  # Increase download buffer to prevent "download buffer is full" errors
+  nix.settings.download-buffer-size = 134217728; # 128MB
 
   # Modules will add ports as needed to firewall config
   networking.firewall.enable = true;
