@@ -161,7 +161,8 @@
 
       cursor = {
         hide-after-inactive-ms = 5000;
-        size = 16;
+        size = 24;
+        theme = "Bibata-Modern-Classic";
       };
 
       spawn-at-startup = [
@@ -178,6 +179,7 @@
 
   home.packages = with pkgs; [
     xwayland-satellite # For apps that need Xwayland
+    bibata-cursors # Custom cursor theme
 
     # Custom script for toggling between monitors
     (writeShellScriptBin "niri-toggle-monitor" ''
