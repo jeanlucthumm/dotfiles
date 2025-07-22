@@ -36,6 +36,7 @@ in {
     discord # Chat
     gimp # Image editing
     neovide # NeoVim GUI
+    hypridle # Idle management daemon
 
     lmstudio # LLM experimentation
     tor-browser # Privacy browser
@@ -189,29 +190,37 @@ in {
     # Idle management daemon
     hypridle = {
       enable = true;
-      settings = {
+      settings = let
+        dpmsCommand = m: msg: "niri msg output '${m.manufacturer} ${m.model} ${m.serial}' ${msg}";
+        monitorOn = builtins.concatStringsSep " && " [
+          (dpmsCommand config.monitors.primary "on")
+          (dpmsCommand config.monitors.secondary "on")
+          # Solves weird problem with hyprlock not showing up post screen sleep
+          "sleep 7"
+          "loginctl lock-session"
+        ];
+        monitorOff =
+          (dpmsCommand config.monitors.primary "off")
+          + " && "
+          + (dpmsCommand config.monitors.secondary "off");
+      in {
         general = {
-          lock_cmd = "pidof hyprlock || hyprlock";
+          lock_cmd = "pidof hyprlock || hyprlock > /tmp/hyprlock.log 2>&1";
           before_sleep_cmd = "loginctl lock-session";
-          after_sleep_cmd = ''niri msg output "*" on'';
+          after_sleep_cmd = monitorOn;
         };
-        listener = [
-          # Dim brightness at 2:50 (warning)
+        listener = let
+          lockTime = 3 * 60;
+          dpmsTime = lockTime + 5 * 60;
+        in [
           {
-            timeout = 2 * 60 + 50;
-            on-timeout = "brightnessctl -s set 10";
-            on-resume = "brightnessctl -r";
-          }
-          # Lock screen at 3:00
-          {
-            timeout = 3 * 60;
+            timeout = lockTime;
             on-timeout = "loginctl lock-session";
           }
-          # Turn off monitors at 8:00 (5min after lock)
           {
-            timeout = 8 * 60;
-            on-timeout = ''niri msg output "*" off'';
-            on-resume = ''niri msg output "*" on'';
+            timeout = dpmsTime;
+            on-timeout = monitorOff;
+            on-resume = monitorOn;
           }
         ];
       };
