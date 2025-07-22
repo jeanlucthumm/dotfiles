@@ -7,6 +7,7 @@
 
 ========================================================
 
-Some of my stuff is in `.config/` and gets cloned with `yadm` for new systems.
+Some of my stuff is in `.config/` and gets cloned with
+`yadm` for new systems.
 
-But most of my stuff is part of my nix config in `nix/`
+But most of my stuff is part of the nix config in `nix/`
