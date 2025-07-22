@@ -2,7 +2,6 @@
 {pkgs, ...}: {
   # Fonts
   fonts.packages = with pkgs; [
-    # builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts)
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
     font-awesome # for icons
@@ -16,6 +15,10 @@
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+
+    displayManager.ly = {
+      enable = true;
+    };
   };
 
   # Hyprland is a window manager.
@@ -27,10 +30,4 @@
 
   # Sway is a window manager.
   programs.sway.enable = true;
-
-  environment.loginShellInit = ''
-    if [ "$TTY" = "/dev/tty1" ] && [ -z "$DISPLAY" ]; then
-      exec niri
-    fi
-  '';
 }
