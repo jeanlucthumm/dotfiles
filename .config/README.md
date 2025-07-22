@@ -1,9 +1,9 @@
 ## Currently in-use:
 
-* Kernel: Zen Linux
-* Distro: Arch (btw)
-* Window Manager: Hyprland
-* Bar: Waybar
-* Terminal: Kitty with NerdFonts
-* Shell: Fish
-* IDE: Neovim with occasional Neovide
+- Kernel: Linux
+- Distro: NixOS
+- Window Manager: Niri
+- Bar: N/A
+- Terminal: Kitty with NerdFonts
+- Shell: Nushell
+- IDE: Neovim with occasional Neovide, Claude Code, Copilot
