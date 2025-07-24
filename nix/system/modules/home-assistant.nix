@@ -7,6 +7,8 @@
       image = "ghcr.io/home-assistant/home-assistant:stable";
       extraOptions = [
         "--network=host"
+        "--device=/dev/ttyUSB0:/dev/ttyUSB0"
+        "--privileged"
       ];
     };
   };
