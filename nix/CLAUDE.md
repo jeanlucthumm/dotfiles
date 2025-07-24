@@ -71,3 +71,6 @@ This is a NixOS/Nix flake configuration repository managing system and home conf
 
 Secrets are managed using agenix with SSH public keys defined in `secrets/secrets.nix`. Available secrets include API keys for OpenAI, Anthropic, Tavily, and Codestral.
 
+## Remote Server Commands
+
+- For questions about the server config, you can run remote commands and get output with `ssh server.lan <cmd>`
