@@ -190,6 +190,8 @@ in {
     # Idle management daemon
     hypridle = {
       enable = true;
+      # Fix race condition: start after niri sets WAYLAND_DISPLAY
+      systemdTarget = "niri.service";
       settings = let
         dpmsCommand = m: msg: "niri msg output '${m.manufacturer} ${m.model} ${m.serial}' ${msg}";
         monitorOn = builtins.concatStringsSep " && " [
