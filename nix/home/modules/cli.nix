@@ -75,6 +75,16 @@ in {
       };
       keymap.mgr.prepend_keymap = [
         {
+          on = ["<C-i>"];
+          run = "forward";
+          desc = "Go forward to next directory";
+        }
+        {
+          on = ["<C-o>"];
+          run = "back";
+          desc = "Go back to previous directory";
+        }
+        {
           on = ["R"];
           run = "plugin rsync";
           desc = "Copy files using rsync";
