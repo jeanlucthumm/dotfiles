@@ -23,58 +23,10 @@ def aihelp [query: string]: [nothing -> string] {
   help commands | select name description | to csv | aichat $msg
 }
 
-alias __ls = ls
+alias lss = ls
 
-# ls wrapper with pretty output
-def ls [
-    --all (-a),         # Show hidden files
-    --long (-l),        # Get all available columns for each entry (slower; columns are platform-dependent)
-    --short-names (-s), # Only print the file names, and not the path
-    --full-paths (-f),  # display paths as absolute paths
-    --du (-d),          # Display the apparent directory size ("disk usage") in place of the directory metadata size
-    --directory (-D),   # List the specified directory itself instead of its contents
-    --mime-type (-m),   # Show mime-type in type column instead of 'file' (based on filenames only; files' contents are not examined)
-    --threads (-t),     # Use multiple threads to list contents. Output will be non-deterministic.
-    ...pattern: glob,   # The glob pattern to use.
-]: [ nothing -> string ] {
-    let pattern = if ($pattern | is-empty) { [ '.' ] } else { $pattern }
-    (__ls
-        --all=$all
-        --long=$long
-        --short-names=$short_names
-        --full-paths=$full_paths
-        --du=$du
-        --directory=$directory
-        --mime-type=$mime_type
-        --threads=$threads
-        ...$pattern
-    ) | sort-by -i type name | grid -c -i -s "\n"
-}
-
-# ls wrapper with table output
-def lss [
-    --all (-a),         # Show hidden files
-    --long (-l),        # Get all available columns for each entry (slower; columns are platform-dependent)
-    --short-names (-s), # Only print the file names, and not the path
-    --full-paths (-f),  # display paths as absolute paths
-    --du (-d),          # Display the apparent directory size ("disk usage") in place of the directory metadata size
-    --directory (-D),   # List the specified directory itself instead of its contents
-    --mime-type (-m),   # Show mime-type in type column instead of 'file' (based on filenames only; files' contents are not examined)
-    --threads (-t),     # Use multiple threads to list contents. Output will be non-deterministic.
-    ...pattern: glob,   # The glob pattern to use.
-]: [ nothing -> table ] {
-    let pattern = if ($pattern | is-empty) { [ '.' ] } else { $pattern }
-    (__ls
-        --all=$all
-        --long=$long
-        --short-names=$short_names
-        --full-paths=$full_paths
-        --du=$du
-        --directory=$directory
-        --mime-type=$mime_type
-        --threads=$threads
-        ...$pattern
-    ) | sort-by -i type name
+def ls --wrapped [...rest]: [nothing -> string] {
+  ^eza -s name --group-directories-first -1 --icons=always ...$rest
 }
 
 def ssh --wrapped [...rest] {
