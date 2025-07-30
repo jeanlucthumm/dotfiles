@@ -82,6 +82,8 @@ in {
     zen-browser = {
       enable = true;
     };
+
+    nushell.shellAliases.nv = "neovide --fork";
   };
 
   gtk = {

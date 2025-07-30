@@ -1,19 +1,22 @@
 # Darwin specific GUI settings
 {...}: {
   # These are darwin specific because NixOS relies on the WM for splits.
-  programs.kitty = {
-    settings = {
-      macos_option_as_alt = true;
+  programs = {
+    kitty = {
+      settings = {
+        macos_option_as_alt = true;
+      };
+      keybindings = {
+        "cmd+p" = "previous_tab";
+        "cmd+n" = "next_tab";
+        "cmd+k" = "focus_visible_window";
+        "cmd+shift+n" = "new_os_window";
+        "cmd+shift+r" = "set_tab_title";
+        "cmd+h" = "previous_window";
+        "cmd+l" = "next_window";
+        "cmd+enter" = "new_window_with_cwd";
+      };
     };
-    keybindings = {
-      "cmd+p" = "previous_tab";
-      "cmd+n" = "next_tab";
-      "cmd+k" = "focus_visible_window";
-      "cmd+shift+n" = "new_os_window";
-      "cmd+shift+r" = "set_tab_title";
-      "cmd+h" = "previous_window";
-      "cmd+l" = "next_window";
-      "cmd+enter" = "new_window_with_cwd";
-    };
+    nushell.shellAliases.nv = "neovide --frame transparent --fork";
   };
 }
