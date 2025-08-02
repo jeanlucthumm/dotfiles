@@ -1,7 +1,0 @@
-#!/bin/bash
-
-if ! command -v fish &> /dev/null; then
-  echo "Bootstrap requires fish shell"
-else
-  fish "$HOME/.config/yadm/bootstrap.fish"
-fi
