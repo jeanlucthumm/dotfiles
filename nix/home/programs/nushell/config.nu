@@ -8,6 +8,17 @@ def from-dotenv []: [string -> record] {
     into record
 }
 
+# Yazi wrapper that changes directory on exit
+def --env --wrapped y [...rest]: [nothing -> nothing] {
+	let tmp = mktemp -t "yazi-cwd.XXXXXX"
+	yazi ...$rest --cwd-file $tmp
+	let cwd = (open $tmp)
+	if $cwd != "" and $cwd != $env.PWD {
+		cd $cwd
+	}
+	rm -fp $tmp
+}
+
 # rg wrapper
 def nrg [pattern: string]: [nothing -> table<file: string, line: int, text: string>] {
   $'[(rg --json $pattern)]' |
@@ -176,7 +187,7 @@ def ngit-status []: [nothing -> table<status: string, file: string>] {
 
 # Copy piped in contents to clipboard.
 def clip []: [string -> nothing] {
-  if ($env | get -i TMUX | is-not-empty) {
+  if ($env | get -o TMUX | is-not-empty) {
     $in | tmux loadb -
   } else if ($nu.os-info.name == "linux") {
     if ($env.XDG_SESSION_TYPE == "wayland") {
@@ -186,6 +197,23 @@ def clip []: [string -> nothing] {
     }
   } else if ($nu.os-info.name == "macos") {
     $in | pbcopy
+  } else {
+    echo "Unsupported OS"
+  }
+}
+
+# Paste clipboard contents to stdout.
+def paste []: [nothing -> string] {
+  if ($env | get -o TMUX | is-not-empty) {
+    tmux showb -t 0
+  } else if ($nu.os-info.name == "linux") {
+    if ($env.XDG_SESSION_TYPE == "wayland") {
+      wl-paste
+    } else {
+      xclip -selection clipboard -o
+    }
+  } else if ($nu.os-info.name == "macos") {
+    pbpaste
   } else {
     echo "Unsupported OS"
   }
