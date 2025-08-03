@@ -48,6 +48,7 @@ in {
     tree-sitter # Syntax parser extensively used by NeoVim
     mdformat # Markdown formatter
     gcc # GNU Compiler Collection
+    graphiti-mcp-server # Knowledge graph MCP server
   ];
 
   programs = {

@@ -12,6 +12,7 @@
     ../../modules/boot.nix
     ../../modules/containers.nix
     ../../modules/home-assistant.nix
+    ../../modules/neo4j.nix
   ];
 
   networking.hostName = "server";

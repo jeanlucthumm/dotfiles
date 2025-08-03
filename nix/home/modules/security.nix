@@ -31,6 +31,10 @@
         # Workaround for lack of lchmod on Darwin, so symlinks wouldn't have correct `mode`.
         symlink = false;
       };
+      neo4j = {
+        file = ../../secrets/jeanluc-neo4j.age;
+        mode = "400";
+      };
     };
     # Allows agenix to use user ssh keys
     identityPaths = [
@@ -51,6 +55,7 @@
       (pkgs.writeShellScriptBin "get-key-openai" (makeKeyGetter s.openai.path))
       (pkgs.writeShellScriptBin "get-key-tavily" (makeKeyGetter s.tavily.path))
       (pkgs.writeShellScriptBin "get-key-codestral" (makeKeyGetter s.codestral.path))
+      (pkgs.writeShellScriptBin "get-key-neo4j" (makeKeyGetter s.neo4j.path))
 
       gnupg # GNU Privacy Guard
       pinentry-tty # Enter password in terminal

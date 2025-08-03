@@ -40,6 +40,25 @@
       url = "github:jeanlucthumm/reddit-easy-post";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # For making python overlays.
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    uv2nix = {
+      url = "github:pyproject-nix/uv2nix";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    pyproject-build-systems = {
+      url = "github:pyproject-nix/build-system-pkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -54,6 +73,9 @@
     disko,
     deploy-rs,
     reddit-easy-post,
+    pyproject-nix,
+    uv2nix,
+    pyproject-build-systems,
     ...
   }: {
     # System configurations for NixOS hosts.
