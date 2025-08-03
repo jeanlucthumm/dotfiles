@@ -39,6 +39,7 @@ in {
     dust # du replacement
     eza # ls replacement
     ripgrep # grep replacement
+    bat-extras.batman # man replacement
 
     # Global dev tools
     alejandra # Nix formatter
