@@ -29,6 +29,9 @@
   };
   programs.carapace.enableNushellIntegration = true;
   programs.direnv.enableNushellIntegration = true;
-  programs.yazi.enableNushellIntegration = true;
+  programs.yazi = {
+    shellWrapperName = "y";
+    enableNushellIntegration = true;
+  };
   programs.zoxide.enableNushellIntegration = true;
 }

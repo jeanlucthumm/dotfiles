@@ -8,17 +8,6 @@ def from-dotenv []: [string -> record] {
     into record
 }
 
-# Yazi wrapper that changes directory on exit
-def --env --wrapped y [...rest]: [nothing -> nothing] {
-	let tmp = mktemp -t "yazi-cwd.XXXXXX"
-	yazi ...$rest --cwd-file $tmp
-	let cwd = (open $tmp)
-	if $cwd != "" and $cwd != $env.PWD {
-		cd $cwd
-	}
-	rm -fp $tmp
-}
-
 # rg wrapper
 def nrg [pattern: string]: [nothing -> table<file: string, line: int, text: string>] {
   $'[(rg --json $pattern)]' |
