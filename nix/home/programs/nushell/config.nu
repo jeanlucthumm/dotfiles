@@ -132,6 +132,7 @@ def tplan []: [nothing -> string] {
   let active = tactive
   task done $active.id
   timew start plan
+  task ready
 }
 
 def __tparent []: [string -> record] {
