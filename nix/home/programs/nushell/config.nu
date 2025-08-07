@@ -233,6 +233,12 @@ def ngit-prcontext [
   "
 }
 
+# Launch Claude Code in ~/nix with a query for AI-enabled config updates
+def nmod [query: string]: [nothing -> nothing] {
+  cd ~/nix
+  claude $query
+}
+
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
 let abbreviations = {
   gt: 'git tree'

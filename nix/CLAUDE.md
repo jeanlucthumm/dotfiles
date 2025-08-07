@@ -10,12 +10,10 @@ This is a NixOS/Nix flake configuration repository managing system and home conf
 
 ### Building and Switching Configurations
 
-- **NixOS rebuild**: `sudo nixos-rebuild switch --flake .#<hostname>`
-
-  - Available hostnames: `desktop`, `server`, `virtual`
-  - Current Makefile uses `laptop` (may need updating)
-
-- **Darwin rebuild**: `nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin -- switch --flake '.#macbook'`
+- **Rebuild system**: `nh os switch > /tmp/nh_build.log 2>/dev/null && echo "Build successful" || (echo "Build failed, showing output:" && cat /tmp/nh_build.log)` (NixOS) or `nh darwin switch > /tmp/nh_build.log 2>/dev/null && echo "Build successful" || (echo "Build failed, showing output:" && cat /tmp/nh_build.log)` (Darwin/macOS)
+  - **IMPORTANT**: After making configuration changes, ALWAYS run this command to apply them
+  - Use `nh os switch -u > /tmp/nh_build.log 2>/dev/null && echo "Build successful" || (echo "Build failed, showing output:" && cat /tmp/nh_build.log)` to update flake inputs as well
+  - Stdout captured to tmp file, stderr discarded completely, output shown only on failure
 
 - **Home Manager restart**: `sudo systemctl restart home-manager-jeanluc`
 
