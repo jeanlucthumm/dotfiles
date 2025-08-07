@@ -16,11 +16,9 @@ in {
   ];
 
   home.packages = with pkgs; [
-    android-studio # Android development
     signal-desktop # Encrypted messaging
     meld # Diff tool
     gammastep # Redshifting at night
-    nautilus # File browser
     brightnessctl # Screen brightness controls
     wl-clipboard # Copy paste in Wayland
     bitwarden-desktop # Password management
@@ -32,9 +30,7 @@ in {
     xdg-utils # Open files in right prorgram
     libnotify # Notifications
     libinput # Input device management
-    firefox # Web browser
     discord # Chat
-    gimp # Image editing
     neovide # NeoVim GUI
     hypridle # Idle management daemon
 
