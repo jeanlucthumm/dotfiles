@@ -400,12 +400,6 @@ local plugin_spec = {
     },
     config = true,
   },
-  {
-    'dlants/magenta.nvim',
-    lazy = false, -- you could also bind to <leader>mt
-    build = 'npm install --frozen-lockfile',
-    opts = {},
-  },
 
   --- Theme
   { 'nvim-tree/nvim-web-devicons' },
