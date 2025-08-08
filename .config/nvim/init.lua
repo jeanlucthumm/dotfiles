@@ -570,6 +570,22 @@ local plugin_spec = {
     end,
   },
   { 'nvim-pack/nvim-spectre' },
+  {
+    'mikesmithgh/kitty-scrollback.nvim',
+    enabled = true,
+    lazy = true,
+    cmd = { 'KittyScrollbackGenerateKittens', 'KittyScrollbackCheckHealth', 'KittyScrollbackGenerateCommandLineEditing' },
+    event = { 'User KittyScrollbackLaunch' },
+    config = function()
+      require('kitty-scrollback').setup({
+        ksb_builtin_get_text_all = {
+          kitty_get_text = {
+            ansi = false,
+          },
+        },
+      })
+    end,
+  },
 } -- plugin_spec
 
 if HasGoogle then table.insert(plugin_spec, { import = 'google-plugins' }) end
