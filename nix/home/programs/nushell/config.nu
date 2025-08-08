@@ -241,6 +241,7 @@ def nmod [query: string]: [nothing -> nothing] {
 
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
 let abbreviations = {
+  g: 'git'
   gt: 'git tree'
   gs: 'git status'
   gm: 'git commit -m'
