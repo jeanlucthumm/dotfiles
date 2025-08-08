@@ -32,6 +32,7 @@ in {
     devenv # Development environment manager
     ffmpeg
     usbutils # USB utilities
+    htop # Interactive process viewer
 
     # Modern replacements for common tools
     delta # Pretty diffs
