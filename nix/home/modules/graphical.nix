@@ -1,5 +1,9 @@
 # System agnostic GUI programs
-{pkgs, config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   programs = {
     # Terminal with GPU acceleration
     kitty = {
@@ -15,7 +19,7 @@
       settings = {
         enable_audio_bell = true;
         window_padding_width = 8;
-        allow_remote_control = "socket-only";
+        allow_remote_control = "yes";
         listen_on = "unix:/tmp/kitty";
         repaint_delay = 5;
         input_delay = 1;

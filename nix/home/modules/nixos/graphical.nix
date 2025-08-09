@@ -7,6 +7,24 @@
 }: let
   homeDir = config.home.homeDirectory;
   configDir = config.xdg.configHome;
+
+  # Wayland image paste workaround for Kitty
+  clip2path = pkgs.writeShellScriptBin "clip2path" ''
+    set -e
+
+    types=$(${pkgs.wl-clipboard}/bin/wl-paste --list-types)
+
+    if grep -q '^text/' <<<"$types"; then
+        ${pkgs.wl-clipboard}/bin/wl-paste --no-newline | ${pkgs.kitty}/bin/kitty @ --to unix:/tmp/kitty send-text --stdin
+    elif grep -q '^image/' <<<"$types"; then
+        ext=$(grep -m1 '^image/' <<<"$types" | cut -d/ -f2 | cut -d';' -f1)
+        file="/tmp/clip_$(date +%s).''${ext}"
+        ${pkgs.wl-clipboard}/bin/wl-paste > "$file"
+        printf '%q' "$file" | ${pkgs.kitty}/bin/kitty @ send-text --stdin
+    else
+        ${pkgs.wl-clipboard}/bin/wl-paste --no-newline | ${pkgs.kitty}/bin/kitty @ send-text --stdin
+    fi
+  '';
 in {
   imports = [
     inputs.zen-browser.homeModules.beta
@@ -43,6 +61,8 @@ in {
     obsidian # Note taking
     smile # emoji picker
     code-cursor # AI IDE
+
+    clip2path # Wayland clipboard helper for Kitty
   ];
 
   programs = {
@@ -80,6 +100,9 @@ in {
     };
 
     nushell.shellAliases.nv = "neovide --fork";
+
+    # Hack to allow copy pasting images in Claude Code with Kitty.
+    kitty.keybindings."ctrl+v" = "launch --type=background --allow-remote-control --keep-focus ${clip2path}/bin/clip2path";
   };
 
   gtk = {
