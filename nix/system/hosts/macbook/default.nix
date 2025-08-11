@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   imports = [
     ../../modules/agenix.nix
     ./theme-setting.nix
@@ -20,6 +20,37 @@
       agent = {
         enable = true;
         enableSSHSupport = true;
+      };
+    };
+  };
+
+  environment.systemPackages = with pkgs; [
+    raycast # Spotlight replacement
+  ];
+
+  system.defaults.CustomUserPreferences = {
+    "com.apple.symbolichotkeys" = {
+      AppleSymbolicHotKeys = {
+        # Disable Spotlight search (Cmd+Space)
+        "64".enabled = false;
+        # Disable Finder search window (Cmd+Option+Space)
+        "65".enabled = false;
+        "34" = {
+          # Show application windows (Ctrl+Down)
+          enabled = true;
+          value = {
+            parameters = [65535 125 2359296];
+            type = "standard";
+          };
+        };
+        "27" = {
+          # Move focus to next window (Cmd+`)
+          enabled = true;
+          value = {
+            parameters = [96 50 1048576];
+            type = "standard";
+          };
+        };
       };
     };
   };
