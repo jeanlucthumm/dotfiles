@@ -152,5 +152,12 @@
     };
 
     checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+
+    templates = {
+      python = {
+        path = ./templates/python;
+        description = "Python development environment using devenv";
+      };
+    };
   };
 }
