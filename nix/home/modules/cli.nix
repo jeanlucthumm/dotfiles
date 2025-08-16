@@ -13,6 +13,7 @@ in {
 
   home.packages = with pkgs; [
     timewarrior # time tracker
+    taskwarrior-enhanced # Enhanced taskwarrior companion CLI
     manix # CLI for nix docs
     neovim # IDE (tExT eDiToR)
     tmux # Terminal multiplexer

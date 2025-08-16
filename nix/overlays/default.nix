@@ -11,5 +11,6 @@ inputs: [
   })
   (final: prev: {
     reddit-easy-post = inputs.reddit-easy-post.packages.${prev.system}.default;
+    taskwarrior-enhanced = inputs.taskwarrior-enhanced.packages.${prev.system}.default;
   })
 ]

@@ -40,6 +40,10 @@
       url = "github:jeanlucthumm/reddit-easy-post";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    taskwarrior-enhanced = {
+      url = "github:jeanlucthumm/taskwarrior-enhanced";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # For making python overlays.
     pyproject-nix = {
@@ -73,6 +77,7 @@
     disko,
     deploy-rs,
     reddit-easy-post,
+    taskwarrior-enhanced,
     pyproject-nix,
     uv2nix,
     pyproject-build-systems,
