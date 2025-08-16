@@ -8,5 +8,6 @@
     mcp-opennutrition # OpenNutrition dataset MCP server
     mcp-language-server # MCP server that exposes language servers to LLMs
     graphiti-mcp-server # Knowledge graph MCP server
+    mcp-reddit # MCP server for Reddit data
   ];
 }
