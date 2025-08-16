@@ -20,6 +20,7 @@ in {
     gh # GitHub CLI
     git # Version control system
     git-lfs # Git extension for large files
+    git-filter-repo # Git tool for rewriting history
     gnumake # Build automation tool
     fzf # Multi-purpose fuzzy finder
     python3 # The language python
