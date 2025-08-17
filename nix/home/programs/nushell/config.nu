@@ -236,7 +236,7 @@ def ngit-prcontext [
 # Launch Claude Code in ~/nix with a query for AI-enabled config updates
 def nmod [query: string]: [nothing -> nothing] {
   cd ~/nix
-  claude $query
+  claude --permission-mode acceptEdits --allowedTools "List Read Bash(find:*)" $query
 }
 
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
