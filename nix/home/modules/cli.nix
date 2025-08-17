@@ -99,6 +99,11 @@ in {
           run = "plugin smart-filter";
           desc = "Filter files using smart filter";
         }
+        {
+          on = ["c" "y"];
+          run = ''shell --block -- ${pkgs.nushell}/bin/nu --login -c "cat \"$1\" | clip"'';
+          desc = "Copy file contents to clipboard";
+        }
       ];
     };
 
