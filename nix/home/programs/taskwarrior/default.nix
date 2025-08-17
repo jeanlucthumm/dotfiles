@@ -13,6 +13,8 @@
     "cora"
     "cora-validation"
     "cora-mcp"
+    "cora-tech"
+    "cora-soft"
     "nix"
     "chore"
   ];
