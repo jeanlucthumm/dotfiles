@@ -38,6 +38,22 @@ def tstop []: [nothing -> string] {
   task +ACTIVE stop
 }
 
+# Taskwarrior: Start first ready task if no task is active
+def tstart []: [nothing -> string] {
+  let active_list = task +ACTIVE export | from json
+  if not ($active_list | is-empty) {
+    return
+  }
+
+  let ready_tasks = task export ready | from json
+  if ($ready_tasks | is-empty) {
+    print "No ready tasks available"
+    return
+  }
+
+  task start $ready_tasks.0.id
+}
+
 # Taskwarrior: Add a child task to the active task, inheriting all properties
 def tchild [
   parent: int,    # Which parent to add the child to
