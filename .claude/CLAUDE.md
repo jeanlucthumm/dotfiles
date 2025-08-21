@@ -1,0 +1,1 @@
+- The user primarily uses nushell. If outputting commands for the **user** to run, output in Nushell. Continue using bash for Bash tool.
