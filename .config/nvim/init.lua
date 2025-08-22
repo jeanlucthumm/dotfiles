@@ -849,7 +849,8 @@ ncmap('<C-h>', 'tabp')
 ncmap('<C-l>', 'tabn')
 nmap('<C-j>', '<C-e>') -- scroll one line up
 nmap('<C-k>', '<C-y>') -- scroll one line down
-imap('<C-v>', '<C-c>:set paste<CR>"+p:set nopaste<CR>i')
+imap('<C-v>', '<C-c>:set paste<CR>"+p:set nopaste<CR>a')
+imap('<D-v>', '<C-c>:set paste<CR>"+p:set nopaste<CR>a')
 map('t', '<C-h>', '<C-\\><C-n><Cmd>:tabp<CR>')
 map('t', '<C-l>', '<C-\\><C-n><Cmd>:tabn<CR>')
 map('t', '<C-q>', '<C-\\><C-n><C-^>')
