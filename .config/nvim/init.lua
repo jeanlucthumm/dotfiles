@@ -571,6 +571,20 @@ local plugin_spec = {
   },
   { 'nvim-pack/nvim-spectre' },
   {
+    'm00qek/baleia.nvim',
+    version = '*',
+    config = function()
+      local baleia = require('baleia').setup({})
+      -- Automatically colorize terminal buffers
+      vim.api.nvim_create_autocmd({'TermOpen'}, {
+        pattern = '*',
+        callback = function()
+          baleia.automatically(vim.api.nvim_get_current_buf())
+        end,
+      })
+    end,
+  },
+  {
     'mikesmithgh/kitty-scrollback.nvim',
     enabled = true,
     lazy = true,
