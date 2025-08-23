@@ -260,6 +260,8 @@ let abbreviations = {
   g: 'git'
   gt: 'git tree'
   gs: 'git status'
+  gd: 'git d'
+  ge: 'git de'
   gm: 'git commit -m'
   gda: 'git add -A; git d'
   yda: 'yadm add -u -p; yadm d'
