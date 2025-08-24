@@ -5,6 +5,7 @@
     aichat # AI chatbot for the terminal
 
     # MCP Servers (see nix/overlays directory)
+    mcp-nixos # MCP server for NixOS packages and configuration
     mcp-opennutrition # OpenNutrition dataset MCP server
     mcp-language-server # MCP server that exposes language servers to LLMs
     graphiti-mcp-server # Knowledge graph MCP server

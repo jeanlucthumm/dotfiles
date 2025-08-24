@@ -22,6 +22,7 @@ in {
     git # Version control system
     git-lfs # Git extension for large files
     git-filter-repo # Git tool for rewriting history
+    git-crypt # Encrypt files in git repos
     gnumake # Build automation tool
     fzf # Multi-purpose fuzzy finder
     python3 # The language python
