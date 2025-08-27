@@ -72,3 +72,4 @@ Secrets are managed using agenix with SSH public keys defined in `secrets/secret
 ## Remote Server Commands
 
 - For questions about the server config, you can run remote commands and get output with `ssh server.lan <cmd>`
+- The server uses nushell. When running SSH commands to server.lan, use nushell syntax.
