@@ -134,10 +134,16 @@ local plugin_spec = {
         dart = { 'dart_format' },
         nix = { 'alejandra' },
       },
-      format_on_save = {
-        lsp_format = 'fallback',
-        timeout_ms = 500,
-      },
+      format_on_save = function(bufnr)
+        local bufname = vim.api.nvim_buf_get_name(bufnr)
+        if bufname:match('/%.claude/agents/.*%.md$') then
+          return nil
+        end
+        return {
+          lsp_format = 'fallback',
+          timeout_ms = 500,
+        }
+      end,
     },
   },
   {
