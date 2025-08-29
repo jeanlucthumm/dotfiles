@@ -20,5 +20,10 @@
     };
     venv.enable = true;
   };
+
+  git-hooks.hooks = {
+    ruff.enable = true;
+    ruff-format.enable = true;
+  };
 }
 
