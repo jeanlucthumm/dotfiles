@@ -73,3 +73,29 @@ Secrets are managed using agenix with SSH public keys defined in `secrets/secret
 
 - For questions about the server config, you can run remote commands and get output with `ssh server.lan <cmd>`
 - The server uses nushell. When running SSH commands to server.lan, use nushell syntax.
+
+## Version Control with yadm
+
+- **Semi-automated commit workflow**: 
+  1. `yadm status` to see modified files
+  2. `yadm ls-files --others --exclude-standard ~/nix/` to see untracked files in nix directory  
+  3. `yadm diff` to review changes
+  4. Group related changes by functional purpose:
+     - Files implementing the same feature/fix should be committed together
+     - Example: Adding git hooks to all templates = one commit for all template files
+  5. **Manual handling required ONLY when**: A single file contains multiple unrelated changes mixed together
+     - Tell user: "This file has multiple unrelated changes. Please use `yadm add -p <file>` to stage selectively"
+  6. **For files with single functional changes**: Group and commit related files together
+  7. `yadm add <files>` and `yadm commit -m "<scope>: <description>"`
+  8. Examples of functional groupings:
+     - All templates getting git hooks = "templates: add git hooks"
+     - Claude model change = "claude: switch to opus model"
+     - Documentation updates = "docs: add yadm workflow"
+- **Commit message format**: `<program/scope>: <brief description>` (following existing pattern)
+
+### Example commits:
+- `claude: settings` - Claude configuration changes
+- `nvim: better pasting` - Neovim paste improvements
+- `nu: git abbreviations` - Nushell git alias updates
+- `nix: add pkgs` - Package additions to Nix config
+- `hypridle: increase timeouts` - Hypridle timeout adjustments
