@@ -7,7 +7,7 @@ def gbranch [name: string]: [nothing -> string] {
     str trim -c '-'
 
   let active = tactive
-  if ('ticket' not in $active) {
+  if ('ticket' not-in $active) {
     error make -u {
       msg: "Active task has no ticket"
     }
