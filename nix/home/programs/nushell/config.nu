@@ -1,3 +1,22 @@
+# Generate git branch name based off taskwarrior ticket
+def gbranch [name: string]: [nothing -> string] {
+  let branch_name = $name |
+    str downcase |
+    str replace ' ' '-' |
+    str replace '[^a-z0-9-]' '' |
+    str trim -c '-'
+
+  let active = tactive
+  if ('ticket' not in $active) {
+    error make -u {
+      msg: "Active task has no ticket"
+    }
+    return
+  }
+
+  $'($active.ticket)/($branch_name)'
+}
+
 # Pipe in .env file and load into environment variables.
 def from-dotenv []: [string -> record] {
     lines |
