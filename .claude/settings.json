@@ -7,7 +7,7 @@
   "model": "sonnet",
   "statusLine": {
     "type": "command",
-    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name // \"Unknown\"'); cost=$(echo \"$input\" | jq -r '.cost.total_cost_usd // 0'); added=$(echo \"$input\" | jq -r '.cost.total_lines_added // 0'); removed=$(echo \"$input\" | jq -r '.cost.total_lines_removed // 0'); printf \"%s · $%.2f · +%d/-%d\" \"$model\" \"$cost\" \"$added\" \"$removed\""
+    "command": "cat | jq -r '.model.display_name'"
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754846298344
