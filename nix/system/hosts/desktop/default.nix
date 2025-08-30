@@ -53,6 +53,8 @@
       enable = true;
       allowEveryone = true;
     };
+    # PCSC daemon for smart card support (Yubikey)
+    pcscd.enable = true;
   };
 
   xdg.portal = {
