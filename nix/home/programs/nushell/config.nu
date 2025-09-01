@@ -60,6 +60,9 @@ ddos"
   cd ('../' + $name)
   ./gen-proto.sh
   cd -
+
+  # Open new kitty tab with the work tree name
+  kitten @ launch --type=tab --tab-title $name --cwd ('../' + $name)
 }
 
 # Pipe in .env file and load into environment variables.
