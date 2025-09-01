@@ -55,6 +55,11 @@ ddos"
   } else {
     git worktree add -b $'($ticket)/($name)' ('../' + $name) $branch_start
   }
+
+  # Run gen-proto.sh in the new work tree
+  cd ('../' + $name)
+  ./gen-proto.sh
+  cd -
 }
 
 # Pipe in .env file and load into environment variables.
