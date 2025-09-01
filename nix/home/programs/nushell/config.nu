@@ -1,3 +1,4 @@
+
 # Generate git branch name based off taskwarrior ticket
 def gbranch [name: string]: [nothing -> string] {
   let branch_name = $name |
@@ -15,6 +16,45 @@ def gbranch [name: string]: [nothing -> string] {
   }
 
   $'($active.ticket)/($branch_name)'
+}
+
+# New PR setup
+def prsetup [
+  ticket: string,       # Ticket ID
+  desc: string          # Description of the ticket
+  branch_start?: string, # Starting point for new branch
+]: [nothing -> nothing] {
+
+  let prompt = "Create a git branch name for the given ticket title. Keep it a single string, no spaces, no '-', keep it short. Output only the git branch name and nothing else. Some examples:
+
+restart
+chat
+uipolish
+signin
+terraconv
+routing
+mcpcreds
+ddos"
+  
+  let resp = $desc | aichat $prompt
+
+  # Ask for confirmation on the name
+  print $"Suggested branch name: ($resp)"
+  let confirmation = input "Use this name? (y/N): "
+  
+  let name = if ($confirmation | str downcase) in ["y", "yes"] {
+    $resp
+  } else {
+    input "Enter branch name: "
+  }
+
+  task add ('ticket:' + $ticket) $desc
+
+  if ($branch_start == null) {
+    git worktree add -b $'($ticket)/($name)' ('../' + $name)
+  } else {
+    git worktree add -b $'($ticket)/($name)' ('../' + $name) $branch_start
+  }
 }
 
 # Pipe in .env file and load into environment variables.
