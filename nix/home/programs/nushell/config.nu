@@ -25,7 +25,7 @@ def prsetup [
   branch_start?: string, # Starting point for new branch
 ]: [nothing -> nothing] {
 
-  let prompt = "Create a git branch name for the given ticket title. Keep it a single string, no spaces, no '-', keep it short. Output only the git branch name and nothing else. Some examples:
+  let prompt = "Create a git branch name for the given ticket title. Keep it at most two combined words, no spaces, no '-', keep it short. Output only the git branch name and nothing else. Some examples:
 
 restart
 chat
