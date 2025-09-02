@@ -260,6 +260,44 @@ def ngit-status []: [nothing -> table<status: string, file: string>] {
   git status --porcelain | from ssv -m 1 -n | rename status file
 }
 
+# Merge PR and clean up worktree
+def prmerge []: [nothing -> nothing] {
+  # Get current branch name and worktree directory
+  let branch_name = git head
+  let current_dir = pwd | path basename
+  
+  print $"Merging PR for branch: ($branch_name)"
+  print $"Current worktree: ($current_dir)"
+  
+  # Ask for confirmation
+  let confirmation = input "Proceed with merge and cleanup? (y/N): "
+  if not (($confirmation | str downcase) in ["y", "yes"]) {
+    print "Aborted"
+    return
+  }
+  
+  # Merge the PR (without deleting branch locally)
+  gh pr merge -m
+  
+  # Navigate to master worktree
+  cd ../master
+  
+  # Remove the worktree we were just in
+  git worktree remove $"../($current_dir)"
+  
+  # Delete local and remote branch
+  git branch -D $branch_name
+  git push origin --delete $branch_name
+  
+  # Pull master to catch up to the merge
+  git pull
+  
+  # Clean up any other stale remote tracking branches
+  git remote prune origin
+  
+  print $"Successfully merged and cleaned up ($branch_name)"
+}
+
 # Copy piped in contents to clipboard.
 def clip []: [string -> nothing] {
   if ($env | get -o TMUX | is-not-empty) {
