@@ -61,8 +61,10 @@ ddos"
   ./gen-proto.sh
   cd -
 
-  # Open new kitty tab with the work tree name
-  kitten @ launch --type=tab --tab-title $name --cwd ('../' + $name)
+  # Open new kitty tab with the work tree name (macOS only)
+  if ($nu.os-info.name == "macos") {
+    kitten @ launch --type=tab --tab-title $name --cwd ('../' + $name)
+  }
 }
 
 # Pipe in .env file and load into environment variables.
