@@ -6,4 +6,4 @@
 - Bar: N/A
 - Terminal: Kitty with NerdFonts
 - Shell: Nushell
-- IDE: Neovim with occasional Neovide, Claude Code, Copilot
+- IDE: Mostly Claude Code, complemented by Neovim, Neovide, Copilot
