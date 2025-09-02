@@ -298,6 +298,11 @@ def prmerge []: [nothing -> nothing] {
   print $"Successfully merged and cleaned up ($branch_name)"
 }
 
+# Create PR.md from template
+def prmd []: [nothing -> nothing] {
+  open ~/nix/templates/PR.md | save PR.md
+}
+
 # Copy piped in contents to clipboard.
 def clip []: [string -> nothing] {
   if ($env | get -o TMUX | is-not-empty) {
