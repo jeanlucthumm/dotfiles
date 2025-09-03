@@ -91,6 +91,8 @@ Secrets are managed using agenix with SSH public keys defined in `secrets/secret
      - All templates getting git hooks = "templates: add git hooks"
      - Claude model change = "claude: switch to opus model"
      - Documentation updates = "docs: add yadm workflow"
+- **IMPORTANT**: Never run `yadm add -A` (this will add literally everything to yadm)
+- **flake.lock handling**: flake.lock changes should not be independent commits. Bundle them with other commits
 - **Commit message format**: `<program/scope>: <brief description>` (following existing pattern)
 
 ### Example commits:
