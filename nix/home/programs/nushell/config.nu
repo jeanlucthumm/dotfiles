@@ -264,10 +264,13 @@ def ngit-status []: [nothing -> table<status: string, file: string>] {
 def prmerge []: [nothing -> nothing] {
   # Get current branch name and worktree directory
   let branch_name = git head
-  let current_dir = pwd | path basename
+  let worktree = git rev-parse --show-toplevel | path basename
+  
+  # Change to the worktree root
+  cd (git rev-parse --show-toplevel)
   
   print $"Merging PR for branch: ($branch_name)"
-  print $"Current worktree: ($current_dir)"
+  print $"Current worktree: ($worktree)"
   
   # Ask for confirmation
   let confirmation = input "Proceed with merge and cleanup? (y/N): "
@@ -283,7 +286,7 @@ def prmerge []: [nothing -> nothing] {
   cd ../master
   
   # Remove the worktree we were just in
-  git worktree remove $"../($current_dir)"
+  sudo git worktree remove $"../($worktree)"
   
   # Delete local and remote branch
   git branch -D $branch_name
