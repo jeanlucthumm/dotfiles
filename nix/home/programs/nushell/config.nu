@@ -392,6 +392,7 @@ let abbreviations = {
   ge: 'git de'
   gm: 'git commit -m'
   gda: 'git add -A; git d'
+  gwl: 'git worktree list'
   yda: 'yadm add -u -p; yadm d'
   ym: 'yadm commit -m'
   tr: 'task ready'
