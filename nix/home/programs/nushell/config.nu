@@ -61,6 +61,17 @@ ddos"
   ./gen-proto.sh
   cd -
 
+  # Check if working in a monorepo subdirectory
+  let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
+  if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
+    let subdir = input "Enter the relative path to the subdirectory: "
+    let worktree_path = ('../' + $name | path expand)
+    let full_subdir_path = ($worktree_path | path join $subdir)
+    
+    print $"Running direnv allow in: ($full_subdir_path)"
+    direnv allow $full_subdir_path
+  }
+
   # Open new kitty tab with the work tree name (macOS only)
   if ($nu.os-info.name == "macos") {
     kitten @ launch --type=tab --tab-title $name --cwd ('../' + $name)
