@@ -16,12 +16,7 @@
   # System level fish config so that we get access to nix commands
   programs = {
     fish.enable = true;
-    gnupg = {
-      agent = {
-        enable = true;
-        enableSSHSupport = true;
-      };
-    };
+    gnupg.agent.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
