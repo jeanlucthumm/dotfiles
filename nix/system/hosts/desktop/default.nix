@@ -12,6 +12,8 @@
     ../../modules/amd-gpu.nix
     ../../modules/agenix.nix
     ../../modules/theme-system.nix
+    ../../modules/secrets.nix
+    ../../modules/neo4j.nix
     ./hardware-configuration.nix
     ./theme-setting.nix
   ];
@@ -55,6 +57,8 @@
     };
     # PCSC daemon for smart card support (Yubikey)
     pcscd.enable = true;
+    # Neo4j configuration
+    neo4j.directories.home = "/var/lib/neo4j";
   };
 
   xdg.portal = {
@@ -70,6 +74,11 @@
 
   # Docker is a container platform
   virtualisation.docker.enable = true;
+
+  # Ensure Neo4j data directory exists
+  systemd.tmpfiles.rules = [
+    "d /var/lib/neo4j 0755 neo4j neo4j -"
+  ];
 
   # Allows home manager modules to access theme
   home-manager.sharedModules = [./theme-setting.nix];

@@ -67,6 +67,21 @@
 
   services.atd.enable = true; # Enable the at daemon for scheduled tasks
 
+  # Neo4j configuration (server-specific settings)
+  services.neo4j = {
+    directories.home = "/srv/backups/neo4j";
+    extraServerConfig = ''
+      # Memory settings (conservative defaults)
+      server.memory.heap.max_size=2G
+      server.memory.pagecache.size=1G
+    '';
+  };
+
+  # Ensure the neo4j data directory exists with proper permissions
+  systemd.tmpfiles.rules = [
+    "d /srv/backups/neo4j 0755 neo4j neo4j -"
+  ];
+
   swapDevices = [
     {
       device = "/swapfile";
