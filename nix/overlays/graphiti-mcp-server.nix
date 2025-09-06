@@ -13,8 +13,8 @@
   graphiti-src = fetchFromGitHub {
     owner = "getzep";
     repo = "graphiti";
-    rev = "v0.18.2";
-    sha256 = "sha256-ehuojkUD1bsXLxB3wKy9UBcGHCQ0a6sxxi2CuWlCYcA=";
+    rev = "v0.20.1";
+    sha256 = "sha256-G4nOE52F4Ndw7ExOqw02PSy6bWyqYz3sknrsz307zlE=";
   };
 
   # Load the workspace from the MCP server subdirectory
@@ -43,7 +43,7 @@
 in
   stdenv.mkDerivation {
     pname = "graphiti-mcp-server";
-    version = "0.18.2";
+    version = "0.20.1";
 
     src = graphiti-src + "/mcp_server";
 
