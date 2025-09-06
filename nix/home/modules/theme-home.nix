@@ -22,6 +22,7 @@ in {
     qutebrowser.enable = false;
     wofi.enable = false;
     hyprlock.enable = false;
+    zen-browser.enable = false;
   };
 
   programs.fish.interactiveShellInit = ''
