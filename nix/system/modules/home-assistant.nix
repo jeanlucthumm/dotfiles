@@ -4,7 +4,7 @@
     containers.homeassistant = {
       volumes = ["/var/lib/home-assistant:/config"];
       environment.TZ = "America/Los_Angeles";
-      image = "ghcr.io/home-assistant/home-assistant:stable";
+      image = "ghcr.io/home-assistant/home-assistant:2025.9.1";
       extraOptions = [
         "--network=host"
         "--device=/dev/ttyUSB0:/dev/ttyUSB0"
