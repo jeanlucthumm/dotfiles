@@ -1,14 +1,22 @@
 # Everything related to AI
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    claude-code # CLI LLM coding utility
-    aichat # AI chatbot for the terminal
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  home.packages = with pkgs;
+    [
+      claude-code # CLI LLM coding utility
+      aichat # AI chatbot for the terminal
 
-    # MCP Servers (see nix/overlays directory)
-    mcp-nixos # MCP server for NixOS packages and configuration
-    mcp-opennutrition # OpenNutrition dataset MCP server
-    mcp-language-server # MCP server that exposes language servers to LLMs
-    graphiti-mcp-server # Knowledge graph MCP server
-    mcp-reddit # MCP server for Reddit data
-  ];
+      # MCP Servers (see nix/overlays directory)
+      mcp-opennutrition # OpenNutrition dataset MCP server
+      mcp-language-server # MCP server that exposes language servers to LLMs
+      graphiti-mcp-server # Knowledge graph MCP server
+      mcp-reddit # MCP server for Reddit data
+    ]
+    ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+      # TODO: mcp-nixos has build issues on Darwin, exclude for now
+      mcp-nixos # MCP server for NixOS packages and configuration
+    ];
 }
