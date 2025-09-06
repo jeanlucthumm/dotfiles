@@ -81,6 +81,8 @@ ddos"
 # Pipe in .env file and load into environment variables.
 def from-dotenv []: [string -> record] {
     lines |
+    where ($it | str trim) != "" |
+    where not ($it | str trim | str starts-with "#") |
     split column -n 2 '=' |
     rename key value |
     update value { str trim --char '"' } |
