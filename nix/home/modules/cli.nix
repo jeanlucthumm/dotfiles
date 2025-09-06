@@ -45,6 +45,7 @@ in {
     eza # ls replacement
     ripgrep # grep replacement
     bat-extras.batman # man replacement
+    sd # sed replacement
 
     # Global dev tools
     alejandra # Nix formatter
