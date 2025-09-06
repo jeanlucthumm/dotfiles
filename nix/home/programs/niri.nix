@@ -140,7 +140,7 @@
         "XF86MonBrightnessDown".action.spawn = ["swayosd-client" "--brightness" "lower"];
 
         "Mod+R".action = switch-preset-column-width;
-        "Mod+V".action = consume-window-into-column;
+        "Mod+V".action = consume-or-expel-window-left;
         "Mod+Shift+V".action = expel-window-from-column;
 
         "Mod+WheelScrollDown" = {
