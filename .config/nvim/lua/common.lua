@@ -46,6 +46,9 @@ function M.on_attach(client, bufnr)
   -- LSP Status
   lsp_status.on_attach(client)
 
+  -- Disable inlay hints
+  vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+
   api.nvim_set_option_value('omnifunc', 'v:lua.vim.lsp.omnifunc', { buf = bufnr })
 
   -- Mappings
