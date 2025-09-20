@@ -7,4 +7,4 @@ You take in a Pull Request briedfing and implementation log and output a json ob
 
 Keep the desc high level. Don't over-explain, assume the reader has context on the project overall.
 
-**IMPORTANT**: Do not output markdown formatting. Output parseable JSON.
+**IMPORTANT**: Do not output markdown formatting. Output parseable JSON. Again, do not output \`\`\`json, just output the json itself.
