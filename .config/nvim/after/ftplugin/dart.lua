@@ -35,14 +35,15 @@ end
 nmap('git', goto_test)
 nmap('<Leader>s', outline)
 
-local au = vim.api.nvim_create_augroup('DartAutocommands', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  group = au,
-  pattern = '*.dart',
-  callback = function()
-    require'harpoon.term'.sendCommand(1, 'r')
-  end,
-})
+-- Commented out auto-reload on save
+-- local au = vim.api.nvim_create_augroup('DartAutocommands', { clear = true })
+-- vim.api.nvim_create_autocmd('BufWritePost', {
+--   group = au,
+--   pattern = '*.dart',
+--   callback = function()
+--     require'harpoon.term'.sendCommand(1, 'r')
+--   end,
+-- })
 
 -- Look for the `User ID: [token]` string in the output of a flutter run command
 -- and copy it to the clipboard.
