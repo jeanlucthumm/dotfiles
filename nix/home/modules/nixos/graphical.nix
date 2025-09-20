@@ -42,6 +42,7 @@ in {
     bitwarden-desktop # Password management
     grim # Screenshots
     slurp # For selecting screen regions
+    kooha # Screen recording for Wayland
     pavucontrol # GUI for PiperWire
     wev # Shows keycodes in wayland
     swayosd # Responsive UI for changing volume and such
@@ -102,7 +103,10 @@ in {
     nushell.shellAliases.nv = "neovide --fork";
 
     # Hack to allow copy pasting images in Claude Code with Kitty.
-    kitty.keybindings."ctrl+v" = "launch --type=background --allow-remote-control --keep-focus ${clip2path}/bin/clip2path";
+    kitty.keybindings = {
+      "ctrl+v" = "launch --type=background --allow-remote-control --keep-focus ${clip2path}/bin/clip2path";
+      "ctrl+enter" = "new_os_window_with_cwd";
+    };
   };
 
   gtk = {

@@ -61,10 +61,27 @@
     neo4j.directories.home = "/var/lib/neo4j";
   };
 
+  # XDG Desktop Portals: Secure gateways for apps to access system features.
+  # In Wayland, apps can't directly capture the screen (security). Instead they request
+  # access through portals which show permission dialogs and provide controlled access.
+  # Without the right portal backend, screen recording apps like Kooha/OBS will fail with
+  # "No such interface" errors. Each compositor needs its matching portal implementation.
   xdg.portal = {
     # Desktop integration portal for sandboxed apps (flatpak) to work correctly
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
-    config.common.default = "gtk";
+    # xdg-desktop-portal-wlr provides screen recording support for wlroots-based compositors like niri
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk  # File choosers, notifications, general GTK stuff
+      pkgs.xdg-desktop-portal-wlr  # ScreenCast/Screenshot for niri (wlroots-based)
+    ];
+    config = {
+      common.default = "gtk";
+      # Route specific portal interfaces to the right backend for niri
+      niri = {
+        default = "gtk";
+        "org.freedesktop.impl.portal.ScreenCast" = "wlr";  # Screen recording/sharing
+        "org.freedesktop.impl.portal.Screenshot" = "wlr";  # Screenshots
+      };
+    };
   };
 
   # This is a systemd service that delays system boot until network connectivity is established.
