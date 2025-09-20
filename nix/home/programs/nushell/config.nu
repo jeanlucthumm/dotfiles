@@ -314,9 +314,20 @@ def prmerge []: [nothing -> nothing] {
   print $"Successfully merged and cleaned up ($branch_name)"
 }
 
-# Create PR.md from template
-def prmd []: [nothing -> nothing] {
-  open ~/nix/templates/PR.md | save PR.md
+# Create PR.md from template with optional description
+def prmd [
+  desc?: string  # Optional PR description to populate in the template
+]: [nothing -> nothing] {
+  let template = open ~/nix/templates/PR.md
+  
+  if ($desc != null) {
+    # Find the PR Description section and add the description after it
+    # Using regex to match the section header and preserve formatting
+    let updated = $template | str replace --regex '(## PR Description\n)(\n)?' $"$1\n($desc)\n\n"
+    $updated | save PR.md
+  } else {
+    $template | save PR.md
+  }
 }
 
 # Copy piped in contents to clipboard.
