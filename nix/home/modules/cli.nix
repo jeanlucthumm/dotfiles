@@ -148,6 +148,7 @@ in {
         pull.rebase = true;
         rebase.merges = true;
         init.defaultBranch = "master";
+        diff.context = 15;
       };
       includes = [
         {
