@@ -9,8 +9,9 @@
       keybindings = {
         "cmd+p" = "previous_tab";
         "cmd+n" = "next_tab";
+        "cmd+shift+p" = "move_tab_backward";
+        "cmd+shift+n" = "move_tab_forward";
         "cmd+k" = "focus_visible_window";
-        "cmd+shift+n" = "new_os_window";
         "cmd+shift+r" = "set_tab_title";
         "cmd+h" = "previous_window";
         "cmd+l" = "next_window";
