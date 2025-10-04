@@ -63,18 +63,18 @@ ddos"
 
   # Check if working in a monorepo subdirectory
   let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
+  let worktree_path = ('../' + $name | path expand)
   if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
     let subdir = input "Enter the relative path to the subdirectory: "
-    let worktree_path = ('../' + $name | path expand)
     let full_subdir_path = ($worktree_path | path join $subdir)
-    
+
     print $"Running direnv allow in: ($full_subdir_path)"
     direnv allow $full_subdir_path
   }
 
   # Open new kitty tab with the work tree name (macOS only)
   if ($nu.os-info.name == "macos") {
-    kitten @ launch --type=tab --tab-title $name --cwd ('../' + $name)
+    kitten @ launch --type=tab --tab-title $name --cwd $worktree_path
   }
 }
 
@@ -95,9 +95,9 @@ def prsync [
 
   # Check if working in a monorepo subdirectory
   let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
+  let worktree_path = ('../' + $name | path expand)
   if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
     let subdir = input "Enter the relative path to the subdirectory: "
-    let worktree_path = ('../' + $name | path expand)
     let full_subdir_path = ($worktree_path | path join $subdir)
 
     print $"Running direnv allow in: ($full_subdir_path)"
@@ -106,7 +106,34 @@ def prsync [
 
   # Open new kitty tab with the work tree name (macOS only)
   if ($nu.os-info.name == "macos") {
-    kitten @ launch --type=tab --tab-title $name --cwd ('../' + $name)
+    kitten @ launch --type=tab --tab-title $name --cwd $worktree_path
+  }
+}
+
+# Open new kitty tab in an existing worktree
+def prtab [
+  name: string  # Worktree name (e.g., master, dailyreport, thinking)
+]: [nothing -> nothing] {
+  # Parse git worktree list output to find the worktree path
+  let worktrees = git worktree list
+    | lines
+    | parse "{path} {commit} [{branch}]"
+
+  let matches = $worktrees | where $path =~ $name
+
+  if ($matches | is-empty) {
+    error make -u {
+      msg: $"Worktree '($name)' not found"
+    }
+  }
+
+  let worktree = $matches | first
+
+  # Open new kitty tab with the worktree name (macOS only)
+  if ($nu.os-info.name == "macos") {
+    kitten @ launch --type=tab --tab-title $name --cwd $worktree.path
+  } else {
+    print $"Not on macOS, would open tab at: ($worktree.path)"
   }
 }
 
@@ -159,13 +186,29 @@ def tstart []: [nothing -> string] {
     return
   }
 
-  let ready_tasks = task export ready | from json
+  let context_name = (try {
+      task _get rc.context | str trim
+    } catch {
+      ""
+    })
+  let context_name = $context_name | str trim
+  let context_arg = if ($context_name | is-empty) or (($context_name | str downcase) == "none") {
+    []
+  } else {
+    [$"rc.context=($context_name)"]
+  }
+
+  let ready_tasks = if ($context_arg | is-empty) {
+    task export ready | from json
+  } else {
+    task ...$context_arg export ready | from json
+  }
   if ($ready_tasks | is-empty) {
     print "No ready tasks available"
     return
   }
 
-  task start $ready_tasks.0.id
+  task ...$context_arg start $ready_tasks.0.id
 }
 
 # Taskwarrior: Add a child task to the active task, inheriting all properties
