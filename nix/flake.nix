@@ -127,6 +127,15 @@
           }
         ];
       };
+
+      # Custom live installer ISO with SSH keys pre-configured
+      "iso" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;};
+        modules = [
+          ./system/hosts/iso.nix
+        ];
+      };
     };
 
     # System configurations for Darwin hosts.
