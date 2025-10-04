@@ -276,7 +276,7 @@ def tsibling [
   desc: string,   # Description of the sibling task
   id?: int, # Optional id of the task to add a sibling to. Default to active task.
 ]: [nothing -> string] {
-  let parent = if (id == null) {
+  let parent = if ($id == null) {
     tactive | get uuid | __tparent
   } else {
     $id | __tlookup | get uuid | __tparent
