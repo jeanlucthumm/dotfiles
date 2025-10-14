@@ -481,9 +481,9 @@ local plugin_spec = {
     config = function()
       local leap = require('leap')
       -- Direct Lua API keybindings
-      vim.keymap.set({'n', 'x', 'o'}, 's', function() leap.leap { forward = true } end)
-      vim.keymap.set({'n', 'x', 'o'}, 'S', function() leap.leap { backward = true } end)
-      vim.keymap.set({'n', 'x', 'o'}, 'gs', function() 
+      vim.keymap.set({ 'n', 'x', 'o' }, 's', function() leap.leap { forward = true } end)
+      vim.keymap.set({ 'n', 'x', 'o' }, 'S', function() leap.leap { backward = true } end)
+      vim.keymap.set({ 'n', 'x', 'o' }, 'gs', function()
         leap.leap { target_windows = require('leap.user').get_focusable_windows() }
       end)
     end,
@@ -545,7 +545,7 @@ local plugin_spec = {
     config = function()
       local baleia = require('baleia').setup({})
       -- Automatically colorize terminal buffers
-      vim.api.nvim_create_autocmd({'TermOpen'}, {
+      vim.api.nvim_create_autocmd({ 'TermOpen' }, {
         pattern = '*',
         callback = function()
           baleia.automatically(vim.api.nvim_get_current_buf())
