@@ -8,7 +8,7 @@
 }: let
   pubkeys = import ../../secrets/pubkeys.nix;
 
-  # Script to set up SSH keys on the installed system
+  # Injects SSH keys from secrets/pubkeys.nix into installed system
   setupRootSSH = pkgs.writeShellScriptBin "setup-root-ssh" ''
     #!/bin/sh
     set -e
