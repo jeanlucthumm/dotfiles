@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find)",
+      "WebFetch",
+      "Fetch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
