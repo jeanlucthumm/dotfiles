@@ -772,7 +772,7 @@ ncmap('<Leader>q', 'qall')
 nmap('<Leader>o', function() Snacks.picker.lsp_symbols() end)
 nmap('<Leader>g', function() Snacks.picker.grep() end)
 ncmap('<Leader>O', 'Telescope lsp_dynamic_workspace_symbols')
-nmap('<Leader>F', function() Snacks.picker.lines() end)
+nmap('<Leader>f', function() Snacks.picker.lines() end)
 nmap('<Leader>S', function()
   local symbols = require'symbols-outline'
   symbols.open_outline()
