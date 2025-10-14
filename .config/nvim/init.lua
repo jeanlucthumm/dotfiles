@@ -55,15 +55,12 @@ local plugin_spec = {
     'neovim/nvim-lspconfig',
     dependencies = { 'folke/neodev.nvim' },
     config = function()
-      local function extend(config)
-        return vim.tbl_deep_extend('force', {
-          capabilities = require'common'.capabilities(),
-          on_attach = require'common'.on_attach,
-          flags = { debounce_text_changes = 150 },
-        }, config)
-      end
-      local lspconfig = require'lspconfig'
-      lspconfig.lua_ls.setup(extend {
+      vim.lsp.config('*', {
+        capabilities = require'common'.capabilities(),
+        on_attach = require'common'.on_attach,
+        flags = { debounce_text_changes = 150 },
+      })
+      vim.lsp.config.lua_ls = {
         settings = {
           Lua = {
             workspace = { checkThirdParty = false },
@@ -81,10 +78,8 @@ local plugin_spec = {
             },
           },
         },
-      })
-      lspconfig.pyright.setup(extend {})
-      lspconfig.gopls.setup(extend {})
-      lspconfig.sourcekit.setup(extend {
+      }
+      vim.lsp.config.sourcekit = {
         capabilities = {
           workspace = {
             didChangeWatchedFiles = {
@@ -92,17 +87,22 @@ local plugin_spec = {
             },
           },
         },
-        root_dir = function(fname)
-          return lspconfig.util.root_pattern('Package.swift', 'project.pbxproj', '.git')(fname)
-        end,
-      })
-      lspconfig.nil_ls.setup(extend {})
-      lspconfig.ts_ls.setup(extend {})
-      lspconfig.ruff.setup(extend {})
+        root_markers = {
+          { 'Package.swift', 'project.pbxproj', '.git' },
+        },
+      }
+
+      vim.lsp.enable('lua_ls')
+      vim.lsp.enable('source_kit')
+      vim.lsp.enable('pyright')
+      vim.lsp.enable('nil_ls')
+      vim.lsp.enable('ts_ls')
+      vim.lsp.enable('ruff')
     end,
   },
   {
     'zbirenbaum/copilot.lua',
+    enabled = false,
     cmd = 'Copilot',
     event = 'InsertEnter',
     opts = {

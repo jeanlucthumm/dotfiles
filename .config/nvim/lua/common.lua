@@ -21,27 +21,12 @@ function M.hover()
   if vim.diagnostic.open_float() == nil then vim.lsp.buf.hover() end
 end
 
-local auformat = vim.api.nvim_create_augroup('LspFormatting', {})
 local auhigh = vim.api.nvim_create_augroup('LspHighlighting', {})
-
-
----@param clients table<number, vim.lsp.Client>
----@param capability string
----@return boolean
-local function any_client_has_capability(clients, capability)
-  for _, client in ipairs(clients) do
-    if client.server_capabilities[capability] then
-      return true
-    end
-  end
-  return false
-end
 
 ---@param client vim.lsp.Client
 ---@param bufnr number
 function M.on_attach(client, bufnr)
   local nmap = M.nmap
-  local ncmap = M.ncmap
 
   -- LSP Status
   lsp_status.on_attach(client)
@@ -53,18 +38,20 @@ function M.on_attach(client, bufnr)
 
   -- Mappings
   local opts = { noremap = true, silent = true, buffer = bufnr }
-  ncmap('gd', 'lua vim.lsp.buf.definition()', opts)
-  ncmap('K', 'lua vim.lsp.buf.hover()', opts)
-  ncmap('<Leader>R', 'lua vim.lsp.buf.rename()', opts)
-  ncmap('<Leader>ks', 'lua vim.lsp.buf.signature_help()', opts)
-  ncmap('<Leader>kp', 'lua vim.diagnostic.goto_prev()', opts)
-  ncmap('<Leader>kn', 'lua vim.diagnostic.goto_next()', opts)
-  ncmap('<Leader>kk', 'lua vim.diagnostic.open_float()', opts)
+  nmap('gd', function() vim.lsp.buf.definition() end, opts)
+  nmap('K', function() vim.lsp.buf.hover() end, opts)
+  nmap('<Leader>R', function() vim.lsp.buf.rename() end, opts)
+  nmap('gd', function() vim.lsp.buf.definition() end, opts)
+  nmap('K', function() vim.lsp.buf.hover() end, opts)
+  nmap('<Leader>R', function() vim.lsp.buf.rename() end, opts)
+  nmap('<Leader>ks', function() vim.lsp.buf.signature_help() end, opts)
+  nmap('<Leader>kp', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+  nmap('<Leader>kn', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
+  nmap('<Leader>kk', function() vim.diagnostic.open_float() end, opts)
   vim.keymap.set({ 'v', 'n' }, '<Leader>a', require('actions-preview').code_actions)
 
   -- Capability specific commands
-  local clients = vim.lsp.get_clients { bufnr = bufnr }
-  if any_client_has_capability(clients, 'documentHighlightProvider') then
+  if client:supports_method('documentHighlightProvider', bufnr) then
     api.nvim_clear_autocmds({ group = auhigh, buffer = bufnr })
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
     api.nvim_create_autocmd('CursorHold', {
@@ -83,13 +70,11 @@ function M.on_attach(client, bufnr)
     })
   end
 
-  if any_client_has_capability(clients, 'codeLensProvider') then
-    -- CodeLens provides extra actions like "Run Test"
-    -- under lang specific unit tests
-    ncmap('<F11>', 'lua vim.lsp.codelens.run()', opts)
+  if client:supports_method('codeLensProvider', bufnr) then
+    nmap('<Leader>lc', function()
+      vim.lsp.codelens.run()
+    end)
   end
-
-  -- Format on save is now handled by conform.nvim's format_on_save option
 end
 
 function M.capabilities()
