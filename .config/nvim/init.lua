@@ -313,40 +313,6 @@ local plugin_spec = {
     },
   },
   {
-    'simrat39/rust-tools.nvim',
-    config = function()
-      -- Gives pretty pretting during Rust debugging by hijacking the CodeLLDB
-      -- extension from VSCode.
-      local paths = {
-        vim.env.HOME .. '/.vscode-oss/extensions/vadimcn.vscode-lldb-1.9.2-universal',
-        vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.9.2',
-      }
-      local extension_path = find_existing_path(paths)
-      local this_os = vim.loop.os_uname().sysname;
-
-      local dap = {}
-      if extension_path then
-        dap.adapter = require'rust-tools.dap'.get_codelldb_adapter(
-          extension_path .. '/adapter/codelldb',
-          extension_path .. '/lldb/lib/liblldb' .. (this_os == 'Linux' and '.so' or '.dylib')
-        )
-      end
-      require'rust-tools'.setup {
-        server = {
-          cargo = { loadOutDirsFromCheck = true },
-          on_attach = require'common'.on_attach,
-          capabilities = require'common'.capabilities(),
-        },
-        dap = dap,
-        tools = {
-          inlay_hints = {
-            highlight = 'InlayHints',
-          },
-        },
-      }
-    end,
-  },
-  {
     'ray-x/go.nvim',
     opts = {
       lsp_codelens = false,
