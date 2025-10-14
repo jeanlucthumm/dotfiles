@@ -235,7 +235,6 @@ local plugin_spec = {
     config = function()
       local cmp = require'cmp'
       local luasnip = require'luasnip'
-      local suggestion = require'copilot.suggestion'
       local conf = {
         snippet = {
           expand = function(args)
@@ -253,8 +252,6 @@ local plugin_spec = {
           ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
-            elseif suggestion.is_visible() then
-              suggestion.accept()
             else
               fallback()
             end
