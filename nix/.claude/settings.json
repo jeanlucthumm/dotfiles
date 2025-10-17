@@ -1,11 +1,8 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(find)",
-      "WebFetch",
-      "Fetch"
-    ],
+    "allow": ["Bash(find)", "WebFetch", "Fetch", "Bash(yadm grep)"],
     "deny": [],
     "ask": []
   }
 }
+
