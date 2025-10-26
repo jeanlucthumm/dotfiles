@@ -98,6 +98,7 @@ local plugin_spec = {
       vim.lsp.enable('nil_ls')
       vim.lsp.enable('ts_ls')
       vim.lsp.enable('ruff')
+      vim.lsp.enable('gopls')
     end,
   },
   {
@@ -310,17 +311,6 @@ local plugin_spec = {
         end
         return value
       end,
-    },
-  },
-  {
-    'ray-x/go.nvim',
-    opts = {
-      lsp_codelens = false,
-    },
-    event = 'CmdlineEnter',
-    ft = { 'go', 'gomod' },
-    dependencies = {
-      'ray-x/guihua.lua',
     },
   },
   {
