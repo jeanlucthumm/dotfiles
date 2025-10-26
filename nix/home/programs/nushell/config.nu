@@ -50,20 +50,23 @@ ddos"
 
   task add ('ticket:' + $ticket) $desc
 
+  # Get git root directory and create worktree relative to its parent
+  let git_root = git rev-parse --show-toplevel | str trim
+  let worktree_path = ($git_root | path dirname | path join $name)
+
   if ($branch_start == null) {
-    git worktree add -b $'($ticket)/($name)' ('../' + $name)
+    git worktree add -b $'($ticket)/($name)' $worktree_path
   } else {
-    git worktree add -b $'($ticket)/($name)' ('../' + $name) $branch_start
+    git worktree add -b $'($ticket)/($name)' $worktree_path $branch_start
   }
 
   # Run gen-proto.sh in the new work tree
-  cd ('../' + $name)
+  cd $worktree_path
   ./gen-proto.sh
   cd -
 
   # Check if working in a monorepo subdirectory
   let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
-  let worktree_path = ('../' + $name | path expand)
   if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
     let subdir = input "Enter the relative path to the subdirectory: "
     let full_subdir_path = ($worktree_path | path join $subdir)
@@ -85,17 +88,20 @@ def prsync [
   # Extract the short name from the branch (part after the slash)
   let name = $branch | split row '/' | last
 
+  # Get git root directory and create worktree relative to its parent
+  let git_root = git rev-parse --show-toplevel | str trim
+  let worktree_path = ($git_root | path dirname | path join $name)
+
   # Create worktree tracking the remote branch
-  git worktree add ('../' + $name) $branch
+  git worktree add $worktree_path $branch
 
   # Run gen-proto.sh in the new work tree
-  cd ('../' + $name)
+  cd $worktree_path
   ./gen-proto.sh
   cd -
 
   # Check if working in a monorepo subdirectory
   let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
-  let worktree_path = ('../' + $name | path expand)
   if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
     let subdir = input "Enter the relative path to the subdirectory: "
     let full_subdir_path = ($worktree_path | path join $subdir)
@@ -119,7 +125,7 @@ def prtab [
     | lines
     | parse "{path} {commit} [{branch}]"
 
-  let matches = $worktrees | where $path =~ $name
+  let matches = $worktrees | where path =~ $name
 
   if ($matches | is-empty) {
     error make -u {
@@ -349,44 +355,55 @@ def ngit-status []: [nothing -> table<status: string, file: string>] {
 }
 
 # Merge PR and clean up worktree
-def prmerge []: [nothing -> nothing] {
+def --env prmerge []: [nothing -> nothing] {
   # Get current branch name and worktree directory
   let branch_name = git head
   let worktree = git rev-parse --show-toplevel | path basename
-  
+
   # Change to the worktree root
   cd (git rev-parse --show-toplevel)
-  
+
   print $"Merging PR for branch: ($branch_name)"
   print $"Current worktree: ($worktree)"
-  
+
   # Ask for confirmation
   let confirmation = input "Proceed with merge and cleanup? (y/N): "
   if not (($confirmation | str downcase) in ["y", "yes"]) {
     print "Aborted"
     return
   }
-  
+
+  # Extract ticket ID from branch name (format: ticket/branch-name)
+  let ticket = $branch_name | split row '/' | first
+
   # Merge the PR (without deleting branch locally)
   gh pr merge -m
-  
+
   # Navigate to master worktree
   cd ../master
-  
+
   # Remove the worktree we were just in
-  sudo git worktree remove $"../($worktree)"
-  
+  git worktree remove $"../($worktree)"
+
   # Delete local and remote branch
   git branch -D $branch_name
   git push origin --delete $branch_name
-  
+
   # Pull master to catch up to the merge
   git pull
-  
+
   # Clean up any other stale remote tracking branches
   git remote prune origin
-  
+
+  # Close the associated taskwarrior ticket
+  task $"ticket:($ticket)" done
+
   print $"Successfully merged and cleaned up ($branch_name)"
+
+  # On macOS, close the kitty tab after all cleanup is complete
+  if ($nu.os-info.name == "macos") {
+    kitten @ close-tab --self
+  }
 }
 
 # Create PR.md from template with optional description
