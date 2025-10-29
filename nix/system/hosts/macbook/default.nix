@@ -1,4 +1,7 @@
-{pkgs, ...}: {
+{pkgs, ...}:
+let
+  pubkeys = import ../../../secrets/pubkeys.nix;
+in {
   imports = [
     ../../modules/agenix.nix
     ./theme-setting.nix
@@ -17,6 +20,15 @@
   programs = {
     fish.enable = true;
     gnupg.agent.enable = true;
+  };
+
+  # SSH server configuration
+  services.openssh = {
+    enable = true;
+    extraConfig = ''
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+    '';
   };
 
   environment.systemPackages = with pkgs; [
@@ -61,6 +73,11 @@
   users.users.jeanluc = {
     name = "jeanluc";
     home = "/Users/jeanluc";
+    openssh.authorizedKeys.keys = [
+      pubkeys.desktop
+      pubkeys.phone
+      pubkeys.server
+    ];
   };
 
   # Allows home manager modules to access theme
