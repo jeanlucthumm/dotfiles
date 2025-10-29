@@ -112,30 +112,34 @@ in {
 
     git = {
       enable = true;
-      userEmail = "jeanlucthumm@gmail.com";
-      userName = "Jean-Luc Thumm";
       signing = {
         key = "6887D29E72EBFA1A0785A02A6717084E580D97E0";
         signByDefault = true;
       };
-      delta = {
-        enable = true;
-        options = {
-          side-by-side = false;
+      includes = [
+        {
+          path = "${configDir}/delta/themes.gitconfig";
+        }
+      ];
+      ignores = [
+        ".DS_Store"
+      ];
+      settings = {
+        user = {
+          email = "jeanlucthumm@gmail.com";
+          name = "Jean-Luc Thumm";
         };
-      };
-      aliases = {
-        de = "diff";
-        s = "status";
-        stat = "status";
-        d = "diff --cached";
-        tree = "log --graph --decorate --oneline --all -n 25";
-        treel = "log --graph --decorate --oneline --all";
-        check = "checkout";
-        head = "symbolic-ref --short HEAD";
-        ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
-      };
-      extraConfig = {
+        alias = {
+          de = "diff";
+          s = "status";
+          stat = "status";
+          d = "diff --cached";
+          tree = "log --graph --decorate --oneline --all -n 25";
+          treel = "log --graph --decorate --oneline --all";
+          check = "checkout";
+          head = "symbolic-ref --short HEAD";
+          ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
+        };
         merge = {
           tool = "meld";
           conflictstyle = "diff3";
@@ -150,14 +154,14 @@ in {
         init.defaultBranch = "master";
         diff.context = 15;
       };
-      includes = [
-        {
-          path = "${configDir}/delta/themes.gitconfig";
-        }
-      ];
-      ignores = [
-        ".DS_Store"
-      ];
+    };
+
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
+      options = {
+        side-by-side = false;
+      };
     };
     # GitHub CLI
     gh = {
