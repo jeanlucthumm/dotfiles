@@ -524,6 +524,9 @@ def --env prmerge []: [nothing -> nothing] {
 
   print $"Successfully merged and cleaned up ($branch_name)"
 
+  # Navigate to home directory
+  cd ~
+
   # On macOS, close the kitty tab after all cleanup is complete
   if ($nu.os-info.name == "macos") {
     kitten @ close-tab --self
