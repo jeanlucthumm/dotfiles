@@ -236,8 +236,8 @@ in {
           after_sleep_cmd = monitorOn;
         };
         listener = let
-          lockTime = 10 * 60;  # 10 minutes before lock
-          dpmsTime = 40 * 60;  # 40 minutes before display off
+          lockTime = 10 * 60; # 10 minutes before lock
+          dpmsTime = 40 * 60; # 40 minutes before display off
         in [
           {
             timeout = lockTime;

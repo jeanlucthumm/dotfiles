@@ -70,16 +70,16 @@
     # Desktop integration portal for sandboxed apps (flatpak) to work correctly
     # xdg-desktop-portal-wlr provides screen recording support for wlroots-based compositors like niri
     extraPortals = [
-      pkgs.xdg-desktop-portal-gtk  # File choosers, notifications, general GTK stuff
-      pkgs.xdg-desktop-portal-wlr  # ScreenCast/Screenshot for niri (wlroots-based)
+      pkgs.xdg-desktop-portal-gtk # File choosers, notifications, general GTK stuff
+      pkgs.xdg-desktop-portal-wlr # ScreenCast/Screenshot for niri (wlroots-based)
     ];
     config = {
       common.default = "gtk";
       # Route specific portal interfaces to the right backend for niri
       niri = {
         default = "gtk";
-        "org.freedesktop.impl.portal.ScreenCast" = "wlr";  # Screen recording/sharing
-        "org.freedesktop.impl.portal.Screenshot" = "wlr";  # Screenshots
+        "org.freedesktop.impl.portal.ScreenCast" = "wlr"; # Screen recording/sharing
+        "org.freedesktop.impl.portal.Screenshot" = "wlr"; # Screenshots
       };
     };
   };
