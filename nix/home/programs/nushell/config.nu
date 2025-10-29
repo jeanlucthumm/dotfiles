@@ -265,31 +265,20 @@ def tchild [
 # Taskwarrior: Break down an active task into a smaller one and start it
 def tbreak [
   desc: string,   # Description of the child task
-  --id: int       # Optional task ID to break (defaults to active task)
 ]: [nothing -> string] {
-  let task_id = if ($id != null) {
-    $id
-  } else {
-    (tactive).id
-  }
+  let active = __tactive_select
 
-  tchild $task_id $desc
+  tchild $active.id $desc
 
   # Stop current task and start the new one
   let new_task = task export newest | from json | get 0
-  task stop $task_id
+  task stop $active.id
   task start $new_task.id
 }
 
 # Taskwarrior: Complete current task and start the parent
-def tparent [
-  --id: int  # Optional task ID to complete (defaults to active task)
-]: [nothing -> string] {
-  let task_record = if ($id != null) {
-    task export $id | from json | get 0
-  } else {
-    tactive
-  }
+def tparent []: [nothing -> string] {
+  let task_record = __tactive_select
   let parent = $task_record.uuid | __tparent
 
   if ($parent.status != "pending") {
@@ -376,6 +365,36 @@ def __tlookup []: [int -> record] {
   }
 
   $result.0
+}
+
+# Get active task, prompting with fzf if multiple are active
+def __tactive_select []: [nothing -> record] {
+  let active_list = task +ACTIVE export | from json
+
+  if ($active_list | is-empty) {
+    error make -u {
+      msg: "No active task"
+    }
+  }
+
+  if ($active_list | length) == 1 {
+    return ($active_list | first)
+  }
+
+  # Multiple active tasks - use fzf to select
+  let selection = ($active_list
+    | each { |task| $"($task.id): ($task.description)" }
+    | to text
+    | fzf --height=40% --prompt="Select active task: ")
+
+  if ($selection | is-empty) {
+    error make -u {
+      msg: "No task selected"
+    }
+  }
+
+  let selected_id = ($selection | split row ":" | first | into int)
+  $active_list | where id == $selected_id | first
 }
 
 # Concatenate file contents with labels.
