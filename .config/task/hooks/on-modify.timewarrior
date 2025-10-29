@@ -50,12 +50,37 @@ def extract_annotation_from(json_obj):
     return json_obj["annotations"][0]["description"]
 
 
-def should_ssh():
-    try:
-        with open(os.path.expandvars("$HOME/.task/ssh.conf")) as f:
-            return f.readline().strip("\n") == "1"
-    except:
+def has_other_active_tasks_with_project(project, current_uuid):
+    """Check if there are other active tasks with the same project."""
+    if not project:
         return False
+
+    try:
+        # Get all active tasks (tasks that have been started but not completed)
+        result = subprocess.run(
+            ["task", "status:pending", "start.any:", "export"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+
+        if not result.stdout.strip():
+            return False
+
+        tasks = json.loads(result.stdout)
+
+        # Check if any other task (not the current one) has the same project and is active
+        for task in tasks:
+            if (task.get("uuid") != current_uuid and
+                task.get("project") == project and
+                "start" in task and
+                "end" not in task):
+                return True
+
+        return False
+    except Exception:
+        # If we can't determine, err on the side of not stopping the timer
+        return True
 
 
 start_or_stop = ""
@@ -66,21 +91,14 @@ if "start" in new and "start" not in old:
 
 # Stopped task.
 elif ("start" not in new or "end" in new) and "start" in old:
-    start_or_stop = "stop"
+    # Only stop the timer if there are no other active tasks with the same project
+    project = new.get("project")
+    uuid = new.get("uuid")
+    if not has_other_active_tasks_with_project(project, uuid):
+        start_or_stop = "stop"
 
 if start_or_stop:
     tags = extract_tags_from(new)
-    if should_ssh():
-        subprocess.Popen(
-            [
-                "ssh",
-                "-p",
-                "5768",
-                "jeanluc@www.jeanlucthumm.me",
-                f"timew {start_or_stop} google",
-            ],
-            start_new_session=True,
-        )
     subprocess.call(["timew", start_or_stop] + tags + [":yes"])
 
 # Modifications to task other than start/stop
