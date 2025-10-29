@@ -92,26 +92,39 @@ def prsync [
   let git_root = git rev-parse --show-toplevel | str trim
   let worktree_path = ($git_root | path dirname | path join $name)
 
-  # Create worktree tracking the remote branch
-  git worktree add $worktree_path $branch
+  # Check if worktree already exists
+  let worktree_exists = ($worktree_path | path exists)
 
-  # Run gen-proto.sh in the new work tree
-  cd $worktree_path
-  ./gen-proto.sh
-  cd -
+  if not $worktree_exists {
+    print $"Creating new worktree at ($worktree_path)"
 
-  # Check if working in a monorepo subdirectory
-  let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
-  if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
-    let subdir = input "Enter the relative path to the subdirectory: "
-    let full_subdir_path = ($worktree_path | path join $subdir)
+    # Create worktree tracking the remote branch
+    git worktree add $worktree_path $branch
 
-    print $"Running direnv allow in: ($full_subdir_path)"
-    direnv allow $full_subdir_path
+    # Run gen-proto.sh in the new work tree
+    if ($worktree_path | path join "gen-proto.sh" | path exists) {
+      print "Running gen-proto.sh"
+      cd $worktree_path
+      ./gen-proto.sh
+      cd -
+    }
+
+    # Check if working in a monorepo subdirectory
+    let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
+    if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
+      let subdir = input "Enter the relative path to the subdirectory: "
+      let full_subdir_path = ($worktree_path | path join $subdir)
+
+      print $"Running direnv allow in: ($full_subdir_path)"
+      direnv allow $full_subdir_path
+    }
+  } else {
+    print $"Worktree already exists at ($worktree_path), skipping setup"
   }
 
   # Open new kitty tab with the work tree name (macOS only)
   if ($nu.os-info.name == "macos") {
+    print $"Opening kitty tab: ($name)"
     kitten @ launch --type=tab --tab-title $name --cwd $worktree_path
   }
 }
@@ -252,28 +265,53 @@ def tchild [
 # Taskwarrior: Break down an active task into a smaller one and start it
 def tbreak [
   desc: string,   # Description of the child task
+  --id: int       # Optional task ID to break (defaults to active task)
 ]: [nothing -> string] {
-  let active = tactive
+  let task_id = if ($id != null) {
+    $id
+  } else {
+    (tactive).id
+  }
 
-  tchild $active.id $desc
+  tchild $task_id $desc
 
   # Stop current task and start the new one
   let new_task = task export newest | from json | get 0
-  task stop $active.id
+  task stop $task_id
   task start $new_task.id
 }
 
 # Taskwarrior: Complete current task and start the parent
-def tparent []: [nothing -> string] {
-  let active = tactive
-  let parent = $active.uuid | __tparent
+def tparent [
+  --id: int  # Optional task ID to complete (defaults to active task)
+]: [nothing -> string] {
+  let task_record = if ($id != null) {
+    task export $id | from json | get 0
+  } else {
+    tactive
+  }
+  let parent = $task_record.uuid | __tparent
 
   if ($parent.status != "pending") {
     print -e $"Parent not pending. UUID: ($parent.uuid)"
     return
   }
 
-  task done $active.id
+  # Check for pending siblings
+  let siblings = task export |
+    from json |
+    default [] depends |
+    where $parent.uuid in $it.depends |
+    where uuid != $task_record.uuid |
+    where status == "pending"
+
+  if ($siblings | is-not-empty) {
+    error make -u {
+      msg: $"Cannot move to parent: ($siblings | length) pending sibling(s) remain"
+    }
+  }
+
+  task done $task_record.id
   task start $parent.id
 }
 
@@ -383,7 +421,7 @@ def --env prmerge []: [nothing -> nothing] {
   cd ../master
 
   # Remove the worktree we were just in
-  git worktree remove $"../($worktree)"
+  sudo git worktree remove $"../($worktree)"
 
   # Delete local and remote branch
   git branch -D $branch_name
