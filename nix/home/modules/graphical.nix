@@ -25,7 +25,7 @@
         input_delay = 1;
         cursor_shape = "block";
         paste_actions = "quote-urls-at-prompt";
-        enabled_layouts = "tall:bias=50;full_size=1;mirrored=false";
+        enabled_layouts = "tall:bias=50;full_size=1;mirrored=true";
       };
 
       actionAliases = {
