@@ -61,7 +61,6 @@ in {
     whatsapp-for-linux # Chat
     obsidian # Note taking
     smile # emoji picker
-    code-cursor # AI IDE
 
     clip2path # Wayland clipboard helper for Kitty
   ];
