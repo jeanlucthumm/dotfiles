@@ -12,6 +12,7 @@
     ../../modules/boot.nix
     ../../modules/containers.nix
     ../../modules/home-assistant.nix
+    ../../modules/server-backups.nix
   ];
 
   networking.hostName = "server";
