@@ -430,9 +430,6 @@ def --env prmerge []: [nothing -> nothing] {
     return
   }
 
-  # Extract ticket ID from branch name (format: ticket/branch-name)
-  let ticket = $branch_name | split row '/' | first
-
   # Merge the PR (without deleting branch locally)
   gh pr merge -m
 
@@ -451,9 +448,6 @@ def --env prmerge []: [nothing -> nothing] {
 
   # Clean up any other stale remote tracking branches
   git remote prune origin
-
-  # Close the associated taskwarrior ticket
-  task $"ticket:($ticket)" done
 
   print $"Successfully merged and cleaned up ($branch_name)"
 
