@@ -1,3 +1,18 @@
+# Nushell version of git branch
+def ngit-branch []: [nothing -> list<string>] {
+  git branch |
+    lines |
+    parse "{symbol} {branch}" |
+    str trim |
+    where ($it.symbol | is-empty) |
+    get branch
+}
+
+
+# Nushell version of git worktree list
+def gwl []: [nothing -> table<path: string, commit: string, branch: string>] {
+  git worktree list | lines | parse "{path} {commit} [{branch}]" | str trim
+}
 
 # Generate git branch name based off taskwarrior ticket
 def gbranch [name: string]: [nothing -> string] {
@@ -83,10 +98,20 @@ ddos"
 
 # Sync existing PR branch from another machine
 def prsync [
-  branch: string,  # Remote branch name (e.g., TICKET-123/feature-name)
+  branch?: string,  # Branch name; if omitted, select via fzf from ngit-branch
 ]: [nothing -> nothing] {
+  # Determine branch: use provided or pick via fzf from ngit-branch
+  let sel_branch = if ($branch == null) {
+    let choice = (ngit-branch | fzf --height=40% --prompt="Select branch: " | str trim)
+    if ($choice | is-empty) {
+      print "No branch selected; aborting prsync."
+      return
+    }
+    $choice
+  } else { $branch }
+
   # Extract the short name from the branch (part after the slash)
-  let name = $branch | split row '/' | last
+  let name = $sel_branch | split row '/' | last
 
   # Get git root directory and create worktree relative to its parent
   let git_root = git rev-parse --show-toplevel | str trim
@@ -99,7 +124,7 @@ def prsync [
     print $"Creating new worktree at ($worktree_path)"
 
     # Create worktree tracking the remote branch
-    git worktree add $worktree_path $branch
+    git worktree add $worktree_path $sel_branch
 
     # Run gen-proto.sh in the new work tree
     if ($worktree_path | path join "gen-proto.sh" | path exists) {
