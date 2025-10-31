@@ -102,7 +102,7 @@ def prsync [
 ]: [nothing -> nothing] {
   # Determine branch: use provided or pick via fzf from ngit-branch
   let sel_branch = if ($branch == null) {
-    let choice = (ngit-branch | fzf --height=40% --prompt="Select branch: " | str trim)
+    let choice = (ngit-branch | to text | fzf --height=40% --prompt="Select branch: " | str trim)
     if ($choice | is-empty) {
       print "No branch selected; aborting prsync."
       return
