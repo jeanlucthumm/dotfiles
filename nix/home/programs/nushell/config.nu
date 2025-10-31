@@ -1,11 +1,9 @@
 # Nushell version of git branch
-def ngit-branch []: [nothing -> list<string>] {
+def ngit-branch []: [nothing -> table<symbol: string, branch: string>] {
   git branch |
     lines |
     parse "{symbol} {branch}" |
-    str trim |
-    where ($it.symbol | is-empty) |
-    get branch
+    str trim
 }
 
 
@@ -102,7 +100,8 @@ def prsync [
 ]: [nothing -> nothing] {
   # Determine branch: use provided or pick via fzf from ngit-branch
   let sel_branch = if ($branch == null) {
-    let choice = (ngit-branch | to text | fzf --height=40% --prompt="Select branch: " | str trim)
+    let choices = ngit-branch | get branch | to text
+    let choice = ($choices | fzf --height=40% --prompt="Select branch: ")
     if ($choice | is-empty) {
       print "No branch selected; aborting prsync."
       return
