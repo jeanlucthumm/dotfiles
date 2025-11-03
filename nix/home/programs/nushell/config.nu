@@ -578,6 +578,7 @@ let abbreviations = {
   ym: 'yadm commit -m'
   tr: 'task ready'
   ta: 'task active'
+  tw: 'taskwarrior-enhanced tree'
 }
 
 $env.config = {
