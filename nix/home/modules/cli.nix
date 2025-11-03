@@ -51,7 +51,7 @@ in {
     alejandra # Nix formatter
     nil # Nix LSP
     # nodejs_22 # A bunch of tools (including Copilot) rely on this
-    sumneko-lua-language-server # Lua language server
+    lua-language-server # Lua language server
     tree-sitter # Syntax parser extensively used by NeoVim
     mdformat # Markdown formatter
     gcc # GNU Compiler Collection
