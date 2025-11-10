@@ -1,5 +1,4 @@
-{pkgs, ...}:
-let
+{pkgs, ...}: let
   pubkeys = import ../../../secrets/pubkeys.nix;
 in {
   imports = [
