@@ -79,6 +79,9 @@ in {
     ];
   };
 
+  # Ensure nushell is an allowed login shell in /etc/shells
+  environment.shells = [pkgs.nushell "/opt/homebrew/bin/fish"];
+
   # Allows home manager modules to access theme
   home-manager.sharedModules = [./theme-setting.nix];
 }
