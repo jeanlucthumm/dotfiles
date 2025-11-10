@@ -783,6 +783,16 @@ ncmap('<Leader>cl', 'cclose')
 ncmap('<Leader>cc', 'cc')
 ncmap('<Leader>co', 'copen')
 ncmap('<Leader>cd', 'cd %:h')
+nmap('<Leader>cp', function()
+  local bufname = api.nvim_buf_get_name(0)
+  if bufname == '' then
+    vim.notify('No file to copy', vim.log.levels.WARN)
+    return
+  end
+  local relative = fn.fnamemodify(bufname, ':.')
+  fn.setreg('+', relative)
+  vim.notify(('Copied %s to +'):format(relative))
+end)
 -- <Leader>h    hunks + help
 ncmap('<Leader>hu', 'SignifyHunkUndo')
 ncmap('<Leader>hd', 'SignifyHunkDiff')
