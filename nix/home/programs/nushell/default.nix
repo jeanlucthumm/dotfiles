@@ -11,8 +11,10 @@
       cd = "z";
       cat = "bat";
       t = "task";
+      tw = "taskwarrior-enhanced tree";
       fg = "job unfreeze";
       man = "batman";
+      codex = "^codex -a on-failure";
       loadenv = "open .env | from-dotenv | load-env";
     };
     environmentVariables = {
