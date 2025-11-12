@@ -19,4 +19,8 @@
       graphiti-mcp-server # Knowledge graph MCP server
       mcp-reddit # MCP server for Reddit data
     ];
+
+  programs = lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
+    codex.enable = true;
+  };
 }
