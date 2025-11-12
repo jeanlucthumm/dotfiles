@@ -58,7 +58,7 @@ in {
     google-cloud-sdk # Google Cloud CLI
     ungoogled-chromium # For Dart dev
 
-    whatsapp-for-linux # Chat
+    wasistlos # Chat (WhatsApp client)
     obsidian # Note taking
     smile # emoji picker
 
