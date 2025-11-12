@@ -12,6 +12,41 @@ def gwl []: [nothing -> table<path: string, commit: string, branch: string>] {
   git worktree list | lines | parse "{path} {commit} [{branch}]" | str trim
 }
 
+# Create a new worktree next to the repo with branch "<current>2"
+def wt2 []: [nothing -> nothing] {
+  # Ensure we are on a branch inside a git worktree
+  let current_branch = (git branch --show-current | str trim)
+  if ($current_branch | is-empty) {
+    error make -u { msg: "Not on a branch" }
+  }
+
+  let git_root = (git rev-parse --show-toplevel | str trim)
+
+  # New branch name and destination path
+  let new_branch = $'($current_branch)2'
+  let dir_name = ($new_branch | split row '/' | last)
+  let worktree_path = ($git_root | path dirname | path join $dir_name)
+
+  # Safety checks
+  let branch_exists = (git branch --list $new_branch | str trim | is-not-empty)
+  if $branch_exists {
+    error make -u { msg: $'Branch already exists: ($new_branch)' }
+  }
+
+  if ($worktree_path | path exists) {
+    error make -u { msg: $'Path already exists: ($worktree_path)' }
+  }
+
+  # Create the worktree and the new branch from current HEAD
+  git worktree add -b $new_branch $worktree_path
+  print $'Created worktree: ($worktree_path) for branch: ($new_branch)'
+
+  # Open new kitty tab with the work tree name (macOS only)
+  if ($nu.os-info.name == "macos") {
+    kitten @ launch --type=tab --tab-title $dir_name --cwd $worktree_path
+  }
+}
+
 # Generate git branch name based off taskwarrior ticket
 def gbranch [name: string]: [nothing -> string] {
   let branch_name = $name |
@@ -79,18 +114,25 @@ ddos"
   cd -
 
   # Check if working in a monorepo subdirectory
-  let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
-  if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
+  let target_dir = if (input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase) in ["y", "yes"] {
     let subdir = input "Enter the relative path to the subdirectory: "
     let full_subdir_path = ($worktree_path | path join $subdir)
 
-    print $"Running direnv allow in: ($full_subdir_path)"
-    direnv allow $full_subdir_path
+    if ($full_subdir_path | path exists) {
+      print $"Running direnv allow in: ($full_subdir_path)"
+      direnv allow $full_subdir_path
+      $full_subdir_path
+    } else {
+      print $"Warning: Subdirectory ($full_subdir_path) does not exist. Using top level."
+      $worktree_path
+    }
+  } else {
+    $worktree_path
   }
 
   # Open new kitty tab with the work tree name (macOS only)
   if ($nu.os-info.name == "macos") {
-    kitten @ launch --type=tab --tab-title $name --cwd $worktree_path
+    kitten @ launch --type=tab --tab-title $name --cwd $target_dir
   }
 }
 
@@ -132,24 +174,31 @@ def prsync [
       ./gen-proto.sh
       cd -
     }
-
-    # Check if working in a monorepo subdirectory
-    let monorepo_confirmation = input "Will you be working in a subdirectory of a monorepo? (y/N): "
-    if ($monorepo_confirmation | str downcase) in ["y", "yes"] {
-      let subdir = input "Enter the relative path to the subdirectory: "
-      let full_subdir_path = ($worktree_path | path join $subdir)
-
-      print $"Running direnv allow in: ($full_subdir_path)"
-      direnv allow $full_subdir_path
-    }
   } else {
     print $"Worktree already exists at ($worktree_path), skipping setup"
+  }
+
+  # Check if working in a monorepo subdirectory
+  let target_dir = if not $worktree_exists and ((input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase) in ["y", "yes"]) {
+    let subdir = input "Enter the relative path to the subdirectory: "
+    let full_subdir_path = ($worktree_path | path join $subdir)
+
+    if ($full_subdir_path | path exists) {
+      print $"Running direnv allow in: ($full_subdir_path)"
+      direnv allow $full_subdir_path
+      $full_subdir_path
+    } else {
+      print $"Warning: Subdirectory ($full_subdir_path) does not exist. Using top level."
+      $worktree_path
+    }
+  } else {
+    $worktree_path
   }
 
   # Open new kitty tab with the work tree name (macOS only)
   if ($nu.os-info.name == "macos") {
     print $"Opening kitty tab: ($name)"
-    kitten @ launch --type=tab --tab-title $name --cwd $worktree_path
+    kitten @ launch --type=tab --tab-title $name --cwd $target_dir
   }
 }
 
@@ -499,7 +548,7 @@ def prmd [
 
 # Copy piped in contents to clipboard.
 def clip []: [string -> nothing] {
-  if ($env | get -o TMUX | is-not-empty) {
+  if ($env | get --optional TMUX | is-not-empty) {
     $in | tmux loadb -
   } else if ($nu.os-info.name == "linux") {
     if ($env.XDG_SESSION_TYPE == "wayland") {
@@ -516,7 +565,7 @@ def clip []: [string -> nothing] {
 
 # Paste clipboard contents to stdout.
 def paste []: [nothing -> string] {
-  if ($env | get -o TMUX | is-not-empty) {
+  if ($env | get --optional TMUX | is-not-empty) {
     tmux showb -t 0
   } else if ($nu.os-info.name == "linux") {
     if ($env.XDG_SESSION_TYPE == "wayland") {
