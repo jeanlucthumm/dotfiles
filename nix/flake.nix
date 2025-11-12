@@ -159,7 +159,8 @@
       hostname = "server.lan";
       sshUser = "jeanluc";
       user = "root";
-      interactiveSudo = true;
+      # wheel group has passwordless sudo on server, so interactive sudo prompts are unnecessary
+      interactiveSudo = false;
       profiles.system = {
         path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
       };
