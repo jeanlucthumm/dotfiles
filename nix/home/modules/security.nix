@@ -22,6 +22,10 @@
         file = ../../secrets/jeanluc-codestral.age;
         mode = "400";
       };
+      ref = {
+        file = ../../secrets/jeanluc-ref.age;
+        mode = "400";
+      };
       taskwarrior = {
         file = ../../secrets/jeanluc-taskwarrior.age;
         mode = "400";
@@ -51,6 +55,7 @@
       (pkgs.writeShellScriptBin "get-key-openai" (makeKeyGetter s.openai.path))
       (pkgs.writeShellScriptBin "get-key-tavily" (makeKeyGetter s.tavily.path))
       (pkgs.writeShellScriptBin "get-key-codestral" (makeKeyGetter s.codestral.path))
+      (pkgs.writeShellScriptBin "get-key-ref" (makeKeyGetter s.ref.path))
 
       gnupg # GNU Privacy Guard
       pinentry-tty # Enter password in terminal

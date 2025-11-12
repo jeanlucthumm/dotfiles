@@ -8,4 +8,5 @@ in {
   "jeanluc-codestral.age".publicKeys = acc;
   "jeanluc-taskwarrior.age".publicKeys = acc;
   "jeanluc-neo4j.age".publicKeys = acc;
+  "jeanluc-ref.age".publicKeys = acc;
 }
