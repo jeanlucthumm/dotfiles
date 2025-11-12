@@ -7,6 +7,7 @@
     # Transmission BitTorrent client
     transmission = {
       enable = true;
+      package = pkgs.transmission_4;
       user = "transmission";
       group = "media";
       settings = {
