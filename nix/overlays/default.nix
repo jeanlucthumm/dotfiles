@@ -10,7 +10,7 @@ inputs: [
     };
   })
   (final: prev: {
-    reddit-easy-post = inputs.reddit-easy-post.packages.${prev.system}.default;
-    taskwarrior-enhanced = inputs.taskwarrior-enhanced.packages.${prev.system}.default;
+    reddit-easy-post = inputs.reddit-easy-post.packages.${prev.stdenv.hostPlatform.system}.default;
+    taskwarrior-enhanced = inputs.taskwarrior-enhanced.packages.${prev.stdenv.hostPlatform.system}.default;
   })
 ]
