@@ -12,6 +12,53 @@ def gwl []: [nothing -> table<path: string, commit: string, branch: string>] {
   git worktree list | lines | parse "{path} {commit} [{branch}]" | str trim
 }
 
+# Create multiple parallel worktrees for the current branch, suffixed with -1, -2, ...
+def wtparallel [count: int]: [nothing -> nothing] {
+  # Ensure we are on a branch inside a git worktree
+  let current_branch = (git branch --show-current | str trim)
+  if ($current_branch | is-empty) {
+    error make -u { msg: "Not on a branch" }
+  }
+
+  if $count <= 0 {
+    error make -u { msg: "Count must be greater than 0" }
+  }
+
+  let git_root = (git rev-parse --show-toplevel | str trim)
+
+  # First, compute and validate all target worktrees
+  let plans = (1..$count
+    | each { |i|
+        let new_branch = $'($current_branch)-($i)'
+        let dir_name = ($new_branch | split row '/' | last)
+        let worktree_path = ($git_root | path dirname | path join $dir_name)
+
+        let branch_exists = (git branch --list $new_branch | str trim | is-not-empty)
+        if $branch_exists {
+          error make -u { msg: $'Branch already exists: ($new_branch)' }
+        }
+
+        if ($worktree_path | path exists) {
+          error make -u { msg: $'Path already exists: ($worktree_path)' }
+        }
+
+        { branch: $new_branch, dir_name: $dir_name, path: $worktree_path }
+      })
+
+  # Create all worktrees
+  for plan in $plans {
+    git worktree add -b $plan.branch $plan.path
+    print $'Created worktree: ($plan.path) for branch: ($plan.branch)'
+  }
+
+  # After all worktrees are created, open kitty tabs on macOS
+  if ($nu.os-info.name == "macos") {
+    for plan in $plans {
+      kitten @ launch --type=tab --tab-title $plan.dir_name --cwd $plan.path
+    }
+  }
+}
+
 # Create a new worktree next to the repo with branch "<current>2"
 def wt2 []: [nothing -> nothing] {
   # Ensure we are on a branch inside a git worktree
@@ -114,7 +161,10 @@ ddos"
   cd -
 
   # Check if working in a monorepo subdirectory
-  let target_dir = if (input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase) in ["y", "yes"] {
+  let monorepo_answer = (input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase)
+  let in_monorepo_subdir = $monorepo_answer in ["y", "yes"]
+
+  let target_dir = if $in_monorepo_subdir {
     let subdir = input "Enter the relative path to the subdirectory: "
     let full_subdir_path = ($worktree_path | path join $subdir)
 
@@ -128,6 +178,17 @@ ddos"
     }
   } else {
     $worktree_path
+  }
+
+  # If we selected a monorepo subdirectory, attempt a best-effort `make setup`
+  if $in_monorepo_subdir {
+    try {
+      cd $target_dir
+      ^make setup err> /dev/null out> /dev/null
+      cd -
+    } catch {
+      # Silently ignore any failures (missing Makefile/setup rule, etc.)
+    }
   }
 
   # Open new kitty tab with the work tree name (macOS only)
