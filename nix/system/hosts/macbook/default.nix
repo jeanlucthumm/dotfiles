@@ -34,6 +34,8 @@ in {
     raycast # Spotlight replacement
   ];
 
+  stylix.homeManagerIntegration.followSystem = false;
+
   system.defaults.CustomUserPreferences = {
     "com.apple.symbolichotkeys" = {
       AppleSymbolicHotKeys = {
