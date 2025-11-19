@@ -37,6 +37,7 @@ in {
     usbutils # USB utilities
     htop # Interactive process viewer
     jq # Command-line JSON processor
+    just # Handy task runner
 
     # Modern replacements for common tools
     delta # Pretty diffs
