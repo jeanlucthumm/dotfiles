@@ -32,9 +32,24 @@ in {
 
   environment.systemPackages = with pkgs; [
     raycast # Spotlight replacement
+    podman
+    podman-compose
+    qemu
+    podman-tui
   ];
 
   stylix.homeManagerIntegration.followSystem = false;
+
+  # Optional: launchd agent to auto-start the podman machine (kept commented per request)
+  # launchd.user.agents.podman-machine-default = {
+  #   enable = true;
+  #   program = "${pkgs.podman}/bin/podman";
+  #   programArguments = ["machine" "start" "podman-machine-default"];
+  #   keepAlive = true;
+  #   runAtLoad = true;
+  #   standardOutPath = "/tmp/podman-machine.log";
+  #   standardErrorPath = "/tmp/podman-machine.err";
+  # };
 
   system.defaults.CustomUserPreferences = {
     "com.apple.symbolichotkeys" = {
