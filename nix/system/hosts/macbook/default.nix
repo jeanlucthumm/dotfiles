@@ -33,6 +33,10 @@ in {
   environment.systemPackages = with pkgs; [
     raycast # Spotlight replacement
     podman
+    (writeShellScriptBin "docker" ''
+      #!/usr/bin/env bash
+      exec ${pkgs.podman}/bin/podman "$@"
+    '') # docker CLI shim that forwards to podman
     podman-compose
     qemu
     podman-tui
