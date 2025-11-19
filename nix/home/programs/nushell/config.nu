@@ -1,3 +1,8 @@
+# Helper for ipv4 address
+def ipv4 [iface: string]: [nothing -> string] {
+  sys net | where name == $iface | get 0.ip | where protocol == "ipv4" | get 0.address
+}
+
 # Nushell version of git branch
 def ngit-branch []: [nothing -> table<symbol: string, branch: string>] {
   git branch |
