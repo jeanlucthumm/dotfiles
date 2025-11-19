@@ -396,15 +396,20 @@ def tchild [
   task add ...$args
 }
 
-# Taskwarrior: Break down an active task into a smaller one and start it
+# Taskwarrior: Break down an active task into one or more smaller ones and start one
 def tbreak [
-  desc: string,   # Description of the child task
+  ...descs: string,   # One or more child task descriptions
 ]: [nothing -> string] {
   let active = __tactive_select
 
-  tchild $active.id $desc
+  if ($descs | is-empty) {
+    error make -u { msg: "No child description(s) provided" }
+  }
 
-  # Stop current task and start the new one
+  # Create all requested child tasks
+  $descs | each { |d| tchild $active.id $d }
+
+  # Stop current task and start the most recently created child
   let new_task = task export newest | from json | get 0
   task stop $active.id
   task start $new_task.id
@@ -420,18 +425,20 @@ def tparent []: [nothing -> string] {
     return
   }
 
-  # Check for pending siblings
+  # Check for pending siblings: siblings are other children the parent depends on
+  let parent_deps = (if ((($parent | columns) | any { |c| $c == "depends" })) { $parent.depends } else { [] })
   let siblings = task export |
     from json |
-    default [] depends |
-    where $parent.uuid in $it.depends |
+    where uuid in $parent_deps |
     where uuid != $task_record.uuid |
     where status == "pending"
 
   if ($siblings | is-not-empty) {
-    error make -u {
-      msg: $"Cannot move to parent: ($siblings | length) pending sibling(s) remain"
-    }
+    let next_sibling = ($siblings | first)
+    task done $task_record.id
+    task start $next_sibling.id
+    print $"Started sibling instead of parent: (#($next_sibling.id)) ($next_sibling.description)"
+    return
   }
 
   task done $task_record.id
@@ -592,6 +599,81 @@ def --env prmerge []: [nothing -> nothing] {
   if ($nu.os-info.name == "macos") {
     kitten @ close-tab --self
   }
+}
+
+# Delete a branch and any associated worktrees
+def prcleanup [
+  branch?: string,  # Branch name; if omitted, select via fzf from ngit-branch
+]: [nothing -> nothing] {
+  let initial_dir = (pwd)
+
+  # Determine branch: use provided or pick via fzf from ngit-branch
+  let sel_branch = if ($branch == null) {
+    let choices = ngit-branch | get branch | to text
+    let choice = ($choices | fzf --height=40% --prompt="Select branch to delete: ")
+    if ($choice | is-empty) {
+      print "No branch selected; aborting prcleanup."
+      return
+    }
+    $choice
+  } else { $branch }
+
+  if ($sel_branch in ["master", "main"]) {
+    print $"Refusing to delete protected branch: ($sel_branch)"
+    return
+  }
+
+  # Ensure we are inside a git repository
+  let git_check = (try { git rev-parse --show-toplevel | str trim } catch { "" })
+  if ($git_check | is-empty) {
+    print "Not inside a git repository; aborting prcleanup."
+    return
+  }
+
+  let confirmation = input $"Delete branch '($sel_branch)' and any associated worktrees? (y/N): "
+  if not (($confirmation | str downcase) in ["y", "yes"]) {
+    print "Aborted prcleanup."
+    return
+  }
+
+  # Find and remove any worktrees associated with this branch
+  let worktrees = gwl
+  let target_worktrees = ($worktrees | where branch == $sel_branch)
+
+  if ($target_worktrees | is-empty) {
+    print $"No worktrees found for branch '($sel_branch)'."
+  } else {
+    let target_paths = ($target_worktrees | get path)
+    let control_candidates = ($worktrees | where $it.path not-in $target_paths)
+
+    if ($control_candidates | is-empty) {
+      print $"Found worktrees for '($sel_branch)' but no alternate worktree to run 'git worktree remove' from; skipping worktree removal."
+    } else {
+      let cleanup_dir = $control_candidates.0.path
+      cd $cleanup_dir
+
+      for wt in $target_worktrees {
+        print $"Removing worktree at ($wt.path)"
+        git worktree remove $wt.path
+      }
+    }
+  }
+
+  # Delete local branch
+  if (git branch --list $sel_branch | str trim | is-not-empty) {
+    print $"Deleting local branch '($sel_branch)'"
+    git branch -D $sel_branch
+  } else {
+    print $"Local branch '($sel_branch)' not found."
+  }
+
+  # Optionally delete remote branch
+  let delete_remote = input "Also delete remote branch? (y/N): "
+  if (($delete_remote | str downcase) in ["y", "yes"]) {
+    git push origin --delete $sel_branch
+  }
+
+  cd $initial_dir
 }
 
 # Create PR.md from template with optional description
