@@ -14,7 +14,7 @@
       tw = "taskwarrior-enhanced tree";
       fg = "job unfreeze";
       man = "batman";
-      codex = "^codex -a on-failure";
+      codex = "^codex -s danger-full-access -a untrusted";
       loadenv = "open .env | from-dotenv | load-env";
     };
     environmentVariables = {
