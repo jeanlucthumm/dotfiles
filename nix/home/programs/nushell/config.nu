@@ -17,8 +17,38 @@ def gwl []: [nothing -> table<path: string, commit: string, branch: string>] {
   git worktree list | lines | parse "{path} {commit} [{branch}]" | str trim
 }
 
-# Create multiple parallel worktrees for the current branch, suffixed with -1, -2, ...
-def wtparallel [count: int]: [nothing -> nothing] {
+# Ensure a tmux session exists and open a window in the given directory
+def tmux-window [
+  session: string,
+  window: string,
+  dir: string,
+  cmd?: string,
+]: [nothing -> nothing] {
+  let created = (try {
+    ^tmux has-session -t $session err> /dev/null out> /dev/null
+    false
+  } catch {
+    if ($cmd == null) {
+      ^tmux new-session -d -s $session -n $window -c $dir
+    } else {
+      ^tmux new-session -d -s $session -n $window -c $dir $cmd
+    }
+    true
+  })
+
+  if not $created {
+    if ($cmd == null) {
+      ^tmux new-window -t $session -n $window -c $dir
+    } else {
+      ^tmux new-window -t $session -n $window -c $dir $cmd
+    }
+  }
+}
+
+def wtparallel [
+  count: int,      # Number of parallel worktrees to create
+  cmd?: string,    # Optional tmux command to run in each window (e.g., 'nvim .; exec $SHELL')
+]: [nothing -> nothing] {
   # Ensure we are on a branch inside a git worktree
   let current_branch = (git branch --show-current | str trim)
   if ($current_branch | is-empty) {
@@ -56,11 +86,17 @@ def wtparallel [count: int]: [nothing -> nothing] {
     print $'Created worktree: ($plan.path) for branch: ($plan.branch)'
   }
 
-  # After all worktrees are created, open kitty tabs on macOS
-  if ($nu.os-info.name == "macos") {
-    for plan in $plans {
-      kitten @ launch --type=tab --tab-title $plan.dir_name --cwd $plan.path
-    }
+  # After all worktrees are created, open tmux windows in a session named after the current branch
+  for plan in $plans {
+    tmux-window $current_branch $plan.dir_name $plan.path $cmd
+  }
+
+  # Confirm tmux session status
+  try {
+    ^tmux has-session -t $current_branch err> /dev/null out> /dev/null
+    print $"tmux session '($current_branch)' created. Attach with: tmux attach -t '($current_branch)'"
+  } catch {
+    print $"Warning: tmux session for '($current_branch)' not found; windows may not have been created."
   }
 }
 
