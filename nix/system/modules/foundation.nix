@@ -8,6 +8,13 @@
   # Modules will add ports as needed to firewall config
   networking.firewall.enable = true;
 
+  # Multicast DNS (mDNS) for .local host discovery on all NixOS hosts
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    nssmdns6 = true;
+  };
+
   # Timezone and locale
   time.timeZone = "America/Los_Angeles";
   i18n.defaultLocale = "en_US.UTF-8";

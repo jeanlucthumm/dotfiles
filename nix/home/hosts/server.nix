@@ -11,6 +11,12 @@
     reddit-easy-post # YAML to Reddit posting CLI
   ];
 
+   # Helper script for restoring data from backups
+   home.file."restore.sh" = {
+     source = ../../system/hosts/server/restore.sh;
+     executable = true;
+   };
+
   # The state version is required and should stay at the version you
   # originally installed.
   home.stateVersion = "24.05";
