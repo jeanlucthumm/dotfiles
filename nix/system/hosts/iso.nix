@@ -4,64 +4,68 @@
   config,
   pkgs,
   lib,
+  inputs,
+  modulesPath,
   ...
 }: let
   pubkeys = import ../../secrets/pubkeys.nix;
-
-  # Injects SSH keys from secrets/pubkeys.nix into installed system
-  setupRootSSH = pkgs.writeShellScriptBin "setup-root-ssh" ''
-    #!/bin/sh
-    set -e
-
-    echo "Setting up root SSH access on installed system..."
-
-    if [ ! -d /mnt/root ]; then
-      mkdir -p /mnt/root
-    fi
-
-    if [ ! -d /mnt/root/.ssh ]; then
-      mkdir /mnt/root/.ssh
-    fi
-
-    cat > /mnt/root/.ssh/authorized_keys <<EOF
-    ${lib.concatStringsSep "\n" pubkeys.all}
-    EOF
-
-    chmod 700 /mnt/root/.ssh
-    chmod 600 /mnt/root/.ssh/authorized_keys
-    chown 0:0 /mnt/root/.ssh /mnt/root/.ssh/authorized_keys
-
-    echo "✓ Root authorized_keys configured at /mnt/root/.ssh/authorized_keys"
-    echo "  Added ${toString (builtins.length pubkeys.all)} SSH keys"
-  '';
 in {
   imports = [
-    "${pkgs.path}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+    (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
   ];
 
-  # Add the setup script to the live environment
+  # Minimal tools in the live environment
   environment.systemPackages = with pkgs; [
-    setupRootSSH
-    git
     tmux
   ];
+
+  # Stable hostname + mDNS for easy discovery (nixos-ssh-bootstrap.local)
+  networking.hostName = "nixos-ssh-bootstrap";
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    publish.enable = true;
+  };
+
+  # SSH access for nixos-anywhere: root over key-only SSH
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "prohibit-password";
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+    };
+  };
+
+  users.users.root.openssh.authorizedKeys.keys = pubkeys.all;
+  networking.firewall.allowedTCPPorts = [22];
+
+  # Auto-login on the first virtual console as the `nixos` user
+  services.getty.autologinUser = "nixos";
 
   # Add a helpful message at login
   environment.etc."issue".text = ''
 
-    Welcome to NixOS Custom Installer
-    ==================================
+    Welcome to the NixOS SSH bootstrap ISO
+    ======================================
 
-    After running 'nixos-install', run:
-      setup-root-ssh
+    This ISO is meant to:
+      - boot a machine
+      - bring up networking
+      - expose root over SSH (key-only)
+      - let you run nixos-anywhere from another machine
 
-    This will configure SSH access for root on the installed system.
+    On your laptop, connect with:
+      ssh root@nixos-ssh-bootstrap.local
 
   '';
 
   # ISO-specific settings
-  isoImage = {
-    isoName = lib.mkForce "nixos-custom-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
-    volumeID = lib.mkForce "NIXOS_CUSTOM";
+  image = {
+    fileName = lib.mkForce "nixos-custom-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.iso";
   };
+
+  # ISO volume ID
+  isoImage.volumeID = lib.mkForce "NIXOS_CUSTOM";
 }
