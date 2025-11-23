@@ -351,10 +351,23 @@ local plugin_spec = {
     end,
   },
   {
+    'sindrets/diffview.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons',
+    },
+    cmd = {
+      'DiffviewOpen',
+      'DiffviewClose',
+      'DiffviewToggleFiles',
+      'DiffviewFocusFiles',
+      'DiffviewFileHistory',
+    },
+  },
+  {
     'NeogitOrg/neogit',
     dependencies = {
       'nvim-lua/plenary.nvim',         -- required
-      'sindrets/diffview.nvim',        -- optional - Diff integration
       'nvim-telescope/telescope.nvim', -- optional
     },
     config = true,
