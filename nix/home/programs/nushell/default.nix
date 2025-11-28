@@ -26,7 +26,13 @@
     settings = {
       completions.algorithm = "fuzzy";
     };
-    extraConfig = builtins.readFile ./config.nu;
+    extraConfig = builtins.concatStringsSep "\n" [
+      (builtins.readFile ./git.nu)
+      (builtins.readFile ./task.nu)
+      (builtins.readFile ./pr.nu)
+      (builtins.readFile ./gh.nu)
+      (builtins.readFile ./config.nu)
+    ];
   };
   programs.carapace.enableNushellIntegration = true;
   programs.direnv.enableNushellIntegration = true;

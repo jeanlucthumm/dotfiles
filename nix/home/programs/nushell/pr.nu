@@ -1,0 +1,336 @@
+# New PR setup
+def prsetup [
+  ticket: string,       # Ticket ID
+  desc: string          # Description of the ticket
+  branch_start?: string, # Starting point for new branch
+]: [nothing -> nothing] {
+
+  let prompt = "Create a git branch name for the given ticket title. Keep it at most two combined words, no spaces, no '-', keep it short. Output only the git branch name and nothing else. Some examples:
+
+restart
+chat
+uipolish
+signin
+terraconv
+routing
+mcpcreds
+ddos"
+
+  let resp = $desc | aichat $prompt
+
+  # Ask for confirmation on the name
+  print $"Suggested branch name: ($resp)"
+  let confirmation = input "Use this name? (y/N): "
+
+  let name = if ($confirmation | str downcase) in ["y", "yes"] {
+    $resp
+  } else {
+    input "Enter branch name: "
+  }
+
+  task add ('ticket:' + $ticket) $desc
+
+  # Get git root directory and create worktree relative to its parent
+  let git_root = git rev-parse --show-toplevel | str trim
+  let worktree_path = ($git_root | path dirname | path join $name)
+
+  if ($branch_start == null) {
+    git worktree add -b $'($ticket)/($name)' $worktree_path
+  } else {
+    git worktree add -b $'($ticket)/($name)' $worktree_path $branch_start
+  }
+
+  # Run gen-proto.sh in the new work tree
+  cd $worktree_path
+  ./gen-proto.sh
+  cd -
+
+  # Check if working in a monorepo subdirectory
+  let monorepo_answer = (input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase)
+  let in_monorepo_subdir = $monorepo_answer in ["y", "yes"]
+
+  let target_dir = if $in_monorepo_subdir {
+    let subdir = input "Enter the relative path to the subdirectory: "
+    let full_subdir_path = ($worktree_path | path join $subdir)
+
+    if ($full_subdir_path | path exists) {
+      print $"Running direnv allow in: ($full_subdir_path)"
+      direnv allow $full_subdir_path
+      $full_subdir_path
+    } else {
+      print $"Warning: Subdirectory ($full_subdir_path) does not exist. Using top level."
+      $worktree_path
+    }
+  } else {
+    $worktree_path
+  }
+
+  # If we selected a monorepo subdirectory, attempt a best-effort `make setup`
+  if $in_monorepo_subdir {
+    try {
+      cd $target_dir
+      ^make setup err> /dev/null out> /dev/null
+      cd -
+    } catch {
+      # Silently ignore any failures (missing Makefile/setup rule, etc.)
+    }
+  }
+
+  # Open new kitty tab with the work tree name (macOS only)
+  if ($nu.os-info.name == "macos") {
+    kitten @ launch --type=tab --tab-title $name --cwd $target_dir
+  }
+}
+
+# Sync existing PR branch from another machine
+def prsync [
+  branch?: string,  # Branch name; if omitted, select via fzf from ngit branch
+]: [nothing -> nothing] {
+  # Determine branch: use provided or pick via fzf from ngit branch
+  let sel_branch = if ($branch == null) {
+    let choices = ngit branch | get branch | to text
+    let choice = ($choices | fzf --height=40% --prompt="Select branch: ")
+    if ($choice | is-empty) {
+      print "No branch selected; aborting prsync."
+      return
+    }
+    $choice
+  } else { $branch }
+
+  # Extract the short name from the branch (part after the slash)
+  let name = $sel_branch | split row '/' | last
+
+  # Get git root directory and create worktree relative to its parent
+  let git_root = git rev-parse --show-toplevel | str trim
+  let worktree_path = ($git_root | path dirname | path join $name)
+
+  # Check if worktree already exists
+  let worktree_exists = ($worktree_path | path exists)
+
+  if not $worktree_exists {
+    print $"Creating new worktree at ($worktree_path)"
+
+    # Create worktree tracking the remote branch
+    git worktree add $worktree_path $sel_branch
+
+    # Run gen-proto.sh in the new work tree
+    if ($worktree_path | path join "gen-proto.sh" | path exists) {
+      print "Running gen-proto.sh"
+      cd $worktree_path
+      ./gen-proto.sh
+      cd -
+    }
+  } else {
+    print $"Worktree already exists at ($worktree_path), skipping setup"
+  }
+
+  # Check if working in a monorepo subdirectory
+  let target_dir = if not $worktree_exists and ((input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase) in ["y", "yes"]) {
+    let subdir = input "Enter the relative path to the subdirectory: "
+    let full_subdir_path = ($worktree_path | path join $subdir)
+
+    if ($full_subdir_path | path exists) {
+      print $"Running direnv allow in: ($full_subdir_path)"
+      direnv allow $full_subdir_path
+      $full_subdir_path
+    } else {
+      print $"Warning: Subdirectory ($full_subdir_path) does not exist. Using top level."
+      $worktree_path
+    }
+  } else {
+    $worktree_path
+  }
+
+  # Open new kitty tab with the work tree name (macOS only)
+  if ($nu.os-info.name == "macos") {
+    print $"Opening kitty tab: ($name)"
+    kitten @ launch --type=tab --tab-title $name --cwd $target_dir
+  }
+}
+
+# Open new kitty tab in an existing worktree
+def prtab [
+  name: string  # Worktree name (e.g., master, dailyreport, thinking)
+]: [nothing -> nothing] {
+  # Parse git worktree list output to find the worktree path
+  let worktrees = git worktree list
+    | lines
+    | parse "{path} {commit} [{branch}]"
+
+  let matches = $worktrees | where path =~ $name
+
+  if ($matches | is-empty) {
+    error make -u {
+      msg: $"Worktree '($name)' not found"
+    }
+  }
+
+  let worktree = $matches | first
+
+  # Open new kitty tab with the worktree name (macOS only)
+  if ($nu.os-info.name == "macos") {
+    kitten @ launch --type=tab --tab-title $name --cwd $worktree.path
+  } else {
+    print $"Not on macOS, would open tab at: ($worktree.path)"
+  }
+}
+
+# Merge PR and clean up worktree
+def --env prmerge []: [nothing -> nothing] {
+  # Get current branch name and worktree directory
+  let branch_name = git head
+  let worktree = git rev-parse --show-toplevel | path basename
+
+  # Change to the worktree root
+  cd (git rev-parse --show-toplevel)
+
+  print $"Merging PR for branch: ($branch_name)"
+  print $"Current worktree: ($worktree)"
+
+  # Ask for confirmation
+  let confirmation = input "Proceed with merge and cleanup? (y/N): "
+  if not (($confirmation | str downcase) in ["y", "yes"]) {
+    print "Aborted"
+    return
+  }
+
+  # Merge the PR (without deleting branch locally)
+  gh pr merge -m
+
+  # Navigate to master worktree
+  cd ../master
+
+  # Remove the worktree we were just in
+  sudo git worktree remove $"../($worktree)"
+
+  # Delete local and remote branch
+  git branch -D $branch_name
+  git push origin --delete $branch_name
+
+  # Pull master to catch up to the merge
+  git pull
+
+  # Clean up any other stale remote tracking branches
+  git remote prune origin
+
+  print $"Successfully merged and cleaned up ($branch_name)"
+
+  # Navigate to home directory
+  cd ~
+
+  # On macOS, close the kitty tab after all cleanup is complete
+  if ($nu.os-info.name == "macos") {
+    kitten @ close-tab --self
+  }
+}
+
+# Delete a branch and any associated worktrees
+def prcleanup [
+  branch?: string,  # Branch name; if omitted, select via fzf from ngit branch
+]: [nothing -> nothing] {
+  let initial_dir = (pwd)
+
+  # Determine branch: use provided or pick via fzf from ngit branch
+  let sel_branch = if ($branch == null) {
+    let choices = ngit branch | get branch | to text
+    let choice = ($choices | fzf --height=40% --prompt="Select branch to delete: ")
+    if ($choice | is-empty) {
+      print "No branch selected; aborting prcleanup."
+      return
+    }
+    $choice
+  } else { $branch }
+
+  if ($sel_branch in ["master", "main"]) {
+    print $"Refusing to delete protected branch: ($sel_branch)"
+    return
+  }
+
+  # Ensure we are inside a git repository
+  let git_check = (try { git rev-parse --show-toplevel | str trim } catch { "" })
+  if ($git_check | is-empty) {
+    print "Not inside a git repository; aborting prcleanup."
+    return
+  }
+
+  let confirmation = input $"Delete branch '($sel_branch)' and any associated worktrees? (y/N): "
+  if not (($confirmation | str downcase) in ["y", "yes"]) {
+    print "Aborted prcleanup."
+    return
+  }
+
+  # Find and remove any worktrees associated with this branch
+  let worktrees = ngit worktree list
+  let target_worktrees = ($worktrees | where branch == $sel_branch)
+
+  if ($target_worktrees | is-empty) {
+    print $"No worktrees found for branch '($sel_branch)'."
+  } else {
+    let target_paths = ($target_worktrees | get path)
+    let control_candidates = ($worktrees | where $it.path not-in $target_paths)
+
+    if ($control_candidates | is-empty) {
+      print $"Found worktrees for '($sel_branch)' but no alternate worktree to run 'git worktree remove' from; skipping worktree removal."
+    } else {
+      let cleanup_dir = $control_candidates.0.path
+      cd $cleanup_dir
+
+      for wt in $target_worktrees {
+        print $"Removing worktree at ($wt.path)"
+        git worktree remove $wt.path
+      }
+    }
+  }
+
+  # Delete local branch
+  if (git branch --list $sel_branch | str trim | is-not-empty) {
+    print $"Deleting local branch '($sel_branch)'"
+    git branch -D $sel_branch
+  } else {
+    print $"Local branch '($sel_branch)' not found."
+  }
+
+  # Optionally delete remote branch
+  let delete_remote = input "Also delete remote branch? (y/N): "
+  if (($delete_remote | str downcase) in ["y", "yes"]) {
+    git push origin --delete $sel_branch
+  }
+
+  cd $initial_dir
+}
+
+# Create PR.md from template with optional description
+def prmd [
+  desc?: string  # Optional PR description to populate in the template
+]: [nothing -> nothing] {
+  let template = open ~/nix/templates/PR.md
+
+  if ($desc != null) {
+    # Find the PR Description section and add the description after it
+    # Using regex to match the section header and preserve formatting
+    let updated = $template | str replace --regex '(## PR Description\n)(\n)?' $"$1\n($desc)\n\n"
+    $updated | save PR.md
+  } else {
+    $template | save PR.md
+  }
+}
+
+# Open a new kitty tab in the same directory for PR composition
+def prcompose []: [nothing -> nothing] {
+  if ($nu.os-info.name != "macos") {
+    print "prcompose is only supported on macOS"
+    return
+  }
+
+  # Get current tab name from kitty
+  let kitty_state = kitten @ ls | from json
+  let current_tab = $kitty_state
+    | get 0.tabs
+    | where is_focused == true
+    | get 0.title
+
+  let new_tab_name = $"($current_tab)-compose"
+  let current_dir = pwd
+
+  kitten @ launch --type=tab --tab-title $new_tab_name --cwd $current_dir
+}
