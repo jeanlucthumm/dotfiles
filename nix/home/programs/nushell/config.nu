@@ -15,8 +15,11 @@ def "ngit branch" []: [nothing -> table<symbol: string, branch: string>] {
 }
 
 
+# Nushell wrapper for git worktree
+def "ngit worktree" [] {}
+
 # Nushell version of git worktree list
-def gwl []: [nothing -> table<path: string, commit: string, branch: string>] {
+def "ngit worktree list" []: [nothing -> table<path: string, commit: string, branch: string>] {
   git worktree list | lines | parse "{path} {commit} [{branch}]" | str trim
 }
 
@@ -48,7 +51,10 @@ def tmux-window [
   }
 }
 
-def wtparallel [
+# Nushell worktree helpers
+def worktree [] {}
+
+def "worktree parallel" [
   count: int,      # Number of parallel worktrees to create
   cmd?: string,    # Optional tmux command to run in each window (e.g., 'nvim .; exec $SHELL')
 ]: [nothing -> nothing] {
@@ -104,7 +110,7 @@ def wtparallel [
 }
 
 # Create a new worktree next to the repo with branch "<current>2"
-def wt2 []: [nothing -> nothing] {
+def "worktree 2" []: [nothing -> nothing] {
   # Ensure we are on a branch inside a git worktree
   let current_branch = (git branch --show-current | str trim)
   if ($current_branch | is-empty) {
@@ -335,7 +341,7 @@ def prtab [
 }
 
 # Pipe in .env file and load into environment variables.
-def from-dotenv []: [string -> record] {
+def "from dotenv" []: [string -> record] {
     lines |
     where ($it | str trim) != "" |
     where not ($it | str trim | str starts-with "#") |
@@ -692,7 +698,7 @@ def prcleanup [
   }
 
   # Find and remove any worktrees associated with this branch
-  let worktrees = gwl
+  let worktrees = ngit worktree list
   let target_worktrees = ($worktrees | where branch == $sel_branch)
 
   if ($target_worktrees | is-empty) {

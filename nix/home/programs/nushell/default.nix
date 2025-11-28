@@ -14,7 +14,6 @@
       tw = "taskwarrior-enhanced tree";
       fg = "job unfreeze";
       man = "batman";
-      loadenv = "open .env | from-dotenv | load-env";
     };
     environmentVariables = {
       # For git signing since it spawns gpg in a non-interactive session so gpg
