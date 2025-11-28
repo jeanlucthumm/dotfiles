@@ -733,6 +733,26 @@ def prmd [
   }
 }
 
+# Open a new kitty tab in the same directory for PR composition
+def prcompose []: [nothing -> nothing] {
+  if ($nu.os-info.name != "macos") {
+    print "prcompose is only supported on macOS"
+    return
+  }
+
+  # Get current tab name from kitty
+  let kitty_state = kitten @ ls | from json
+  let current_tab = $kitty_state
+    | get 0.tabs
+    | where is_focused == true
+    | get 0.title
+
+  let new_tab_name = $"($current_tab)-compose"
+  let current_dir = pwd
+
+  kitten @ launch --type=tab --tab-title $new_tab_name --cwd $current_dir
+}
+
 # Copy piped in contents to clipboard.
 def clip []: [string -> nothing] {
   if ($env | get --optional TMUX | is-not-empty) {
