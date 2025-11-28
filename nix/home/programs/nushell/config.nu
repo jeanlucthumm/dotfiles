@@ -3,8 +3,11 @@ def ipv4 [iface: string]: [nothing -> string] {
   sys net | where name == $iface | get 0.ip | where protocol == "ipv4" | get 0.address
 }
 
+# Nushell wrapper for git
+def ngit [] {}
+
 # Nushell version of git branch
-def ngit-branch []: [nothing -> table<symbol: string, branch: string>] {
+def "ngit branch" []: [nothing -> table<symbol: string, branch: string>] {
   git branch |
     lines |
     parse "{symbol} {branch}" |
@@ -240,11 +243,11 @@ ddos"
 
 # Sync existing PR branch from another machine
 def prsync [
-  branch?: string,  # Branch name; if omitted, select via fzf from ngit-branch
+  branch?: string,  # Branch name; if omitted, select via fzf from ngit branch
 ]: [nothing -> nothing] {
-  # Determine branch: use provided or pick via fzf from ngit-branch
+  # Determine branch: use provided or pick via fzf from ngit branch
   let sel_branch = if ($branch == null) {
-    let choices = ngit-branch | get branch | to text
+    let choices = ngit branch | get branch | to text
     let choice = ($choices | fzf --height=40% --prompt="Select branch: ")
     if ($choice | is-empty) {
       print "No branch selected; aborting prsync."
@@ -589,8 +592,19 @@ def label-files []: [list<path> -> string] {
 }
 
 # Git status
-def ngit-status []: [nothing -> table<status: string, file: string>] {
+def "ngit status" []: [nothing -> table<status: string, file: string>] {
   git status --porcelain | from ssv -m 1 -n | rename status file
+}
+
+# Nushell wrapper for gh
+def ngh [] {}
+
+# Nushell wrapper for gh pr
+def "ngh pr" [] {}
+
+# GitHub PR checks
+def "ngh pr checks" []: [nothing -> table<name: string, link: string, state: string>] {
+  gh pr checks --json name,link,state | from json
 }
 
 # Merge PR and clean up worktree
@@ -644,13 +658,13 @@ def --env prmerge []: [nothing -> nothing] {
 
 # Delete a branch and any associated worktrees
 def prcleanup [
-  branch?: string,  # Branch name; if omitted, select via fzf from ngit-branch
+  branch?: string,  # Branch name; if omitted, select via fzf from ngit branch
 ]: [nothing -> nothing] {
   let initial_dir = (pwd)
 
-  # Determine branch: use provided or pick via fzf from ngit-branch
+  # Determine branch: use provided or pick via fzf from ngit branch
   let sel_branch = if ($branch == null) {
-    let choices = ngit-branch | get branch | to text
+    let choices = ngit branch | get branch | to text
     let choice = ($choices | fzf --height=40% --prompt="Select branch to delete: ")
     if ($choice | is-empty) {
       print "No branch selected; aborting prcleanup."
@@ -793,7 +807,7 @@ def label-diff []: [string -> string] {
 }
 
 # Create PR context for LLMs
-def ngit-prcontext [
+def "ngit prcontext" [
   revrange: string # Revision range this applies to e.g. `master..HEAD`
   ticket_title: string # Title of the ticket of this PR
   ticket_desc: string # Description fo the ticket of this PR
