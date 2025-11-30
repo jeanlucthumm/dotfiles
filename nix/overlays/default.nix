@@ -8,6 +8,7 @@ inputs: [
     mcp-reddit = prev.callPackage ./mcp-reddit.nix {
       inherit (inputs) uv2nix pyproject-nix pyproject-build-systems;
     };
+    notify = prev.callPackage ./notify.nix {};
   })
   (final: prev: {
     reddit-easy-post = inputs.reddit-easy-post.packages.${prev.stdenv.hostPlatform.system}.default;

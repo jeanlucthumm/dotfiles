@@ -38,6 +38,7 @@ in {
     htop # Interactive process viewer
     jq # Command-line JSON processor
     just # Handy task runner
+    notify # Cross-platform notifications
 
     # Modern replacements for common tools
     delta # Pretty diffs
