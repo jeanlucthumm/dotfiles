@@ -56,30 +56,4 @@
       recommendedPythonPackages = false; # Keep it minimal for now
     };
   };
-
-  # Firewall configuration
-  networking.firewall.allowedTCPPorts = [19999];
-
-  # Nginx reverse proxy for clean access
-  services.nginx = {
-    enable = true;
-
-    virtualHosts."netdata.server.lan" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:19999";
-        proxyWebsockets = true;
-        extraConfig = ''
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
-
-          # Optimize for real-time data
-          proxy_buffering off;
-          proxy_cache off;
-          proxy_read_timeout 300s;
-        '';
-      };
-    };
-  };
 }
