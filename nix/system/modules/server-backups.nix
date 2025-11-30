@@ -11,7 +11,7 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
-      ExecStart = "${pkgs.rsync}/bin/rsync -av --delete --exclude '.cache' --exclude '.local/share/Trash' --exclude '.npm' --exclude '.nix-defexpr' --exclude '.nix-profile' --exclude '.nix-channels' /home/jeanluc/ /srv/backups/home/";
+      ExecStart = "${pkgs.rsync}/bin/rsync -av --delete --include '/.ssh/' --include '/.ssh/**' --include '/.gnupg/' --include '/.gnupg/**' --exclude '/.*' --exclude 'restore.sh' --exclude '.cache' --exclude '.npm' --exclude '.nix-defexpr' --exclude '.nix-profile' --exclude '.nix-channels' /home/jeanluc/ /srv/backups/home/";
     };
   };
 
