@@ -7,7 +7,7 @@
     config = {
       global = {
         # Performance settings
-        "update every" = "1"; # 1 second collection interval
+        "update every" = "5"; # 5 second collection interval
         "history" = "3996"; # ~1 hour in RAM before flushing to disk
 
         # Logging
@@ -20,7 +20,7 @@
       db = {
         "mode" = "dbengine";
         "storage tiers" = "3";
-        "dbengine page cache size" = "32"; # MB - ultra-conservative for tight RAM
+        "dbengine page cache size" = "64"; # MB - netdata default
         "dbengine tier 0 retention size" = "75GiB"; # 2+ weeks for freeze debugging
         "dbengine tier 0 retention time" = "14d"; # 14 days for troubleshooting
       };
