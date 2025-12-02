@@ -16,6 +16,8 @@
             if d
             then "gruvbox-dark-soft"
             else "gruvbox-light-soft"
+          else if t == "zenbones"
+          then "zenburn"
           else throw "unknown theme ${t}";
       };
     }

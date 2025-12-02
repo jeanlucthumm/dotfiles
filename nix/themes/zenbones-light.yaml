@@ -1,0 +1,23 @@
+system: "base16"
+name: "Zenbones Light"
+author: "mcchrish (base16 adaptation)"
+variant: "light"
+palette:
+  # Normal ANSI colors (0-7)
+  base00: "#F0EDEC"  # color0 - black (background)
+  base01: "#A8334C"  # color1 - red
+  base02: "#4F6C31"  # color2 - green
+  base03: "#944927"  # color3 - yellow
+  base04: "#286486"  # color4 - blue
+  base05: "#88507D"  # color5 - magenta
+  base06: "#3B8992"  # color6 - cyan
+  base07: "#2C363C"  # color7 - white (foreground)
+  # Bright ANSI colors (8-15)
+  base08: "#CFC1BA"  # color8 - bright black
+  base09: "#94253E"  # color9 - bright red
+  base0A: "#3F5A22"  # color10 - bright green
+  base0B: "#803D1C"  # color11 - bright yellow
+  base0C: "#1D5573"  # color12 - bright blue
+  base0D: "#7B3B70"  # color13 - bright magenta
+  base0E: "#2B747C"  # color14 - bright cyan
+  base0F: "#4F5E68"  # color15 - bright white

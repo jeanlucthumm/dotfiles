@@ -109,6 +109,8 @@ in {
       func =
         if n == "gruvbox"
         then "GruvboxTheme"
+        else if n == "zenbones"
+        then "ZenbonesTheme"
         else throw "Unsupported nvim theme: ${n}";
     in ''
       local M = {}
@@ -127,6 +129,8 @@ in {
     name =
       if n == "gruvbox"
       then "gruvbox-${themeDarkMode}-soft"
+      else if n == "zenbones"
+      then "zenburn"
       else throw "Unsupported nushell theme: ${n}";
   in {
     LS_COLORS = lib.hm.nushell.mkNushellInline ''

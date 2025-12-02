@@ -59,6 +59,9 @@ in {
           then
             # Always dark wallpaper since we want contrast
             ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          else if t == "zenbones"
+          then
+            ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
           else throw "unknown theme ${t}";
         polarity =
           if d
@@ -70,6 +73,11 @@ in {
             if d
             then "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-soft.yaml"
             else "${pkgs.base16-schemes}/share/themes/gruvbox-material-light-soft.yaml"
+          else if t == "zenbones"
+          then
+            if d
+            then "${pkgs.base16-schemes}/share/themes/zenbones.yaml"
+            else ../../themes/zenbones-light.yaml
           else throw "unknown theme ${t}";
         fonts = {
           monospace = {
