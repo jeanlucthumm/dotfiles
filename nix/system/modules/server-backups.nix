@@ -16,11 +16,10 @@
   };
 
   systemd.timers.home-backup = {
-    description = "Daily home directory backup";
+    description = "Weekly home directory backup";
     wantedBy = ["timers.target"];
     timerConfig = {
-      OnCalendar = "daily";
-      OnBootSec = "15min";
+      OnCalendar = "Sun *-*-* 14:00:00";
       Persistent = true;
     };
   };
@@ -36,11 +35,10 @@
   };
 
   systemd.timers.homeassistant-backup = {
-    description = "Daily Home Assistant backup";
+    description = "Weekly Home Assistant backup";
     wantedBy = ["timers.target"];
     timerConfig = {
-      OnCalendar = "daily";
-      OnBootSec = "15min";
+      OnCalendar = "Sun *-*-* 14:05:00";
       Persistent = true;
     };
   };
@@ -56,11 +54,10 @@
   };
 
   systemd.timers.plex-backup = {
-    description = "Daily Plex database backup";
+    description = "Weekly Plex database backup";
     wantedBy = ["timers.target"];
     timerConfig = {
-      OnCalendar = "daily";
-      OnBootSec = "15min";
+      OnCalendar = "Sun *-*-* 14:10:00";
       Persistent = true;
     };
   };
