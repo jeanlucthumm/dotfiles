@@ -6,6 +6,6 @@
   theme = {
     enable = true;
     name = "gruvbox";
-    darkMode = false;
+    darkMode = true;
   };
 }

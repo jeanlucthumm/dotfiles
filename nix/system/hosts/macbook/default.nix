@@ -43,6 +43,7 @@ in {
   ];
 
   stylix.homeManagerIntegration.followSystem = false;
+  stylix.enableReleaseChecks = false;
 
   # Optional: launchd agent to auto-start the podman machine (kept commented per request)
   # launchd.user.agents.podman-machine-default = {
