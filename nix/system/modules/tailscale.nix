@@ -5,9 +5,8 @@
     checkReversePath = false;
   };
   services.tailscale.enable = true;
-  boot.kernelParams = [
-    # Allows a Linux system to forward packets from one network interface to another,
-    # which is necessary for routing traffic between Tailscale and the rest of the network.
-    "net.ipv4.ip_forward=1"
-  ];
+  # Allows a Linux system to forward packets from one network interface to another,
+  # which is necessary for routing traffic between Tailscale and the rest of the network.
+  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+  boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
 }
