@@ -14,6 +14,7 @@
     ../../modules/home-assistant.nix
     ../../modules/server-backups.nix
     ../../modules/monitoring.nix
+    ../../modules/zfs.nix
   ];
 
   networking.hostName = "server";
@@ -26,12 +27,6 @@
   environment.systemPackages = with pkgs; [
     smartmontools # for disk health monitoring
   ];
-
-  # ZFS auto-scrub (weekly data integrity checks)
-  services.zfs.autoScrub = {
-    enable = true;
-    interval = "weekly"; # Run every Sunday at 2:00 AM
-  };
 
   # Sanoid automated snapshots
   services.sanoid = {
