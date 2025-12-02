@@ -1,7 +1,7 @@
 # ZFS scrub configuration for tank pool
 # Runs monthly, but only during daytime to avoid HDD noise at night
 {pkgs, ...}: let
-  startHour = "09"; # Resume/start scrubbing
+  startHour = "12"; # Resume/start scrubbing
   endHour = "22"; # Pause scrubbing
 in {
   # Disable NixOS auto-scrub, we manage it ourselves
