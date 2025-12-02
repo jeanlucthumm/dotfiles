@@ -31,12 +31,11 @@
   # Sanoid automated snapshots
   services.sanoid = {
     enable = true;
-    interval = "hourly"; # Check for snapshots every hour
+    interval = "*-*-* 14:15:00"; # Afternoon, after backups
 
     templates = {
       # Template for critical data (backups)
       critical = {
-        hourly = 24; # 1 day of hourly
         daily = 14; # 2 weeks of daily
         weekly = 4; # 1 month of weekly
       };
