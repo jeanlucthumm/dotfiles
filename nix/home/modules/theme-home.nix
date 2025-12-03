@@ -23,6 +23,21 @@ in {
     wofi.enable = false;
     hyprlock.enable = false;
     zen-browser.enable = false;
+    # Use official zenbones kitty theme instead of Stylix's base16 mapping
+    kitty.enable = n != "zenbones";
+  };
+
+  # Official zenbones kitty theme (has proper bright color variants)
+  # Also need to set font manually since we disabled Stylix's kitty target
+  programs.kitty = lib.mkIf (n == "zenbones") {
+    font = {
+      name = theme.fontCoding.name;
+      size = theme.fontCoding.size;
+      package = theme.fontCoding.package;
+    };
+    extraConfig = ''
+      include ${../../themes/kitty/zenbones_${themeDarkMode}.conf}
+    '';
   };
 
   programs.fish.interactiveShellInit = ''
