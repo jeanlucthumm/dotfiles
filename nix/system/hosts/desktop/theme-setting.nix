@@ -12,7 +12,7 @@
   in {
     enable = true;
     inherit (localSettings) darkMode;
-    name = "gruvbox";
+    name = localSettings.name or "gruvbox";
     fontCoding = {
       name = "JetBrainsMono Nerd Font Mono";
       size = 10;
