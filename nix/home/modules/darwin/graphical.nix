@@ -5,6 +5,7 @@
     kitty = {
       settings = {
         macos_option_as_alt = true;
+        macos_titlebar_color = "background";
       };
       keybindings = {
         "cmd+p" = "previous_tab";
