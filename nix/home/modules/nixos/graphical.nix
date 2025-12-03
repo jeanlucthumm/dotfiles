@@ -61,6 +61,7 @@ in {
     wasistlos # Chat (WhatsApp client)
     obsidian # Note taking
     smile # emoji picker
+    transmission_4 # BitTorrent client
 
     clip2path # Wayland clipboard helper for Kitty
   ];
@@ -143,6 +144,7 @@ in {
         "text/html" = ["zen-beta.desktop"];
         "application/xhtml+xml" = ["zen-beta.desktop"];
         "application/pdf" = ["zen-beta.desktop"];
+        "x-scheme-handler/magnet" = ["transmission-gtk.desktop"];
       };
     };
 
