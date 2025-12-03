@@ -5,7 +5,7 @@
 
   theme = {
     enable = true;
-    name = "gruvbox";
-    darkMode = true;
+    name = "zenbones";
+    darkMode = false;
   };
 }
