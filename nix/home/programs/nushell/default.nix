@@ -31,6 +31,7 @@
       (builtins.readFile ./task.nu)
       (builtins.readFile ./pr.nu)
       (builtins.readFile ./gh.nu)
+      (builtins.readFile ./notion.nu)
       (builtins.readFile ./config.nu)
     ];
   };

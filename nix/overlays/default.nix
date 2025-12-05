@@ -9,6 +9,7 @@ inputs: [
       inherit (inputs) uv2nix pyproject-nix pyproject-build-systems;
     };
     notify = prev.callPackage ./notify.nix {};
+    notion-cli = prev.callPackage ./notion-cli.nix {};
   })
   (final: prev: {
     reddit-easy-post = inputs.reddit-easy-post.packages.${prev.stdenv.hostPlatform.system}.default;

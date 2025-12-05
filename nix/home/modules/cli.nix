@@ -39,6 +39,7 @@ in {
     jq # Command-line JSON processor
     just # Handy task runner
     notify # Cross-platform notifications
+    notion-cli # Notion API CLI
 
     # Modern replacements for common tools
     delta # Pretty diffs
