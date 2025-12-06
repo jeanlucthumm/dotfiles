@@ -48,6 +48,19 @@ ddos"
   ./gen-proto.sh
   cd -
 
+  # Allow direnv on all top-level directories with .envrc files
+  glob $"($worktree_path)/*/.envrc" | each { |f|
+    let dir = ($f | path dirname)
+    print $"Allowing direnv in ($dir)"
+    direnv allow $dir
+  }
+
+  # Also allow direnv on the worktree root if it has .envrc
+  if ($worktree_path | path join ".envrc" | path exists) {
+    print $"Allowing direnv in ($worktree_path)"
+    direnv allow $worktree_path
+  }
+
   # Check if working in a monorepo subdirectory
   let monorepo_answer = (input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase)
   let in_monorepo_subdir = $monorepo_answer in ["y", "yes"]
@@ -236,6 +249,14 @@ def --env prdelete []: [nothing -> nothing] {
 
   # Change to the worktree root
   cd (git rev-parse --show-toplevel)
+
+  # Check for uncommitted changes
+  let status = git status --porcelain | str trim
+  if ($status | is-not-empty) {
+    print "Error: Worktree has uncommitted changes. Commit or stash them first."
+    print $status
+    return
+  }
 
   print $"Discarding PR for branch: ($branch_name)"
   print $"Current worktree: ($worktree)"
