@@ -35,11 +35,15 @@ def tstart []: [nothing -> string] {
   task ...$context_arg start $ready_tasks.0.id
 }
 
-# Taskwarrior: Add a child task to the active task, inheriting all properties
+# Taskwarrior: Add child task(s) to a parent task, inheriting all properties
 def tchild [
-  parent: int,    # Which parent to add the child to
-  desc: string,   # Description of the child task
-]: [nothing -> string] {
+  parent: int,        # Which parent to add the child to
+  ...descs: string,   # One or more child task descriptions
+]: [nothing -> nothing] {
+  if ($descs | is-empty) {
+    error make -u { msg: "No child description(s) provided" }
+  }
+
   let parent_task_list = task $parent export | from json
   if ($parent_task_list | is-empty) {
     error make {
@@ -58,13 +62,15 @@ def tchild [
     "id" "description" "entry" "modified" "status" "uuid" "urgency" "depends" "start"
   ]
   let common_props = $parent_task | columns | where not ($it in $skip_list)
-  let args = $common_props | each { |prop|
+  let base_args = $common_props | each { |prop|
     $"($prop):($parent_task | get $prop)"
   }
-  let args = $args ++ [$"blocks:($parent)", $"description:($desc)"]
 
-  # Create the child task
-  task add ...$args
+  # Create each child task
+  $descs | each { |desc|
+    let args = $base_args ++ [$"blocks:($parent)", $"description:($desc)"]
+    task add ...$args
+  }
 }
 
 # Taskwarrior: Break down an active task into one or more smaller ones and start one
@@ -78,7 +84,7 @@ def tbreak [
   }
 
   # Create all requested child tasks
-  $descs | each { |d| tchild $active.id $d }
+  tchild $active.id ...$descs
 
   # Stop current task and start the most recently created child
   let new_task = task export newest | from json | get 0
@@ -118,9 +124,13 @@ def tparent []: [nothing -> string] {
 
 # Taskwarrior: Add task as children to the active's parent
 def tsibling [
-  desc: string,   # Description of the sibling task
-  id?: int, # Optional id of the task to add a sibling to. Default to active task.
-]: [nothing -> string] {
+  ...descs: string,   # One or more sibling task descriptions
+  --id (-i): int,     # Optional id of the task to add a sibling to. Default to active task.
+]: [nothing -> nothing] {
+  if ($descs | is-empty) {
+    error make -u { msg: "No sibling description(s) provided" }
+  }
+
   let parent = if ($id == null) {
     tactive | get uuid | __tparent
   } else {
@@ -132,7 +142,7 @@ def tsibling [
     return
   }
 
-  tchild $parent.id $desc
+  tchild $parent.id ...$descs
 }
 
 def tactive []: [nothing -> record] {
