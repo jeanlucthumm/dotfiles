@@ -26,6 +26,10 @@
         file = ../../secrets/jeanluc-ref.age;
         mode = "400";
       };
+      notion = {
+        file = ../../secrets/jeanluc-notion.age;
+        mode = "400";
+      };
       taskwarrior = {
         file = ../../secrets/jeanluc-taskwarrior.age;
         mode = "400";
@@ -56,6 +60,7 @@
       (pkgs.writeShellScriptBin "get-key-tavily" (makeKeyGetter s.tavily.path))
       (pkgs.writeShellScriptBin "get-key-codestral" (makeKeyGetter s.codestral.path))
       (pkgs.writeShellScriptBin "get-key-ref" (makeKeyGetter s.ref.path))
+      (pkgs.writeShellScriptBin "get-key-notion" (makeKeyGetter s.notion.path))
 
       gnupg # GNU Privacy Guard
       pinentry-tty # Enter password in terminal

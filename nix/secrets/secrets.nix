@@ -9,4 +9,5 @@ in {
   "jeanluc-taskwarrior.age".publicKeys = acc;
   "jeanluc-neo4j.age".publicKeys = acc;
   "jeanluc-ref.age".publicKeys = acc;
+  "jeanluc-notion.age".publicKeys = acc;
 }
