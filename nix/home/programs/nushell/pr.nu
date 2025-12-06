@@ -1,9 +1,12 @@
 # New PR setup
 def prsetup [
-  ticket: string,       # Ticket ID
-  desc: string          # Description of the ticket
-  branch_start?: string, # Starting point for new branch
+  ticket_id: string,       # Ticket ID (e.g., "CORA2-304")
+  branch_start?: string,   # Starting point for new branch
 ]: [nothing -> nothing] {
+
+  # Fetch ticket info from Notion
+  let t = ticket $ticket_id
+  let desc = $t.title
 
   let prompt = "Create a git branch name for the given ticket title. Keep it at most two combined words, no spaces, no '-', keep it short. Output only the git branch name and nothing else. Some examples:
 
@@ -28,16 +31,16 @@ ddos"
     input "Enter branch name: "
   }
 
-  task add ('ticket:' + $ticket) $desc
+  task add ('ticket:' + $ticket_id) $desc
 
   # Get git root directory and create worktree relative to its parent
   let git_root = git rev-parse --show-toplevel | str trim
   let worktree_path = ($git_root | path dirname | path join $name)
 
   if ($branch_start == null) {
-    git worktree add -b $'($ticket)/($name)' $worktree_path
+    git worktree add -b $'($ticket_id)/($name)' $worktree_path
   } else {
-    git worktree add -b $'($ticket)/($name)' $worktree_path $branch_start
+    git worktree add -b $'($ticket_id)/($name)' $worktree_path $branch_start
   }
 
   # Run gen-proto.sh in the new work tree
@@ -65,15 +68,16 @@ ddos"
     $worktree_path
   }
 
-  # If we selected a monorepo subdirectory, attempt a best-effort `make setup`
+  # If we selected a monorepo subdirectory, create PR.md and run setup
   if $in_monorepo_subdir {
+    cd $target_dir
+    prmd $t.contents
     try {
-      cd $target_dir
-      ^make setup err> /dev/null out> /dev/null
-      cd -
+      ^just setup err> /dev/null out> /dev/null
     } catch {
-      # Silently ignore any failures (missing Makefile/setup rule, etc.)
+      # Silently ignore any failures (missing justfile/setup recipe, etc.)
     }
+    cd -
   }
 
   # Open new kitty tab with the work tree name (macOS only)
@@ -214,6 +218,55 @@ def --env prmerge []: [nothing -> nothing] {
   git remote prune origin
 
   print $"Successfully merged and cleaned up ($branch_name)"
+
+  # Navigate to home directory
+  cd ~
+
+  # On macOS, close the kitty tab after all cleanup is complete
+  if ($nu.os-info.name == "macos") {
+    kitten @ close-tab --self
+  }
+}
+
+# Discard PR and clean up worktree (counterpart to prmerge)
+def --env prdelete []: [nothing -> nothing] {
+  # Get current branch name and worktree directory
+  let branch_name = git head
+  let worktree = git rev-parse --show-toplevel | path basename
+
+  # Change to the worktree root
+  cd (git rev-parse --show-toplevel)
+
+  print $"Discarding PR for branch: ($branch_name)"
+  print $"Current worktree: ($worktree)"
+
+  # Ask for confirmation
+  let confirmation = input "Proceed with discard and cleanup? (y/N): "
+  if not (($confirmation | str downcase) in ["y", "yes"]) {
+    print "Aborted"
+    return
+  }
+
+  # Close the PR if it exists (ignore errors if no PR)
+  try {
+    gh pr close --delete-branch
+  } catch { }
+
+  # Navigate to master worktree
+  cd ../master
+
+  # Remove the worktree we were just in
+  sudo git worktree remove $"../($worktree)"
+
+  # Delete local branch (remote already deleted by gh pr close --delete-branch)
+  try {
+    git branch -D $branch_name
+  } catch { }
+
+  # Clean up any other stale remote tracking branches
+  git remote prune origin
+
+  print $"Successfully discarded and cleaned up ($branch_name)"
 
   # Navigate to home directory
   cd ~
