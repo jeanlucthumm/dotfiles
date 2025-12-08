@@ -102,7 +102,8 @@ in {
   };
 
   # Ensure nushell is an allowed login shell in /etc/shells
-  environment.shells = [pkgs.nushell "/opt/homebrew/bin/fish"];
+  # Note: nushell is installed via home-manager, so we use the per-user profile path
+  environment.shells = ["/etc/profiles/per-user/jeanluc/bin/nu"];
 
   # Allows home manager modules to access theme
   home-manager.sharedModules = [./theme-setting.nix];
