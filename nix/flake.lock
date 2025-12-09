@@ -716,11 +716,11 @@
         "uv2nix": "uv2nix_2"
       },
       "locked": {
-        "lastModified": 1765056679,
-        "narHash": "sha256-313Ul5lloopsf+A2uKsYjh8SkJc7B5pWfPnRYJ1Ef9E=",
+        "lastModified": 1765240030,
+        "narHash": "sha256-K1TiYAhNiH1H3+njrf+KLOqROCGzPPFSf6R7URZamKw=",
         "owner": "jeanlucthumm",
         "repo": "taskwarrior-enhanced",
-        "rev": "1aaa605b964133963630c62257ca0345006233a1",
+        "rev": "f9ade55f69193b2b7df49c305c21ad9fa6bd3a74",
         "type": "github"
       },
       "original": {

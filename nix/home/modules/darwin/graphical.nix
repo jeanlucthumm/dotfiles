@@ -1,11 +1,13 @@
 # Darwin specific GUI settings
-{...}: {
+{config, ...}: {
   # These are darwin specific because NixOS relies on the WM for splits.
   programs = {
     kitty = {
       settings = {
         macos_option_as_alt = true;
         macos_titlebar_color = "background";
+        # macOS GUI apps don't inherit shell PATH, so tell kitty where to find nvim
+        exe_search_path = "/etc/profiles/per-user/${config.home.username}/bin";
       };
       keybindings = {
         "cmd+p" = "previous_tab";
