@@ -12,7 +12,7 @@
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       claude-code # CLI LLM coding utility
       # TODO: mcp-nixos has build issues on Darwin, exclude for now
-      mcp-nixos # MCP server for NixOS packages and configuration
+      # mcp-nixos # MCP server for NixOS packages and configuration
 
       # MCP Servers (see nix/overlays directory)
       mcp-opennutrition # OpenNutrition dataset MCP server
