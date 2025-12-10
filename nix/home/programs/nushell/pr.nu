@@ -105,9 +105,12 @@ ddos"
 def prsync [
   branch?: string,  # Branch name; if omitted, select via fzf from ngit branch
 ]: [nothing -> nothing] {
-  # Determine branch: use provided or pick via fzf from ngit branch
+  # Fetch latest remote branches first
+  git fetch --prune
+
+  # Determine branch: use provided or pick via fzf from ngit branch (including remote)
   let sel_branch = if ($branch == null) {
-    let choices = ngit branch | get branch | to text
+    let choices = ngit branch --all | get branch | to text
     let choice = ($choices | fzf --height=40% --prompt="Select branch: ")
     if ($choice | is-empty) {
       print "No branch selected; aborting prsync."

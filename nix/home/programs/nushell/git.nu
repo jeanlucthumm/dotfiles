@@ -2,11 +2,27 @@
 def ngit [] {}
 
 # Nushell version of git branch
-def "ngit branch" []: [nothing -> table<symbol: string, branch: string>] {
-  git branch |
-    lines |
-    parse "{symbol} {branch}" |
-    str trim
+def "ngit branch" [
+  --all (-a)  # Include remote branches not present locally
+]: [nothing -> table<symbol: string, branch: string>] {
+  let local = git branch | lines | parse "{symbol} {branch}" | str trim
+
+  if $all {
+    let local_names = $local | get branch
+
+    # Get remote branches, strip origin/ prefix, exclude HEAD and local branches
+    let remote_only = git branch -r |
+      lines |
+      str trim |
+      where { |b| not ($b | str starts-with "origin/HEAD") } |
+      each { |b| $b | str replace "origin/" "" } |
+      where { |b| $b not-in $local_names } |
+      each { |b| { symbol: "r", branch: $b } }
+
+    $local | append $remote_only
+  } else {
+    $local
+  }
 }
 
 # Nushell wrapper for git worktree
