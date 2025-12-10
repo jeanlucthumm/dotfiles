@@ -101,4 +101,3 @@ Secrets are managed using agenix with SSH public keys defined in `secrets/secret
 - `nu: git abbreviations` - Nushell git alias updates
 - `nix: add pkgs` - Package additions to Nix config
 - `hypridle: increase timeouts` - Hypridle timeout adjustments
-- If updating nushell config, try `nu -c 'source <file>'` afterwards to check for errors
