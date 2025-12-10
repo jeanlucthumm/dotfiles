@@ -93,9 +93,11 @@ ddos"
     cd -
   }
 
-  # Open new kitty tab with the work tree name (macOS only)
+  # Open new kitty tab (macOS) or window (Linux)
   if ($nu.os-info.name == "macos") {
     kitten @ launch --type=tab --tab-title $name --cwd $target_dir
+  } else {
+    kitty --detach --directory $target_dir
   }
 }
 
@@ -158,10 +160,13 @@ def prsync [
     $worktree_path
   }
 
-  # Open new kitty tab with the work tree name (macOS only)
+  # Open new kitty tab (macOS) or window (Linux)
   if ($nu.os-info.name == "macos") {
     print $"Opening kitty tab: ($name)"
     kitten @ launch --type=tab --tab-title $name --cwd $target_dir
+  } else {
+    print $"Opening kitty window in: ($target_dir)"
+    kitty --detach --directory $target_dir
   }
 }
 
@@ -184,11 +189,11 @@ def prtab [
 
   let worktree = $matches | first
 
-  # Open new kitty tab with the worktree name (macOS only)
+  # Open new kitty tab (macOS) or window (Linux)
   if ($nu.os-info.name == "macos") {
     kitten @ launch --type=tab --tab-title $name --cwd $worktree.path
   } else {
-    print $"Not on macOS, would open tab at: ($worktree.path)"
+    kitty --detach --directory $worktree.path
   }
 }
 
