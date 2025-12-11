@@ -202,6 +202,8 @@ def prtab [
 
 # Merge PR and clean up worktree
 def --env prmerge []: [nothing -> nothing] {
+  let initial_dir = (pwd)
+
   # Get current branch name and worktree directory
   let branch_name = git head
   let worktree = git rev-parse --show-toplevel | path basename
@@ -216,6 +218,7 @@ def --env prmerge []: [nothing -> nothing] {
   let confirmation = input "Proceed with merge and cleanup? (y/N): "
   if not (($confirmation | str downcase) in ["y", "yes"]) {
     print "Aborted"
+    cd $initial_dir
     return
   }
 
@@ -251,6 +254,8 @@ def --env prmerge []: [nothing -> nothing] {
 
 # Discard PR and clean up worktree (counterpart to prmerge)
 def --env prdelete []: [nothing -> nothing] {
+  let initial_dir = (pwd)
+
   # Get current branch name and worktree directory
   let branch_name = git head
   let worktree = git rev-parse --show-toplevel | path basename
@@ -263,6 +268,7 @@ def --env prdelete []: [nothing -> nothing] {
   if ($status | is-not-empty) {
     print "Error: Worktree has uncommitted changes. Commit or stash them first."
     print $status
+    cd $initial_dir
     return
   }
 
@@ -273,6 +279,7 @@ def --env prdelete []: [nothing -> nothing] {
   let confirmation = input "Proceed with discard and cleanup? (y/N): "
   if not (($confirmation | str downcase) in ["y", "yes"]) {
     print "Aborted"
+    cd $initial_dir
     return
   }
 
