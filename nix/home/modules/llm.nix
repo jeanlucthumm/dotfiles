@@ -8,6 +8,7 @@
     [
       aichat # AI chatbot for the terminal
       mcp-language-server # MCP server that exposes language servers to LLMs
+      mcp-opennutrition # OpenNutrition dataset MCP server
     ]
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       claude-code # CLI LLM coding utility
@@ -15,7 +16,6 @@
       # mcp-nixos # MCP server for NixOS packages and configuration
 
       # MCP Servers (see nix/overlays directory)
-      mcp-opennutrition # OpenNutrition dataset MCP server
       graphiti-mcp-server # Knowledge graph MCP server
       mcp-reddit # MCP server for Reddit data
     ];
