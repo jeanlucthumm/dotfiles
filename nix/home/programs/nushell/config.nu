@@ -138,6 +138,16 @@ $env.config = {
   }
   keybindings: [
     {
+      name: fzf_file
+      modifier: control
+      keycode: char_f
+      mode: [emacs, vi_normal, vi_insert]
+      event: {
+        send: executehostcommand
+        cmd: "commandline edit --insert (fd --type f --type d --hidden | fzf | str trim)"
+      }
+    }
+    {
       name: backward_word
       modifier: control
       keycode: char_h
