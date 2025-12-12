@@ -30,6 +30,14 @@ def aihelp [query: string]: [nothing -> string] {
   help commands | select name description | to csv | aichat $msg
 }
 
+# Preview current color config with colored swatches
+def color-config []: [nothing -> list<string>] {
+  $env.config.color_config | transpose key value | each { |row|
+    let color = if ($row.value | describe) == "string" { $row.value } else { $row.value.fg? | default "white" }
+    $"(ansi -e {fg: $color})██ ($row.key)(ansi reset)"
+  }
+}
+
 alias lss = ls
 
 def ls --wrapped [...rest]: [nothing -> string] {
