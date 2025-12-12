@@ -96,6 +96,21 @@ def nmod [query: string]: [nothing -> nothing] {
   claude --permission-mode acceptEdits $query
 }
 
+# Carapace completer with path fallback
+# Returns null when empty so nushell falls back to file completion
+$env.PATH = ($env.PATH | split row (char esep) | prepend "~/.config/carapace/bin")
+
+let carapace_completer = {|spans|
+  let expanded_alias = (scope aliases | where name == $spans.0 | $in.0?.expansion?)
+  let spans = (if $expanded_alias != null {
+    $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
+  } else { $spans })
+
+  carapace $spans.0 nushell ...$spans
+  | from json
+  | if ($in | is-empty) { null } else { $in }
+}
+
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
 let abbreviations = {
   g: 'git'
@@ -115,6 +130,12 @@ let abbreviations = {
 
 $env.config = {
   edit_mode: "emacs"
+  completions: {
+    external: {
+      enable: true
+      completer: $carapace_completer
+    }
+  }
   keybindings: [
     {
       name: backward_word

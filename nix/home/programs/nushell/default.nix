@@ -35,7 +35,7 @@
       (builtins.readFile ./config.nu)
     ];
   };
-  programs.carapace.enableNushellIntegration = true;
+  programs.carapace.enableNushellIntegration = false; # Custom integration in config.nu with path fallback
   programs.direnv.enableNushellIntegration = true;
   programs.yazi = {
     shellWrapperName = "y";
