@@ -153,9 +153,4 @@ in {
     '';
   };
 
-  # Override shape_string to use base0A (orange) instead of base0B (green)
-  # Stylix's nushell module doesn't support per-property overrides
-  programs.nushell.extraConfig = lib.mkAfter (with config.lib.stylix.colors.withHashtag; ''
-    $env.config.color_config.shape_string = "${base0A}"
-  '');
 }
