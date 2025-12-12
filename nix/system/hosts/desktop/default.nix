@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ../../modules/bluetooth.nix
+    ../../modules/containers.nix
     ../../modules/graphical.nix
     ../../modules/foundation.nix
     ../../modules/graphical.nix
@@ -34,6 +35,8 @@
   environment.systemPackages = with pkgs; [
     # Desktop host is the only one doing deployments.
     deploy-rs
+    # Docker Compose alternative for Podman
+    podman-compose
   ];
 
   # Android Debug Bridge (ADB) for Android development
@@ -89,8 +92,6 @@
   # connectivity
   systemd.services.NetworkManager-wait-online.enable = false;
 
-  # Docker is a container platform
-  virtualisation.docker.enable = true;
 
   # Ensure Neo4j data directory exists
   systemd.tmpfiles.rules = [
