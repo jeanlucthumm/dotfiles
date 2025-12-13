@@ -1,3 +1,18 @@
+# Parse taskwarrior JSON export with proper datetime conversion
+def "from taskwarrior" []: [string -> table] {
+  let datetime_fields = [start end wait entry modified due scheduled until]
+
+  $in | from json | each { |task|
+    $datetime_fields | reduce --fold $task { |field, acc|
+      if ($field in ($acc | columns)) and ($acc | get $field) != null {
+        $acc | update $field { $in | into datetime }
+      } else {
+        $acc
+      }
+    }
+  }
+}
+
 # Taskwarrior: Stop active task
 def tstop []: [nothing -> string] {
   task +ACTIVE stop
