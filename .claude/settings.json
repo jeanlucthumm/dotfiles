@@ -8,7 +8,7 @@
     "type": "command",
     "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); cd \"$cwd\" 2>/dev/null && branch=$(git head 2>/dev/null || git symbolic-ref --short HEAD 2>/dev/null || echo 'no-git') && echo \"$model • $branch\" || echo \"$model\""
   },
-  "alwaysThinkingEnabled": true,
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754846298344
   }
