@@ -54,7 +54,7 @@ def tstart []: [nothing -> string] {
 def tchild [
   parent: int,        # Which parent to add the child to
   ...descs: string,   # One or more child task descriptions
-]: [nothing -> nothing] {
+]: [nothing -> list<string>] {
   if ($descs | is-empty) {
     error make -u { msg: "No child description(s) provided" }
   }
@@ -141,7 +141,7 @@ def tparent []: [nothing -> string] {
 def tsibling [
   ...descs: string,   # One or more sibling task descriptions
   --id (-i): int,     # Optional id of the task to add a sibling to. Default to active task.
-]: [nothing -> nothing] {
+]: [nothing -> list<string>] {
   if ($descs | is-empty) {
     error make -u { msg: "No sibling description(s) provided" }
   }
