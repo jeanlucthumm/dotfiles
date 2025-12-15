@@ -67,29 +67,13 @@ def tstart []: [nothing -> string] {
     return
   }
 
-  let context_name = (try {
-      task _get rc.context | str trim
-    } catch {
-      ""
-    })
-  let context_name = $context_name | str trim
-  let context_arg = if ($context_name | is-empty) or (($context_name | str downcase) == "none") {
-    []
-  } else {
-    [$"rc.context=($context_name)"]
-  }
-
-  let ready_tasks = if ($context_arg | is-empty) {
-    task export ready | from json
-  } else {
-    task ...$context_arg export ready | from json
-  }
-  if ($ready_tasks | is-empty) {
+  let ready = __tready
+  if ($ready | is-empty) {
     print "No ready tasks available"
     return
   }
 
-  task ...$context_arg start $ready_tasks.0.id
+  task start ($ready | first | get id)
 }
 
 # Taskwarrior: Add child task(s) to a parent task, inheriting all properties
