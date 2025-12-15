@@ -15,9 +15,17 @@ def "from taskwarrior" []: [string -> table] {
 
 # Taskwarrior: Show parent chain for a task (root to task)
 def tchain [
-  id: int  # Task ID to show chain for
+  id?: int  # Task ID (defaults to first ready task)
 ]: [nothing -> table<id: int, description: string>] {
-  let task = $id | __tlookup
+  let task = if ($id == null) {
+    let ready = __tready
+    if ($ready | is-empty) {
+      error make -u { msg: "No ready tasks" }
+    }
+    $ready | first
+  } else {
+    $id | __tlookup
+  }
 
   # Build chain from task up to root
   mut chain = [$task]
@@ -33,6 +41,18 @@ def tchain [
   }
 
   $chain | select id description
+}
+
+# Get ready tasks filtered by current context
+def __tready []: [nothing -> list<record>] {
+  let context = task _get rc.context | str trim
+  let ready = task export ready | from json
+
+  if ($context | is-empty) or ($context | str downcase) == "none" {
+    $ready
+  } else {
+    $ready | where ($it.project? | default "" | str starts-with $context)
+  }
 }
 
 # Taskwarrior: Stop active task
