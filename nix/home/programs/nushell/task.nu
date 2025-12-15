@@ -13,6 +13,28 @@ def "from taskwarrior" []: [string -> table] {
   }
 }
 
+# Taskwarrior: Show parent chain for a task (root to task)
+def tchain [
+  id: int  # Task ID to show chain for
+]: [nothing -> table<id: int, description: string>] {
+  let task = $id | __tlookup
+
+  # Build chain from task up to root
+  mut chain = [$task]
+  mut current = $task
+
+  loop {
+    let parents = $current.uuid | __tparents
+    if ($parents | is-empty) {
+      break
+    }
+    $current = $parents | first
+    $chain = $chain | prepend $current
+  }
+
+  $chain | select id description
+}
+
 # Taskwarrior: Stop active task
 def tstop []: [nothing -> string] {
   task +ACTIVE stop
