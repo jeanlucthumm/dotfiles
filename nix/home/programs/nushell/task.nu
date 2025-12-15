@@ -139,6 +139,7 @@ def trchild [
     error make -u { msg: "No ready tasks" }
   }
   tchild ($ready | first | get id) ...$descs
+  task ready
 }
 
 # Taskwarrior: Delay a task by setting wait
@@ -156,6 +157,9 @@ def twait [
     $id
   }
   task $task_id mod $"wait:($duration)"
+  if ($id == null) {
+    task ready
+  }
 }
 
 # Taskwarrior: Break down an active task into one or more smaller ones and start one
