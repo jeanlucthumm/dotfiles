@@ -12,8 +12,9 @@ local caffeine = hs.caffeinate.watcher
 local log = hs.logger.new("timew", "info")
 local timew = "/etc/profiles/per-user/jeanluc/bin/timew"
 
--- Track if we auto-stopped (only continue our own stops)
-local autoStopped = false
+-- Track when we auto-stopped (nil = not auto-stopped)
+local autoStoppedAt = nil
+local maxLockSeconds = 2 * 60 * 60 -- 2 hours
 
 local function caffeineCallback(event)
     if event == caffeine.systemWillSleep or event == caffeine.screensDidLock then
@@ -22,16 +23,21 @@ local function caffeineCallback(event)
         if output and output:match("^1") then
             log.i("Stopping timewarrior: " .. reason)
             hs.execute(timew .. " stop", true)
-            autoStopped = true
+            autoStoppedAt = os.time()
         else
             log.i("No active tracking to stop (" .. reason .. ")")
         end
     elseif event == caffeine.systemDidWake or event == caffeine.screensDidUnlock then
         local reason = event == caffeine.systemDidWake and "system wake" or "screen unlock"
-        if autoStopped then
-            log.i("Continuing timewarrior: " .. reason)
-            hs.execute(timew .. " continue", true)
-            autoStopped = false
+        if autoStoppedAt then
+            local elapsed = os.time() - autoStoppedAt
+            if elapsed <= maxLockSeconds then
+                log.i(string.format("Continuing timewarrior: %s (locked for %dm)", reason, elapsed / 60))
+                hs.execute(timew .. " continue", true)
+            else
+                log.i(string.format("Not continuing (locked too long: %dh %dm)", elapsed / 3600, (elapsed % 3600) / 60))
+            end
+            autoStoppedAt = nil
         else
             log.i("Not continuing (wasn't auto-stopped): " .. reason)
         end

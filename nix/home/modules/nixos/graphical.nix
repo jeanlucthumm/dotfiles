@@ -27,15 +27,22 @@
   '';
 
   # Timewarrior auto stop/continue scripts for hypridle
+  # Only continues if locked for less than 2 hours
+  maxLockSeconds = 2 * 60 * 60; # 2 hours
   timewAutoStop = pkgs.writeShellScript "timew-auto-stop" ''
     if ${pkgs.timewarrior}/bin/timew get dom.active | grep -q "^1"; then
       ${pkgs.timewarrior}/bin/timew stop
-      touch /tmp/timew-auto-stopped
+      date +%s > /tmp/timew-auto-stopped
     fi
   '';
   timewAutoContinue = pkgs.writeShellScript "timew-auto-continue" ''
     if [ -f /tmp/timew-auto-stopped ]; then
-      ${pkgs.timewarrior}/bin/timew continue
+      stopped_at=$(cat /tmp/timew-auto-stopped)
+      now=$(date +%s)
+      elapsed=$((now - stopped_at))
+      if [ "$elapsed" -le ${toString maxLockSeconds} ]; then
+        ${pkgs.timewarrior}/bin/timew continue
+      fi
       rm /tmp/timew-auto-stopped
     fi
   '';
