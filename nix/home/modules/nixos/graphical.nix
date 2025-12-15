@@ -25,6 +25,20 @@
         ${pkgs.wl-clipboard}/bin/wl-paste --no-newline | ${pkgs.kitty}/bin/kitty @ send-text --stdin
     fi
   '';
+
+  # Timewarrior auto stop/continue scripts for hypridle
+  timewAutoStop = pkgs.writeShellScript "timew-auto-stop" ''
+    if ${pkgs.timewarrior}/bin/timew get dom.active | grep -q "^1"; then
+      ${pkgs.timewarrior}/bin/timew stop
+      touch /tmp/timew-auto-stopped
+    fi
+  '';
+  timewAutoContinue = pkgs.writeShellScript "timew-auto-continue" ''
+    if [ -f /tmp/timew-auto-stopped ]; then
+      ${pkgs.timewarrior}/bin/timew continue
+      rm /tmp/timew-auto-stopped
+    fi
+  '';
 in {
   imports = [
     inputs.zen-browser.homeModules.beta
@@ -233,7 +247,8 @@ in {
           + (dpmsCommand config.monitors.secondary "off");
       in {
         general = {
-          lock_cmd = "pidof hyprlock || hyprlock > /tmp/hyprlock.log 2>&1";
+          lock_cmd = "${timewAutoStop} ; pidof hyprlock || hyprlock > /tmp/hyprlock.log 2>&1";
+          unlock_cmd = "${timewAutoContinue}";
           before_sleep_cmd = "loginctl lock-session";
           after_sleep_cmd = monitorOn;
         };
