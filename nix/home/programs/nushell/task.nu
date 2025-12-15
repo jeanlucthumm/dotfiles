@@ -43,10 +43,10 @@ def tchain [
   $chain | select id description
 }
 
-# Get ready tasks filtered by current context
+# Get ready tasks filtered by current context, excluding active
 def __tready []: [nothing -> list<record>] {
   let context = task _get rc.context | str trim
-  let ready = task export ready | from json
+  let ready = task export ready | from json | where ($it.start? == null)
 
   if ($context | is-empty) or ($context | str downcase) == "none" {
     $ready
@@ -128,6 +128,34 @@ def tchild [
     let args = $base_args ++ [$"blocks:($parent)", $"description:($desc)"]
     task add ...$args
   }
+}
+
+# Taskwarrior: Add child task(s) to first ready task
+def trchild [
+  ...descs: string,   # One or more child task descriptions
+]: [nothing -> list<string>] {
+  let ready = __tready
+  if ($ready | is-empty) {
+    error make -u { msg: "No ready tasks" }
+  }
+  tchild ($ready | first | get id) ...$descs
+}
+
+# Taskwarrior: Delay a task by setting wait
+def twait [
+  duration: string,   # Wait duration (e.g. 2d, 1w)
+  --id (-i): int,     # Task ID (defaults to first ready)
+]: [nothing -> string] {
+  let task_id = if ($id == null) {
+    let ready = __tready
+    if ($ready | is-empty) {
+      error make -u { msg: "No ready tasks" }
+    }
+    $ready | first | get id
+  } else {
+    $id
+  }
+  task $task_id mod $"wait:($duration)"
 }
 
 # Taskwarrior: Break down an active task into one or more smaller ones and start one
