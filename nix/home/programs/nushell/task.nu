@@ -184,8 +184,7 @@ def tparent []: [nothing -> string] {
     from json |
     where uuid in ($parent.depends? | default []) |
     where uuid != $task_record.uuid |
-    where status == "pending" |
-    where $it.wait? == null
+    where status == "pending" and ($it not-has "wait")
 
   if ($siblings | is-not-empty) {
     let next_sibling = ($siblings | first)
@@ -244,7 +243,7 @@ def tplan []: [nothing -> string] {
 # Return all pending direct parents (tasks that depend on this uuid)
 def __tparents []: [string -> list<record>] {
   let uuid = $in
-  task export | from json | where status == "pending" | where $it.wait? == null | where ($uuid in ($it.depends? | default []))
+  task export | from json | where status == "pending" and ($it not-has "wait") | where ($uuid in ($it.depends? | default []))
 }
 
 # Check if task A transitively depends on task B (A is ancestor of B)
@@ -272,7 +271,7 @@ def __lowest_parents []: [list<record> -> list<record>] {
 
 # Select a single pending parent, using fzf if multiple
 def __select_parent []: [list<record> -> record] {
-  let parents = $in | where status == "pending" | where $it.wait? == null
+  let parents = $in | where status == "pending" and ($it not-has "wait")
 
   if ($parents | is-empty) {
     error make -u { msg: "No pending parents" }
