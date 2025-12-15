@@ -132,18 +132,20 @@ def tbreak [
 # Taskwarrior: Complete current task and start the parent
 def tparent []: [nothing -> string] {
   let task_record = __tactive_select
-  let parent = $task_record.uuid | __tparent
+  let all_parents = $task_record.uuid | __tparents
 
-  if ($parent.status != "pending") {
-    print -e $"Parent not pending. UUID: ($parent.uuid)"
-    return
+  if ($all_parents | is-empty) {
+    error make -u { msg: "No parents" }
   }
 
-  # Check for pending siblings: siblings are other children the parent depends on
-  let parent_deps = (if ((($parent | columns) | any { |c| $c == "depends" })) { $parent.depends } else { [] })
+  # Filter to lowest parents (exclude ancestors of other parents)
+  let lowest = $all_parents | __lowest_parents
+  let parent = $lowest | __select_parent
+
+  # Check for pending siblings: other deps of parent that aren't current task
   let siblings = task export |
     from json |
-    where uuid in $parent_deps |
+    where uuid in ($parent.depends? | default []) |
     where uuid != $task_record.uuid |
     where status == "pending"
 
@@ -168,17 +170,18 @@ def tsibling [
     error make -u { msg: "No sibling description(s) provided" }
   }
 
-  let parent = if ($id == null) {
-    tactive | get uuid | __tparent
+  let task_uuid = if ($id == null) {
+    tactive | get uuid
   } else {
-    $id | __tlookup | get uuid | __tparent
+    $id | __tlookup | get uuid
   }
 
-  if ($parent.status != "pending") {
-    print -e $"Parent not pending. UUID: ($parent.uuid)"
-    return
+  let all_parents = $task_uuid | __tparents
+  if ($all_parents | is-empty) {
+    error make -u { msg: "No parents" }
   }
 
+  let parent = $all_parents | __lowest_parents | __select_parent
   tchild $parent.id ...$descs
 }
 
@@ -200,18 +203,59 @@ def tplan []: [nothing -> string] {
   task ready
 }
 
-def __tparent []: [string -> record] {
+# Return all pending direct parents (tasks that depend on this uuid)
+def __tparents []: [string -> list<record>] {
   let uuid = $in
-  let parents = task export |
-    from json |
-    default [] depends |
-    where $uuid in $it.depends
-  if ($parents | is-empty) {
-    error make -u {
-      msg: "No parents"
-    }
+  task export | from json | where status == "pending" | where ($uuid in ($it.depends? | default []))
+}
+
+# Check if task A transitively depends on task B (A is ancestor of B)
+def __depends_on [ancestor_uuid: string, descendant_uuid: string]: [nothing -> bool] {
+  let task = task $ancestor_uuid export | from json | first
+  let deps = $task.depends? | default []
+
+  if ($descendant_uuid in $deps) {
+    return true
   }
-  $parents.0
+
+  # Recurse through deps
+  $deps | any { |d| __depends_on $d $descendant_uuid }
+}
+
+# Filter to "lowest" parents (remove any parent that depends on another parent)
+def __lowest_parents []: [list<record> -> list<record>] {
+  let parents = $in
+  $parents | where { |p|
+    not ($parents | any { |other|
+      $other.uuid != $p.uuid and (__depends_on $p.uuid $other.uuid)
+    })
+  }
+}
+
+# Select a single pending parent, using fzf if multiple
+def __select_parent []: [list<record> -> record] {
+  let parents = $in | where status == "pending"
+
+  if ($parents | is-empty) {
+    error make -u { msg: "No pending parents" }
+  }
+
+  if ($parents | length) == 1 {
+    return ($parents | first)
+  }
+
+  # Multiple parents - use fzf to select
+  let selection = ($parents
+    | each { |t| $"($t.id): ($t.description)" }
+    | to text
+    | fzf --height=40% --prompt="Select parent: ")
+
+  if ($selection | is-empty) {
+    error make -u { msg: "No parent selected" }
+  }
+
+  let selected_id = ($selection | split row ":" | first | into int)
+  $parents | where id == $selected_id | first
 }
 
 def __tlookup []: [int -> record] {
