@@ -32,10 +32,10 @@ local function caffeineCallback(event)
         if autoStoppedAt then
             local elapsed = os.time() - autoStoppedAt
             if elapsed <= maxLockSeconds then
-                log.i(string.format("Continuing timewarrior: %s (locked for %dm)", reason, elapsed / 60))
+                log.i(string.format("Continuing timewarrior: %s (locked for %dm)", reason, math.floor(elapsed / 60)))
                 hs.execute(timew .. " continue", true)
             else
-                log.i(string.format("Not continuing (locked too long: %dh %dm)", elapsed / 3600, (elapsed % 3600) / 60))
+                log.i(string.format("Not continuing (locked too long: %dh %dm)", math.floor(elapsed / 3600), math.floor((elapsed % 3600) / 60)))
             end
             autoStoppedAt = nil
         else
