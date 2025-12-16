@@ -241,10 +241,24 @@ def tplan []: [nothing -> string] {
   task ready
 }
 
+# Check if a task is currently waiting (wait date in the future)
+def __twaiting []: [record -> bool] {
+  let task = $in
+  if ($task.wait? | default "") == "" {
+    false
+  } else {
+    ($task.wait | into datetime) > (date now)
+  }
+}
+
 # Return all pending direct parents (tasks that depend on this uuid)
 def __tparents []: [string -> list<record>] {
   let uuid = $in
-  task export | from json | where status == "pending" and ($it not-has "wait") | where ($uuid in ($it.depends? | default []))
+  task export |
+    from json |
+    where status == "pending" |
+    where not ($it | __twaiting) |
+    where ($uuid in ($it.depends? | default []))
 }
 
 # Check if task A transitively depends on task B (A is ancestor of B)
@@ -272,7 +286,7 @@ def __lowest_parents []: [list<record> -> list<record>] {
 
 # Select a single pending parent, using fzf if multiple
 def __select_parent []: [list<record> -> record] {
-  let parents = $in | where status == "pending" and ($it not-has "wait")
+  let parents = $in | where status == "pending" and not ($it | __twaiting)
 
   if ($parents | is-empty) {
     error make -u { msg: "No pending parents" }
