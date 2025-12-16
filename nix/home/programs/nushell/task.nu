@@ -166,7 +166,7 @@ def tbreak [
 }
 
 # Taskwarrior: Complete current task and start the parent
-def tparent []: [nothing -> string] {
+def tparent []: [nothing -> nothing] {
   let task_record = __tactive_select
   let all_parents = $task_record.uuid | __tparents
 
@@ -190,12 +190,13 @@ def tparent []: [nothing -> string] {
     let next_sibling = ($siblings | first)
     task done $task_record.id
     task start $next_sibling.id
-    print $"Started sibling instead of parent: (#($next_sibling.id)) ($next_sibling.description)"
+    print $"\n(ansi cyan)($next_sibling.description)(ansi reset)"
     return
   }
 
   task done $task_record.id
   task start $parent.id
+  print $"\n(ansi cyan)($parent.description)(ansi reset)"
 }
 
 # Taskwarrior: Add task as children to the active's parent
