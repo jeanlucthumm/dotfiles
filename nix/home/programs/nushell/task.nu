@@ -51,7 +51,9 @@ def __tready []: [nothing -> list<record>] {
   if ($context | is-empty) or ($context | str downcase) == "none" {
     $ready
   } else {
-    $ready | where ($it.project? | default "" | str starts-with $context)
+    # Context uses dashes, project uses dots (e.g., my-proj -> my.proj)
+    let proj_prefix = $context | str replace -a "-" "."
+    $ready | where ($it.project? | default "" | str starts-with $proj_prefix)
   }
 }
 
