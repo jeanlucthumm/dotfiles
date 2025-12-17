@@ -171,7 +171,9 @@ def tparent []: [nothing -> nothing] {
   let all_parents = $task_record.uuid | __tparents
 
   if ($all_parents | is-empty) {
-    error make -u { msg: "No parents" }
+    task done $task_record.id
+    print $"\n(ansi cyan)($task_record.description)(ansi reset) was the last task"
+    return
   }
 
   # Filter to lowest parents (exclude ancestors of other parents)
