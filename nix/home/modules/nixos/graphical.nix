@@ -77,7 +77,7 @@ in {
     lmstudio # LLM experimentation
     tor-browser # Privacy browser
     google-cloud-sdk # Google Cloud CLI
-    ungoogled-chromium # For Dart dev
+    chromium # For Dart dev and PWAs
 
     wasistlos # Chat (WhatsApp client)
     obsidian # Note taking
@@ -277,6 +277,6 @@ in {
     };
   };
   home.sessionVariables = {
-    CHROME_EXECUTABLE = "${pkgs.ungoogled-chromium}/bin/chromium";
+    CHROME_EXECUTABLE = "${pkgs.chromium}/bin/chromium";
   };
 }
