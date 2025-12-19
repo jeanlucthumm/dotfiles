@@ -270,6 +270,25 @@ def tplan []: [nothing -> string] {
   tchain
 }
 
+# Taskwarrior: Move a task from one parent to another
+def tmove [
+  id: int,      # Task ID to move
+  new: int,     # New parent ID
+]: [nothing -> string] {
+  let task_record = $id | __tlookup
+  let parents = $task_record.uuid | __tparents
+
+  if ($parents | length) != 1 {
+    error make -u { msg: $"Task must have exactly one parent, found ($parents | length)" }
+  }
+
+  let old = $parents | first
+
+  # Remove from old parent, add to new
+  task $old.id mod $"dep:-($task_record.uuid)"
+  task $new mod $"dep:($task_record.uuid)"
+}
+
 # Check if a task is currently waiting (wait date in the future)
 def __twaiting []: [record -> bool] {
   let task = $in
