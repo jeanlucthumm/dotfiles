@@ -127,13 +127,14 @@ def tchild [
 # Taskwarrior: Add child task(s) to first ready task
 def trchild [
   ...descs: string,   # One or more child task descriptions
-]: [nothing -> list<string>] {
+]: [nothing -> string] {
   let ready = __tready
   if ($ready | is-empty) {
     error make -u { msg: "No ready tasks" }
   }
   tchild ($ready | first | get id) ...$descs
-  task ready
+  print ""
+  tchain
 }
 
 # Taskwarrior: Block first ready task on another task
@@ -146,6 +147,8 @@ def tblock [
   }
   let ready_id = $ready | first | get id
   task $ready_id mod $"dep:($id)"
+  print ""
+  tchain
 }
 
 # Taskwarrior: Delay a task by setting wait
@@ -164,7 +167,8 @@ def twait [
   }
   task $task_id mod $"wait:($duration)"
   if ($id == null) {
-    task ready
+    print ""
+    tchain
   }
 }
 
@@ -262,7 +266,8 @@ def tplan []: [nothing -> string] {
   let active = tactive
   task done $active.id
   timew start plan
-  task ready
+  print ""
+  tchain
 }
 
 # Check if a task is currently waiting (wait date in the future)
