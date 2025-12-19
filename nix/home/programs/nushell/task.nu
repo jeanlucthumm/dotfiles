@@ -128,6 +128,18 @@ def trchild [
   task ready
 }
 
+# Taskwarrior: Block first ready task on another task
+def tblock [
+  id: int,  # Task ID that blocks the ready task
+]: [nothing -> string] {
+  let ready = __tready
+  if ($ready | is-empty) {
+    error make -u { msg: "No ready tasks" }
+  }
+  let ready_id = $ready | first | get id
+  task $ready_id mod $"dep:($id)"
+}
+
 # Taskwarrior: Delay a task by setting wait
 def twait [
   duration: string,   # Wait duration (e.g. 2d, 1w)
