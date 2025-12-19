@@ -13,10 +13,10 @@ def "from taskwarrior" []: [string -> table] {
   }
 }
 
-# Taskwarrior: Show parent chain for a task (root to task)
+# Taskwarrior: Show parent chain for a task (task to root)
 def tchain [
   id?: int  # Task ID (defaults to first ready task)
-]: [nothing -> table<id: int, description: string>] {
+]: [nothing -> string] {
   let task = if ($id == null) {
     let ready = __tready
     if ($ready | is-empty) {
@@ -40,7 +40,15 @@ def tchain [
     $chain = $chain | prepend $current
   }
 
-  $chain | select id description
+  # Reverse so current task is on top, format as lines
+  $chain | reverse | enumerate | each { |item|
+    let t = $item.item
+    if $item.index == 0 {
+      $"(ansi cyan)($t.id) ($t.description)(ansi reset)"
+    } else {
+      $"($t.id) ($t.description)"
+    }
+  } | str join "\n"
 }
 
 # Get ready tasks filtered by current context, excluding active
