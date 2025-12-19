@@ -207,12 +207,11 @@ def tparent []: [nothing -> nothing] {
   let parent = $lowest | __select_parent
 
   # Check for pending siblings: other deps of parent that aren't current task
-  # Exclude waiting tasks (pending with wait set)
   let siblings = task export |
     from json |
     where uuid in ($parent.depends? | default []) |
     where uuid != $task_record.uuid |
-    where status == "pending" and ($it not-has "wait")
+    where status == "pending" and not ($it | __twaiting)
 
   if ($siblings | is-not-empty) {
     let next_sibling = ($siblings | first)
