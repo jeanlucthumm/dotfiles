@@ -36,6 +36,7 @@
         "kitty_mod+h" = "kitty_scrollback_nvim";
         "kitty_mod+g" = "kitty_scrollback_nvim --config ksb_builtin_last_cmd_output";
         "ctrl+shift+right" = "mouse_select_command_output";
+        "shift+enter" = "send_text all \\e\\r";
       };
     };
 
