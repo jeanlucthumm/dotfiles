@@ -14,7 +14,7 @@
       tw = "taskwarrior-enhanced tree";
       fg = "job unfreeze";
       man = "batman";
-      ccreview = ''claude --allowed-tools "Bash(gh pr:*)" /review'';
+      ccreview = ''claude --allowed-tools "Bash(gh pr:*)" -- /review'';
     };
     environmentVariables = {
       # For git signing since it spawns gpg in a non-interactive session so gpg
