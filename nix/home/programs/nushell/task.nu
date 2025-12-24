@@ -13,7 +13,7 @@ def "from taskwarrior" []: [string -> table] {
   }
 }
 
-# Taskwarrior: Show parent chain for a task (task to root)
+# Taskwarrior: Show parent chain(s) for a task (task to root)
 def tchain [
   id?: int  # Task ID (defaults to first ready task)
 ]: [nothing -> string] {
@@ -27,28 +27,37 @@ def tchain [
     $id | __tlookup
   }
 
-  # Build chain from task up to root
-  mut chain = [$task]
-  mut current = $task
+  # Build all chains from task up to roots
+  let chains = $task | __build_chains
 
-  loop {
-    let parents = $current.uuid | __tparents
-    if ($parents | is-empty) {
-      break
-    }
-    $current = $parents | first
-    $chain = $chain | prepend $current
+  # Format each chain (task on top, cyan for first line)
+  $chains | each { |chain|
+    $chain | enumerate | each { |item|
+      let t = $item.item
+      if $item.index == 0 {
+        $"(ansi cyan)($t.id) ($t.description)(ansi reset)"
+      } else {
+        $"($t.id) ($t.description)"
+      }
+    } | str join "\n"
+  } | str join "\n\n"
+}
+
+# Recursively build all parent chains from a task to roots
+def __build_chains []: [record -> list<list<record>>] {
+  let task = $in
+  let parents = $task.uuid | __tparents
+
+  if ($parents | is-empty) {
+    return [[$task]]
   }
 
-  # Reverse so current task is on top, format as lines
-  $chain | reverse | enumerate | each { |item|
-    let t = $item.item
-    if $item.index == 0 {
-      $"(ansi cyan)($t.id) ($t.description)(ansi reset)"
-    } else {
-      $"($t.id) ($t.description)"
+  # For each parent, get its chains and prepend this task
+  $parents | each { |p|
+    $p | __build_chains | each { |chain|
+      [$task] ++ $chain
     }
-  } | str join "\n"
+  } | flatten
 }
 
 # Get ready tasks filtered by current context, excluding active
@@ -236,7 +245,7 @@ def tsibling [
   }
 
   let task_uuid = if ($id == null) {
-    tactive | get uuid
+    __tactive_select | get uuid
   } else {
     $id | __tlookup | get uuid
   }
