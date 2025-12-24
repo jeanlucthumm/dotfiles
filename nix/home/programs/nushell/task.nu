@@ -17,47 +17,17 @@ def "from taskwarrior" []: [string -> table] {
 def tchain [
   id?: int  # Task ID (defaults to first ready task)
 ]: [nothing -> string] {
-  let task = if ($id == null) {
+  let task_id = if ($id == null) {
     let ready = __tready
     if ($ready | is-empty) {
       error make -u { msg: "No ready tasks" }
     }
-    $ready | first
+    $ready | first | get id
   } else {
-    $id | __tlookup
+    $id
   }
 
-  # Build all chains from task up to roots
-  let chains = $task | __build_chains
-
-  # Format each chain (task on top, cyan for first line)
-  $chains | each { |chain|
-    $chain | enumerate | each { |item|
-      let t = $item.item
-      if $item.index == 0 {
-        $"(ansi cyan)($t.id) ($t.description)(ansi reset)"
-      } else {
-        $"($t.id) ($t.description)"
-      }
-    } | str join "\n"
-  } | str join "\n\n"
-}
-
-# Recursively build all parent chains from a task to roots
-def __build_chains []: [record -> list<list<record>>] {
-  let task = $in
-  let parents = $task.uuid | __tparents
-
-  if ($parents | is-empty) {
-    return [[$task]]
-  }
-
-  # For each parent, get its chains and prepend this task
-  $parents | each { |p|
-    $p | __build_chains | each { |chain|
-      [$task] ++ $chain
-    }
-  } | flatten
+  taskwarrior-enhanced chain $task_id
 }
 
 # Get ready tasks filtered by current context, excluding active
