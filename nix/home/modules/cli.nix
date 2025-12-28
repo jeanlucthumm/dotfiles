@@ -43,6 +43,7 @@ in {
 
     # Modern replacements for common tools
     delta # Pretty diffs
+    difit # GitHub-style git diff viewer
     fd # find replacement
     dust # du replacement
     eza # ls replacement
