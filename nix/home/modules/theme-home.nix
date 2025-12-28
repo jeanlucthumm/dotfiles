@@ -23,20 +23,20 @@ in {
     wofi.enable = false;
     hyprlock.enable = false;
     zen-browser.enable = false;
-    # Use official zenbones kitty theme instead of Stylix's base16 mapping
-    kitty.enable = n != "zenbones";
+    # Use custom kitty themes instead of Stylix's base16 mapping
+    kitty.enable = n != "zenbones" && n != "snazzy";
   };
 
-  # Official zenbones kitty theme (has proper bright color variants)
+  # Custom kitty themes (have proper bright color variants)
   # Also need to set font manually since we disabled Stylix's kitty target
-  programs.kitty = lib.mkIf (n == "zenbones") {
+  programs.kitty = lib.mkIf (n == "zenbones" || n == "snazzy") {
     font = {
       name = theme.fontCoding.name;
       size = theme.fontCoding.size;
       package = theme.fontCoding.package;
     };
     extraConfig = ''
-      include ${../../themes/kitty/zenbones_${themeDarkMode}.conf}
+      include ${../../themes/kitty/${n}_${themeDarkMode}.conf}
     '';
   };
 
@@ -126,6 +126,8 @@ in {
         then "GruvboxTheme"
         else if n == "zenbones"
         then "ZenbonesTheme"
+        else if n == "snazzy"
+        then "SnazzyTheme"
         else throw "Unsupported nvim theme: ${n}";
     in ''
       local M = {}
@@ -146,6 +148,8 @@ in {
       then "gruvbox-${themeDarkMode}-soft"
       else if n == "zenbones"
       then "zenburn"
+      else if n == "snazzy"
+      then "snazzy"
       else throw "Unsupported nushell theme: ${n}";
   in {
     LS_COLORS = lib.hm.nushell.mkNushellInline ''

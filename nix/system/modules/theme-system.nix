@@ -18,6 +18,8 @@
             else "gruvbox-light-soft"
           else if t == "zenbones"
           then "zenburn"
+          else if t == "snazzy"
+          then "snazzy"
           else throw "unknown theme ${t}";
       };
     }

@@ -62,6 +62,9 @@ in {
           else if t == "zenbones"
           then
             ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          else if t == "snazzy"
+          then
+            ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
           else throw "unknown theme ${t}";
         polarity =
           if d
@@ -78,6 +81,11 @@ in {
             if d
             then "${pkgs.base16-schemes}/share/themes/zenbones.yaml"
             else ../../themes/zenbones-light.yaml
+          else if t == "snazzy"
+          then
+            if d
+            then "${pkgs.base16-schemes}/share/themes/snazzy.yaml"
+            else ../../themes/snazzy-light.yaml
           else throw "unknown theme ${t}";
         fonts = {
           monospace = {

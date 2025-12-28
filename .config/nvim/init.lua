@@ -398,6 +398,7 @@ local plugin_spec = {
   },
   { 'folke/tokyonight.nvim' },
   { 'tjdevries/colorbuddy.nvim' },
+  { 'bbenzikry/snazzybuddy.nvim' },
   { 'projekt0n/github-nvim-theme' },
   { 'savq/melange' },
   {
@@ -685,6 +686,12 @@ function ZenbonesTheme(background)
   opt.background = background
   lualine_theme = 'auto'
   cmd('colorscheme zenbones')
+end
+
+function SnazzyTheme(background)
+  opt.background = background
+  lualine_theme = 'auto'
+  require('colorbuddy').colorscheme('snazzybuddy')
 end
 
 function EverForestTheme(background)
