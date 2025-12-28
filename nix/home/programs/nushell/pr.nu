@@ -474,18 +474,45 @@ def prmd [
   }
 }
 
-# Fetch review comments for the current PR
+# Fetch unresolved review comments for the current PR
 def prcomments [
   --llm (-l)  # Copy formatted output to clipboard for LLM
-]: [nothing -> table<path: string, line: int, position: int, body: string>] {
+]: [nothing -> table<path: string, line: int, body: string>] {
   let repo_info = gh repo view --json owner,name | from json
   let owner = $repo_info.owner.login
   let repo = $repo_info.name
-  let pr_number = gh pr view --json number -q '.number'
+  let pr_number = gh pr view --json number -q '.number' | str trim
 
-  let comments = gh api $"repos/($owner)/($repo)/pulls/($pr_number)/comments"
-    | from json
-    | select path line position body
+  let comments = gh api graphql -f $"owner=($owner)" -f $"repo=($repo)" -F $"number=($pr_number)" -f query='
+    query($owner: String!, $repo: String!, $number: Int!) {
+      repository(owner: $owner, name: $repo) {
+        pullRequest(number: $number) {
+          reviewThreads(first: 100) {
+            nodes {
+              isResolved
+              comments(first: 10) {
+                nodes {
+                  path
+                  line
+                  body
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ' | from json | get data.repository.pullRequest.reviewThreads.nodes
+    | where isResolved == false
+    | each { |thread|
+      let comments = $thread.comments.nodes
+      let first = $comments.0
+      {
+        path: $first.path
+        line: $first.line
+        body: ($comments | get body | str join "\n---\n")
+      }
+    }
 
   if $llm {
     $"<review>
@@ -496,7 +523,7 @@ def prcomments [
 
 </review>
 
-Address the simple comments you agree with, one commit per, then let's talk about the ones that require design or you disagree with." | clip
+Address the simple comments you agree with, one commit per, then let's talk about the ones that require design or you disagree with (if any)." | clip
   } else {
     $comments
   }
