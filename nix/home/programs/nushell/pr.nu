@@ -523,7 +523,7 @@ def prcomments [
 
 </review>
 
-Address the simple comments you agree with, one commit per, then let's talk about the ones that require design or you disagree with (if any)." | clip
+Address the simple comments you agree with, one commit per, then let's talk about the ones that require design or you disagree with \(if any\)." | clip
   } else {
     $comments
   }
