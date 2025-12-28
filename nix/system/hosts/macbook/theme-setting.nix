@@ -1,11 +1,17 @@
-{...}: {
+{lib, ...}: {
   imports = [
     ../../modules/theme.nix
   ];
 
-  theme = {
-    enable = true;
-    name = "zenbones";
-    darkMode = false;
-  };
+  theme = let
+    # Externalizes some theme settings outside of VCS.
+    # Helpful when they change frequently.
+    localSettings = lib.optionalAttrs (builtins.pathExists ./theme-setting-local.nix) (import ./theme-setting-local.nix);
+    defaults = {
+      enable = true;
+      name = "zenbones";
+      darkMode = true;
+    };
+  in
+    defaults // localSettings;
 }
