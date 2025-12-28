@@ -39,7 +39,7 @@ def prsetup-offline [
   }
 
   # Check if working in a monorepo subdirectory
-  let subdirs = ls $worktree_path | where type == dir | get name | path basename
+  let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
   let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
 
   let target_dir = if ($subdir | is-empty) {
@@ -139,7 +139,7 @@ ddos"
   }
 
   # Check if working in a monorepo subdirectory
-  let subdirs = ls $worktree_path | where type == dir | get name | path basename
+  let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
   let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
 
   let target_dir = if ($subdir | is-empty) {
@@ -218,7 +218,7 @@ def prsync [
 
   # Check if working in a monorepo subdirectory
   let target_dir = if not $worktree_exists {
-    let subdirs = ls $worktree_path | where type == dir | get name | path basename
+    let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
     let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
 
     if ($subdir | is-empty) {
