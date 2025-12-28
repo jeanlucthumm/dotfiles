@@ -10,16 +10,35 @@
     enableNushellIntegration = true;
 
     settings = let
+      stylixEnabled = config ? stylix && config.stylix.enable;
+      colors = config.lib.stylix.colors.withHashtag;
+      # Foreground for gray segments (light)
       fg =
-        if config ? stylix && config.stylix.enable
-        then config.lib.stylix.colors.withHashtag.base00
+        if stylixEnabled
+        then colors.base00
         else "#FBF1C7";
-      # Colors
-      c1 = "#9A348E";
-      c2 = "#DA627D";
-      c3 = "#FCA17D";
-      c4 = "#86BBD8";
-      c5 = "#06969A";
+      # Foreground for accent segment (dark for contrast)
+      fgAccent =
+        if stylixEnabled
+        then colors.base07
+        else "#282828";
+      # Segment colors: accent + gray gradient
+      c1 =
+        if stylixEnabled
+        then colors.base0D # primary accent (blue)
+        else "#9A348E";
+      c2 =
+        if stylixEnabled
+        then colors.base02 # gray - selection bg
+        else "#DA627D";
+      c3 =
+        if stylixEnabled
+        then colors.base03 # gray - comments
+        else "#FCA17D";
+      c4 =
+        if stylixEnabled
+        then colors.base04 # gray - dark fg
+        else "#86BBD8";
 
       langSymbols = {
         elixir = "";
@@ -71,11 +90,11 @@
         ];
 
         os = {
-          style = "bg:${c1}";
+          style = "bg:${c1} fg:${fg}";
         };
 
         directory = {
-          style = "bg:${c2} fg:${fg}";
+          style = "bg:${c2} fg:${fgAccent}";
           format = "[ $path ]($style)";
           truncation_length = 3;
           truncation_symbol = "…/";
