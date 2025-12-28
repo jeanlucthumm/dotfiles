@@ -62,27 +62,20 @@ ddos"
   }
 
   # Check if working in a monorepo subdirectory
-  let monorepo_answer = (input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase)
-  let in_monorepo_subdir = $monorepo_answer in ["y", "yes"]
+  let subdirs = ls $worktree_path | where type == dir | get name | path basename
+  let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
 
-  let target_dir = if $in_monorepo_subdir {
-    let subdir = input "Enter the relative path to the subdirectory: "
-    let full_subdir_path = ($worktree_path | path join $subdir)
-
-    if ($full_subdir_path | path exists) {
-      print $"Running direnv allow in: ($full_subdir_path)"
-      direnv allow $full_subdir_path
-      $full_subdir_path
-    } else {
-      print $"Warning: Subdirectory ($full_subdir_path) does not exist. Using top level."
-      $worktree_path
-    }
-  } else {
+  let target_dir = if ($subdir | is-empty) {
     $worktree_path
+  } else {
+    let full_subdir_path = ($worktree_path | path join $subdir)
+    print $"Running direnv allow in: ($full_subdir_path)"
+    direnv allow $full_subdir_path
+    $full_subdir_path
   }
 
   # If we selected a monorepo subdirectory, create PR.md and run setup
-  if $in_monorepo_subdir {
+  if $target_dir != $worktree_path {
     cd $target_dir
     prmd $t.contents
     try {
@@ -147,17 +140,17 @@ def prsync [
   }
 
   # Check if working in a monorepo subdirectory
-  let target_dir = if not $worktree_exists and ((input "Will you be working in a subdirectory of a monorepo? (y/N): " | str downcase) in ["y", "yes"]) {
-    let subdir = input "Enter the relative path to the subdirectory: "
-    let full_subdir_path = ($worktree_path | path join $subdir)
+  let target_dir = if not $worktree_exists {
+    let subdirs = ls $worktree_path | where type == dir | get name | path basename
+    let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
 
-    if ($full_subdir_path | path exists) {
+    if ($subdir | is-empty) {
+      $worktree_path
+    } else {
+      let full_subdir_path = ($worktree_path | path join $subdir)
       print $"Running direnv allow in: ($full_subdir_path)"
       direnv allow $full_subdir_path
       $full_subdir_path
-    } else {
-      print $"Warning: Subdirectory ($full_subdir_path) does not exist. Using top level."
-      $worktree_path
     }
   } else {
     $worktree_path
