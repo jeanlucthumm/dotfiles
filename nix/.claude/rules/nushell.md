@@ -10,6 +10,10 @@ After editing nushell config files, verify syntax with:
 nu -c 'source <file>'
 ```
 
+## External Command Arguments
+
+Variables after `=` aren't interpolated: `cmd -f key=$var` passes literal `key=$var`. Use `cmd -f $"key=($var)"`.
+
 ## Pipeline vs Arguments
 
 - **Pipeline input**: The subject being transformed/queried (fits in chains)
