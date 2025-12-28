@@ -1,3 +1,80 @@
+# New PR setup (offline version - no Notion/AI calls)
+def prsetup-offline [
+  ticket_id: string,       # Ticket ID (e.g., "CORA2-304")
+  name: string,            # Branch name (e.g., "authfix")
+  --desc: string,          # Optional ticket description for task
+  branch_start?: string,   # Starting point for new branch
+]: [nothing -> nothing] {
+
+  if ($desc != null) {
+    task add ('ticket:' + $ticket_id) $desc
+  }
+
+  # Get git root directory and create worktree relative to its parent
+  let git_root = git rev-parse --show-toplevel | str trim
+  let worktree_path = ($git_root | path dirname | path join $name)
+
+  if ($branch_start == null) {
+    git worktree add -b $'($ticket_id)/($name)' $worktree_path
+  } else {
+    git worktree add -b $'($ticket_id)/($name)' $worktree_path $branch_start
+  }
+
+  # Run gen-proto.sh in the new work tree
+  cd $worktree_path
+  ./gen-proto.sh
+  cd -
+
+  # Allow direnv on all top-level directories with .envrc files
+  glob $"($worktree_path)/*/.envrc" | each { |f|
+    let dir = ($f | path dirname)
+    print $"Allowing direnv in ($dir)"
+    direnv allow $dir
+  }
+
+  # Also allow direnv on the worktree root if it has .envrc
+  if ($worktree_path | path join ".envrc" | path exists) {
+    print $"Allowing direnv in ($worktree_path)"
+    direnv allow $worktree_path
+  }
+
+  # Check if working in a monorepo subdirectory
+  let subdirs = ls $worktree_path | where type == dir | get name | path basename
+  let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+
+  let target_dir = if ($subdir | is-empty) {
+    $worktree_path
+  } else {
+    let full_subdir_path = ($worktree_path | path join $subdir)
+    print $"Running direnv allow in: ($full_subdir_path)"
+    direnv allow $full_subdir_path
+    $full_subdir_path
+  }
+
+  # If we selected a monorepo subdirectory, create PR.md and run setup
+  if $target_dir != $worktree_path {
+    cd $target_dir
+    if ($desc != null) {
+      prmd $desc
+    } else {
+      prmd
+    }
+    try {
+      ^just setup err> /dev/null out> /dev/null
+    } catch {
+      # Silently ignore any failures (missing justfile/setup recipe, etc.)
+    }
+    cd -
+  }
+
+  # Open new kitty tab (macOS) or window (Linux)
+  if ($nu.os-info.name == "macos") {
+    kitten @ launch --type=tab --tab-title $name --cwd $target_dir
+  } else {
+    kitty --detach --directory $target_dir
+  }
+}
+
 # New PR setup
 def prsetup [
   ticket_id: string,       # Ticket ID (e.g., "CORA2-304")
@@ -395,6 +472,78 @@ def prmd [
   } else {
     $template | save PR.md
   }
+}
+
+# Fetch review comments for the current PR
+def prcomments [
+  --llm (-l)  # Copy formatted output to clipboard for LLM
+]: [nothing -> table<path: string, line: int, position: int, body: string>] {
+  let repo_info = gh repo view --json owner,name | from json
+  let owner = $repo_info.owner.login
+  let repo = $repo_info.name
+  let pr_number = gh pr view --json number -q '.number'
+
+  let comments = gh api $"repos/($owner)/($repo)/pulls/($pr_number)/comments"
+    | from json
+    | select path line position body
+
+  if $llm {
+    $"<review>
+
+```csv
+($comments | to csv)
+```
+
+</review>
+
+Address the simple comments you agree with, one commit per, then let's talk about the ones that require design or you disagree with." | clip
+  } else {
+    $comments
+  }
+}
+
+# Resolve all review threads on the current PR
+def prresolve []: [nothing -> nothing] {
+  let repo_info = gh repo view --json owner,name | from json
+  let owner = $repo_info.owner.login
+  let repo = $repo_info.name
+  let pr_number = gh pr view --json number -q '.number' | str trim
+
+  # Get all unresolved review thread IDs
+  let thread_ids = gh api graphql -f $"owner=($owner)" -f $"repo=($repo)" -F $"number=($pr_number)" -f query='
+    query($owner: String!, $repo: String!, $number: Int!) {
+      repository(owner: $owner, name: $repo) {
+        pullRequest(number: $number) {
+          reviewThreads(first: 100) {
+            nodes {
+              id
+              isResolved
+            }
+          }
+        }
+      }
+    }
+  ' | from json | get data.repository.pullRequest.reviewThreads.nodes
+    | where isResolved == false
+    | get id
+
+  if ($thread_ids | is-empty) {
+    print "No unresolved review threads"
+    return
+  }
+
+  # Resolve each thread
+  for thread_id in $thread_ids {
+    gh api graphql -f $"threadId=($thread_id)" -f query='
+      mutation($threadId: ID!) {
+        resolveReviewThread(input: {threadId: $threadId}) {
+          thread { isResolved }
+        }
+      }
+    ' | ignore
+  }
+
+  print $"Resolved ($thread_ids | length) review threads"
 }
 
 # Open a new kitty tab in the same directory for PR composition
