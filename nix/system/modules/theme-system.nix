@@ -19,7 +19,10 @@
           else if t == "zenbones"
           then "zenburn"
           else if t == "snazzy"
-          then "snazzy"
+          then
+            if d
+            then "snazzy"
+            else ../../themes/vivid/snazzy-light.yml
           else throw "unknown theme ${t}";
       };
     }

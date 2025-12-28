@@ -1,0 +1,126 @@
+colors:
+  # snazzy-light theme for vivid
+  # Based on vscode-snazzy-light by Loilo
+  # https://github.com/loilo/vscode-snazzy-light
+  background_color: 'fafbfc'
+  foreground: '565869'
+  white: 'fafbf9'
+  red: 'ff5c57'
+  green: '2dae58'
+  yellow: 'cf9c00'
+  blue: '09a1ed'
+  pink: 'f767bb'
+  cyan: '13bbb7'
+
+  rose: 'c17e70'
+
+  light_red: 'ffaeac'
+  light_green: '35cf68'
+  light_yellow: 'f5b900'
+  light_blue: '14b1ff'
+  light_pink: 'ff94d2'
+  light_cyan: '13bbb7'
+
+  black: '565869'
+  gray: '9194a2'
+  darkgray: '75798f'
+  darkergray: 'e9eaeb'
+
+core:
+  normal_text: {}
+  regular_file: {}
+  reset_to_normal: {}
+
+  directory:
+    foreground: blue
+
+  symlink:
+    foreground: pink
+
+  multi_hard_link: {}
+
+  fifo:
+    foreground: white
+    background: blue
+
+  socket:
+    foreground: white
+    background: pink
+
+  door:
+    foreground: white
+    background: pink
+
+  block_device:
+    foreground: cyan
+    background: darkergray
+
+  character_device:
+    foreground: pink
+    background: darkergray
+
+  broken_symlink:
+    foreground: white
+    background: red
+
+  missing_symlink_target:
+    foreground: white
+    background: red
+
+  setuid: {}
+  setgid: {}
+  file_with_capability: {}
+  sticky_other_writable: {}
+  other_writable: {}
+  sticky: {}
+
+  executable_file:
+    foreground: red
+    font-style: bold
+
+text:
+  special:
+    foreground: background_color
+    background: yellow
+
+  todo:
+    font-style: bold
+
+  licenses:
+    foreground: gray
+
+  configuration:
+    foreground: yellow
+
+  other:
+    foreground: yellow
+
+markup:
+  foreground: yellow
+
+programming:
+  source:
+    foreground: green
+
+  tooling:
+    foreground: light_green
+
+  continuous-integration:
+    foreground: green
+
+media:
+  foreground: light_pink
+
+office:
+  foreground: red
+
+archives:
+  foreground: cyan
+  font-style: underline
+
+executable:
+  foreground: red
+  font-style: bold
+
+unimportant:
+  foreground: gray

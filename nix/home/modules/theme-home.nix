@@ -117,23 +117,33 @@ in {
     }
   '';
 
-  # Neovim theme
+  # Neovim theme - uses Stylix colors for base16 themes
   home.file = {
-    "${config.xdg.configHome}/nvim/lua/theme.lua".text = let
+    "${config.xdg.configHome}/nvim/lua/theme.lua".text = with config.lib.stylix.colors; let
       n = theme.name;
-      func =
+      # For base16 themes, we inject the colors directly
+      base16Setup = ''
+        require('base16-colorscheme').setup({
+          base00 = '#${base00}', base01 = '#${base01}', base02 = '#${base02}', base03 = '#${base03}',
+          base04 = '#${base04}', base05 = '#${base05}', base06 = '#${base06}', base07 = '#${base07}',
+          base08 = '#${base08}', base09 = '#${base09}', base0A = '#${base0A}', base0B = '#${base0B}',
+          base0C = '#${base0C}', base0D = '#${base0D}', base0E = '#${base0E}', base0F = '#${base0F}',
+        })
+      '';
+      themeSetup =
         if n == "gruvbox"
-        then "GruvboxTheme"
+        then "GruvboxTheme('${themeDarkMode}')"
         else if n == "zenbones"
-        then "ZenbonesTheme"
+        then "ZenbonesTheme('${themeDarkMode}')"
         else if n == "snazzy"
-        then "SnazzyTheme"
+        then base16Setup
         else throw "Unsupported nvim theme: ${n}";
     in ''
       local M = {}
 
       function M.setup()
-        ${func}('${themeDarkMode}')
+        vim.o.background = '${themeDarkMode}'
+        ${themeSetup}
         vim.o.guifont = "${theme.fontCoding.name}:h${toString theme.fontCoding.size}"
       end
 
@@ -143,17 +153,20 @@ in {
 
   # Nushell doesn't have vivid integration yet
   programs.nushell.environmentVariables = let
-    name =
+    vividTheme =
       if n == "gruvbox"
       then "gruvbox-${themeDarkMode}-soft"
       else if n == "zenbones"
       then "zenburn"
       else if n == "snazzy"
-      then "snazzy"
+      then
+        if theme.darkMode
+        then "snazzy"
+        else "${../../themes/vivid/snazzy-light.yml}"
       else throw "Unsupported nushell theme: ${n}";
   in {
     LS_COLORS = lib.hm.nushell.mkNushellInline ''
-      ${pkgs.vivid}/bin/vivid generate ${name}
+      ${pkgs.vivid}/bin/vivid generate ${vividTheme}
     '';
   };
 
