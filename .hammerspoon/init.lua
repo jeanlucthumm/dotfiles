@@ -14,7 +14,7 @@ local timew = "/etc/profiles/per-user/jeanluc/bin/timew"
 
 -- Track when we auto-stopped (nil = not auto-stopped)
 local autoStoppedAt = nil
-local maxLockSeconds = 2 * 60 * 60 -- 2 hours
+local maxLockSeconds = 1 * 60 * 60 -- 1 hours
 
 local function caffeineCallback(event)
     if event == caffeine.systemWillSleep or event == caffeine.screensDidLock then
