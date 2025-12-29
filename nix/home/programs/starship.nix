@@ -64,8 +64,7 @@
       {
         format = lib.strings.concatStrings [
           "[](${c1})"
-          "$os"
-          "$username"
+          "$hostname"
           "[](bg:${c2} fg:${c1})"
           "$directory"
           "[](fg:${c2} bg:${c3})"
@@ -89,7 +88,9 @@
           "[ ](fg:${c4})"
         ];
 
-        os = {
+        hostname = {
+          ssh_only = true;
+          format = "[ $hostname ]($style)";
           style = "bg:${c1} fg:${fg}";
         };
 
