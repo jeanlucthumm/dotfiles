@@ -1,3 +1,1 @@
-Fix what you agree with, reply otherwise. Commit logical chunks.
-
-Before git push, provide a summary. Focus on what (if anything) you disagreed with.
+Go through and implement what you agree with (committing atomically). If there's a design decision required let's talk. For the ones you disagree with, explain why.
