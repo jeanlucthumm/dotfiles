@@ -1,0 +1,1 @@
+Ok now do a simplification pass in the code we changed. Look for opportunities to make the code more elegant. Make variable and function names minimal while remaining legible. Reduce abstractions where possible to help cognitive overhead. Look for ways to consolidate. etc. If code is already good, don’t force it.
