@@ -4,8 +4,9 @@ def worktree [] {}
 
 # Create parallel worktrees and run a command in each via tmux
 def "worktree parallel" [
-  count: int,    # Number of parallel worktrees to create
-  ...cmd: string # Command to run in each worktree
+  count: int,      # Number of parallel worktrees to create
+  --subdir: string # Subdirectory within worktree to run command in
+  ...cmd: string   # Command to run in each worktree
 ]: [nothing -> nothing] {
   if ($cmd | is-empty) {
     error make -u { msg: "Command is required" }
@@ -28,6 +29,7 @@ def "worktree parallel" [
     let new_branch = $"($current_branch)-($i)"
     let dir_name = $new_branch | split row '/' | last
     let worktree_path = $git_root | path dirname | path join $dir_name
+    let work_dir = if ($subdir | is-empty) { $worktree_path } else { $worktree_path | path join $subdir }
 
     if (git branch --list $new_branch | str trim | is-not-empty) {
       error make -u { msg: $"Branch already exists: ($new_branch)" }
@@ -36,7 +38,7 @@ def "worktree parallel" [
       error make -u { msg: $"Path already exists: ($worktree_path)" }
     }
 
-    { branch: $new_branch, dir_name: $dir_name, path: $worktree_path }
+    { branch: $new_branch, dir_name: $dir_name, path: $worktree_path, work_dir: $work_dir }
   }
 
   # Create all worktrees
@@ -51,10 +53,12 @@ def "worktree parallel" [
   let first = $plans | first
   let rest = $plans | skip 1
 
-  ^tmux new-session -d -s $session -n $first.dir_name -c $first.path $shell_cmd
+  ^tmux new-session -d -s $session -n $first.dir_name -c $first.work_dir $shell_cmd
+  sleep 100ms
 
   for plan in $rest {
-    ^tmux new-window -t $"($session):" -n $plan.dir_name -c $plan.path $shell_cmd
+    ^tmux new-window -t $"($session):" -n $plan.dir_name -c $plan.work_dir $shell_cmd
+    sleep 100ms
   }
 
   print ""
@@ -64,7 +68,8 @@ def "worktree parallel" [
 
 # Run parallel Claude Code instances working on PR.md
 def "worktree claude" [
-  count: int  # Number of parallel worktrees/claude instances
+  count: int         # Number of parallel worktrees/claude instances
+  --subdir: string   # Subdirectory within worktree to run in
 ]: [nothing -> nothing] {
   if not ("PR.md" | path exists) {
     error make -u { msg: "PR.md not found in current directory" }
@@ -78,7 +83,12 @@ IMPORTANT - You are running autonomously while the user is AFK:
 - Commit your changes when done with a clear commit message
 - If you hit a blocker you truly cannot resolve, document it in a BLOCKER.md file and stop"
 
-  worktree parallel $count $"claude -- r#'($prompt)'#"
+  let cmd = $"claude --permission-mode acceptEdits -- r#'($prompt)'#"
+  if ($subdir | is-empty) {
+    worktree parallel $count $cmd
+  } else {
+    worktree parallel $count --subdir $subdir $cmd
+  }
 }
 
 # Clean up parallel worktrees created by worktree parallel/claude
@@ -117,4 +127,119 @@ def "worktree cleanup" []: [nothing -> nothing] {
   }
 
   print "Cleanup complete"
+}
+
+# Extract diffs from all parallel branches
+def "worktree diffs" []: [nothing -> table<id: int, branch: string, diff: string>] {
+  let branch = git branch --show-current | str trim
+  if ($branch | is-empty) {
+    error make -u { msg: "Not on a branch" }
+  }
+
+  let wts = ngit worktree list | where { |w| $w.branch =~ $"^($branch)-\\d+$" }
+  if ($wts | is-empty) {
+    error make -u { msg: "No parallel branches found" }
+  }
+
+  let base = git merge-base $branch ($wts | first | get branch) | str trim
+
+  $wts | each { |wt|
+    {
+      id: ($wt.branch | split row '-' | last | into int),
+      branch: $wt.branch,
+      diff: (git diff $"($base)...($wt.branch)")
+    }
+  }
+}
+
+# Judge a match between two implementations
+def judge_match [a: record, b: record, spec: string, out_file: string, out_dir: string]: [nothing -> record] {
+  let prompt = $"You are judging two implementations of the same task.
+
+## Task
+($spec)
+
+## Implementation A \(branch: ($a.branch)\)
+```diff
+($a.diff)
+```
+
+## Implementation B \(branch: ($b.branch)\)
+```diff
+($b.diff)
+```
+
+## Criteria
+1. Correctness: Does it fulfill the requirements?
+2. Code quality: Is it clean and maintainable?
+3. Minimalism: Does it avoid unnecessary changes?
+
+## Instructions
+1. Write your detailed analysis and reasoning to: ($out_file)
+2. End your response with exactly: WINNER: A or WINNER: B"
+
+  let out = $prompt | ^claude -p --allowed-tools "Write" --add-dir $out_dir --permission-mode acceptEdits --no-session-persistence
+
+  # Parse "WINNER: A" or "WINNER: B" from output
+  let winner_lines = $out | lines | where { $in =~ "^WINNER:" }
+  if ($winner_lines | is-empty) {
+    print "  Warning: Could not parse winner, picking randomly"
+    return ([$a $b] | shuffle | first)
+  }
+  let winner = $winner_lines | last
+  if ($winner | str contains "A") { $a } else { $b }
+}
+
+# Run bracket-style tournament on parallel implementations
+def "worktree tournament" []: [nothing -> record<winner: string, dir: string>] {
+  if not ("PR.md" | path exists) {
+    error make -u { msg: "PR.md not found in current directory" }
+  }
+  let spec = open PR.md
+
+  # Filter to non-empty diffs
+  let subs = worktree diffs | where { $in.diff | str trim | is-not-empty }
+  if ($subs | is-empty) {
+    error make -u { msg: "No valid submissions (all diffs empty)" }
+  }
+  if ($subs | length) == 1 {
+    print $"Only one submission: (($subs | first).branch) auto-wins"
+    return { winner: ($subs | first).branch, dir: "" }
+  }
+
+  print $"Starting tournament with ($subs | length) submissions"
+
+  let session = git branch --show-current | str trim | str replace --all '/' '-'
+  let dir = $"/tmp/tournament-($session)"
+  mkdir $dir
+
+  mut remaining = $subs | shuffle
+  mut round = 1
+
+  while ($remaining | length) > 1 {
+    print $"=== Round ($round) \(($remaining | length) left\) ==="
+    let round_dir = $"($dir)/round-($round)"
+    mkdir $round_dir
+
+    $remaining = ($remaining | chunks 2 | par-each { |pair|
+      if ($pair | length) == 1 {
+        print $"  ($pair.0.branch) gets bye"
+        $pair | first
+      } else {
+        let out_file = $"($round_dir)/($pair.0.branch)_vs_($pair.1.branch).md"
+        let winner = judge_match $pair.0 $pair.1 $spec $out_file $dir
+        print $"  ($pair.0.branch) vs ($pair.1.branch) → ($winner.branch)"
+        $winner
+      }
+    })
+    $round = $round + 1
+  }
+
+  let winner = $remaining | first
+  $winner.branch | save -f $"($dir)/winner.txt"
+
+  print $"\nTournament complete! Winner: ($winner.branch)"
+  print $"Results: ($dir)"
+
+  { winner: $winner.branch, dir: $dir }
 }
