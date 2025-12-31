@@ -153,7 +153,7 @@ def "worktree diffs" []: [nothing -> table<id: int, branch: string, diff: string
 }
 
 # Judge a match between two implementations
-def judge_match [a: record, b: record, spec: string, out_file: string, out_dir: string]: [nothing -> record] {
+def judge_match [a: record, b: record, spec: string, out_file: string, round_dir: string, tourney_dir: string]: [nothing -> record] {
   let prompt = $"You are judging two implementations of the same task.
 
 ## Task
@@ -176,9 +176,12 @@ def judge_match [a: record, b: record, spec: string, out_file: string, out_dir: 
 
 ## Instructions
 1. Write your detailed analysis and reasoning to: ($out_file)
-2. End your response with exactly: WINNER: A or WINNER: B"
+2. If the LOSING implementation has good ideas the winner lacks, write them to:
+   ($round_dir)/<loser-branch>_insights.md
+   Format: bullet points of actionable insights. Don't force it - skip if nothing valuable.
+3. End your response with exactly: WINNER: A or WINNER: B"
 
-  let out = $prompt | ^claude -p --allowed-tools "Write" --add-dir $out_dir --permission-mode acceptEdits --no-session-persistence
+  let out = $prompt | ^claude -p --allowed-tools "Write" --add-dir $tourney_dir --permission-mode acceptEdits --no-session-persistence
 
   # Parse "WINNER: A" or "WINNER: B" from output
   let winner_lines = $out | lines | where { $in =~ "^WINNER:" }
@@ -227,7 +230,7 @@ def "worktree tournament" []: [nothing -> record<winner: string, dir: string>] {
         $pair | first
       } else {
         let out_file = $"($round_dir)/($pair.0.branch)_vs_($pair.1.branch).md"
-        let winner = judge_match $pair.0 $pair.1 $spec $out_file $dir
+        let winner = judge_match $pair.0 $pair.1 $spec $out_file $round_dir $dir
         print $"  ($pair.0.branch) vs ($pair.1.branch) → ($winner.branch)"
         $winner
       }
@@ -237,6 +240,14 @@ def "worktree tournament" []: [nothing -> record<winner: string, dir: string>] {
 
   let winner = $remaining | first
   $winner.branch | save -f $"($dir)/winner.txt"
+
+  # Consolidate insights from all rounds
+  let insight_files = glob $"($dir)/round-*/*_insights.md"
+  if ($insight_files | is-not-empty) {
+    let insights = $insight_files | each { open $in } | str join "\n\n"
+    $"# Insights from Eliminated Implementations\n\n($insights)" | save -f $"($dir)/insights.md"
+    print $"\nInsights collected: ($dir)/insights.md"
+  }
 
   print $"\nTournament complete! Winner: ($winner.branch)"
   print $"Results: ($dir)"
