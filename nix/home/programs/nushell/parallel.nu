@@ -243,7 +243,7 @@ def "worktree tournament" []: [nothing -> record<winner: string, dir: string>] {
   $winner.branch | save -f $"($dir)/winner.txt"
 
   # Consolidate insights from all rounds
-  let insight_files = glob $"($dir)/round-*/*_insights.md"
+  let insight_files = glob $"($dir)/round-*/**/*_insights.md"
   if ($insight_files | is-not-empty) {
     let insights = $insight_files | each { open $in } | str join "\n\n"
     $"# Insights from Eliminated Implementations\n\n($insights)" | save -f $"($dir)/insights.md"
