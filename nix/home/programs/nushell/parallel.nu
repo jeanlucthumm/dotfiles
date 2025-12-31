@@ -153,7 +153,8 @@ def "worktree diffs" []: [nothing -> table<id: int, branch: string, diff: string
 }
 
 # Judge a match between two implementations
-def judge_match [a: record, b: record, spec: string, out_file: string, round_dir: string, tourney_dir: string]: [nothing -> record] {
+def judge_match [a: record, b: record, spec: string, out_file: string, dir: string]: [nothing -> record] {
+  let round_dir = $out_file | path dirname
   let prompt = $"You are judging two implementations of the same task.
 
 ## Task
@@ -175,13 +176,13 @@ def judge_match [a: record, b: record, spec: string, out_file: string, round_dir
 3. Minimalism: Does it avoid unnecessary changes?
 
 ## Instructions
-1. Write your detailed analysis and reasoning to: ($out_file)
-2. If the LOSING implementation has good ideas the winner lacks, write them to:
+1. Write your detailed analysis to: ($out_file)
+2. If the LOSER has good ideas the winner lacks, write them to:
    ($round_dir)/<loser-branch>_insights.md
-   Format: bullet points of actionable insights. Don't force it - skip if nothing valuable.
-3. End your response with exactly: WINNER: A or WINNER: B"
+   Bullet points of actionable insights. Skip if nothing valuable.
+3. End with exactly: WINNER: A or WINNER: B"
 
-  let out = $prompt | ^claude -p --allowed-tools "Write" --add-dir $tourney_dir --permission-mode acceptEdits --no-session-persistence
+  let out = $prompt | ^claude -p --allowed-tools "Write" --add-dir $dir --permission-mode acceptEdits --no-session-persistence
 
   # Parse "WINNER: A" or "WINNER: B" from output
   let winner_lines = $out | lines | where { $in =~ "^WINNER:" }
@@ -230,7 +231,7 @@ def "worktree tournament" []: [nothing -> record<winner: string, dir: string>] {
         $pair | first
       } else {
         let out_file = $"($round_dir)/($pair.0.branch)_vs_($pair.1.branch).md"
-        let winner = judge_match $pair.0 $pair.1 $spec $out_file $round_dir $dir
+        let winner = judge_match $pair.0 $pair.1 $spec $out_file $dir
         print $"  ($pair.0.branch) vs ($pair.1.branch) → ($winner.branch)"
         $winner
       }
