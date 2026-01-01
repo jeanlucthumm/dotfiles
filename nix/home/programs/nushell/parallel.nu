@@ -131,51 +131,39 @@ def "worktree cleanup" []: [nothing -> nothing] {
 
 # Finish tournament: merge winner into base and cleanup
 def "worktree finish" []: [nothing -> nothing] {
-  let winner = git branch --show-current | str trim
-  if ($winner | is-empty) {
+  let base = git branch --show-current | str trim
+  if ($base | is-empty) {
     error make -u { msg: "Not on a branch" }
   }
 
-  # Derive base branch (strip -N suffix)
-  let base = $winner | str replace -r '-\d+$' ''
-  if $base == $winner {
-    error make -u { msg: $"Not on a numbered branch \(expected <base>-N\): ($winner)" }
+  let session = $base | str replace --all '/' '-'
+  let winner_file = $"/tmp/tournament-($session)/winner.txt"
+
+  if not ($winner_file | path exists) {
+    error make -u { msg: $"No tournament results found: ($winner_file)" }
   }
 
-  let session = $base | str replace --all '/' '-'
-
-  # Find parallel branches
-  let parallel = git branch --list $"($base)-*" | lines | str trim | where { $in =~ $"^($base)-\\d+$" }
+  let winner = open $winner_file | str trim
+  let parallel = ngit branch | get branch | where { $in =~ $"^($base)-\\d+$" }
   if ($parallel | is-empty) {
     error make -u { msg: "No parallel branches found" }
   }
 
-  print $"Winner: ($winner)"
-  print $"Base: ($base)"
-  print $"Merging winner into base..."
-
-  # Checkout base and merge winner
-  git checkout $base
-  let ff = git merge --ff-only $winner | complete
-  if $ff.exit_code != 0 {
+  print $"Merging ($winner) into ($base)..."
+  if (git merge --ff-only $winner | complete).exit_code != 0 {
     git merge $winner -m $"Merge tournament winner ($winner)"
   }
 
-  print $"Merged ($winner) into ($base)"
-
-  # Kill tmux session if exists
   try { ^tmux kill-session -t $session } catch { }
 
-  # Remove worktrees and delete parallel branches
-  let worktrees = ngit worktree list | where { $in.branch in $parallel }
-  for wt in $worktrees {
+  for wt in (ngit worktree list | where { $in.branch in $parallel }) {
     git worktree remove --force $wt.path
     print $"Removed worktree: ($wt.path)"
   }
 
-  for branch in $parallel {
-    git branch -D $branch
-    print $"Deleted branch: ($branch)"
+  for b in $parallel {
+    git branch -D $b
+    print $"Deleted branch: ($b)"
   }
 
   print "Finish complete"
