@@ -7,6 +7,7 @@
   home.packages = with pkgs;
     [
       aichat # AI chatbot for the terminal
+      mcp-flutter # MCP server for Flutter app debugging
       mcp-language-server # MCP server that exposes language servers to LLMs
       mcp-opennutrition # OpenNutrition dataset MCP server
     ]

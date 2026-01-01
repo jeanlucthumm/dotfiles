@@ -9,6 +9,7 @@ inputs: [
     mcp-reddit = prev.callPackage ./mcp-reddit.nix {
       inherit (inputs) uv2nix pyproject-nix pyproject-build-systems;
     };
+    mcp-flutter = prev.callPackage ./mcp-flutter.nix {};
     notify = prev.callPackage ./notify.nix {};
     notion-cli = prev.callPackage ./notion-cli.nix {};
   })
