@@ -40,7 +40,9 @@ def prsetup-offline [
 
   # Check if working in a monorepo subdirectory
   let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
-  let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+  let subdir = try {
+    $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+  } catch { "" }
 
   let target_dir = if ($subdir | is-empty) {
     $worktree_path
@@ -140,7 +142,9 @@ ddos"
 
   # Check if working in a monorepo subdirectory
   let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
-  let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+  let subdir = try {
+    $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+  } catch { "" }
 
   let target_dir = if ($subdir | is-empty) {
     $worktree_path
@@ -219,7 +223,9 @@ def prsync [
   # Check if working in a monorepo subdirectory
   let target_dir = if not $worktree_exists {
     let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
-    let subdir = $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+    let subdir = try {
+      $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+    } catch { "" }
 
     if ($subdir | is-empty) {
       $worktree_path
