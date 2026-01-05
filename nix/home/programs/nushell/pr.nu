@@ -3,6 +3,7 @@ def prsetup-offline [
   ticket_id: string,       # Ticket ID (e.g., "CORA2-304")
   name: string,            # Branch name (e.g., "authfix")
   --desc: string,          # Optional ticket description for task
+  --subdir: string,        # Optional moonrepo subdirectory (skips fzf prompt)
   branch_start?: string,   # Starting point for new branch
 ]: [nothing -> nothing] {
 
@@ -39,15 +40,19 @@ def prsetup-offline [
   }
 
   # Check if working in a monorepo subdirectory
-  let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
-  let subdir = try {
-    $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
-  } catch { "" }
+  let selected_subdir = if ($subdir != null) {
+    $subdir
+  } else {
+    let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
+    try {
+      $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+    } catch { "" }
+  }
 
-  let target_dir = if ($subdir | is-empty) {
+  let target_dir = if ($selected_subdir | is-empty) {
     $worktree_path
   } else {
-    let full_subdir_path = ($worktree_path | path join $subdir)
+    let full_subdir_path = ($worktree_path | path join $selected_subdir)
     print $"Running direnv allow in: ($full_subdir_path)"
     direnv allow $full_subdir_path
     $full_subdir_path
@@ -80,6 +85,7 @@ def prsetup-offline [
 # New PR setup
 def prsetup [
   ticket_id: string,       # Ticket ID (e.g., "CORA2-304")
+  --subdir: string,        # Optional moonrepo subdirectory (skips fzf prompt)
   branch_start?: string,   # Starting point for new branch
 ]: [nothing -> nothing] {
 
@@ -141,15 +147,19 @@ ddos"
   }
 
   # Check if working in a monorepo subdirectory
-  let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
-  let subdir = try {
-    $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
-  } catch { "" }
+  let selected_subdir = if ($subdir != null) {
+    $subdir
+  } else {
+    let subdirs = glob ($worktree_path | path join "*") --no-file | path basename
+    try {
+      $subdirs | str join "\n" | fzf --height=40% --prompt="Select subdirectory (ESC for root): "
+    } catch { "" }
+  }
 
-  let target_dir = if ($subdir | is-empty) {
+  let target_dir = if ($selected_subdir | is-empty) {
     $worktree_path
   } else {
-    let full_subdir_path = ($worktree_path | path join $subdir)
+    let full_subdir_path = ($worktree_path | path join $selected_subdir)
     print $"Running direnv allow in: ($full_subdir_path)"
     direnv allow $full_subdir_path
     $full_subdir_path
