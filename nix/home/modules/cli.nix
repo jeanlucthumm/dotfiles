@@ -40,6 +40,7 @@ in {
     just # Handy task runner
     notify # Cross-platform notifications
     notion-cli # Notion API CLI
+    doppler # Secrets manager
 
     # Modern replacements for common tools
     delta # Pretty diffs
