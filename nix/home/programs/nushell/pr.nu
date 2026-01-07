@@ -294,10 +294,14 @@ def --env prmerge []: [nothing -> nothing] {
   let branch_name = git head
   let worktree = git rev-parse --show-toplevel | path basename
 
+  # Get base branch from the PR
+  let base_branch = gh pr view --json baseRefName -q '.baseRefName' | str trim
+
   # Change to the worktree root
   cd (git rev-parse --show-toplevel)
 
   print $"Merging PR for branch: ($branch_name)"
+  print $"Base branch: ($base_branch)"
   print $"Current worktree: ($worktree)"
 
   # Ask for confirmation
@@ -311,8 +315,8 @@ def --env prmerge []: [nothing -> nothing] {
   # Merge the PR (without deleting branch locally)
   gh pr merge -m
 
-  # Navigate to master worktree
-  cd ../master
+  # Navigate to base branch worktree
+  cd $"../($base_branch)"
 
   # Remove the worktree we were just in
   sudo git worktree remove $"../($worktree)"
@@ -346,6 +350,14 @@ def --env prdelete []: [nothing -> nothing] {
   let branch_name = git head
   let worktree = git rev-parse --show-toplevel | path basename
 
+  # Get base branch from PR if it exists, otherwise detect default branch
+  let base_branch = try {
+    gh pr view --json baseRefName -q '.baseRefName' | str trim
+  } catch {
+    # No PR exists, detect default branch from available worktrees
+    if ("../main" | path exists) { "main" } else { "master" }
+  }
+
   # Change to the worktree root
   cd (git rev-parse --show-toplevel)
 
@@ -359,6 +371,7 @@ def --env prdelete []: [nothing -> nothing] {
   }
 
   print $"Discarding PR for branch: ($branch_name)"
+  print $"Base branch: ($base_branch)"
   print $"Current worktree: ($worktree)"
 
   # Ask for confirmation
@@ -374,8 +387,8 @@ def --env prdelete []: [nothing -> nothing] {
     gh pr close --delete-branch
   } catch { }
 
-  # Navigate to master worktree
-  cd ../master
+  # Navigate to base branch worktree
+  cd $"../($base_branch)"
 
   # Remove the worktree we were just in
   sudo git worktree remove $"../($worktree)"
