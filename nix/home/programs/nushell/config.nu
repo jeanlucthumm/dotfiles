@@ -104,6 +104,12 @@ def nmod [query: string]: [nothing -> nothing] {
   claude --permission-mode acceptEdits $query
 }
 
+# Claude Code review - optionally pass args to /review command (e.g. "from branch-a to branch-b")
+def ccreview [...args: string]: [nothing -> nothing] {
+  let review_arg = if ($args | is-empty) { "/review" } else { $"/review ($args | str join ' ')" }
+  claude --allowedTools 'Bash(gh pr:*)' -- $review_arg
+}
+
 # Carapace completer with path fallback
 # Returns null when empty so nushell falls back to file completion
 $env.PATH = ($env.PATH | split row (char esep) | prepend "~/.config/carapace/bin")
