@@ -24,19 +24,24 @@ in {
     hyprlock.enable = false;
     zen-browser.enable = false;
     # Use custom kitty themes instead of Stylix's base16 mapping
-    kitty.enable = n != "zenbones" && n != "snazzy";
+    kitty.enable = n != "zenbones" && n != "snazzy" && n != "rose-pine";
   };
 
   # Custom kitty themes (have proper bright color variants)
   # Also need to set font manually since we disabled Stylix's kitty target
-  programs.kitty = lib.mkIf (n == "zenbones" || n == "snazzy") {
+  programs.kitty = lib.mkIf (n == "zenbones" || n == "snazzy" || n == "rose-pine") {
     font = {
       name = theme.fontCoding.name;
       size = theme.fontCoding.size;
       package = theme.fontCoding.package;
     };
-    extraConfig = ''
-      include ${../../themes/kitty/${n}_${themeDarkMode}.conf}
+    extraConfig = let
+      kittyThemeFile =
+        if n == "rose-pine" && theme.variant == "moon"
+        then "rose-pine_moon.conf"
+        else "${n}_${themeDarkMode}.conf";
+    in ''
+      include ${../../themes/kitty}/${kittyThemeFile}
     '';
   };
 
@@ -130,6 +135,19 @@ in {
           base0C = '#${base0C}', base0D = '#${base0D}', base0E = '#${base0E}', base0F = '#${base0F}',
         })
       '';
+      rosePineVariant =
+        if theme.darkMode
+        then (if theme.variant == "moon" then "moon" else "main")
+        else "dawn";
+      rosePineSetup = ''
+        require'rose-pine'.setup {
+          variant = '${rosePineVariant}',
+          dark_variant = '${if theme.variant == "moon" then "moon" else "main"}',
+          disable_italics = true,
+        }
+        lualine_theme = 'rose-pine'
+        vim.cmd('colorscheme rose-pine')
+      '';
       themeSetup =
         if n == "gruvbox"
         then "GruvboxTheme('${themeDarkMode}')"
@@ -137,6 +155,8 @@ in {
         then "ZenbonesTheme('${themeDarkMode}')"
         else if n == "snazzy"
         then base16Setup
+        else if n == "rose-pine"
+        then rosePineSetup
         else throw "Unsupported nvim theme: ${n}";
     in ''
       local M = {}
@@ -163,6 +183,14 @@ in {
         if theme.darkMode
         then "snazzy"
         else "${../../themes/vivid/snazzy-light.yml}"
+      else if n == "rose-pine"
+      then
+        if theme.darkMode
+        then
+          if theme.variant == "moon"
+          then "rose-pine-moon"
+          else "rose-pine"
+        else "rose-pine-dawn"
       else throw "Unsupported nushell theme: ${n}";
   in {
     LS_COLORS = lib.hm.nushell.mkNushellInline ''

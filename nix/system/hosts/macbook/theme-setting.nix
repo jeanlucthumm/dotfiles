@@ -9,8 +9,9 @@
     localSettings = lib.optionalAttrs (builtins.pathExists ./theme-setting-local.nix) (import ./theme-setting-local.nix);
     defaults = {
       enable = true;
-      name = "zenbones";
+      name = "rose-pine";
       darkMode = true;
+      # variant = "moon";  # Uncomment for moon variant
     };
   in
     defaults // localSettings;

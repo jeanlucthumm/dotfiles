@@ -65,6 +65,9 @@ in {
           else if t == "snazzy"
           then
             ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          else if t == "rose-pine"
+          then
+            ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
           else throw "unknown theme ${t}";
         polarity =
           if d
@@ -86,6 +89,14 @@ in {
             if d
             then "${pkgs.base16-schemes}/share/themes/snazzy.yaml"
             else ../../themes/snazzy-light.yaml
+          else if t == "rose-pine"
+          then
+            if d
+            then
+              if config.theme.variant == "moon"
+              then "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml"
+              else "${pkgs.base16-schemes}/share/themes/rose-pine.yaml"
+            else "${pkgs.base16-schemes}/share/themes/rose-pine-dawn.yaml"
           else throw "unknown theme ${t}";
         fonts = {
           monospace = {
