@@ -1,3 +1,24 @@
+# Clean up Xcode DerivedData for a removed worktree (macOS only, best-effort)
+def cleanup-derived-data [worktree_path: string]: [nothing -> nothing] {
+  let derived_data = $"($env.HOME)/Library/Developer/Xcode/DerivedData"
+
+  if not ($derived_data | path exists) { return }
+
+  ls $derived_data | where type == dir | each { |d|
+    let info_plist = $d.name | path join "info.plist"
+    if ($info_plist | path exists) {
+      let workspace = try {
+        defaults read $info_plist WorkspacePath | str trim
+      } catch { "" }
+
+      if ($workspace | str starts-with $worktree_path) {
+        print $"Cleaning up DerivedData: ($d.name | path basename)"
+        rm -rf $d.name
+      }
+    }
+  } | ignore
+}
+
 # New PR setup (offline version - no Notion/AI calls)
 def prsetup-offline [
   ticket_id: string,       # Ticket ID (e.g., "CORA2-304")
@@ -315,11 +336,19 @@ def --env prmerge []: [nothing -> nothing] {
   # Merge the PR (without deleting branch locally)
   gh pr merge -m
 
+  # Capture full worktree path before removal (for DerivedData cleanup)
+  let worktree_full_path = ($"../($worktree)" | path expand)
+
   # Navigate to base branch worktree
   cd $"../($base_branch)"
 
   # Remove the worktree we were just in
-  sudo git worktree remove $"../($worktree)"
+  sudo git worktree remove $worktree_full_path
+
+  # Clean up Xcode DerivedData (macOS only)
+  if ($nu.os-info.name == "macos") {
+    cleanup-derived-data $worktree_full_path
+  }
 
   # Delete local and remote branch
   git branch -D $branch_name
@@ -387,11 +416,19 @@ def --env prdelete []: [nothing -> nothing] {
     gh pr close --delete-branch
   } catch { }
 
+  # Capture full worktree path before removal (for DerivedData cleanup)
+  let worktree_full_path = ($"../($worktree)" | path expand)
+
   # Navigate to base branch worktree
   cd $"../($base_branch)"
 
   # Remove the worktree we were just in
-  sudo git worktree remove $"../($worktree)"
+  sudo git worktree remove $worktree_full_path
+
+  # Clean up Xcode DerivedData (macOS only)
+  if ($nu.os-info.name == "macos") {
+    cleanup-derived-data $worktree_full_path
+  }
 
   # Delete local branch (remote already deleted by gh pr close --delete-branch)
   try {
@@ -466,6 +503,11 @@ def prcleanup [
       for wt in $target_worktrees {
         print $"Removing worktree at ($wt.path)"
         git worktree remove $wt.path
+
+        # Clean up Xcode DerivedData (macOS only)
+        if ($nu.os-info.name == "macos") {
+          cleanup-derived-data $wt.path
+        }
       }
     }
   }
