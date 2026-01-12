@@ -30,6 +30,14 @@
   networking.hostName = "desktop";
   networking.hostId = "17646629";
 
+  # Block distracting websites
+  networking.extraHosts = ''
+    127.0.0.1 chess.com
+    127.0.0.1 www.chess.com
+    127.0.0.1 lichess.org
+    127.0.0.1 www.lichess.org
+  '';
+
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
