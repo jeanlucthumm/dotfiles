@@ -4,16 +4,16 @@ def cleanup-derived-data [worktree_path: string]: [nothing -> nothing] {
 
   if not ($derived_data | path exists) { return }
 
-  ls $derived_data | where type == dir | each { |d|
-    let info_plist = $d.name | path join "info.plist"
+  glob ($derived_data | path join "*") | where { ($in | path type) == "dir" } | each { |d|
+    let info_plist = $d | path join "info.plist"
     if ($info_plist | path exists) {
       let workspace = try {
         defaults read $info_plist WorkspacePath | str trim
       } catch { "" }
 
       if ($workspace | str starts-with $worktree_path) {
-        print $"Cleaning up DerivedData: ($d.name | path basename)"
-        rm -rf $d.name
+        print $"Cleaning up DerivedData: ($d | path basename)"
+        rm -rf $d
       }
     }
   } | ignore
