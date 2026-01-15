@@ -2,6 +2,7 @@
 {pkgs, ...}: {
   imports = [
     ../../programs/starship.nix
+    ../../programs/nushell/qol.nix
   ];
 
   home.packages = with pkgs; [

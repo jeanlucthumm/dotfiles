@@ -1,7 +1,7 @@
 # Minimal CLI setup - bare essentials for a usable remote server
 {pkgs, ...}: {
   imports = [
-    ../../programs/nushell
+    ../../programs/nushell/foundation.nix
   ];
 
   home.packages = with pkgs; [

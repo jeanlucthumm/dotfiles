@@ -6,6 +6,10 @@
 }: let
   configDir = config.xdg.configHome;
 in {
+  imports = [
+    ../../programs/nushell/dev.nix
+  ];
+
   home.packages = with pkgs; [
     timewarrior # time tracker
     taskwarrior-enhanced # Enhanced taskwarrior companion CLI
