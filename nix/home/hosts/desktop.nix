@@ -2,7 +2,7 @@
   imports = [
     ./desktop_monitors.nix
     ../modules/nixos/foundation.nix
-    ../modules/cli.nix
+    ../modules/cli
     ../modules/nixos/cli.nix
     ../modules/nixos/graphical.nix
     ../modules/graphical.nix

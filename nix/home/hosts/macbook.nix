@@ -8,7 +8,7 @@ in {
   imports = [
     ../modules/darwin/foundation.nix
     ../modules/darwin/nushell.nix
-    ../modules/cli.nix
+    ../modules/cli
     ../modules/graphical.nix
     ../modules/darwin/graphical.nix
     ../modules/darwin/fish-fix.nix

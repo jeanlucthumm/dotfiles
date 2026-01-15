@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ../modules/nixos/foundation.nix
-    ../modules/cli.nix
+    ../modules/cli
     ../modules/ssh.nix
     ../modules/nixos/security.nix
   ];
@@ -11,11 +11,11 @@
     reddit-easy-post # YAML to Reddit posting CLI
   ];
 
-   # Helper script for restoring data from backups
-   home.file."restore.sh" = {
-     source = ../../system/hosts/server/restore.sh;
-     executable = true;
-   };
+  # Helper script for restoring data from backups
+  home.file."restore.sh" = {
+    source = ../../system/hosts/server/restore.sh;
+    executable = true;
+  };
 
   # The state version is required and should stay at the version you
   # originally installed.
