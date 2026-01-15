@@ -128,6 +128,24 @@
         ];
       };
 
+      # Minimal backup server - receives ZFS replication from main server
+      "server-mini" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;};
+        modules = [
+          stylix.nixosModules.stylix
+          home-manager.nixosModules.home-manager
+          agenix.nixosModules.default
+          disko.nixosModules.disko
+          ./system/modules/home-manager.nix
+          ./system/hosts/server-mini
+          {
+            home-manager.extraSpecialArgs.hostName = "server-mini";
+            home-manager.users.jeanluc = import ./home/hosts/server-mini.nix;
+          }
+        ];
+      };
+
       # Custom live installer ISO with SSH keys pre-configured
       "iso" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
