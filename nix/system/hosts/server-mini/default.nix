@@ -21,5 +21,12 @@
     smartmontools # disk health monitoring
   ];
 
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 4 * 1024; # 4 GiB
+    }
+  ];
+
   system.stateVersion = "24.05";
 }
