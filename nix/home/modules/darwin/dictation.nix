@@ -193,7 +193,7 @@
 
             if text:
                 print(f'✓ "{text}"')
-                subprocess.run(["pbcopy"], input=text.encode(), check=True)
+                subprocess.run(["pbcopy"], input=(text + " ").encode(), check=True)
                 subprocess.run([
                     "osascript", "-e",
                     'tell application "System Events" to keystroke "v" using command down'
@@ -247,7 +247,7 @@ in {
                 local text, status = hs.execute("echo '" .. dictFile .. "' | nc -U /tmp/whisper.sock")
                 if status and text and text ~= "" then
                     text = text:gsub("^%s*(.-)%s*$", "%1")
-                    hs.pasteboard.setContents(text)
+                    hs.pasteboard.setContents(text .. " ")
                     hs.eventtap.keyStroke({"cmd"}, "v")
                 else
                     dictLog.e("Transcription failed or empty")
