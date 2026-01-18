@@ -66,6 +66,11 @@ Secrets are managed using agenix with SSH public keys defined in `secrets/secret
 ## General notes
 
 - User primarily uses nushell for interactive use. Config is located in `home/programs/nushell/`
+- **Use `manix` to search for Nix packages and options**:
+  - `manix <query>` - searches nixpkgs packages, NixOS options, Home Manager options, nix-darwin options
+  - `manix <query> --source nixpkgs_tree` - search only packages
+  - `manix <query> --source hm_options` - search only Home Manager options
+  - `manix <query> --source nd_options` - search only nix-darwin options
 
 ## Version Control with yadm
 
