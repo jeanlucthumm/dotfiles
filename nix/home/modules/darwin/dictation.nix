@@ -70,6 +70,46 @@ in {
     python313Packages.sounddevice
   ];
 
+  programs.hammerspoon.extraConfig = ''
+    -- Push-to-talk dictation with Whisper
+    -- Hold Cmd+Shift+P to record, release to transcribe and paste
+    local dictLog = hs.logger.new("dictation", "info")
+    local dictPid = nil
+    local dictFile = "/tmp/dictation.wav"
+    local ffmpeg = "${pkgs.ffmpeg}/bin/ffmpeg"
+
+    local function startRecording()
+        dictLog.i("Starting recording")
+        local task = hs.task.new(ffmpeg, nil, {
+            "-f", "avfoundation", "-i", ":default", "-y", dictFile
+        })
+        task:start()
+        dictPid = task:pid()
+    end
+
+    local function stopAndTranscribe()
+        if dictPid then
+            os.execute("kill -INT " .. dictPid)
+            dictPid = nil
+
+            -- Wait for file to finalize, then transcribe via daemon
+            hs.timer.doAfter(0.1, function()
+                local text, status = hs.execute("echo '" .. dictFile .. "' | nc -U /tmp/whisper.sock")
+                if status and text and text ~= "" then
+                    text = text:gsub("^%s*(.-)%s*$", "%1")
+                    hs.pasteboard.setContents(text)
+                    hs.eventtap.keyStroke({"cmd"}, "v")
+                else
+                    dictLog.e("Transcription failed or empty")
+                end
+            end)
+        end
+    end
+
+    hs.hotkey.bind({"cmd", "shift"}, "p", startRecording, stopAndTranscribe)
+    dictLog.i("Dictation hotkey registered (Cmd+Shift+P)")
+  '';
+
   launchd.agents.whisper-daemon = {
     enable = true;
     config = {
