@@ -22,5 +22,9 @@
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754846298344
+  },
+  "fileSuggestion": {
+    "type": "command",
+    "command": "python3 ~/.claude/hooks/hook_file_suggestion.py"
   }
 }
