@@ -17,54 +17,53 @@ let abbreviations = {
   ta: 'task active'
 }
 
-# Merge abbreviation keybindings and menu into existing config
-$env.config = ($env.config | merge {
-  keybindings: ($env.config.keybindings | append [
-    {
-      name: abbr_menu
-      modifier: none
-      keycode: enter
-      mode: [emacs, vi_normal, vi_insert]
-      event: [
-          { send: menu name: abbr_menu }
-          { send: enter }
-      ]
+# Add abbreviation keybindings and menu (order-independent)
+$env.config.keybindings ++= [
+  {
+    name: abbr_menu
+    modifier: none
+    keycode: enter
+    mode: [emacs, vi_normal, vi_insert]
+    event: [
+        { send: menu name: abbr_menu }
+        { send: enter }
+    ]
+  }
+  {
+    name: abbr_menu
+    modifier: none
+    keycode: space
+    mode: [emacs, vi_normal, vi_insert]
+    event: [
+        { send: menu name: abbr_menu }
+        { edit: insertchar value: ' '}
+    ]
+  }
+]
+
+$env.config.menus ++= [
+  {
+    name: abbr_menu
+    only_buffer_difference: false
+    marker: none
+    type: {
+      layout: columnar
+      columns: 1
+      col_width: 20
+      col_padding: 2
     }
-    {
-      name: abbr_menu
-      modifier: none
-      keycode: space
-      mode: [emacs, vi_normal, vi_insert]
-      event: [
-          { send: menu name: abbr_menu }
-          { edit: insertchar value: ' '}
-      ]
+    style: {
+      text: green
+      selected_text: green_reverse
+      description_text: yellow
     }
-  ])
-  menus: ($env.config.menus? | default [] | append [
-    {
-      name: abbr_menu
-      only_buffer_difference: false
-      marker: none
-      type: {
-        layout: columnar
-        columns: 1
-        col_width: 20
-        col_padding: 2
-      }
-      style: {
-        text: green
-        selected_text: green_reverse
-        description_text: yellow
-      }
-      source: { |buffer, position|
-        let match = $abbreviations | columns | where $it == $buffer
-        if ($match | is-empty) {
-          { value: $buffer }
-        } else {
-          { value: ($abbreviations | get $match.0) }
-        }
+    source: { |buffer, position|
+      let match = $abbreviations | columns | where $it == $buffer
+      if ($match | is-empty) {
+        { value: $buffer }
+      } else {
+        { value: ($abbreviations | get $match.0) }
       }
     }
-  ])
-})
+  }
+]

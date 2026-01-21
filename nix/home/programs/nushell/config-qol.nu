@@ -42,24 +42,19 @@ let carapace_completer = {|spans|
   | if ($in | is-empty) { null } else { $in }
 }
 
-# Merge into existing config
-$env.config = ($env.config | merge {
-  completions: {
-    external: {
-      enable: true
-      completer: $carapace_completer
+# Add to existing config (order-independent)
+$env.config.completions.external.enable = true
+$env.config.completions.external.completer = $carapace_completer
+
+$env.config.keybindings ++= [
+  {
+    name: fzf_file
+    modifier: control
+    keycode: char_f
+    mode: [emacs, vi_normal, vi_insert]
+    event: {
+      send: executehostcommand
+      cmd: "commandline edit --insert (fd --type f --type d --hidden | fzf | str trim)"
     }
   }
-  keybindings: ($env.config.keybindings | append [
-    {
-      name: fzf_file
-      modifier: control
-      keycode: char_f
-      mode: [emacs, vi_normal, vi_insert]
-      event: {
-        send: executehostcommand
-        cmd: "commandline edit --insert (fd --type f --type d --hidden | fzf | str trim)"
-      }
-    }
-  ])
-})
+]
