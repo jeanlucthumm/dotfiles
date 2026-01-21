@@ -45,10 +45,9 @@
     deploy-rs
     # Docker Compose alternative for Podman
     podman-compose
+    # Android Debug Bridge (ADB) for Android development
+    android-tools
   ];
-
-  # Android Debug Bridge (ADB) for Android development
-  programs.adb.enable = true;
 
   swapDevices = [
     {
