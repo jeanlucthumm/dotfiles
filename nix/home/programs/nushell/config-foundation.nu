@@ -75,41 +75,40 @@ def color-config []: [nothing -> list<string>] {
   }
 }
 
-$env.config = {
-  edit_mode: "emacs"
-  hooks: {
-    env_change: {
-      # Auto-load .nu-local.nu overlay when entering a directory, hide it when leaving
-      PWD: [
-        {
-          condition: {|_, after| ($after | path join ".nu-local.nu" | path exists) }
-          code: "overlay use .nu-local.nu"
-        }
-        {
-          condition: {|before, _| (
-            $before != null and
-            ($before | path join ".nu-local.nu" | path exists) and
-            "nu-local" in (overlay list | get name)
-          )}
-          code: "overlay hide nu-local --keep-env [ PWD ]"
-        }
-      ]
-    }
+# Foundation config (order-independent)
+$env.config.edit_mode = "emacs"
+
+# Auto-load .nu-local.nu overlay when entering a directory, hide it when leaving
+$env.config.hooks = ($env.config.hooks? | default {})
+$env.config.hooks.env_change = ($env.config.hooks.env_change? | default {})
+$env.config.hooks.env_change.PWD = ($env.config.hooks.env_change.PWD? | default [] | append [
+  {
+    condition: {|_, after| ($after | path join ".nu-local.nu" | path exists) }
+    code: "overlay use .nu-local.nu"
   }
-  keybindings: [
-    {
-      name: backward_word
-      modifier: control
-      keycode: char_h
-      mode: [emacs, vi_normal, vi_insert]
-      event: { edit: movewordleft }
-    }
-    {
-      name: forward_word
-      modifier: control
-      keycode: char_l
-      mode: [emacs, vi_normal, vi_insert]
-      event: { edit: movewordright }
-    }
-  ]
-}
+  {
+    condition: {|before, _| (
+      $before != null and
+      ($before | path join ".nu-local.nu" | path exists) and
+      "nu-local" in (overlay list | get name)
+    )}
+    code: "overlay hide nu-local --keep-env [ PWD ]"
+  }
+])
+
+$env.config.keybindings ++= [
+  {
+    name: backward_word
+    modifier: control
+    keycode: char_h
+    mode: [emacs, vi_normal, vi_insert]
+    event: { edit: movewordleft }
+  }
+  {
+    name: forward_word
+    modifier: control
+    keycode: char_l
+    mode: [emacs, vi_normal, vi_insert]
+    event: { edit: movewordright }
+  }
+]
