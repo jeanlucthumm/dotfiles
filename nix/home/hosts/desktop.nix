@@ -13,6 +13,7 @@
     ../modules/llm.nix
     ../modules/nixos/security.nix
     ../programs/taskwarrior
+    ../modules/logitech-mx.nix
   ];
 
   # The state version is required and should stay at the version you

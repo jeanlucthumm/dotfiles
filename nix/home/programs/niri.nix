@@ -156,8 +156,8 @@
           action = focus-workspace-up;
         };
 
-        # MX Master thumb button (via logiops mapping to Super+Shift+F20)
-        "Mod+Shift+F20".action = toggle-overview;
+        # MX Master thumb button (via Solaar mapping to Super+Shift+F10)
+        "Mod+Shift+F10".action = toggle-overview;
 
         # New actions from recent niri versions
         # TODO: niri-flake is at v25.08, waiting on v25.11 parity (github.com/sodiboo/niri-flake/issues/1493)
