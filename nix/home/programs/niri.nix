@@ -66,6 +66,10 @@
       layout = {
         gaps = 20;
         always-center-single-column = true;
+
+        shadow = {
+          enable = true;
+        };
       };
 
       window-rules = [
@@ -163,17 +167,16 @@
 
       cursor = {
         hide-after-inactive-ms = 5000;
+        hide-when-typing = true;
         size = 24;
         theme = "Bibata-Modern-Classic";
       };
 
       spawn-at-startup = [
-        {command = ["${pkgs.xwayland-satellite}/bin/xwayland-satellite"];}
         {command = ["${pkgs.swayosd}/bin/swayosd-server"];}
       ];
 
       environment = {
-        DISPLAY = ":0"; # Connects to xwalyand-satellite
         XDG_SESSION_TYPE = "wayland";
       };
     };
