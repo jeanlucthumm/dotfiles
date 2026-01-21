@@ -156,7 +156,18 @@
           action = focus-workspace-up;
         };
 
-        "MouseForward".action = toggle-overview;
+        # MX Master thumb button (via logiops mapping to Super+Shift+F20)
+        "Mod+Shift+F20".action = toggle-overview;
+
+        # New actions from recent niri versions
+        # TODO: niri-flake is at v25.08, waiting on v25.11 parity (github.com/sodiboo/niri-flake/issues/1493)
+        # "Mod+Tab".action = show-recent-windows;
+        # "Mod+Shift+F".action = maximize-window-to-edges;
+        "Mod+Escape".action = toggle-keyboard-shortcuts-inhibit;
+        "Mod+G".action = center-column;
+        # TODO: check if load-config-file gets added to niri-flake actions
+        "Mod+Shift+C".action.spawn = ["niri" "msg" "action" "load-config-file"];
+        "Mod+Shift+W".action = expand-column-to-available-width;
       };
 
       prefer-no-csd = true;
