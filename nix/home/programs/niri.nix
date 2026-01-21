@@ -151,6 +151,8 @@
           cooldown-ms = 150;
           action = focus-workspace-up;
         };
+
+        "MouseForward".action = toggle-overview;
       };
 
       prefer-no-csd = true;
