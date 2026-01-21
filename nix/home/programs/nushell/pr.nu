@@ -321,6 +321,26 @@ def --env prmerge []: [nothing -> nothing] {
   # Change to the worktree root
   cd (git rev-parse --show-toplevel)
 
+  # Check if local branch is in sync with remote
+  git fetch origin $branch_name
+  let local_sha = git rev-parse HEAD | str trim
+  let remote_sha = try {
+    git rev-parse $"origin/($branch_name)" | str trim
+  } catch {
+    print $"Error: Branch '($branch_name)' has not been pushed to remote"
+    cd $initial_dir
+    return
+  }
+
+  if $local_sha != $remote_sha {
+    print $"Error: Local branch has diverged from remote"
+    print $"  Local:  ($local_sha)"
+    print $"  Remote: ($remote_sha)"
+    print "Push your changes or pull from remote before merging"
+    cd $initial_dir
+    return
+  }
+
   print $"Merging PR for branch: ($branch_name)"
   print $"Base branch: ($base_branch)"
   print $"Current worktree: ($worktree)"
