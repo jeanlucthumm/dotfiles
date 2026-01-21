@@ -7,7 +7,19 @@
       "Bash(yadm status:*)",
       "Bash(yadm ls-files:*)",
       "Bash(yadm diff:*)",
-      "Bash(grep:*)"
+      "Bash(yadm show:*)",
+      "Bash(git clone:*)",
+      "Bash(cat:*)",
+      "Bash(tree:*)",
+      "Bash(nix-build:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(du:*)",
+      "Bash(manix:*)",
+      "Bash(nix-instantiate:*)",
+      "Bash(mktemp:*)",
+      "Bash(nu -c 'source *')",
+      "Skill(yadm)"
     ],
     "deny": [],
     "ask": []

@@ -1,7 +1,4 @@
 {
-  "mcpServers": {
-    "mcp-nixos": {
-      "command": "mcp-nixos"
-    }
-  }
+  "mcpServers": {}
 }
+
