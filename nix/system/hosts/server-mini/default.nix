@@ -1,5 +1,10 @@
 # Minimal ZFS backup receiver - receives replication from main server
 {pkgs, ...}: {
+  # Limit ZFS ARC to leave memory for the rest of the system (only 3GB RAM)
+  boot.kernelParams = [
+    "zfs.zfs_arc_max=536870912" # 512MB max
+    "zfs.zfs_arc_min=268435456" # 256MB min
+  ];
   imports = [
     ./disko-config.nix
     ./hardware-configuration.nix
