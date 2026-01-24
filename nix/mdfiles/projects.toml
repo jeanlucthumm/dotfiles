@@ -1,0 +1,97 @@
+# Projects Release Tracking
+#
+# Track projects we use extensively to periodically catch up with GitHub releases.
+# Constraint: 1 year lookback max, ~50k token budget for release notes.
+#
+# Fields:
+#   repo        - GitHub owner/repo
+#   version     - Last version we've caught up to
+#   source      - Where to find release notes:
+#                   github         - GH release body has full notes
+#                   blog           - External blog posts (use url_pattern)
+#                   changelog_url  - Single page with all changes
+#                   changelog_file - File in repo (e.g., CHANGELOG.md)
+#   url_pattern - Template for blog/changelog URLs
+#   url         - Static URL for changelog_url source
+#   path        - File path for changelog_file source
+
+# =============================================================================
+# TRACKED
+# =============================================================================
+
+[tracked.niri]
+repo = "YaLTeR/niri"
+version = "v25.08"
+source = "github"
+
+# =============================================================================
+# TODO: Projects to add (move to [tracked.X] when ready)
+# =============================================================================
+
+# Top priority (extensive config, daily use)
+
+[todo.nushell]
+repo = "nushell/nushell"
+source = "blog"
+url_pattern = "https://www.nushell.sh/blog/{date}-nushell_{version}.html"
+note = "date=YYYY-MM-DD, version=v0_110_0 format"
+
+[todo.taskwarrior]
+repo = "GothenburgBitFactory/taskwarrior"
+source = "changelog_file"
+path = "ChangeLog"
+
+[todo.kitty]
+repo = "kovidgoyal/kitty"
+source = "changelog_url"
+url = "https://sw.kovidgoyal.net/kitty/changelog/"
+
+[todo.hyprland]
+repo = "hyprwm/Hyprland"
+source = "github"
+
+# Second tier (significant config)
+
+[todo.starship]
+repo = "starship/starship"
+source = "github"
+
+[todo.yazi]
+repo = "sxyazi/yazi"
+source = "github"
+
+[todo.delta]
+repo = "dandavison/delta"
+source = "github"
+
+[todo.hyprlock]
+repo = "hyprwm/hyprlock"
+source = "github"
+
+[todo.zen-browser]
+repo = "zen-browser/desktop"
+source = "github"
+
+# Infrastructure/tooling
+
+[todo.home-manager]
+repo = "nix-community/home-manager"
+source = "github"
+
+[todo.stylix]
+repo = "danth/stylix"
+source = "github"
+
+[todo.agenix]
+repo = "ryantm/agenix"
+source = "github"
+
+# =============================================================================
+# Stable (track only if hitting issues)
+# =============================================================================
+# ripgrep: BurntSushi/ripgrep
+# fd: sharkdp/fd
+# eza: eza-community/eza
+# bat: sharkdp/bat
+# zoxide: ajeetdsouza/zoxide
+# fzf: junegunn/fzf
