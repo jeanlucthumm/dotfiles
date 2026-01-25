@@ -1,6 +1,6 @@
 # Voice-to-text dictation using Whisper
 # Two modes:
-#   1. Push-to-talk (Cmd+Shift+P): Hold to record, release to transcribe
+#   1. Push-to-talk (Cmd+Shift+F5): Hold to record, release to transcribe
 #   2. VAD mode (Cmd+Shift+O): Toggle continuous listening with voice activity detection
 {
   pkgs,
@@ -223,7 +223,7 @@
 in {
   programs.hammerspoon.extraConfig = ''
     -- Push-to-talk dictation with Whisper
-    -- Hold Cmd+Shift+P to record, release to transcribe and paste
+    -- Hold Cmd+Shift+F5 to record, release to transcribe and paste
     local dictLog = hs.logger.new("dictation", "info")
     local dictPid = nil
     local dictFile = "/tmp/dictation.wav"
@@ -256,8 +256,8 @@ in {
         end
     end
 
-    hs.hotkey.bind({"cmd", "shift"}, "p", startRecording, stopAndTranscribe)
-    dictLog.i("Dictation hotkey registered (Cmd+Shift+P)")
+    hs.hotkey.bind({"cmd", "shift"}, "f5", startRecording, stopAndTranscribe)
+    dictLog.i("Dictation hotkey registered (Cmd+Shift+F5)")
 
     -- VAD mode: Toggle continuous listening
     -- Press Cmd+Shift+O to start/stop
