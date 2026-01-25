@@ -1,16 +1,24 @@
 # Security Posture
 
-Hardware-backed key management using YubiKeys. Replaces software keys in `~/.ssh/` to protect against supply chain exfiltration attacks.
+Hardware-backed key management using YubiKeys. Private keys never touch disk; all cryptographic operations require physical hardware.
+
+**Assumed baseline:** Full disk encryption (FileVault on macOS, LUKS on Linux) on all devices.
 
 ## Threat Model
 
-**Primary concern:** Malicious packages (npm, pip, etc.) exfiltrating private keys from disk.
+### Threats Addressed
 
-**Solution:** Private keys never touch disk. All cryptographic operations require physical hardware.
+| Threat | Likelihood | Mitigation |
+|--------|------------|------------|
+| **Supply chain exfiltration** | Medium | Keys not on disk - malicious packages can't steal them |
+| **Phishing** | Medium-High | WebAuthn credentials are origin-bound - fake sites can't use them |
+| **Device theft** | Low-Medium | Disk encryption + YubiKey PIN/touch required |
 
-**Out of scope:**
-- Evil maid attacks for API keys (cost/benefit doesn't justify)
-- Irreplaceable secrets (handled separately if needed, not in agenix)
+### Out of Scope
+
+- **Zero-day / RAT** - Sophisticated persistent compromise. Low likelihood, not worth optimizing for.
+- **Evil maid for API keys** - Physical access attacks for rotatable secrets. Cost/benefit doesn't justify.
+- **Irreplaceable secrets** - Handled separately if ever needed (see Backup Strategy section).
 
 ## YubiKey Inventory
 
@@ -18,9 +26,9 @@ Hardware-backed key management using YubiKeys. Replaces software keys in `~/.ssh
 |-----|----------|---------|
 | Desktop YubiKey | Desktop workstation | Full setup |
 | MacBook YubiKey | MacBook | Full setup |
-| Wallet NFC | Wallet | Phone web 2FA only |
+| Wallet NFC | Wallet | Phone 2FA + 2FA backup |
 
-No N+1 backup key. Agenix secrets are API keys, recoverable from provider dashboards.
+No agenix backup key. Agenix secrets are recoverable from provider dashboards (which require 2FA - see backup strategy).
 
 ## Per-Device YubiKey Configuration
 
@@ -46,10 +54,11 @@ PIN and PUK changed from defaults on setup. Three wrong PIN attempts locks the s
 
 ## Wallet NFC Key
 
-Dedicated to phone web 2FA only:
-- WebAuthn credentials for mobile authentication
-- NOT an agenix recipient
-- Easily revocable if lost (just deregister from web accounts)
+Dual purpose:
+- **Phone 2FA** - WebAuthn credentials for mobile authentication
+- **2FA backup** - Survives overnight disaster that takes both workstation keys
+
+NOT an agenix recipient. If lost, deregister from web accounts (still have workstation keys).
 
 ## Agenix Configuration
 
@@ -65,9 +74,21 @@ Dedicated to phone web 2FA only:
 
 **Identity:** Each device uses its own YubiKey PIV identity for decryption.
 
-**Secret classification:** Only recoverable secrets (API keys, service credentials). Irreplaceable secrets would use a separate system with N+1 redundancy.
+**Secret classification:** Only recoverable secrets (API keys, service credentials). See backup strategy section for irreplaceable secrets.
 
-## Why No Backup Key
+## Backup Strategy
+
+**N+1 terminology:** If you have N devices that need to decrypt secrets, an N+1 setup adds one extra backup key stored offline. This backup is only used if all N primary keys are lost.
+
+### 2FA Backup
+
+Critical: Without 2FA, can't access dashboards to rotate API keys.
+
+**Strategy:** Register all three YubiKeys (desktop, macbook, wallet) with critical services. Wallet key is geographically separate, survives home disaster.
+
+**Additionally:** Save backup codes offered by services.
+
+### Agenix: No Backup Key
 
 Agenix secrets are operational (daily system ops), not archival:
 - API keys can be rotated from provider dashboards
@@ -80,14 +101,14 @@ If all YubiKeys are lost (catastrophic overnight disaster), recovery is:
 3. Rotate/regenerate credentials
 4. Rebuild nix config
 
-Annoying, not catastrophic.
+Annoying, not catastrophic. N+1 backup not justified for recoverable secrets.
 
-## Future: Irreplaceable Secrets
+### Agenix: Future Irreplaceable Secrets
 
-If ever needed, add N+1 backup key:
-- Store offsite (bank safe deposit box)
-- Add as recipient for sensitive secrets only
-- Store those `.age` files privately (not public dotfiles)
+If ever storing secrets that cannot be regenerated (crypto keys, archival encryption), add N+1 backup:
+- Additional YubiKey stored offsite (bank safe deposit box)
+- Added as agenix recipient alongside primary keys
+- Those `.age` files stored privately, not in public dotfiles
 
 The tooling supports this; it's an operational choice, not a technical limitation.
 
