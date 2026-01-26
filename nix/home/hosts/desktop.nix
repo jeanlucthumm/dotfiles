@@ -5,6 +5,7 @@
     ../modules/cli
     ../modules/nixos/cli.nix
     ../modules/nixos/graphical.nix
+    ../modules/nixos/dictation.nix
     ../modules/graphical.nix
     ../modules/ssh.nix
     ../modules/theme-home.nix
