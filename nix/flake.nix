@@ -44,6 +44,12 @@
       url = "github:jeanlucthumm/taskwarrior-enhanced";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # TODO: switch back to clawdbot/nix-clawdbot once PR #10 is merged
+    nix-clawdbot = {
+      url = "github:das-monki/nix-clawdbot/nixos-aarch64-support";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
 
     # For making python overlays.
     pyproject-nix = {
@@ -78,6 +84,7 @@
     deploy-rs,
     reddit-easy-post,
     taskwarrior-enhanced,
+    nix-clawdbot,
     pyproject-nix,
     uv2nix,
     pyproject-build-systems,
@@ -121,7 +128,10 @@
           ./system/modules/home-manager.nix
           ./system/hosts/server
           {
-            home-manager.extraSpecialArgs.hostName = "server";
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              hostName = "server";
+            };
             home-manager.users.jeanluc = import ./home/hosts/server.nix;
             nixpkgs.overlays = import ./overlays inputs;
           }

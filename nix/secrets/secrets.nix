@@ -1,7 +1,12 @@
 let
   keys = import ./pubkeys.nix;
+  # TODO: rename acc -> hwbacked
+  # Hardware-backed secrets (YubiKey required to decrypt)
   acc = [keys.desktop keys.macbook];
+  # Local-backed secrets (SSH key on disk, recoverable credentials only)
+  localbacked = [keys.desktop keys.macbook keys.server];
 in {
+  # Hardware-backed (YubiKey)
   "jeanluc-openai.age".publicKeys = acc;
   "jeanluc-anthropic.age".publicKeys = acc;
   "jeanluc-tavily.age".publicKeys = acc;
@@ -10,4 +15,7 @@ in {
   "jeanluc-neo4j.age".publicKeys = acc;
   "jeanluc-ref.age".publicKeys = acc;
   "jeanluc-notion.age".publicKeys = acc;
+
+  # Local-backed (recoverable, lower sensitivity)
+  "clawdbot-telegram.age".publicKeys = localbacked;
 }

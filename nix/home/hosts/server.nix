@@ -1,9 +1,10 @@
-{pkgs, ...}: {
+{pkgs, inputs, ...}: {
   imports = [
     ../modules/nixos/foundation.nix
     ../modules/cli
     ../modules/ssh.nix
     ../modules/nixos/security.nix
+    ../programs/clawdbot.nix
   ];
 
   # Server-specific packages

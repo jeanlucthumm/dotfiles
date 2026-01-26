@@ -15,6 +15,7 @@
     ../../modules/server-backups.nix
     ../../modules/monitoring.nix
     ../../modules/zfs.nix
+    ../../modules/agenix.nix
   ];
 
   networking.hostName = "server";
