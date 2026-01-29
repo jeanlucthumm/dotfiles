@@ -17,5 +17,5 @@ inputs: [
     reddit-easy-post = inputs.reddit-easy-post.packages.${prev.stdenv.hostPlatform.system}.default;
     taskwarrior-enhanced = inputs.taskwarrior-enhanced.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  inputs.nix-clawdbot.overlays.default
+  inputs.nix-moltbot.overlays.default
 ]

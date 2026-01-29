@@ -16,6 +16,7 @@
     ../../modules/monitoring.nix
     ../../modules/zfs.nix
     ../../modules/agenix.nix
+    ../../programs/moltbot
   ];
 
   networking.hostName = "server";

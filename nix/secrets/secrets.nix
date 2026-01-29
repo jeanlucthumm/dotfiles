@@ -17,5 +17,6 @@ in {
   "jeanluc-notion.age".publicKeys = acc;
 
   # Local-backed (recoverable, lower sensitivity)
-  "clawdbot-telegram.age".publicKeys = localbacked;
+  "moltbot-telegram.age".publicKeys = localbacked;
+  "moltbot-anthropic-token.age".publicKeys = localbacked;
 }

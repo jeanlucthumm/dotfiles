@@ -4,11 +4,11 @@
     ../modules/cli
     ../modules/ssh.nix
     ../modules/nixos/security.nix
-    ../programs/clawdbot.nix
   ];
 
   # Server-specific packages
   home.packages = with pkgs; [
+    claude-code # Claude CLI (OAuth creds in ~/.claude, gateway runs as system service)
     reddit-easy-post # YAML to Reddit posting CLI
   ];
 

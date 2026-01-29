@@ -44,9 +44,10 @@
       url = "github:jeanlucthumm/taskwarrior-enhanced";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # TODO: switch back to clawdbot/nix-clawdbot once PR #10 is merged
-    nix-clawdbot = {
-      url = "github:das-monki/nix-clawdbot/nixos-aarch64-support";
+    # Local fork for development
+    # TODO: switch to upstream once user isolation implemented
+    nix-moltbot = {
+      url = "path:/home/jeanluc/Code/nix-moldbot";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
@@ -84,7 +85,7 @@
     deploy-rs,
     reddit-easy-post,
     taskwarrior-enhanced,
-    nix-clawdbot,
+    nix-moltbot,
     pyproject-nix,
     uv2nix,
     pyproject-build-systems,
