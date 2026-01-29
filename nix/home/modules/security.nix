@@ -64,5 +64,9 @@
 
       gnupg # GNU Privacy Guard
       pinentry-tty # Enter password in terminal
+
+      # YubiKey
+      yubikey-manager # ykman CLI
+      age-plugin-yubikey # PIV-backed age identities
     ];
 }
