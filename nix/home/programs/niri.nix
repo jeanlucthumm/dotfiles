@@ -165,6 +165,7 @@
         # "Mod+Shift+F".action = maximize-window-to-edges;
         "Mod+Escape".action = toggle-keyboard-shortcuts-inhibit;
         "Mod+G".action = center-column;
+        "Ctrl+Shift+G".action = center-visible-columns;
         # TODO: check if load-config-file gets added to niri-flake actions
         "Mod+Shift+C".action.spawn = ["niri" "msg" "action" "load-config-file"];
         "Mod+Shift+W".action = expand-column-to-available-width;
