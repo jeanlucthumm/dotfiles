@@ -18,4 +18,5 @@ inputs: [
     taskwarrior-enhanced = inputs.taskwarrior-enhanced.packages.${prev.stdenv.hostPlatform.system}.default;
   })
   inputs.nix-moltbot.overlays.default
+  inputs.claude-code.overlays.default
 ]

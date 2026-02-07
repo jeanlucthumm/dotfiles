@@ -47,7 +47,7 @@
     # Local fork for development
     # TODO: switch to upstream once user isolation implemented
     nix-moltbot = {
-      url = "path:/home/jeanluc/Code/nix-moldbot";
+      url = "path:/home/jeanluc/Code/nix-openclaw";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
@@ -70,6 +70,11 @@
       inputs.uv2nix.follows = "uv2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -89,6 +94,7 @@
     pyproject-nix,
     uv2nix,
     pyproject-build-systems,
+    claude-code,
     ...
   }: {
     # System configurations for NixOS hosts.
