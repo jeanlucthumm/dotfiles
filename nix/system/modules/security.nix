@@ -10,6 +10,8 @@
         # Don't ask for password within given time
         default-cache-ttl = 14400;
         max-cache-ttl = 14400;
+        # Prevent scdaemon from grabbing YubiKey CCID interface (conflicts with pcscd)
+        disable-scdaemon = true;
       };
     };
 
