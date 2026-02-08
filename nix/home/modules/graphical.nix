@@ -40,6 +40,8 @@
       };
     };
 
+    zathura.enable = true;
+
     # Enables using Kitty's new key handling protocol in nushell
     nushell.settings.use_kitty_protocol = true;
   };
