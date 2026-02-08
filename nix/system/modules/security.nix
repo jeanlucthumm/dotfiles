@@ -11,7 +11,9 @@
         default-cache-ttl = 14400;
         max-cache-ttl = 14400;
         # Prevent scdaemon from grabbing YubiKey CCID interface (conflicts with pcscd)
-        disable-scdaemon = true;
+        # NB: = true renders as "disable-scdaemon true" which crashes gpg-agent.
+        # Empty string renders as bare flag. See https://github.com/NixOS/nixpkgs/issues/488446
+        disable-scdaemon = "";
       };
     };
 
