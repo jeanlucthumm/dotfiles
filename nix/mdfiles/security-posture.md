@@ -48,7 +48,9 @@ Two separate FIDO2 credentials because SSH auth and git signing have different f
 
 | Slot | Purpose | Policy | Rationale |
 |------|---------|--------|-----------|
-| 9a | Age identity (agenix) | PIN + touch | High-value API keys, low frequency (~1x/day) |
+| 82 (retired key management) | Age identity (agenix) | PIN + touch | High-value API keys, low frequency (~1x/day) |
+
+`age-plugin-yubikey` uses PIV retired key management slots (82-95), not standard PIV slots like 9a.
 
 PIN and PUK changed from defaults on setup. Three wrong PIN attempts locks the slot (PUK to reset). Three wrong PUK attempts bricks the slot.
 
