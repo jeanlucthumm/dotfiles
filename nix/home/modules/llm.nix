@@ -13,9 +13,6 @@
       claude-code # CLI LLM coding utility
     ]
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
-      # TODO: mcp-nixos has build issues on Darwin, exclude for now
-      # mcp-nixos # MCP server for NixOS packages and configuration
-
       # MCP Servers (see nix/overlays directory)
       graphiti-mcp-server # Knowledge graph MCP server
       mcp-reddit # MCP server for Reddit data
