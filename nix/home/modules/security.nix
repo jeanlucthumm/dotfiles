@@ -62,6 +62,7 @@
       (pkgs.writeShellScriptBin "get-key-ref" (makeKeyGetter s.ref.path))
       (pkgs.writeShellScriptBin "get-key-notion" (makeKeyGetter s.notion.path))
 
+      age # Age encryption tool
       gnupg # GNU Privacy Guard
       pinentry-tty # Enter password in terminal
 
