@@ -31,7 +31,6 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    raycast # Spotlight replacement
     podman
     (writeShellScriptBin "docker" ''
       #!/usr/bin/env bash
@@ -59,10 +58,6 @@ in {
   system.defaults.CustomUserPreferences = {
     "com.apple.symbolichotkeys" = {
       AppleSymbolicHotKeys = {
-        # Disable Spotlight search (Cmd+Space)
-        "64".enabled = false;
-        # Disable Finder search window (Cmd+Option+Space)
-        "65".enabled = false;
         "34" = {
           # Show application windows (Ctrl+Down)
           enabled = true;
