@@ -10,9 +10,9 @@
       mcp-flutter # MCP server for Flutter app debugging
       mcp-language-server # MCP server that exposes language servers to LLMs
       mcp-opennutrition # OpenNutrition dataset MCP server
+      claude-code # CLI LLM coding utility
     ]
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
-      claude-code # CLI LLM coding utility
       # TODO: mcp-nixos has build issues on Darwin, exclude for now
       # mcp-nixos # MCP server for NixOS packages and configuration
 
