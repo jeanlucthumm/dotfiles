@@ -1,31 +1,35 @@
-# Moltbot - Personal AI assistant (system service)
-# https://github.com/moltbot/moltbot
+# Openclaw - Personal AI assistant (system service)
+# https://github.com/openclaw/openclaw
 #
 # Runs as isolated system user with systemd hardening.
 # Uses long-lived setup token from `claude setup-token`.
 {
   config,
   inputs,
+  pkgs,
   ...
-}: {
+}:
+let
+  skills = inputs.nix-moltbot.skills.${pkgs.system};
+in {
   imports = [
-    inputs.nix-moltbot.nixosModules.moltbot
+    inputs.nix-moltbot.nixosModules.openclaw
   ];
 
   age.secrets = {
     moltbot-telegram = {
       file = ../../../secrets/moltbot-telegram.age;
-      owner = config.services.moltbot.user;
-      group = config.services.moltbot.group;
+      owner = config.services.openclaw.user;
+      group = config.services.openclaw.group;
     };
     moltbot-anthropic-token = {
       file = ../../../secrets/moltbot-anthropic-token.age;
-      owner = config.services.moltbot.user;
-      group = config.services.moltbot.group;
+      owner = config.services.openclaw.user;
+      group = config.services.openclaw.group;
     };
   };
 
-  services.moltbot = {
+  services.openclaw = {
     enable = true;
 
     # Long-lived token from `claude setup-token`
@@ -47,7 +51,17 @@
     # Gateway auth required by upstream (not exposed - only using Telegram)
     instances.default.gateway.auth = {
       mode = "token";
-      tokenFile = "/var/lib/moltbot/gateway-token";
+      tokenFile = "/var/lib/openclaw/gateway-token";
     };
+
+    # Skills
+    skills = [
+      skills.google-calendar
+      {
+        name = "guided-day";
+        mode = "copy";
+        source = ./skills/guided-day;
+      }
+    ];
   };
 }

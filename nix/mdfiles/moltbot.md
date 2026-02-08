@@ -203,6 +203,7 @@ Semantic search over workspace files:
 
 ## Resources
 
+- NixOS config: [`system/programs/moltbot/`](../system/programs/moltbot/CLAUDE.md) (extra module info)
 - [Moltbot GitHub](https://github.com/moltbot/moltbot)
 - [Docs](https://docs.molt.bot)
 - [ClawdHub](https://clawdhub.com)

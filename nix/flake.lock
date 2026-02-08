@@ -452,14 +452,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1770509054,
-        "narHash": "sha256-06cX/aijwZqfQlSOGem/Kq0vWM9XY7rQXj2TgZBZJuU=",
-        "path": "/home/jeanluc/Code/nix-openclaw",
-        "type": "path"
+        "lastModified": 1770581943,
+        "narHash": "sha256-83SXopXSjZdwMMEJZ5YeWxuN9gMpqG3ShT4OlNbtnsI=",
+        "owner": "jeanlucthumm",
+        "repo": "nix-openclaw",
+        "rev": "00140ed65c3fd02aba38f66f112f2841c0179eeb",
+        "type": "github"
       },
       "original": {
-        "path": "/home/jeanluc/Code/nix-openclaw",
-        "type": "path"
+        "owner": "jeanlucthumm",
+        "ref": "jeanluc-fixes",
+        "repo": "nix-openclaw",
+        "type": "github"
       }
     },
     "nix-steipete-tools": {

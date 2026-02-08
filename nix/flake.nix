@@ -44,10 +44,9 @@
       url = "github:jeanlucthumm/taskwarrior-enhanced";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Local fork for development
-    # TODO: switch to upstream once user isolation implemented
+    # Personal fork — switch to upstream once user isolation implemented
     nix-moltbot = {
-      url = "path:/home/jeanluc/Code/nix-openclaw";
+      url = "github:jeanlucthumm/nix-openclaw/jeanluc-fixes";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
