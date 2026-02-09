@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   imports = [
     ../../modules/bluetooth.nix
     ../../modules/containers.nix
@@ -32,11 +32,8 @@
     identityPaths = [
       ../../../secrets/desktop-yubikey-identity.txt
     ];
-    # age needs age-plugin-yubikey in PATH during activation, before system PATH is set
-    ageBin = "${pkgs.writeShellScript "age-with-yubikey" ''
-      export PATH="${pkgs.age-plugin-yubikey}/bin:$PATH"
-      exec ${pkgs.age}/bin/age "$@"
-    ''}";
+    # Inline PATH so age finds the plugin and can prompt for PIN interactively
+    ageBin = "PATH=$PATH:${lib.makeBinPath [pkgs.age-plugin-yubikey]} ${pkgs.age}/bin/age";
   };
 
   networking.hostName = "desktop";
