@@ -19,6 +19,10 @@
     ../../programs/moltbot
   ];
 
+  age.identityPaths = [
+    "/home/jeanluc/.ssh/id_ed25519"
+  ];
+
   networking.hostName = "server";
   networking.hostId = "1d9f895e";
 
