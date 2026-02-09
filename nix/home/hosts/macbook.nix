@@ -4,6 +4,7 @@
   ...
 }: let
   homeDir = config.home.homeDirectory;
+  keys = import ../../secrets/pubkeys.nix;
 in {
   imports = [
     ../modules/darwin/foundation.nix
@@ -20,6 +21,11 @@ in {
     ../modules/darwin/security.nix
     ../programs/taskwarrior
   ];
+
+  programs.git.signing = {
+    key = "key::${keys.macbook.fido2.signing}";
+    format = "ssh";
+  };
 
   home.file = {
     # gpgagent not yet supported for darwin
