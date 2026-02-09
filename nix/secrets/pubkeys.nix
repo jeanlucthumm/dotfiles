@@ -12,6 +12,10 @@ rec {
   macbook = {
     ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKSY9ngqsMwi97aC1GM6gTnChfUl22aXzE9wzt0TXJB";
     age = "age1yubikey1qgnp293pa8mn6l8kls4scm88t73mf5cy5vc5g6e2mpk3wj5shvl5vm72q8y";
+    fido2 = {
+      signing = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIxoTw4UrTzsJCeIHFzRWvMQzwwmA8/X8ir125XZZhQLAAAAD3NzaDpnaXQtc2lnbmluZw== macbook-git-signing";
+      auth = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIKJOM+JH6oDE9i78P8vN652sCfQxO3j8LbgA1APCkTsKAAAACHNzaDphdXRo macbook-ssh-auth";
+    };
   };
 
   phone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILASMv9zSPwIF9ihPRdzHCZSgYec9P2PlVceItWMjhuO";
