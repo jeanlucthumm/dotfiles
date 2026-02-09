@@ -2,12 +2,13 @@
 {...}: {
   programs = {
     nushell.configFile.text = ''
+      # TODO: switch back to nh once TTY passthrough is fixed (~/Code/nh/ISSUE.md)
       def nrs []: [nothing -> nothing] {
-          nh os switch
+          sudo nixos-rebuild switch --flake ~/nix
       }
 
       def nra []: [nothing -> nothing] {
-          nh os switch -u
+          sudo nixos-rebuild switch --flake ~/nix --upgrade
       }
     '';
   };
