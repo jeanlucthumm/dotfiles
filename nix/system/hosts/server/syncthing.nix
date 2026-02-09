@@ -23,6 +23,27 @@ in {
         };
       };
 
+      folders = {
+        "default" = {
+          path = "${home}/Sync";
+          devices = ["desktop" "macbook"];
+          type = "receiveonly";
+          label = "Default Folder";
+        };
+        "px27y-bxdsz" = {
+          path = "${home}/.timewarrior/data";
+          devices = ["desktop" "macbook"];
+          type = "receiveonly";
+          label = "Timewarrior";
+        };
+        "xyrfm-qkrya" = {
+          path = "${home}/obsidian/vault";
+          devices = ["desktop" "macbook"];
+          type = "receiveonly";
+          label = "Obsidian";
+        };
+      };
+
       options = {
         urAccepted = -1;
         localAnnounceEnabled = true;
