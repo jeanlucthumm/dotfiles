@@ -34,10 +34,8 @@ in {
   programs = {
     git = {
       enable = true;
-      signing = {
-        key = "6887D29E72EBFA1A0785A02A6717084E580D97E0";
-        signByDefault = true;
-      };
+      signing.signByDefault = true;
+      # signing.key and signing.format set per-host (FIDO2 YubiKey, differs per device)
       includes = [
         {
           path = "${configDir}/delta/themes.gitconfig";

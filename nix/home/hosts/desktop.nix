@@ -1,4 +1,6 @@
-{...}: {
+{...}: let
+  keys = import ../../secrets/pubkeys.nix;
+in {
   imports = [
     ./desktop_monitors.nix
     ../modules/nixos/foundation.nix
@@ -16,6 +18,11 @@
     ../programs/taskwarrior
     ../modules/logitech-mx.nix
   ];
+
+  programs.git.signing = {
+    key = "key::${keys.desktop.fido2.signing}";
+    format = "ssh";
+  };
 
   # The state version is required and should stay at the version you
   # originally installed.
