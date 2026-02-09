@@ -41,6 +41,15 @@ in {
           devices = ["desktop" "macbook"];
           type = "receiveonly";
           label = "Obsidian";
+          ignorePatterns = [
+            ".devenv*"
+            ".direnv"
+            ".obsidian/workspace.json"
+            ".obsidian/workspace-mobile.json"
+            ".git"
+            ".DS_Store"
+            ".Trash-*"
+          ];
         };
       };
 
