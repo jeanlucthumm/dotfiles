@@ -27,6 +27,10 @@ in {
     format = "ssh";
   };
 
+  age.identityPaths = [
+    ../../secrets/macbook-yubikey-identity.txt
+  ];
+
   home.file = {
     # gpgagent not yet supported for darwin
     "${homeDir}/.gnupg/gpg-agent.conf".text = ''

@@ -28,6 +28,17 @@
     ];
   };
 
+  age = {
+    identityPaths = [
+      ../../../secrets/desktop-yubikey-identity.txt
+    ];
+    # age needs age-plugin-yubikey in PATH during activation, before system PATH is set
+    ageBin = "${pkgs.writeShellScript "age-with-yubikey" ''
+      export PATH="${pkgs.age-plugin-yubikey}/bin:$PATH"
+      exec ${pkgs.age}/bin/age "$@"
+    ''}";
+  };
+
   networking.hostName = "desktop";
   networking.hostId = "17646629";
 

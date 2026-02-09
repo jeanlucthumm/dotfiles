@@ -21,10 +21,7 @@
     hashedPassword = "$y$j9T$olPxnw3sjt6/HFw.1SKyT/$GVqznhguvSLErdAQxNW0O6CKxVuUc6trVrxvj2pJLw1";
   };
 
-  # Allows agenix to use user ssh keys
-  age.identityPaths = [
-    "${config.users.users.jeanluc.home}/.ssh/id_ed25519"
-  ];
+  # age.identityPaths set per-host (YubiKey identity for desktop, SSH for server)
 
   # Allows jeanluc additional rights when connecting to the daemon, like managing caches.
   # This is useful for devenv.

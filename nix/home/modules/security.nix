@@ -40,10 +40,7 @@
         symlink = false;
       };
     };
-    # Allows agenix to use user ssh keys
-    identityPaths = [
-      "${config.home.homeDirectory}/.ssh/id_ed25519"
-    ];
+    # identityPaths set per-host (YubiKey identity file differs per device)
   };
 
   home.packages = let
