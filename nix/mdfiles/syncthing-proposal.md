@@ -26,9 +26,9 @@ On each device that already has Syncthing running:
 sudo cat /var/lib/syncthing/.config/syncthing/cert.pem > ~/syncthing-cert.pem
 sudo cat /var/lib/syncthing/.config/syncthing/key.pem > ~/syncthing-key.pem
 
-# Home Manager service
-cat ~/.config/syncthing/cert.pem > ~/syncthing-cert.pem
-cat ~/.config/syncthing/key.pem > ~/syncthing-key.pem
+# Home Manager service (check ~/.local/state/syncthing on newer versions)
+cat ~/.local/state/syncthing/cert.pem > ~/syncthing-cert.pem
+cat ~/.local/state/syncthing/key.pem > ~/syncthing-key.pem
 ```
 
 Get the device ID (for reference):
@@ -104,7 +104,7 @@ let
       devices = [ "desktop" "server" "phone" ];
       versioning = {
         type = "staggered";
-        params.maxAge = "30";  # days
+        params.maxAge = "2592000";  # 30 days (in seconds)
       };
     };
     notes = {
@@ -114,6 +114,7 @@ let
   };
 
   # Helper to filter folders for current host
+  # Alternative: define all folders and use per-folder `enable = false` on each host
   foldersForHost = hostname:
     lib.filterAttrs (name: folder:
       lib.elem hostname folder.devices
@@ -192,6 +193,7 @@ The server acts as the central node that's always available:
     user = "jeanluc";
     group = "users";
     dataDir = "/home/jeanluc";
+    configDir = "/home/jeanluc/.config/syncthing";  # explicit to avoid nested default
 
     cert = config.age.secrets.syncthing-cert.path;
     key = config.age.secrets.syncthing-key.path;
@@ -270,10 +272,12 @@ Android Syncthing app can't be configured declaratively, but:
 - Include "phone" in relevant folders' device lists
 - Phone will auto-accept shared folders if `autoAcceptFolders = true` is set
 
+**Important:** `autoAcceptFolders = true` on any device forces `overrideFolders` to default to `false`, and the module has an assertion that prevents `overrideFolders = true` when any device uses `autoAcceptFolders`. If using `autoAcceptFolders` for the phone, either set `overrideFolders = false` or manage phone folders manually without `autoAcceptFolders`.
+
 ```nix
 devices.phone = {
   id = "PPPPPPP-...";
-  autoAcceptFolders = true;
+  autoAcceptFolders = true;  # requires overrideFolders = false
 };
 ```
 
@@ -282,7 +286,7 @@ devices.phone = {
 | Aspect | Home Manager | NixOS System |
 |--------|--------------|--------------|
 | Runs as | User | Dedicated user (or specified) |
-| Config location | `~/.config/syncthing` | `/var/lib/syncthing` |
+| Config location | `~/.local/state/syncthing` (Linux), `~/Library/Application Support/Syncthing` (macOS) | `<dataDir>/.config/syncthing` (default: `/var/lib/syncthing/.config/syncthing`) |
 | Permissions | User files only | Can sync system files |
 | Starts | On user login | On boot |
 | Best for | Desktop use | Server (24/7) |
@@ -304,9 +308,17 @@ For desktop, Home Manager service is usually preferred. For server, NixOS servic
 - [ ] Use Home Manager service or NixOS service per host?
 - [ ] Include phone in sync topology?
 
+## Notes
+
+- **Deprecated folder options**: `rescanInterval`, `watch`, `watchDelay` were renamed to `rescanIntervalS`, `fsWatcherEnabled`, `fsWatcherDelayS`. Using the old names causes a runtime error.
+- **Syncthing 2.0+**: The `--no-default-folder` flag and default `~/Sync` folder creation were removed. Not an issue for declarative config.
+- **Per-folder `enable`**: Each folder has an `enable` boolean (default `true`). An alternative to the `foldersForHost` helper is to define all folders centrally and selectively set `enable = false` per host.
+- **`configDir`**: On the NixOS service, defaults to `dataDir + "/.config/syncthing"`. Set explicitly to avoid surprises.
+- **`databaseDir`**: Available if you want to store the database separately from config.
+
 ## Resources
 
-- [Syncthing NixOS Wiki](https://nixos.wiki/wiki/Syncthing)
+- [Syncthing NixOS Wiki](https://wiki.nixos.org/wiki/Syncthing)
 - [Home Manager Syncthing options](https://nix-community.github.io/home-manager/options.xhtml#opt-services.syncthing.enable)
 - [Syncthing config reference](https://docs.syncthing.net/users/config.html)
 - [Syncthing ignore patterns](https://docs.syncthing.net/users/ignoring.html)
