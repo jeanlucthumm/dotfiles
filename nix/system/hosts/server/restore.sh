@@ -19,7 +19,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Verify backup directories exist
-BACKUP_DIRS=("/srv/backups/home" "/srv/backups/homeassistant" "/srv/backups/plex")
+BACKUP_DIRS=("/srv/backups/home" "/srv/backups/homeassistant" "/srv/backups/plex" "/srv/backups/openclaw")
 for dir in "${BACKUP_DIRS[@]}"; do
     if [[ ! -d "$dir" ]]; then
         echo "Error: Backup directory not found: $dir"
@@ -57,6 +57,13 @@ mkdir -p "/var/lib/plex/Plex Media Server/Plug-in Support/Databases"
 rsync -av --delete /srv/backups/plex/ "/var/lib/plex/Plex Media Server/Plug-in Support/Databases/"
 chown -R plex:media "/var/lib/plex/Plex Media Server/Plug-in Support/Databases"
 echo "✓ Plex database restored"
+echo
+
+# Restore Openclaw data
+echo "Restoring Openclaw data..."
+rsync -av --delete /srv/backups/openclaw/ /var/lib/openclaw/
+chown -R openclaw:openclaw /var/lib/openclaw
+echo "✓ Openclaw data restored"
 echo
 
 # Restart services

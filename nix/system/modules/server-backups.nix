@@ -62,10 +62,30 @@
     };
   };
 
+  # Openclaw data backup
+  systemd.services.openclaw-backup = {
+    description = "Backup Openclaw data to ZFS pool";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${pkgs.rsync}/bin/rsync -av --delete /var/lib/openclaw/ /srv/backups/openclaw/";
+    };
+  };
+
+  systemd.timers.openclaw-backup = {
+    description = "Daily Openclaw backup";
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 14:12:00";
+      Persistent = true;
+    };
+  };
+
   # Ensure backup directories exist
   systemd.tmpfiles.rules = [
     "d /srv/backups/home 0755 jeanluc users -"
     "d /srv/backups/homeassistant 0755 root root -"
     "d /srv/backups/plex 0755 root root -"
+    "d /srv/backups/openclaw 0755 root root -"
   ];
 }
