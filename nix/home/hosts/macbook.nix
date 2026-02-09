@@ -17,6 +17,7 @@ in {
     ../modules/llm.nix
     ../modules/theme-home.nix
     ../modules/security.nix
+    ../modules/darwin/security.nix
     ../programs/taskwarrior
   ];
 

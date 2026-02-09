@@ -90,7 +90,7 @@ in {
     name = "jeanluc";
     home = "/Users/jeanluc";
     openssh.authorizedKeys.keys = [
-      pubkeys.desktop
+      pubkeys.desktop.fido2.auth
       pubkeys.phone
       pubkeys.server
     ];
