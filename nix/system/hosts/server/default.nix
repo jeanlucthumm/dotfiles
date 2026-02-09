@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./nginx.nix
     ./media.nix
+    ./syncthing.nix
     ../../modules/foundation.nix
     ../../modules/security.nix
     ../../modules/ssh.nix
