@@ -14,7 +14,7 @@ in {
     ../modules/darwin/graphical.nix
     ../modules/darwin/fish-fix.nix
     ../modules/darwin/cli.nix
-    ../modules/darwin/dictation.nix
+    # ../modules/darwin/dictation.nix  # disabled: pysilero-vad 3.3.0 fails to build on darwin (--disable-new-dtags)
     ../modules/llm.nix
     ../modules/theme-home.nix
     ../modules/security.nix
