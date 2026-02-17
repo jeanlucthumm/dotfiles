@@ -17,6 +17,7 @@
     "cora-soft"
     "nix"
     "chore"
+    "job-anthropic"
   ];
   makeContextEntry = label: let
     # Proj name allows for nesting ('.'), but the label does not.
