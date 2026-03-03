@@ -71,6 +71,7 @@ in {
     libnotify # Notifications
     libinput # Input device management
     discord # Chat
+    telegram-desktop # Chat
     neovide # NeoVim GUI
     hypridle # Idle management daemon
 
