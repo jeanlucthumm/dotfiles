@@ -4,7 +4,6 @@
   ...
 }: let
   homeDir = config.home.homeDirectory;
-  keys = import ../../secrets/pubkeys.nix;
 in {
   imports = [
     ../modules/darwin/foundation.nix
@@ -17,13 +16,14 @@ in {
     # ../modules/darwin/dictation.nix  # disabled: pysilero-vad 3.3.0 fails to build on darwin (--disable-new-dtags)
     ../modules/llm.nix
     ../modules/theme-home.nix
+    ../modules/ssh.nix
+    ../modules/darwin/ssh.nix
     ../modules/security.nix
-    ../modules/darwin/security.nix
     ../programs/taskwarrior
   ];
 
   programs.git.signing = {
-    key = "key::${keys.macbook.fido2.signing}";
+    key = "~/.ssh/id_ed25519_sk_signing";
     format = "ssh";
   };
 

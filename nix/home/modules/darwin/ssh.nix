@@ -1,3 +1,4 @@
+# Darwin-specific SSH setup: FIDO2-capable openssh, agent, and lazy key loading.
 {pkgs, ...}: {
   home.packages = with pkgs; [
     openssh # FIDO2-capable SSH (macOS system SSH lacks libfido2)
@@ -9,8 +10,14 @@
     enableNushellIntegration = true;
   };
 
-  # Point system-wide SSH_AUTH_SOCK to FIDO2-capable agent and auto-load key handles.
-  # launchctl setenv makes GUI apps (not just terminals) use the Nix agent.
+  programs.ssh = {
+    addKeysToAgent = "yes";
+
+    matchBlocks."*".identityFile = "~/.ssh/id_ed25519_sk_auth";
+  };
+
+  # Point system-wide SSH_AUTH_SOCK to FIDO2-capable agent so GUI apps use it.
+  # Keys are loaded lazily via AddKeysToAgent; git signing uses the key file directly.
   launchd.agents.ssh-fido2-setup = {
     enable = true;
     config = {
@@ -20,10 +27,6 @@
         ''
           SOCK="$(getconf DARWIN_USER_TEMP_DIR)ssh-agent"
           launchctl setenv SSH_AUTH_SOCK "$SOCK"
-          while [ ! -S "$SOCK" ]; do sleep 0.5; done
-          export SSH_AUTH_SOCK="$SOCK"
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519_sk_signing" 2>/dev/null
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519_sk_auth" 2>/dev/null
         ''
       ];
       RunAtLoad = true;

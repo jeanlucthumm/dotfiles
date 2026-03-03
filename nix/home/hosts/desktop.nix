@@ -1,6 +1,4 @@
-{...}: let
-  keys = import ../../secrets/pubkeys.nix;
-in {
+{...}: {
   imports = [
     ./desktop_monitors.nix
     ../modules/nixos/foundation.nix
@@ -10,6 +8,7 @@ in {
     ../modules/nixos/dictation.nix
     ../modules/graphical.nix
     ../modules/ssh.nix
+    ../modules/nixos/ssh.nix
     ../modules/theme-home.nix
     ../modules/syncing.nix
     ../modules/security.nix
@@ -20,7 +19,7 @@ in {
   ];
 
   programs.git.signing = {
-    key = "key::${keys.desktop.fido2.signing}";
+    key = "~/.ssh/id_ed25519_sk_signing";
     format = "ssh";
   };
 
