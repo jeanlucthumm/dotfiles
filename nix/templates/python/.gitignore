@@ -173,3 +173,4 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 .claude/settings.local.json
+.devenv*
