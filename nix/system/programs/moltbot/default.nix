@@ -56,6 +56,10 @@
     # Downloads ~300MB embedding model on first use.
     instances.default.configOverrides = {
       agents.defaults.memorySearch.provider = "local";
+      agents.defaults.compaction.memoryFlush = {
+        enabled = true;
+        systemPrompt = builtins.readFile ./memory-flush-prompt.md;
+      };
     };
 
     # Skills
