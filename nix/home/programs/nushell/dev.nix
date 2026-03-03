@@ -13,6 +13,7 @@
       (builtins.readFile ./gh.nu)
       (builtins.readFile ./notion.nu)
       (builtins.readFile ./config-dev.nu)
+      (builtins.readFile ./init.nu)
     ];
   };
 }
