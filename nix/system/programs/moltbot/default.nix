@@ -52,6 +52,12 @@
       tokenFile = "/var/lib/openclaw/gateway-token";
     };
 
+    # Local memory search (no external API keys needed).
+    # Downloads ~300MB embedding model on first use.
+    instances.default.configOverrides = {
+      agents.defaults.memorySearch.provider = "local";
+    };
+
     # Skills
     skills = [
       {
