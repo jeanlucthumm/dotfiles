@@ -119,6 +119,7 @@ in {
     # New-age Firefox based browser
     zen-browser = {
       enable = true;
+      suppressXdgMigrationWarning = true;
     };
 
     nushell.shellAliases.nv = "neovide --fork";
