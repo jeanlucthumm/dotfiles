@@ -1,4 +1,6 @@
 {
+    "editor.inlineSuggest.enabled": false,
+    "cursor.completions.enabled": false,
     "editor.formatOnSave": true,
     "git.openRepositoryInParentFolders": "always",
     "nix.formatterPath": "alejandra",
