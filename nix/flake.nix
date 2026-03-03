@@ -45,7 +45,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Personal fork — switch to upstream once user isolation implemented
-    nix-moltbot = {
+    nix-openclaw = {
       url = "github:jeanlucthumm/nix-openclaw/jeanluc-fixes";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
@@ -89,7 +89,7 @@
     deploy-rs,
     reddit-easy-post,
     taskwarrior-enhanced,
-    nix-moltbot,
+    nix-openclaw,
     pyproject-nix,
     uv2nix,
     pyproject-build-systems,

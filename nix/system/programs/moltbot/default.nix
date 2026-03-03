@@ -9,11 +9,9 @@
   pkgs,
   ...
 }:
-let
-  skills = inputs.nix-moltbot.skills.${pkgs.system};
-in {
+{
   imports = [
-    inputs.nix-moltbot.nixosModules.openclaw
+    inputs.nix-openclaw.nixosModules.openclaw
   ];
 
   age.secrets = {
@@ -37,7 +35,7 @@ in {
 
     # Model configuration
     defaults = {
-      model = "anthropic/claude-opus-4-5";
+      model = "anthropic/claude-opus-4-6";
       thinkingDefault = "high";
     };
 
@@ -56,7 +54,6 @@ in {
 
     # Skills
     skills = [
-      skills.google-calendar
       {
         name = "guided-day";
         mode = "copy";
