@@ -31,6 +31,7 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    deploy-rs
     podman
     (writeShellScriptBin "docker" ''
       #!/usr/bin/env bash
