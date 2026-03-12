@@ -74,6 +74,12 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # TODO: Remove once devenv 2.0.4 lands in nixpkgs (fixes Boehm GC crash on macOS)
+    devenv-src = {
+      url = "github:cachix/devenv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -94,6 +100,7 @@
     uv2nix,
     pyproject-build-systems,
     claude-code,
+    devenv-src,
     ...
   }: {
     # System configurations for NixOS hosts.
