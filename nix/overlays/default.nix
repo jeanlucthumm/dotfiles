@@ -19,8 +19,5 @@ inputs: [
   })
   inputs.nix-openclaw.overlays.default
   inputs.claude-code.overlays.default
-  # TODO: Remove once devenv 2.0.4 lands in nixpkgs (fixes Boehm GC crash on macOS)
-  (final: prev: {
-    devenv = inputs.devenv-src.packages.${prev.stdenv.hostPlatform.system}.devenv;
-  })
+  (import ./pysilero-vad-darwin.nix)
 ]

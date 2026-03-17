@@ -77,11 +77,14 @@
       pysilero-vad
       numpy
     ];
-    flakeIgnore = ["E501"];
+    flakeIgnore = ["E501" "E402"];
   } ''
     """VAD dictation - continuous listening with voice activity detection."""
+    import os
     import subprocess
     import sys
+
+    os.environ["PYTHONUNBUFFERED"] = "1"
     import tempfile
     import threading
     import time
@@ -274,6 +277,8 @@ in {
             dictLog.i("Starting VAD mode")
             vadTask = hs.task.new(vadBin, function(exitCode, stdOut, stdErr)
                 dictLog.i("VAD task exited with code " .. tostring(exitCode))
+                if stdOut and stdOut ~= "" then dictLog.i("VAD stdout: " .. stdOut) end
+                if stdErr and stdErr ~= "" then dictLog.i("VAD stderr: " .. stdErr) end
                 vadTask = nil
             end)
             vadTask:start()
