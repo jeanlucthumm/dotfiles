@@ -14,18 +14,6 @@
         file = ../../secrets/jeanluc-anthropic.age;
         mode = "400";
       };
-      tavily = {
-        file = ../../secrets/jeanluc-tavily.age;
-        mode = "400";
-      };
-      codestral = {
-        file = ../../secrets/jeanluc-codestral.age;
-        mode = "400";
-      };
-      ref = {
-        file = ../../secrets/jeanluc-ref.age;
-        mode = "400";
-      };
       notion = {
         file = ../../secrets/jeanluc-notion.age;
         mode = "400";
@@ -54,9 +42,6 @@
       # Key Getters
       (pkgs.writeShellScriptBin "get-key-anthropic" (makeKeyGetter s.anthropic.path))
       (pkgs.writeShellScriptBin "get-key-openai" (makeKeyGetter s.openai.path))
-      (pkgs.writeShellScriptBin "get-key-tavily" (makeKeyGetter s.tavily.path))
-      (pkgs.writeShellScriptBin "get-key-codestral" (makeKeyGetter s.codestral.path))
-      (pkgs.writeShellScriptBin "get-key-ref" (makeKeyGetter s.ref.path))
       (pkgs.writeShellScriptBin "get-key-notion" (makeKeyGetter s.notion.path))
 
       age # Age encryption tool
