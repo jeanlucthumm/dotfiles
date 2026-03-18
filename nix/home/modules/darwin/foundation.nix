@@ -4,10 +4,12 @@
     nushell.configFile.text = ''
       def nrs []: [nothing -> nothing] {
           nh darwin switch
+          delock # decrypt agenix secrets (YubiKey PIN + touch)
       }
 
       def nra []: [nothing -> nothing] {
           nh darwin switch -u
+          delock # decrypt agenix secrets (YubiKey PIN + touch)
       }
     '';
   };
