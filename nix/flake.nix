@@ -189,6 +189,22 @@
       ];
     };
 
+    darwinConfigurations."macbook-work" = nix-darwin.lib.darwinSystem {
+      specialArgs = {inherit inputs;};
+      modules = [
+        stylix.darwinModules.stylix
+        home-manager.darwinModules.home-manager
+        ./system/hosts/macbook-work
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs.hostName = "macbook-work";
+          home-manager.users.jeanlucthumm = import ./home/hosts/macbook-work.nix;
+          nixpkgs.overlays = import ./overlays inputs;
+        }
+      ];
+    };
+
     deploy.nodes.server = {
       hostname = "server.lan";
       sshUser = "jeanluc";
