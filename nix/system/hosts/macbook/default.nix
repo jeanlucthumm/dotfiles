@@ -31,6 +31,7 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    raycast
     deploy-rs
     podman
     (writeShellScriptBin "docker" ''
@@ -59,6 +60,10 @@ in {
   system.defaults.CustomUserPreferences = {
     "com.apple.symbolichotkeys" = {
       AppleSymbolicHotKeys = {
+        # Disable Spotlight search (Cmd+Space)
+        "64".enabled = false;
+        # Disable Finder search window (Cmd+Option+Space)
+        "65".enabled = false;
         "34" = {
           # Show application windows (Ctrl+Down)
           enabled = true;
