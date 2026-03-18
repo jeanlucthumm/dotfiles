@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ../macbook/theme-setting.nix
+    ./theme-setting.nix
   ];
 
   nix = {
@@ -38,5 +38,5 @@
 
   environment.shells = ["/etc/profiles/per-user/jeanlucthumm/bin/nu"];
 
-  home-manager.sharedModules = [../macbook/theme-setting.nix];
+  home-manager.sharedModules = [./theme-setting.nix];
 }
