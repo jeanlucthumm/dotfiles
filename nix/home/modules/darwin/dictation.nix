@@ -267,6 +267,8 @@ in {
     local vadTask = nil
     local vadBin = "${vadDictation}/bin/vad-dictation"
 
+    local vadLogFile = "/tmp/vad-dictation.log"
+
     local function toggleVAD()
         if vadTask and vadTask:isRunning() then
             dictLog.i("Stopping VAD mode")
@@ -275,12 +277,10 @@ in {
             hs.alert.show("🎤 VAD Off")
         else
             dictLog.i("Starting VAD mode")
-            vadTask = hs.task.new(vadBin, function(exitCode, stdOut, stdErr)
+            vadTask = hs.task.new("/bin/sh", function(exitCode, stdOut, stdErr)
                 dictLog.i("VAD task exited with code " .. tostring(exitCode))
-                if stdOut and stdOut ~= "" then dictLog.i("VAD stdout: " .. stdOut) end
-                if stdErr and stdErr ~= "" then dictLog.i("VAD stderr: " .. stdErr) end
                 vadTask = nil
-            end)
+            end, {"-c", "PYTHONUNBUFFERED=1 " .. vadBin .. " > " .. vadLogFile .. " 2>&1"})
             vadTask:start()
             hs.alert.show("🎤 VAD On")
         end
