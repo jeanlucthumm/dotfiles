@@ -28,6 +28,8 @@
   system.stateVersion = 4;
   system.primaryUser = "jeanlucthumm";
 
+  ids.gids.nixbld = 350;
+
   nixpkgs.config.allowUnfree = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
