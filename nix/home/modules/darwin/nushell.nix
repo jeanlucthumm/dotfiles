@@ -51,10 +51,12 @@ in {
     ]
 
     # Environment variables from nix-darwin
-    $env.NIX_SSL_CERT_FILE = "${darwinEnv.NIX_SSL_CERT_FILE}"
-    $env.NIX_PATH = "${darwinEnv.NIX_PATH}"
-    $env.TERMINFO_DIRS = "${expandVars darwinEnv.TERMINFO_DIRS}"
-    $env.XDG_DATA_DIRS = "${expandVars darwinEnv.XDG_DATA_DIRS}"
-    $env.XDG_CONFIG_DIRS = "${expandVars darwinEnv.XDG_CONFIG_DIRS}"
+    # Uses `or ""` and `? NIX_PATH` guards for compatibility with Determinate Nix,
+    # which doesn't set all the same variables as stock Nix.
+    $env.NIX_SSL_CERT_FILE = "${darwinEnv.NIX_SSL_CERT_FILE or ""}"
+    ${lib.optionalString (darwinEnv ? NIX_PATH) ''$env.NIX_PATH = "${darwinEnv.NIX_PATH}"''}
+    $env.TERMINFO_DIRS = "${expandVars (darwinEnv.TERMINFO_DIRS or "")}"
+    $env.XDG_DATA_DIRS = "${expandVars (darwinEnv.XDG_DATA_DIRS or "")}"
+    $env.XDG_CONFIG_DIRS = "${expandVars (darwinEnv.XDG_CONFIG_DIRS or "")}"
   '';
 }

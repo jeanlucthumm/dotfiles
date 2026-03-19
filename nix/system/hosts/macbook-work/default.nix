@@ -4,7 +4,7 @@
   ];
 
   nix = {
-    enable = true;
+    enable = false;
     settings = {
       experimental-features = "nix-command flakes";
       trusted-users = ["jeanlucthumm"];
