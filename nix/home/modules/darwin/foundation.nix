@@ -1,14 +1,14 @@
 # Foundation settings for Darwin.
-{config, ...}: {
+{config, hostName, ...}: {
   programs = {
     nushell.configFile.text = ''
       def nrs []: [nothing -> nothing] {
-          nh darwin switch
+          nh darwin switch -H ${hostName}
           delock # decrypt agenix secrets (YubiKey PIN + touch)
       }
 
       def nra []: [nothing -> nothing] {
-          nh darwin switch -u
+          nh darwin switch -H ${hostName} -u
           delock # decrypt agenix secrets (YubiKey PIN + touch)
       }
     '';
