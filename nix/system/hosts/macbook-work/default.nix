@@ -3,23 +3,10 @@
     ./theme-setting.nix
   ];
 
-  nix = {
-    enable = false;
-    settings = {
-      experimental-features = "nix-command flakes";
-      trusted-users = ["jeanlucthumm"];
-    };
-  };
+  # Determinate Nix manages nix settings
+  nix.enable = false;
 
   environment.systemPackages = with pkgs; [
-    podman
-    (writeShellScriptBin "docker" ''
-      #!/usr/bin/env bash
-      exec ${pkgs.podman}/bin/podman "$@"
-    '')
-    podman-compose
-    qemu
-    podman-tui
   ];
 
   stylix.homeManagerIntegration.followSystem = false;
