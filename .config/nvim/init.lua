@@ -176,40 +176,18 @@ local plugin_spec = {
     build = ':TSUpdate',
     dependencies = { 'nushell/tree-sitter-nu' },
     config = function()
-      require'nvim-treesitter.configs'.setup {
+      require'nvim-treesitter'.setup {
         ensure_installed = {
           'c',
           'lua',
           'markdown',
           'markdown_inline',
         },
-        highlight = { enable = true },
-        indent = { enable = true },
       }
-      vim.wo.foldmethod = 'expr'                     -- expression based folding to enable treesitter
-      vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- treesitter folding
-      -- Custom parser for go template files
-      local parser_config =
-          require'nvim-treesitter.parsers'.get_parser_configs()
-      parser_config.gotmpl = {
-        install_info = {
-          url = 'https://github.com/ngalaiko/tree-sitter-go-template',
-          files = { 'src/parser.c' },
-        },
-        filetype = 'gotmpl',
-        used_by = { 'gohtmltmpl', 'gotexttmpl', 'gotmpl' },
-      }
-      -- See https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
-      parser_config.dart = {
-        install_info = {
-          url = 'https://github.com/UserNobody14/tree-sitter-dart',
-          files = { 'src/parser.c', 'src/scanner.c' },
-          revision = '8aa8ab977647da2d4dcfb8c4726341bee26fbce4', -- The last commit before the snail speed
-        },
-      }
+      vim.wo.foldmethod = 'expr'
+      vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     end,
   },
-  { 'nvim-treesitter/playground' },
   {
     'L3MON4D3/LuaSnip',
     config = function()
@@ -481,7 +459,7 @@ local plugin_spec = {
   },
   { 'ThePrimeagen/harpoon' },
   {
-    'ggandor/leap.nvim',
+    url = 'https://codeberg.org/andyg/leap.nvim',
     config = function()
       local leap = require('leap')
       -- Direct Lua API keybindings
