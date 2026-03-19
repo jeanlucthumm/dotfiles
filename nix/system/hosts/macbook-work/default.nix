@@ -1,5 +1,6 @@
 {pkgs, ...}: {
   imports = [
+    ../../modules/darwin/foundation.nix
     ./theme-setting.nix
   ];
 

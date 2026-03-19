@@ -3,6 +3,7 @@
 in {
   imports = [
     ../../modules/agenix.nix
+    ../../modules/darwin/foundation.nix
     ./theme-setting.nix
   ];
   nix = {
