@@ -1,4 +1,4 @@
-{...}: {
+{lib, ...}: {
   imports = [
     ../modules/darwin/foundation.nix
     ../modules/darwin/nushell.nix
@@ -9,6 +9,9 @@
     ../modules/theme-home.nix
     ../modules/ssh.nix
   ];
+
+  # No FIDO2 security key on work laptop — waiting for sk setup on this host
+  programs.git.signing.signByDefault = lib.mkForce false;
 
   home.stateVersion = "24.05";
 }
