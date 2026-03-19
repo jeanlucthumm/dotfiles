@@ -4,3 +4,4 @@ result
 system/hosts/*/theme-setting-local.nix
 *.qcow2
 .claude/settings.local.json
+CLAUDE-HOST.md
