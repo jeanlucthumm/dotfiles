@@ -1,8 +1,5 @@
 local api = vim.api
 
-local lsp_status = require'lsp-status'
-lsp_status.register_progress()
-
 local M = {}
 
 function M.map(mode, lhs, rhs, opts) vim.keymap.set(mode, lhs, rhs, opts) end
@@ -27,9 +24,6 @@ local auhigh = vim.api.nvim_create_augroup('LspHighlighting', {})
 ---@param bufnr number
 function M.on_attach(client, bufnr)
   local nmap = M.nmap
-
-  -- LSP Status
-  lsp_status.on_attach(client)
 
   -- Disable inlay hints
   vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
@@ -78,10 +72,7 @@ function M.on_attach(client, bufnr)
 end
 
 function M.capabilities()
-  local capabilities = require'cmp_nvim_lsp'.default_capabilities()
-  capabilities = vim.tbl_extend('keep', capabilities,
-    require'lsp-status'.capabilities)
-  return capabilities
+  return require'cmp_nvim_lsp'.default_capabilities()
 end
 
 function M.print_table(o)

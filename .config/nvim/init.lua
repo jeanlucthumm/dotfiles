@@ -157,7 +157,6 @@ local plugin_spec = {
       }
     end,
   },
-  { 'nvim-lua/lsp-status.nvim' },
   { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end },
   {
     'rcarriga/nvim-dap-ui',
@@ -308,7 +307,7 @@ local plugin_spec = {
   },
   {
     'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig', 'nvim-lua/lsp-status.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
     enabled = false,
     config = function()
       require'typescript-tools'.setup {
@@ -319,12 +318,16 @@ local plugin_spec = {
   },
   { 'aznhe21/actions-preview.nvim' },
   {
-    'simrat39/symbols-outline.nvim',
+    'hedyhli/outline.nvim',
     config = function()
-      require'symbols-outline'.setup({
-        autofold_depth = 1,
-        relative_width = false,
-        width = 40,
+      require'outline'.setup({
+        outline_window = {
+          relative_width = false,
+          width = 40,
+        },
+        symbol_folding = {
+          autofold_depth = 1,
+        },
       })
     end,
   },
@@ -709,7 +712,7 @@ end
 autoTheme()
 vim.cmd('hi! link pythonSpaceError Normal')
 
-local function lsp_status_component() return require'lsp-status'.status() end
+local function lsp_status_component() return vim.lsp.status() end
 require'lualine'.setup {
   options = { theme = lualine_theme, extensions = { 'quickfix' } },
   sections = {
@@ -756,9 +759,9 @@ nmap('<Leader>g', function() Snacks.picker.grep() end)
 ncmap('<Leader>O', 'Telescope lsp_dynamic_workspace_symbols')
 nmap('<Leader>f', function() Snacks.picker.lines() end)
 nmap('<Leader>S', function()
-  local symbols = require'symbols-outline'
-  symbols.open_outline()
-  fn.win_gotoid(symbols.view.winnr)
+  local outline = require'outline'
+  outline.open()
+  outline.focus_outline()
 end)
 nmap('<Leader>r', function() Snacks.picker.grep() end)
 ncmap('<Leader><Leader>', 'write')
