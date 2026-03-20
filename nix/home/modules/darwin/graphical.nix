@@ -71,4 +71,8 @@
     };
     nushell.shellAliases.nv = "neovide --frame transparent --fork";
   };
+
+  home.packages = with pkgs; [
+    neovide
+  ];
 }
