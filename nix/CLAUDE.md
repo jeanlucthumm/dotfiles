@@ -56,6 +56,10 @@ This is a NixOS/Nix flake configuration repository managing system and home conf
 - **macbook**: Darwin/macOS configuration
 - **virtual**: VM configuration for testing
 
+## Private Configuration
+
+Work-specific config lives in a separate private repo: `dotfiles-private` (flake input via `git+ssh`). It's expected to be checked out at `../dotfiles-private` relative to this repo. It exports `homeModules.work` which is imported by the macbook-work host. Add any work-private config there (taskwarrior contexts, internal hostnames, etc.).
+
 ## Secret Management
 
 Secrets are managed using agenix with SSH public keys defined in `secrets/secrets.nix`. Available secrets include API keys for OpenAI, Anthropic, Tavily, and Codestral.

@@ -176,6 +176,21 @@
         "type": "github"
       }
     },
+    "dotfiles-private": {
+      "locked": {
+        "lastModified": 1773971221,
+        "narHash": "sha256-RCFH0IoA0xBJhl0G1CYR1Qk30VzdHde5yaq8xmMJ+pU=",
+        "ref": "refs/heads/master",
+        "rev": "7d34cf01ba5c460cab73d2aeb860b2c00ec465a4",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/jeanlucthumm/dotfiles-private"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/jeanlucthumm/dotfiles-private"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -732,6 +747,7 @@
         "claude-code": "claude-code",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
+        "dotfiles-private": "dotfiles-private",
         "home-manager": "home-manager_2",
         "niri": "niri",
         "nix-darwin": "nix-darwin",

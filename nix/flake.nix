@@ -74,6 +74,9 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dotfiles-private = {
+      url = "git+ssh://git@github.com/jeanlucthumm/dotfiles-private";
+    };
 };
 
   outputs = inputs @ {
@@ -198,7 +201,10 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs.hostName = "macbook-work";
+          home-manager.extraSpecialArgs = {
+            inherit inputs;
+            hostName = "macbook-work";
+          };
           home-manager.users.jeanlucthumm = import ./home/hosts/macbook-work.nix;
           nixpkgs.overlays = import ./overlays inputs;
         }
