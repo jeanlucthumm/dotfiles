@@ -14,6 +14,10 @@ git_root=$(git rev-parse --show-toplevel 2>/dev/null)
 if [ -n "$git_root" ]; then
   repo_name=$(basename "$git_root")
   branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo "detached")
+  max_branch=50
+  if [ ${#branch} -gt $max_branch ]; then
+    branch="${branch:0:$max_branch}..."
+  fi
   location="$repo_name:$branch"
 else
   # Fallback to basename of current directory
