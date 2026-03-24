@@ -112,6 +112,8 @@
           symbol = "";
           style = "bg:${c3} fg:${fg}";
           format = "[ $symbol $branch ]($style)";
+          truncation_length = 24;
+          truncation_symbol = "…";
         };
 
         git_status = {
