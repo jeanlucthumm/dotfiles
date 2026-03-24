@@ -3,7 +3,7 @@
 # See https://github.com/nushell/nushell/issues/5552#issuecomment-2113935091
 let abbreviations = {
   g: 'git'
-  gt: 'git tree'
+  tre: 'git tree'
   gs: 'git status'
   gd: 'git d'
   ge: 'git de'
