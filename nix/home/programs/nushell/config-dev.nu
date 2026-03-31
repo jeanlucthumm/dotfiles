@@ -10,6 +10,7 @@ let abbreviations = {
   gm: 'git commit -m'
   ga: 'git add -A'
   gda: 'git add -A; git d'
+  gl: 'gt log'
   gwl: 'git worktree list'
   yda: 'yadm add -u -p; yadm d'
   ym: 'yadm commit -m'
