@@ -17,7 +17,9 @@
       shellIntegration.mode = "no-cursor";
 
       settings = {
-        enable_audio_bell = true;
+        enable_audio_bell = false;
+        bell_on_tab = "🔔 ";
+        window_alert_on_bell = true;
         window_padding_width = 8;
         allow_remote_control = "yes";
         listen_on = "unix:/tmp/kitty";
