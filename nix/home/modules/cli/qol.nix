@@ -1,4 +1,4 @@
-# Quality of life CLI setup - nicer interactive experience
+# Quality of life CLI setup - modern shell niceties for any machine
 {pkgs, ...}: {
   imports = [
     ../../programs/starship.nix
@@ -6,13 +6,9 @@
   ];
 
   home.packages = with pkgs; [
-    notify # Cross-platform notifications
     fzf # Multi-purpose fuzzy finder
-    ffmpeg
-    usbutils # USB utilities
 
     # Modern replacements for common tools
-    delta # Pretty diffs
     fd # find replacement
     dust # du replacement
     eza # ls replacement

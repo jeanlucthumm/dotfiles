@@ -1,4 +1,4 @@
-# Devving related CLI setup
+# Core development tools - essentials for any dev machine
 {
   config,
   pkgs,
@@ -11,20 +11,15 @@ in {
   ];
 
   home.packages = with pkgs; [
-    timewarrior # time tracker
-    taskwarrior-enhanced # Enhanced taskwarrior companion CLI
     gh # GitHub CLI
     git # Version control system
     git-lfs # Git extension for large files
     git-filter-repo # Git tool for rewriting history
     git-crypt # Encrypt files in git repos
+    devenv # Development environment manager
     gnumake # Build automation tool
     entr # Run arbitrary commands when files change
-    devenv # Development environment manager
     just # Handy task runner
-    notion-cli # Notion API CLI
-    doppler # Secrets manager
-    difit # GitHub-style git diff viewer
     lua-language-server # Lua language server
     tree-sitter # Syntax parser extensively used by NeoVim
     mdformat # Markdown formatter
