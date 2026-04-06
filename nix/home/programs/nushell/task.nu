@@ -130,6 +130,26 @@ def tblock [
   tchain
 }
 
+# Taskwarrior: Complete first ready task and show chain
+def tdone [
+  --id (-i): int,     # Task ID (defaults to first ready)
+]: [nothing -> string] {
+  let task_id = if ($id == null) {
+    let ready = __tready
+    if ($ready | is-empty) {
+      error make -u { msg: "No ready tasks" }
+    }
+    $ready | first | get id
+  } else {
+    $id
+  }
+  task $task_id stop
+  if ($id == null) {
+    print ""
+    tchain
+  }
+}
+
 # Taskwarrior: Delay a task by setting wait
 def twait [
   duration: string,   # Wait duration (e.g. 2d, 1w)
