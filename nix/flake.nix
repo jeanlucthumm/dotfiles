@@ -211,6 +211,22 @@
       ];
     };
 
+    # Standalone home-manager configurations for non-NixOS hosts.
+    homeConfigurations."developer@cloud-vm" = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      extraSpecialArgs = {
+        inherit inputs;
+        hostName = "cloud-vm";
+      };
+      modules = [
+        ./home/hosts/cloud-vm.nix
+        {
+          nixpkgs.overlays = import ./overlays inputs;
+          nixpkgs.config.allowUnfree = true;
+        }
+      ];
+    };
+
     deploy.nodes.server = {
       hostname = "server.lan";
       sshUser = "jeanluc";
