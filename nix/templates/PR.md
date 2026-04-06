@@ -8,6 +8,6 @@ This file maintains context on the current pull request implementation.
 
 Short bullet lists on everything we've done so far. Use one top bullet per update, and nested ones for details.
 
-- Did this and that for update
+- Did this and that for update. Note to LLM: Use this nested structure for updates.
   - Detail 1
   - Detail 2
