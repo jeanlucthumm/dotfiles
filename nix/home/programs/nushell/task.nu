@@ -143,7 +143,7 @@ def tdone [
   } else {
     $id
   }
-  task $task_id stop
+  task $task_id done
   if ($id == null) {
     print ""
     tchain
