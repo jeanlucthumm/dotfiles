@@ -16,6 +16,9 @@
 
   # No FIDO2 security key on work laptop — waiting for sk setup on this host
   programs.git.signing.signByDefault = lib.mkForce false;
+  programs.git.signing.format = null;
+
+  gtk.gtk4.theme = null;
 
   home.stateVersion = "24.05";
 }
