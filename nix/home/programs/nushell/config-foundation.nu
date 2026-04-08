@@ -33,39 +33,6 @@ def label-diff []: [string -> string] {
   $"```diff\n($in)\n```"
 }
 
-# Copy piped in contents to clipboard.
-def clip []: [string -> nothing] {
-  if ($env | get --optional TMUX | is-not-empty) {
-    $in | tmux loadb -
-  } else if ($nu.os-info.name == "linux") {
-    if ($env.XDG_SESSION_TYPE == "wayland") {
-      $in | wl-copy
-    } else {
-      $in | xclip -selection clipboard
-    }
-  } else if ($nu.os-info.name == "macos") {
-    $in | pbcopy
-  } else {
-    echo "Unsupported OS"
-  }
-}
-
-# Paste clipboard contents to stdout.
-def paste []: [nothing -> string] {
-  if ($env | get --optional TMUX | is-not-empty) {
-    tmux showb -t 0
-  } else if ($nu.os-info.name == "linux") {
-    if ($env.XDG_SESSION_TYPE == "wayland") {
-      wl-paste
-    } else {
-      xclip -selection clipboard -o
-    }
-  } else if ($nu.os-info.name == "macos") {
-    pbpaste
-  } else {
-    echo "Unsupported OS"
-  }
-}
 
 # Preview current color config with colored swatches
 def color-config []: [nothing -> list<string>] {

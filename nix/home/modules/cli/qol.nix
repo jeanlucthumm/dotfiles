@@ -1,5 +1,35 @@
 # Quality of life CLI setup - modern shell niceties for any machine
-{pkgs, ...}: {
+{pkgs, ...}: let
+  clip = pkgs.writeShellScriptBin "clip" ''
+    if [ -n "$TMUX" ]; then
+      tmux loadb -
+    elif [ "$(uname)" = "Darwin" ]; then
+      pbcopy
+    elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+      wl-copy
+    else
+      xclip -selection clipboard
+    fi
+  '';
+
+  paste = pkgs.writeShellScriptBin "paste" ''
+    if [ -n "$TMUX" ]; then
+      tmux showb -t 0
+    elif [ "$(uname)" = "Darwin" ]; then
+      pbpaste
+    elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+      wl-paste
+    else
+      xclip -selection clipboard -o
+    fi
+  '';
+
+  copy-last-cmd = pkgs.writeShellScriptBin "copy-last-cmd" ''
+    cmd=$(${pkgs.nushell}/bin/nu -c 'history | last | get command')
+    output=$(kitty @ get-text --extent last_non_empty_output)
+    printf '$ %s\n%s' "$cmd" "$output" | ${clip}/bin/clip
+  '';
+in {
   imports = [
     ../../programs/starship.nix
     ../../programs/nushell/qol.nix
@@ -15,6 +45,11 @@
     ripgrep # grep replacement
     bat-extras.batman # man replacement
     sd # sed replacement
+
+    # Clipboard utilities
+    clip
+    paste
+    copy-last-cmd
   ];
 
   programs = {
@@ -52,7 +87,7 @@
         }
         {
           on = ["c" "y"];
-          run = ''shell --block -- ${pkgs.nushell}/bin/nu --login -c "cat \"$1\" | clip"'';
+          run = ''shell --block -- sh -c "cat \"$1\" | ${clip}/bin/clip"'';
           desc = "Copy file contents to clipboard";
         }
       ];
