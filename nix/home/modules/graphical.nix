@@ -19,6 +19,7 @@
       settings = {
         enable_audio_bell = false;
         bell_on_tab = "🔔 ";
+        tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
         window_alert_on_bell = true;
         window_padding_width = 8;
         allow_remote_control = "yes";
@@ -37,6 +38,7 @@
       keybindings = {
         "kitty_mod+h" = "kitty_scrollback_nvim";
         "kitty_mod+g" = "kitty_scrollback_nvim --config ksb_builtin_last_cmd_output";
+        "kitty_mod+y" = "launch --type=background copy-last-cmd";
         "ctrl+shift+right" = "mouse_select_command_output";
         "shift+enter" = "send_text all \\e\\r";
       };
