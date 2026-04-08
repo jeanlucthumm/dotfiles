@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "difit";
-  version = "2.2.7";
+  version = "4.0.3";
 
   src = fetchFromGitHub {
     owner = "yoshiko-pg";
     repo = "difit";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-1YMGvzjHW0XKtMK0uRradFdRAFlCK+EeR768GYeTunY=";
+    hash = "sha256-FXxHxujI1hM0LmWm+y9dFiQdtU9GmQmwrbDsegGlSwk=";
   };
 
   nativeBuildInputs = [
@@ -29,7 +29,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-yYQTuv42XZpmD73F5yHAKOnMY220zczduDb4nOuwzDY=";
+    hash = "sha256-ze7Z/qV3RYmqrmsdSDLHdbpN9UOZl+68qHxj2Doalio=";
     fetcherVersion = 3;
   };
 
@@ -47,6 +47,7 @@ stdenv.mkDerivation (finalAttrs: {
 
     cp -r dist/ $out/lib/difit/
     cp -r node_modules/ $out/lib/difit/
+    cp -r packages/ $out/lib/difit/
     cp package.json $out/lib/difit/
 
     makeWrapper ${nodejs}/bin/node $out/bin/difit \
