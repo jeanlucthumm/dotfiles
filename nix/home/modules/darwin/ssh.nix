@@ -7,7 +7,6 @@
   # Use nix-provided ssh-agent instead of macOS launchd agent (which lacks SK/FIDO2 support)
   services.ssh-agent = {
     enable = true;
-    enableNushellIntegration = true;
   };
 
   # Point system-wide SSH_AUTH_SOCK to FIDO2-capable agent, preload auth key.
