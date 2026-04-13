@@ -58,9 +58,9 @@
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
+  "effortLevel": "high",
   "voiceEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754846298344
-  },
-  "effortLevel": "high"
+  }
 }
