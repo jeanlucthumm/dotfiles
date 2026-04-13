@@ -11,6 +11,7 @@
       mcp-language-server # MCP server that exposes language servers to LLMs
       mcp-opennutrition # OpenNutrition dataset MCP server
       claude-code # CLI LLM coding utility
+      opencode # AI coding agent TUI
     ]
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       # MCP Servers (see nix/overlays directory)
