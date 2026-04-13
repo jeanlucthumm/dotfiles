@@ -7,7 +7,7 @@
     ../modules/darwin/graphical.nix
     ../modules/llm.nix
     ../modules/theme-home.nix
-    ../modules/ssh.nix
+    # ssh.nix not imported — work SSH config is handled by dotfiles-private
     ../programs/taskwarrior/common.nix
     inputs.dotfiles-private.homeModules.work
   ];
