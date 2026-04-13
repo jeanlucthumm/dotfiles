@@ -96,7 +96,8 @@ local plugin_spec = {
       vim.lsp.enable('source_kit')
       vim.lsp.enable('pyright')
       vim.lsp.enable('nil_ls')
-      vim.lsp.enable('ts_ls')
+      -- ts_ls disabled: typescript-tools.nvim provides TS LSP instead
+      -- vim.lsp.enable('ts_ls')
       vim.lsp.enable('ruff')
       vim.lsp.enable('gopls')
     end,
@@ -308,10 +309,14 @@ local plugin_spec = {
   {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    enabled = false,
     config = function()
       require'typescript-tools'.setup {
-        on_attach = require'common'.on_attach,
+        on_attach = function(client, bufnr)
+          require'common'.on_attach(client, bufnr)
+          -- Override gd to use source definition (skips barrel exports / import lines)
+          vim.keymap.set('n', 'gd', '<cmd>TSToolsGoToSourceDefinition<CR>',
+            { buffer = bufnr, noremap = true, silent = true })
+        end,
         capabilities = require'common'.capabilities(),
       }
     end,
