@@ -119,6 +119,11 @@ local plugin_spec = {
   {
     'stevearc/conform.nvim',
     opts = {
+      formatters = {
+        mdformat = {
+          prepend_args = { '--number' },
+        },
+      },
       formatters_by_ft = {
         markdown = { 'mdformat' },
         c = { 'clang-format' },
