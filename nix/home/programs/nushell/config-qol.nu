@@ -6,6 +6,22 @@ def ls --wrapped [...rest]: [nothing -> string] {
   ^eza -s name --group-directories-first -1 --icons=always ...$rest
 }
 
+# Prefer repo-local OpenCode config when present.
+def opencode --wrapped [...rest] {
+  let config_dir = (try {
+    ^git rev-parse --show-toplevel err> /dev/null | str trim
+  } catch {
+    $env.PWD
+  })
+  let local_config = ($config_dir | path join "opencode.local.json")
+
+  if ($local_config | path exists) {
+    with-env { OPENCODE_CONFIG: $local_config } { ^opencode ...$rest }
+  } else {
+    ^opencode ...$rest
+  }
+}
+
 # rg wrapper
 def nrg [pattern: string]: [nothing -> table<file: string, line: int, text: string>] {
   $'[(rg --json $pattern)]' |
