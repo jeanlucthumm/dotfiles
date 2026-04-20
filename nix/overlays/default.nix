@@ -17,6 +17,13 @@ inputs: [
     reddit-easy-post = inputs.reddit-easy-post.packages.${prev.stdenv.hostPlatform.system}.default;
     taskwarrior-enhanced = inputs.taskwarrior-enhanced.packages.${prev.stdenv.hostPlatform.system}.default;
   })
+  # Temporary: pull nushell from a pinned nixpkgs with the darwin test-skip fix.
+  # Drop once inputs.nixpkgs catches up.
+  (final: prev: {
+    nushell = (import inputs.nixpkgs-nushell {
+      inherit (prev.stdenv.hostPlatform) system;
+    }).nushell;
+  })
   inputs.nix-openclaw.overlays.default
   inputs.claude-code.overlays.default
   (import ./pysilero-vad-darwin.nix)
