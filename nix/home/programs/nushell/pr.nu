@@ -664,6 +664,69 @@ def prresolve []: [nothing -> nothing] {
   print $"Resolved ($thread_ids | length) review threads"
 }
 
+# Print the latest "review / results" check for the current PR
+def presult []: [nothing -> nothing] {
+  let check = ngh pr checks | where name == "review / results"
+
+  if ($check | is-empty) {
+    print "No 'review / results' check found for this PR"
+    return
+  }
+
+  let link = $check | first | get link
+  let check_run_id = $link | split row '?' | first | split row '/' | last
+
+  let repo_info = gh repo view --json owner,name | from json
+  let owner = $repo_info.owner.login
+  let repo = $repo_info.name
+
+  let summary = gh api $"repos/($owner)/($repo)/check-runs/($check_run_id)" | from json
+  let annotations = gh api $"repos/($owner)/($repo)/check-runs/($check_run_id)/annotations" | from json
+
+  let conclusion_color = match $summary.conclusion {
+    "success" => (ansi green)
+    "failure" => (ansi red)
+    "neutral" => (ansi yellow)
+    _ => (ansi white)
+  }
+
+  print $"(ansi bold)($summary.name)(ansi reset) — ($conclusion_color)($summary.conclusion)(ansi reset)"
+  print $"(ansi blue)($link)(ansi reset)"
+
+  let title = $summary.output.title? | default ""
+  let body = $summary.output.summary? | default ""
+  if ($title | is-not-empty) {
+    print ""
+    print $"(ansi bold)($title)(ansi reset)"
+  }
+  if ($body | is-not-empty) {
+    print $body
+  }
+
+  if ($annotations | is-empty) {
+    print ""
+    print "No annotations."
+    return
+  }
+
+  print ""
+  print $"(ansi bold)Findings \(($annotations | length)\):(ansi reset)"
+  for a in $annotations {
+    let level_color = match $a.annotation_level {
+      "failure" => (ansi red)
+      "warning" => (ansi yellow)
+      "notice" => (ansi blue)
+      _ => (ansi white)
+    }
+    let line = $a.start_line? | default "?"
+    let atitle = $a.title? | default ""
+    print ""
+    print $"  ($level_color)[($a.annotation_level)](ansi reset) ($atitle)"
+    print $"  ($a.path):($line)"
+    print $"  ($a.message)"
+  }
+}
+
 # Open a new kitty tab in the same directory for PR composition
 def prcompose []: [nothing -> nothing] {
   if ($nu.os-info.name != "macos") {
