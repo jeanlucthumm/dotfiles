@@ -1,6 +1,5 @@
 inputs: [
   (final: prev: {
-    difit = prev.callPackage ./difit.nix {};
     mcp-opennutrition = prev.callPackage ./mcp-opennutrition.nix {};
     mcp-language-server = prev.callPackage ./mcp-language-server.nix {};
     graphiti-mcp-server = prev.callPackage ./graphiti-mcp-server.nix {
@@ -26,5 +25,6 @@ inputs: [
   })
   inputs.nix-openclaw.overlays.default
   inputs.claude-code.overlays.default
+  inputs.difit.overlays.default
   (import ./pysilero-vad-darwin.nix)
 ]
