@@ -12,7 +12,7 @@
     inputs.dotfiles-private.homeModules.work
   ];
 
-  home.packages = with pkgs; [_1password-cli pnpm ngrok google-cloud-sdk];
+  home.packages = with pkgs; [_1password-cli pnpm ngrok google-cloud-sdk sem];
 
   # No FIDO2 security key on work laptop — waiting for sk setup on this host
   programs.git.signing.signByDefault = lib.mkForce false;
