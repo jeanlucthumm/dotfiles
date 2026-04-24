@@ -25,6 +25,5 @@ inputs: [
   })
   inputs.nix-openclaw.overlays.default
   inputs.claude-code.overlays.default
-  inputs.difit.overlays.default
   (import ./pysilero-vad-darwin.nix)
 ]

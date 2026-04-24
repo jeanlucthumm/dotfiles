@@ -25,7 +25,6 @@ in {
     mdformat # Markdown formatter
     gcc # GNU Compiler Collection
     graphite-cli # Stacked branch management
-    difit # GitHub-style git diff viewer
   ];
 
   programs = {

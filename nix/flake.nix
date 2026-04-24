@@ -77,10 +77,6 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    difit = {
-      url = "github:jeanlucthumm/difit/nixify";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     dotfiles-private = {
       url = "git+ssh://git@github.com/jeanlucthumm/dotfiles-private";
     };
