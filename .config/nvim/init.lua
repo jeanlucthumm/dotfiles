@@ -363,6 +363,19 @@ local plugin_spec = {
     },
     config = true,
   },
+  {
+    'jeanlucthumm/review.nvim',
+    dependencies = {
+      'esmuellert/codediff.nvim',
+      'MunifTanjim/nui.nvim',
+    },
+    cmd = { 'Review' },
+    keys = {
+      { '<Leader>lR', '<cmd>Review<cr>',         desc = 'Review changes' },
+      { '<Leader>lr', '<cmd>Review commits<cr>', desc = 'Review commits' },
+    },
+    opts = {},
+  },
 
   --- Theme
   { 'nvim-tree/nvim-web-devicons' },
