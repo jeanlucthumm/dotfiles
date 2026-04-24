@@ -14,6 +14,10 @@ nu -c 'source <file>'
 
 Variables after `=` aren't interpolated: `cmd -f key=$var` passes literal `key=$var`. Use `cmd -f $"key=($var)"`.
 
+## Parens in Interpolated Strings
+
+Inside `$"..."`, any `(...)` is a subexpression — `agent(s)` tries to run command `s`. Reword (`agents`) or escape (`\(s\)`).
+
 ## Pipeline vs Arguments
 
 - **Pipeline input**: The subject being transformed/queried (fits in chains)
