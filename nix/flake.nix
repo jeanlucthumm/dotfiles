@@ -53,6 +53,11 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # TODO
+    import-tree = {
+      url = "github:vic/import-tree";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Personal fork — switch to upstream once user isolation implemented
     nix-openclaw = {
