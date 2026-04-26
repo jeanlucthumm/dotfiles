@@ -1,7 +1,6 @@
 # Base for all module systems
 {
   config,
-  pkgs,
   inputs,
   ...
 }: {
@@ -25,9 +24,18 @@
         options = "--delete-older-than 30d";
       };
     };
+
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+    };
   };
 
   flake.modules.nixos.base = {
+    imports = with config.flake.modules; [
+      generic.base
+    ];
+
     # Timezone and locale
     time.timeZone = "America/Los_Angeles";
     i18n.defaultLocale = "en_US.UTF-8";
@@ -50,6 +58,13 @@
   };
 
   flake.modules.darwin.base = {
+    imports = [
+      inputs.stylix.darwinModules.stylix
+      inputs.home-manager.darwinModules.home-manager
+      inputs.agenix.darwinModules.default
+      config.flake.modules.generic.base
+    ];
+
     system.defaults.NSGlobalDomain = {
       InitialKeyRepeat = 10;
       KeyRepeat = 1;
@@ -85,5 +100,9 @@
         };
       };
     };
+  };
+
+  flake.modules.homeManager.base = {
+    imports = [inputs.agenix.homeManagerModules.default];
   };
 }

@@ -1,5 +1,5 @@
 # CLI
-{...}: {
+{
   flake.modules.nixos.cli = {pkgs, ...}: {
     # Basic sytem wide packages
     environment.systemPackages = with pkgs; [
