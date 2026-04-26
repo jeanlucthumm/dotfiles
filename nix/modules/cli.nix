@@ -1,6 +1,6 @@
 # CLI
-{pkgs, ...}: {
-  flake.modules.nixos.cli = {
+{...}: {
+  flake.modules.nixos.cli = {pkgs, ...}: {
     # Basic sytem wide packages
     environment.systemPackages = with pkgs; [
       file # Figure out what a certain file is
@@ -12,5 +12,21 @@
       zfs # ZFS filesystem tools
       vim # Text editor
     ];
+  };
+
+  flake.modules.homeManager.cli = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: {
+    imports = with config.flake.modules; [
+      homeManager.nushell
+    ];
+
+    home.sessionVariables = {
+      EDITOR = "${pkgs.neovim}/bin/nvim";
+      NH_FLAKE = config.home.homeDirectory + "/nix";
+    };
   };
 }
