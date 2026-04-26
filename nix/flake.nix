@@ -102,6 +102,7 @@
     deploy-rs,
     reddit-easy-post,
     taskwarrior-enhanced,
+    flake-parts,
     nix-openclaw,
     pyproject-nix,
     uv2nix,
