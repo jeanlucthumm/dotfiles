@@ -10,16 +10,20 @@
   imports = [inputs.flake-parts.flakeModules.modules];
 
   flake.modules.generic.base = {
-    # Enable flakes
-    nix.settings.experimental-features = ["nix-command" "flakes"];
-    # Increase download buffer to prevent "download buffer is full" errors
-    nix.settings.download-buffer-size = 134217728; # 128MB
+    nix = {
+      enable = true;
 
-    # Nix store gets full of old stuff, so clean it up periodically.
-    nix.gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
+      # Enable flakes
+      settings.experimental-features = ["nix-command" "flakes"];
+      # Increase download buffer to prevent "download buffer is full" errors
+      settings.download-buffer-size = 134217728; # 128MB
+
+      # Nix store gets full of old stuff, so clean it up periodically.
+      gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 30d";
+      };
     };
   };
 
