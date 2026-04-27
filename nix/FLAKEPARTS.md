@@ -87,6 +87,15 @@ import-tree reference. Cloned locally at `/tmp/infra`.
   contribution); zathura inlined into `modules/graphical.nix`; nushell
   kitty-protocol setting → `modules/nushell/graphical.nix`. Dropped
   `../modules/graphical.nix` import from macbook host.
+- 2026-04-26: migrated `home/modules/theme-home.nix` →
+  `modules/theme/home.nix`. Contributes to a new dedicated
+  `homeManager.theme` slot (not `base`) — theme is opt-in per host. Reads
+  theme via `osConfig.theme.*` (single source of truth at system level;
+  no separate HM theme option to avoid value-duplication). Explicitly
+  imports `inputs.stylix.homeModules.stylix` rather than relying on
+  system-level Stylix's auto-injection. Dropped fish lines (gone) and
+  taskwarrior import (deferred). Macbook HM imports now
+  `[base cli dev graphical darwin theme]`.
 - 2026-04-26: migrated `home/modules/llm.nix` → `modules/llm.nix`,
   contributing to `homeManager.dev`. Cross-platform; linux-only packages
   via `lib.optionals`.

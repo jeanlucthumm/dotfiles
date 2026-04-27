@@ -26,6 +26,7 @@
           dev
           graphical
           darwin
+          theme
         ];
 
         # What devices can SSH?
