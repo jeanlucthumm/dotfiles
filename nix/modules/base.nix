@@ -25,6 +25,9 @@
       };
     };
 
+    # Bite me
+    nixpkgs.config.allowUnfree = true;
+
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
@@ -32,8 +35,9 @@
   };
 
   flake.modules.nixos.base = {
-    imports = with config.flake.modules; [
-      generic.base
+    imports = [
+      inputs.home-manager.nixosModules.home-manager
+      config.flake.modules.generic.base
     ];
 
     # Timezone and locale
@@ -59,9 +63,7 @@
 
   flake.modules.darwin.base = {
     imports = [
-      inputs.stylix.darwinModules.stylix
       inputs.home-manager.darwinModules.home-manager
-      inputs.agenix.darwinModules.default
       config.flake.modules.generic.base
     ];
 
@@ -97,6 +99,10 @@
               type = "standard";
             };
           };
+          # Disable Spotlight search (Cmd+Space)
+          "64".enabled = false;
+          # Disable Finder search window (Cmd+Option+Space)
+          "65".enabled = false;
         };
       };
     };

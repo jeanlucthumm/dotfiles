@@ -60,14 +60,11 @@ in {
             # Always dark wallpaper since we want contrast
             ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
           else if t == "zenbones"
-          then
-            ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          then ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
           else if t == "snazzy"
-          then
-            ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          then ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
           else if t == "rose-pine"
-          then
-            ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
+          then ../../wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
           else throw "unknown theme ${t}";
         polarity =
           if d
