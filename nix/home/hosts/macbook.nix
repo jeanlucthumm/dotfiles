@@ -6,7 +6,6 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ../modules/llm.nix
     ../modules/theme-home.nix
     ../modules/ssh.nix
     ../modules/darwin/ssh.nix

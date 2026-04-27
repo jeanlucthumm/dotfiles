@@ -87,6 +87,9 @@ import-tree reference. Cloned locally at `/tmp/infra`.
   contribution); zathura inlined into `modules/graphical.nix`; nushell
   kitty-protocol setting → `modules/nushell/graphical.nix`. Dropped
   `../modules/graphical.nix` import from macbook host.
+- 2026-04-26: migrated `home/modules/llm.nix` → `modules/llm.nix`,
+  contributing to `homeManager.dev`. Cross-platform; linux-only packages
+  via `lib.optionals`.
 - 2026-04-26: migrated `home/modules/darwin/dictation.nix` →
   `modules/dictation.nix` (single file, darwin-only). Whisper push-to-talk
   + VAD modes contributing to `homeManager.darwin` (hammerspoon extraConfig
