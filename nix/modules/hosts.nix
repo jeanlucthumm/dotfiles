@@ -17,6 +17,8 @@
       darwin.graphical
       darwin.dev
       {
+        networking.hostName = "macbook";
+
         # Home Manager module tree
         home-manager.users.jeanluc.imports = [
           homeManager.base
