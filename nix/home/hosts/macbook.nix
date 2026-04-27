@@ -6,8 +6,6 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ../modules/darwin/fish-fix.nix
-    ../modules/darwin/cli.nix
     ../modules/darwin/dictation.nix
     ../modules/llm.nix
     ../modules/theme-home.nix

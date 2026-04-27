@@ -61,8 +61,8 @@ Branch: `flakeparts`.
   Until done, the new `modules/hosts.nix` darwinConfiguration is dead code and
   the modules tree can't be eval-verified. Old `flake.nix` macbook config
   references deleted files and will fail to evaluate — that's expected.
-- Migrate remaining programs to the new layout (fish, starship, taskwarrior,
-  hyprland, niri, hammerspoon, …)
+- Migrate remaining programs to the new layout (starship, taskwarrior,
+  hyprland, niri, …)
 - Migrate other host configs (desktop, server, server-mini, virtual, cloud-vm,
   iso) once flake.nix is rewired
 
@@ -87,6 +87,11 @@ import-tree reference. Cloned locally at `/tmp/infra`.
   contribution); zathura inlined into `modules/graphical.nix`; nushell
   kitty-protocol setting → `modules/nushell/graphical.nix`. Dropped
   `../modules/graphical.nix` import from macbook host.
+- 2026-04-26: dropped fish entirely (no longer used). Removed
+  `home/programs/fish.nix`, `home/modules/darwin/fish-fix.nix`, and
+  `home/modules/darwin/cli.nix` (was just a fish import). Removed
+  `shellIntegration.enableFishIntegration` from `modules/kitty/kitty.nix`.
+  Two macbook imports gone.
 - 2026-04-26: migrated `home/modules/darwin/graphical.nix` → split as:
   hammerspoon (timewarrior watcher + extraConfig option) →
   `modules/hammerspoon.nix` (single file, darwin-only); kitty darwin settings →

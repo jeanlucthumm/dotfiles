@@ -8,7 +8,6 @@
         if p.pkgs.stdenv.hostPlatform.isDarwin
         then p.pkgs.emptyDirectory
         else p.pkgs.kitty;
-      shellIntegration.enableFishIntegration = true;
       shellIntegration.mode = "no-cursor";
 
       settings = {
