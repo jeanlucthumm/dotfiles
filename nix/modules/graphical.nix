@@ -24,6 +24,7 @@
   in {
     home.packages = with pkgs; [
       copy-last-cmd
+      neovide # Neovim GUI
       notify # Cross-platform notifications
       ffmpeg # Media processing toolkit
       usbutils # USB utilities

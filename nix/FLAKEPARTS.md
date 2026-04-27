@@ -87,3 +87,11 @@ import-tree reference. Cloned locally at `/tmp/infra`.
   contribution); zathura inlined into `modules/graphical.nix`; nushell
   kitty-protocol setting → `modules/nushell/graphical.nix`. Dropped
   `../modules/graphical.nix` import from macbook host.
+- 2026-04-26: migrated `home/modules/darwin/graphical.nix` → split as:
+  hammerspoon (timewarrior watcher + extraConfig option) →
+  `modules/hammerspoon.nix` (single file, darwin-only); kitty darwin settings →
+  `modules/kitty/darwin.nix`; neovide pkg → `modules/graphical.nix` (cross-
+  platform); `nv` alias → `modules/nushell/graphical.nix`. Dropped the
+  separate `programs.hammerspoon.enable` option (import implies enable);
+  kept `extraConfig` option as the contribution point. Dropped
+  `../modules/darwin/graphical.nix` import from macbook host.
