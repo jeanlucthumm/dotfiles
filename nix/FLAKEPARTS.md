@@ -82,3 +82,8 @@ import-tree reference. Cloned locally at `/tmp/infra`.
 - 2026-04-26: migrated `home/modules/cli/*` → flake-parts modules tree
   (cli/dev/graphical contributions). `../modules/cli` import dropped from
   `home/hosts/macbook.nix` — first import eliminated from that file.
+- 2026-04-26: migrated `home/modules/graphical.nix` (general HM) → kitty
+  to `modules/kitty/kitty.nix` (per-program dir, anticipating darwin
+  contribution); zathura inlined into `modules/graphical.nix`; nushell
+  kitty-protocol setting → `modules/nushell/graphical.nix`. Dropped
+  `../modules/graphical.nix` import from macbook host.

@@ -28,5 +28,7 @@
       ffmpeg # Media processing toolkit
       usbutils # USB utilities
     ];
+
+    programs.zathura.enable = true;
   };
 }
