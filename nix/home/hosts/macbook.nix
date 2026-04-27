@@ -6,8 +6,6 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ../modules/darwin/nushell.nix
-    ../modules/cli
     ../modules/graphical.nix
     ../modules/darwin/graphical.nix
     ../modules/darwin/fish-fix.nix

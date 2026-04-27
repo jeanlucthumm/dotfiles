@@ -24,7 +24,7 @@
           base
           cli
           dev
-          gui
+          graphical
           darwin
         ];
 

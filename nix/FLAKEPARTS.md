@@ -9,7 +9,7 @@ Flatten `system/modules/` + `home/modules/` "foundation" files into a unified
 
 ## Architectural decisions
 
-- **Profile axis**: `base`, `cli`, `server`, `dev`, `gui` — **flat à-la-carte**.
+- **Profile axis**: `base`, `cli`, `server`, `dev`, `graphical` — **flat à-la-carte**.
   Hosts list every profile they want explicitly. No inheritance chain. Wins
   predictability over conciseness.
 - **OS axis**: use the flake-parts module *class* (`flake.modules.darwin.*`,
@@ -42,6 +42,14 @@ Branch: `flakeparts`.
   `nrs`/`nra` defs moved out of `base.nix` into the right per-OS contributions
   and switched from `configFile.text` to `extraConfig` (the former clobbered
   the base config).
+- **CLI/dev/graphical homeManager migration** — content of `home/modules/cli/`
+  (foundation, dev, dev-custom, qol, qol-system, sysadmin) folded into
+  `modules/cli.nix`, `modules/dev.nix`, `modules/graphical.nix`. Split:
+  `clip`/`paste` → cli; `copy-last-cmd` + `qol-system` packages → graphical.
+  Starship deferred. Yazi clip-keybind dropped (unused).
+  `../modules/cli` import removed from `home/hosts/macbook.nix`.
+  `home/modules/cli/` left in place for not-yet-migrated hosts (already
+  broken by nushell deletion; will go away as remaining hosts migrate).
 
 ### In progress
 
@@ -69,5 +77,8 @@ import-tree reference. Cloned locally at `/tmp/infra`.
 - 2026-04-26: locked in flat-profile architectural decision; completed nushell
   migration (cli/dev/darwin/nixos contributions, all .nu files moved, old
   files deleted, base.nix de-nushelled, macbook host imports updated to
-  `[base cli dev gui darwin]`). Verification deferred until `flake.nix` is
+  `[base cli dev graphical darwin]`). Verification deferred until `flake.nix` is
   rewired to use flake-parts.
+- 2026-04-26: migrated `home/modules/cli/*` → flake-parts modules tree
+  (cli/dev/graphical contributions). `../modules/cli` import dropped from
+  `home/hosts/macbook.nix` — first import eliminated from that file.
