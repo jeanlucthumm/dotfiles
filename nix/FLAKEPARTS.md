@@ -87,6 +87,12 @@ import-tree reference. Cloned locally at `/tmp/infra`.
   contribution); zathura inlined into `modules/graphical.nix`; nushell
   kitty-protocol setting → `modules/nushell/graphical.nix`. Dropped
   `../modules/graphical.nix` import from macbook host.
+- 2026-04-26: migrated SSH HM bits into `modules/ssh.nix` alongside the
+  existing system-level `darwin.ssh` slot. Shared HM config (controlMaster)
+  → `homeManager.base` since every host wants it. Darwin FIDO2 setup →
+  `homeManager.darwin`. NixOS systemd ssh-add-keys + nushell SSH_AUTH_SOCK
+  → `homeManager.nixos`. Removed `home/modules/{ssh,darwin/ssh,nixos/ssh}.nix`.
+  Two macbook imports gone.
 - 2026-04-26: migrated `home/modules/theme-home.nix` →
   `modules/theme/home.nix`. Contributes to a new dedicated
   `homeManager.theme` slot (not `base`) — theme is opt-in per host. Reads

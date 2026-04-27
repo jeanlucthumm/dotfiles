@@ -6,8 +6,6 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ../modules/ssh.nix
-    ../modules/darwin/ssh.nix
     ../modules/security.nix
     ../modules/darwin/security.nix
     ../programs/taskwarrior
