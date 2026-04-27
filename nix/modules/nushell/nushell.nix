@@ -7,7 +7,6 @@
   };
 
   flake.modules.homeManager.nushell = {
-    config,
     pkgs,
     lib,
     ...
@@ -29,4 +28,4 @@
       extraConfig = builtins.readFile ./config-base.nu;
     };
   };
-}
+

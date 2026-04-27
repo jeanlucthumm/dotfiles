@@ -20,8 +20,8 @@
         networking.hostName = "macbook";
 
         # Home Manager module tree
-        home-manager.users.jeanluc.imports = [
-          homeManager.base
+        home-manager.users.jeanluc.imports = with config.flake.modules.homeManager; [
+          darwin
         ];
 
         # What devices can SSH?
