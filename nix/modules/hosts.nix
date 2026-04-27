@@ -13,14 +13,18 @@
       darwin.theme
       darwin.secrets
       darwin.ssh
-      darwin.nushell
+      darwin.cli
       darwin.graphical
       darwin.dev
       {
         networking.hostName = "macbook";
 
-        # Home Manager module tree
+        # Home Manager module tree (flat à la carte composition)
         home-manager.users.jeanluc.imports = with config.flake.modules.homeManager; [
+          base
+          cli
+          dev
+          gui
           darwin
         ];
 

@@ -17,13 +17,8 @@
   flake.modules.homeManager.cli = {
     config,
     pkgs,
-    lib,
     ...
   }: {
-    imports = with config.flake.modules; [
-      homeManager.nushell
-    ];
-
     home.sessionVariables = {
       EDITOR = "${pkgs.neovim}/bin/nvim";
       NH_FLAKE = config.home.homeDirectory + "/nix";

@@ -113,49 +113,15 @@
       imports = [inputs.agenix.homeManagerModules.default];
     };
 
-    nixos = {...}: {
-      imports = [config.flake.modules.homeManager.base];
-      programs = {
-        nushell.configFile.text = ''
-          # TODO: switch back to nh once tty passthrough is fixed (~/code/nh/issue.md)
-          def nrs []: [nothing -> nothing] {
-              sudo nixos-rebuild switch --flake ~/nix
-          }
-
-          def nra []: [nothing -> nothing] {
-              sudo nixos-rebuild switch --flake ~/nix --upgrade
-          }
-        '';
-      };
-    };
+    nixos = {};
 
     darwin = p: {
-      imports = [config.flake.modules.homeManager.base];
-      programs = {
-        # TODO: delock should only be set if we are using agenix module
-        nushell.configFile.text = ''
-          def nrs []: [nothing -> nothing] {
-              nh darwin switch -H ${p.osConfig.networking.hostName}
-              delock # decrypt agenix secrets (YubiKey PIN + touch)
-          }
-
-          def nra []: [nothing -> nothing] {
-              nh darwin switch -H ${p.osConfig.networking.hostName} -u
-              delock # decrypt agenix secrets (YubiKey PIN + touch)
-          }
-        '';
-      };
-
-      home = {
-        # Extra stuff to add to $PATH
-        sessionPath = [
-          # homebrew puts all its stuff in this directory instead
-          # of /usr/bin or otherwise
-          "/opt/homebrew/bin"
-          # Any Dart dev requires this in path
-          "${config.home.homeDirectory}/.pub-cache/bin"
-        ];
-      };
+      home.sessionPath = [
+        # Homebrew puts its stuff here instead of /usr/bin
+        "/opt/homebrew/bin"
+        # Any Dart dev requires this in path
+        "${p.config.home.homeDirectory}/.pub-cache/bin"
+      ];
     };
   };
 }
