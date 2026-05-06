@@ -4,10 +4,7 @@
 # in HM. Single source of truth at the system level; the `osConfig.` prefix
 # makes cross-context access explicit. Hosts must import this slot
 # explicitly (it's not in `base`) so untheme'd hosts don't drag it in.
-{
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   flake.modules.homeManager.theme = {
     osConfig,
     pkgs,
@@ -49,6 +46,13 @@
       in ''
         include ${../../themes/kitty}/${kittyThemeFile}
       '';
+    };
+
+    programs.taskwarrior = {
+      colorTheme =
+        if theme.darkMode
+        then ./taskwarrior-themes/dark-256.theme
+        else ./taskwarrior-themes/light-256.theme;
     };
 
     programs.wofi.style = with config.lib.stylix.colors; ''
@@ -137,12 +141,21 @@
         '';
         rosePineVariant =
           if theme.darkMode
-          then (if theme.variant == "moon" then "moon" else "main")
+          then
+            (
+              if theme.variant == "moon"
+              then "moon"
+              else "main"
+            )
           else "dawn";
         rosePineSetup = ''
           require'rose-pine'.setup {
             variant = '${rosePineVariant}',
-            dark_variant = '${if theme.variant == "moon" then "moon" else "main"}',
+            dark_variant = '${
+            if theme.variant == "moon"
+            then "moon"
+            else "main"
+          }',
             disable_italics = true,
           }
           lualine_theme = 'rose-pine'
