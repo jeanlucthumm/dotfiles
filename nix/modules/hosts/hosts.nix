@@ -30,9 +30,19 @@
           secrets-darwin
           theme
           hwKey
+          {
+            # Security identity
+            programs.git.signing = {
+              key = "~/.ssh/id_ed25519_sk_signing";
+              format = "ssh";
+            };
+
+            age.identityPaths = [
+              ./macbook-yubikey-identity.txt
+            ];
+          }
         ];
 
-        # What devices can SSH?
         users.users.jeanluc.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
           desktop.fido2.auth
           phone
