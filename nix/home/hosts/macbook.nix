@@ -6,8 +6,6 @@
   homeDir = config.home.homeDirectory;
 in {
   imports = [
-    ../modules/security.nix
-    ../modules/darwin/security.nix
     ../programs/taskwarrior
   ];
 

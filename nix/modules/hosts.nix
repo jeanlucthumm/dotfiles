@@ -9,6 +9,7 @@
   flake.darwinConfigurations."macbook" = inputs.nix-darwin.lib.darwinSystem {
     modules = with config.flake.modules; [
       generic.jeanluc
+      generic.hwKey
       darwin.base
       darwin.theme
       darwin.secrets
@@ -26,7 +27,9 @@
           dev
           graphical
           darwin
+          secrets-darwin
           theme
+          hwKey
         ];
 
         # What devices can SSH?
