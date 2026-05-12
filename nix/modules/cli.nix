@@ -112,6 +112,7 @@
         ];
       };
 
+      # Modern nix CLI wrapper
       nh = {
         enable = true;
         flake = config.home.homeDirectory + "/nix";

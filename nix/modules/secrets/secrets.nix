@@ -80,15 +80,11 @@
       }
       (lib.mkIf pkgs.hostPlatform.isDarwin
         (let
-          args = config.flake.modules.homeManager.secrets-darwin.launchd.agents.activate-agenix.config.ProgramArguments;
+          args = config.flake.modules.homeManager.secrets.launchd.agents.activate-agenix.config.ProgramArguments;
           # Agenix sets ProgramArguments = [ mountingScript ]; home-manager wraps
           # it in the plist but the config value is the unwrapped nix store path.
           mountScript = builtins.head args;
         in {
-          imports = [
-            config.flake.modules.homeManager.secrets
-          ];
-
           age.package = pkgs.writeShellScriptBin "age" ''
             export PATH="${lib.makeBinPath [pkgs.age-plugin-yubikey]}:$PATH"
             exec ${pkgs.age}/bin/age "$@"
