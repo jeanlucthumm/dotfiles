@@ -1,10 +1,13 @@
 # Darwin specific GUI settings
-{config, pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ../../programs/hammerspoon.nix
   ];
 
-  # These are darwin specific because NixOS relies on the WM for splits.
   programs = {
     hammerspoon = {
       enable = true;
@@ -50,6 +53,8 @@
         log.i("Timewarrior watcher started")
       '';
     };
+
+    # These are darwin specific because NixOS relies on the WM for splits.
     kitty = {
       settings = {
         macos_option_as_alt = true;

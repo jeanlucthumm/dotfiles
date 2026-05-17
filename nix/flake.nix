@@ -91,6 +91,8 @@
     };
   };
 
+  # TODO: add jlib to specialArgs in mkFlake
+
   outputs = inputs @ {
     self,
     nixpkgs,
