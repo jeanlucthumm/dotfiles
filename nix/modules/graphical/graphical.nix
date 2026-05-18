@@ -73,7 +73,7 @@ fps: {
 
       darwin = {
         imports = [
-          fps.flake.modules.homeManager.mod-hammerspoon
+          fps.config.flake.modules.homeManager.mod-hammerspoon
         ];
 
         programs = {

@@ -16,6 +16,13 @@
       darwin.cli
       darwin.graphical
       darwin.dev
+      # Freezes pkgs so it can't be modified and we single source of truth it from
+      # flake-parts perSystem (via withSystem).
+      inputs.nixpkgs.nixosModules.readOnlyPkgs
+      {
+        nixpkgs.hostPlatform = "aarch64-darwin";
+        nixpkgs.pkgs = withSystem "aarch64-darwin" ({pkgs, ...}: pkgs);
+      }
       {
         networking.hostName = "macbook";
 
@@ -53,7 +60,6 @@
 
         system.stateVersion = 4;
         system.primaryUser = "jeanluc";
-        nixpkgs.hostPlatform = "aarch64-darwin";
       }
       # TODO: overlays
     ];
