@@ -1,4 +1,5 @@
 # LLM / AI tooling
+# TODO clean up what pkgs we actually want here
 {
   flake.modules.homeManager.dev = {
     pkgs,

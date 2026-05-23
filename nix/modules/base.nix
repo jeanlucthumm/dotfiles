@@ -1,12 +1,8 @@
 # Base for all module systems
-{
-  config,
-  inputs,
-  ...
-}: {
+fp: {
   # Allows for setting `flake.modules`.
   # Only needs to be imported in one file per eval so base is natural fit.
-  imports = [inputs.flake-parts.flakeModules.modules];
+  imports = [fp.inputs.flake-parts.flakeModules.modules];
 
   flake.modules.generic.base = {
     nix = {
@@ -36,8 +32,8 @@
 
   flake.modules.nixos.base = {
     imports = [
-      inputs.home-manager.nixosModules.home-manager
-      config.flake.modules.generic.base
+      fp.inputs.home-manager.nixosModules.home-manager
+      fp.config.flake.modules.generic.base
     ];
 
     # Timezone and locale
@@ -59,12 +55,14 @@
       execWheelOnly = true;
       wheelNeedsPassword = false;
     };
+
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];
   };
 
   flake.modules.darwin.base = {
     imports = [
-      inputs.home-manager.darwinModules.home-manager
-      config.flake.modules.generic.base
+      fp.inputs.home-manager.darwinModules.home-manager
+      fp.config.flake.modules.generic.base
     ];
 
     system.defaults.NSGlobalDomain = {
@@ -106,22 +104,24 @@
         };
       };
     };
+
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];
   };
 
   flake.modules.homeManager = {
-    base = {
-      imports = [inputs.agenix.homeManagerModules.default];
+    config,
+    pkgs,
+    ...
+  }:
+    fp.jlib.mkHomeManager pkgs {
+      darwin = {
+        home.sessionPath = [
+          # Homebrew puts its stuff here instead of /usr/bin
+          "/opt/homebrew/bin"
+          # TODO: move this to dev
+          # Any Dart dev requires this in path
+          "${config.home.homeDirectory}/.pub-cache/bin"
+        ];
+      };
     };
-
-    nixos = {};
-
-    darwin = p: {
-      home.sessionPath = [
-        # Homebrew puts its stuff here instead of /usr/bin
-        "/opt/homebrew/bin"
-        # Any Dart dev requires this in path
-        "${p.config.home.homeDirectory}/.pub-cache/bin"
-      ];
-    };
-  };
 }

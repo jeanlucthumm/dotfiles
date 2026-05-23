@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  jlib,
   ...
 }: {
   flake.modules.generic.secrets = {
@@ -41,6 +42,8 @@
       inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
       pkgs.age-plugin-yubikey
     ];
+
+    home-manager.sharedModules = [config.flake.modules.homeManager.secrets];
   };
 
   flake.modules.darwin.secrets = {pkgs, ...}: {
@@ -52,6 +55,8 @@
       inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
       pkgs.age-plugin-yubikey
     ];
+
+    home-manager.sharedModules = [config.flake.modules.homeManager.secrets];
   };
 
   flake.modules.homeManager.secrets = {
@@ -59,8 +64,9 @@
     lib,
     ...
   }:
-    lib.mkMerge [
-      {
+    jlib.mkHomeManager pkgs {
+      generic = {
+        imports = [inputs.agenix.homeManagerModules.default];
         home.packages = let
           s = config.flake.modules.generic.secrets;
           makeKeyGetter = path: ''
@@ -77,29 +83,29 @@
             age # Age encryption tool
             pinentry-tty # Enter password in terminal
           ];
-      }
-      (lib.mkIf pkgs.hostPlatform.isDarwin
-        (let
-          args = config.flake.modules.homeManager.secrets.launchd.agents.activate-agenix.config.ProgramArguments;
-          # Agenix sets ProgramArguments = [ mountingScript ]; home-manager wraps
-          # it in the plist but the config value is the unwrapped nix store path.
-          mountScript = builtins.head args;
-        in {
-          age.package = pkgs.writeShellScriptBin "age" ''
-            export PATH="${lib.makeBinPath [pkgs.age-plugin-yubikey]}:$PATH"
-            exec ${pkgs.age}/bin/age "$@"
-          '';
+      };
 
-          launchd.agents.activate-agenix.config = {
-            RunAtLoad = lib.mkForce false;
-            KeepAlive = lib.mkForce {};
-          };
+      darwin = let
+        args = config.flake.modules.homeManager.secrets.launchd.agents.activate-agenix.config.ProgramArguments;
+        # Agenix sets ProgramArguments = [ mountingScript ]; home-manager wraps
+        # it in the plist but the config value is the unwrapped nix store path.
+        mountScript = builtins.head args;
+      in {
+        age.package = pkgs.writeShellScriptBin "age" ''
+          export PATH="${lib.makeBinPath [pkgs.age-plugin-yubikey]}:$PATH"
+          exec ${pkgs.age}/bin/age "$@"
+        '';
 
-          home.packages = [
-            (pkgs.writeShellScriptBin "delock" ''
-              exec ${mountScript}
-            '')
-          ];
-        }))
-    ];
+        launchd.agents.activate-agenix.config = {
+          RunAtLoad = lib.mkForce false;
+          KeepAlive = lib.mkForce {};
+        };
+
+        home.packages = [
+          (pkgs.writeShellScriptBin "delock" ''
+            exec ${mountScript}
+          '')
+        ];
+      };
+    };
 }

@@ -8,33 +8,25 @@
 }: {
   flake.darwinConfigurations."macbook" = inputs.nix-darwin.lib.darwinSystem {
     modules = with config.flake.modules; [
-      generic.jeanluc
       darwin.base
-      darwin.theme
-      darwin.secrets
-      darwin.ssh
-      darwin.cli
-      darwin.graphical
       darwin.dev
-      # Freezes pkgs so it can't be modified and we single source of truth it from
-      # flake-parts perSystem (via withSystem).
+      darwin.graphical
+      darwin.secrets
+      darwin.theme
+
+      # Avoid evaluating `pkgs` multiple times by importing the one from flake-parts
+      # for this system (via `withSystem`). Also freeze pkgs to avoid surprising local tree
+      # only modifications.
       inputs.nixpkgs.nixosModules.readOnlyPkgs
       {
         nixpkgs.hostPlatform = "aarch64-darwin";
         nixpkgs.pkgs = withSystem "aarch64-darwin" ({pkgs, ...}: pkgs);
       }
+
       {
         networking.hostName = "macbook";
 
-        # Home Manager module tree (flat à la carte composition)
         home-manager.users.jeanluc.imports = with config.flake.modules.homeManager; [
-          base
-          cli
-          dev
-          graphical
-          darwin
-          secrets
-          theme
           {
             # Security identity
             programs.git.signing = {

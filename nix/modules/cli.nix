@@ -1,6 +1,6 @@
 # CLI
 {
-  flake.modules.nixos.cli = {pkgs, ...}: {
+  flake.modules.nixos.base = {pkgs, ...}: {
     # Basic system wide packages
     environment.systemPackages = with pkgs; [
       file # Figure out what a certain file is
@@ -14,7 +14,7 @@
     ];
   };
 
-  flake.modules.homeManager.cli = {
+  flake.modules.homeManager.base = {
     config,
     pkgs,
     ...

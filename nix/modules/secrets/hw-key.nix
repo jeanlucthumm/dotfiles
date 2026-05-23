@@ -11,5 +11,9 @@
       yubikey-manager # ykman CLI
       age-plugin-yubikey # PIV-backed age identities
     ];
+
+    home.sessionVariables = {
+      HW_KEY_HOST = true;
+    };
   };
 }

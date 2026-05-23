@@ -1,10 +1,16 @@
 # GUI
-fps: {
-  flake.modules.nixos.generic = {
+fp: {
+  flake.modules.nixos.graphical = {
     config,
     pkgs,
     ...
   }: {
+    # Configure keymap in X11;
+    xserver.xkb = {
+      layout = "us";
+      variant = "";
+    };
+
     # Terminal with GPU acceleration
     kitty = {
       enable = true;
@@ -48,19 +54,16 @@ fps: {
 
     # Enables using Kitty's new key handling protocol in nushell
     nushell.settings.use_kitty_protocol = true;
-  };
-  flake.modules.nixos.graphical = {
-    # Configure keymap in X11;
-    xserver.xkb = {
-      layout = "us";
-      variant = "";
-    };
+
+    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.graphical];
   };
 
   flake.modules.darwin.graphical = {pkgs, ...}: {
     environment.systemPackages = with pkgs; [
       raycast
     ];
+
+    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.graphical];
   };
 
   flake.modules.homeManager.graphical = {
@@ -69,7 +72,7 @@ fps: {
     lib,
     ...
   }:
-    fps.jlib.mkHomeManager pkgs {
+    fp.jlib.mkHomeManager pkgs {
       generic = let
         # `clip` comes from the cli profile (always co-imported at host level).
         copy-last-cmd = pkgs.writeShellScriptBin "copy-last-cmd" ''
@@ -87,11 +90,17 @@ fps: {
         ];
 
         programs.zathura.enable = true;
+
+        programs.nushell = {
+          # Enables kitty's new key handling protocol in nushell
+          settings.use_kitty_protocol = true;
+          shellAliases.nv = "neovide --frame transparent --fork";
+        };
       };
 
       darwin = {
         imports = [
-          fps.config.flake.modules.homeManager.opt-hammerspoon
+          fp.config.flake.modules.homeManager.opt-hammerspoon
         ];
 
         programs = {

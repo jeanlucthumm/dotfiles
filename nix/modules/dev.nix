@@ -1,9 +1,15 @@
 # Development tools
-{
+fp: {
+  flake.modules.nixos.dev = {pkgs, ...}: {
+    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.dev];
+  };
+
   flake.modules.darwin.dev = {pkgs, ...}: {
     environment.systemPackages = with pkgs; [
       qemu
     ];
+
+    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.dev];
   };
 
   flake.modules.homeManager.dev = {
@@ -33,7 +39,6 @@
       # Workflow-specific
       timewarrior # time tracker
       taskwarrior-enhanced # Enhanced taskwarrior companion CLI
-      notion-cli # Notion API CLI
     ];
 
     programs = {
