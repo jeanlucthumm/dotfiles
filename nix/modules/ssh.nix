@@ -1,5 +1,16 @@
 # SSH
 fps: {
+  flake.modules.nixos.base = {lib, ...}: {
+    services.openssh = {
+      enable = true;
+      # Forces SSH keys
+      settings.PasswordAuthentication = false;
+    };
+    networking.firewall.allowedTCPPorts = [22];
+
+    services.gnome.gcr-ssh-agent.enable = lib.mkForce false;
+  };
+
   flake.modules.darwin.base = {
     # SSH server configuration
     services.openssh = {

@@ -11,6 +11,7 @@ fp: {
       variant = "";
     };
 
+    # TODO shouldn't this be home-manager config?
     # Terminal with GPU acceleration
     kitty = {
       enable = true;
@@ -54,6 +55,36 @@ fp: {
 
     # Enables using Kitty's new key handling protocol in nushell
     nushell.settings.use_kitty_protocol = true;
+
+    # TODO end ========
+
+    # Fonts
+    fonts.packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.fira-code
+      font-awesome # for icons
+    ];
+
+    services = {
+      # Audio management. Modern version of PulseAudio.
+      pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+      };
+
+      displayManager.ly = {
+        enable = true;
+      };
+
+      blueman.enable = true;
+    };
+
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
 
     home-manager.sharedMoules = [fp.config.flake.modules.homeManager.graphical];
   };

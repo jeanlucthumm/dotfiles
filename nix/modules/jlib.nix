@@ -12,5 +12,7 @@
         (lib.mkIf (darwin != null && pkgs.hostPlatform.isDarwin) darwin)
         (lib.mkIf (nixos != null && pkgs.hostPlatform.isLinux) nixos)
       ];
+    mkHomeManagerNixOS = pkgs: nixos:
+      lib.mkIf pkgs.hostPlatform.isLinux nixos;
   };
 }

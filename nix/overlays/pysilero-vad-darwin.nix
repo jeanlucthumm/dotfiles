@@ -1,6 +1,7 @@
 # TODO: Remove once pysilero-vad > 3.3.0 lands in nixpkgs (nixpkgs#491459)
 # Upstream fix: rhasspy/pysilero-vad#15 (merged, but no release cut yet)
-final: prev: prev.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
+final: prev:
+prev.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
   python3 = prev.python3.override {
     packageOverrides = pyFinal: pyPrev: {
       pysilero-vad = pyPrev.pysilero-vad.overridePythonAttrs {
