@@ -7,7 +7,12 @@
   ...
 }: {
   flake.nixosConfiguration."desktop" = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; [
+    modules = with config.flake.modules.nixos; let
+      themeSetting = {
+        name = "rose-pine";
+        darkMode = false;
+      };
+    in [
       base
       amdGpu
 
@@ -41,7 +46,12 @@
   };
 
   flake.darwinConfigurations."macbook" = inputs.nix-darwin.lib.darwinSystem {
-    modules = with config.flake.modules.darwin; [
+    modules = with config.flake.modules.darwin; let
+      themeSetting = {
+        name = "rose-pine";
+        darkMode = false;
+      };
+    in [
       base
       dev
       graphical
@@ -62,6 +72,8 @@
             age.identityPaths = [
               ./macbook-yubikey-identity.txt
             ];
+
+            theme = themeSetting;
           }
         ];
 
@@ -70,10 +82,7 @@
           phone
         ];
 
-        theme = {
-          name = "rose-pine";
-          darkMode = false;
-        };
+        theme = themeSetting;
 
         system.stateVersion = 4;
         system.primaryUser = "jeanluc";

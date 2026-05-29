@@ -110,12 +110,36 @@ fp: {
       };
     };
 
-  flake.modules.nixos.theme = nixosParams: {
+  flake.modules.nixos.theme = {
+    config,
+    lib,
+    ...
+  }: let
+    t = config.theme.name;
+    d = config.theme.darkMode;
+  in {
     imports = [
       fp.inputs.stylix.nixosModules.stylix
-      # TODO: unclear if this is required
       fp.config.flake.modules.generic.theme
     ];
+
+    programs.vivid = {
+      enable = true;
+      theme =
+        if t == "gruvbox"
+        then
+          if d
+          then "gruvbox-dark-soft"
+          else "gruvbox-light-soft"
+        else if t == "zenbones"
+        then "zenburn"
+        else if t == "snazzy"
+        then
+          if d
+          then "snazzy"
+          else ../../themes/vivid/snazzy-light.yml
+        else throw "unknown theme ${t}";
+    };
 
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.theme];
   };

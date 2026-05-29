@@ -14,6 +14,7 @@ Instead, `import-tree` imports the entire `/modules/**/*` directory, evaluating 
 - **graphical** – For daily machines with a GUI
 - **secrets** — For machines with a hwkey that are able to unlock and use repo secrets
 - **theme** — Themeing via stylix and custom
+- **homeServer** — For headless server managing a home
 
 ## Config trees
 
