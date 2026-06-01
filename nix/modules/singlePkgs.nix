@@ -8,13 +8,13 @@
     lib,
     ...
   }: {
-    import = [
+    imports = [
       # No local tree modifications of nixpkgs so we have the same pkgsc
       inputs.nixpkgs.nixosModules.readOnlyPkgs
     ];
 
     options.jl.system = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "System string";
     };
 

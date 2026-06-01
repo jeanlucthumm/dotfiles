@@ -30,10 +30,14 @@ fp: {
     };
   };
 
-  flake.modules.nixos.base = {
+  flake.modules.nixos.base = {pkgs, ...}: {
     imports = [
       fp.inputs.home-manager.nixosModules.home-manager
       fp.config.flake.modules.generic.base
+    ];
+
+    environment.systemPackages = with pkgs; [
+      deploy-rs
     ];
 
     # Timezone and locale

@@ -1,10 +1,46 @@
+# Systemd services to backup critical data to ZFS pool
 {
   flake.modules.nixos.homeServer = {pkgs, ...}: {
-    # Systemd services to backup critical data to ZFS pool
-
-    environment.systemPackages = with pkgs; [
+    environment.systemPackages = with pkgs; let
+      restoreBackups = pkgs.writeShellScriptBin "restore-backups" (builtins.readFile ./restore.sh);
+    in [
       rsync
+      restoreBackups
+      smartmontools # for disk health monitoring
     ];
+
+    # Sanoid automated snapshots
+    services.sanoid = {
+      enable = true;
+      interval = "*-*-* 14:15:00"; # Afternoon, after backups
+
+      templates = {
+        # Template for critical data (backups)
+        critical = {
+          daily = 14; # 2 weeks of daily
+          weekly = 4; # 1 month of weekly
+        };
+
+        # Template for large infrequent storage (media/games)
+        storage = {
+          daily = 7; # 1 week of daily
+          weekly = 4; # 1 month of weekly
+        };
+      };
+
+      datasets = {
+        "tank/backups" = {
+          useTemplate = ["critical"];
+        };
+        "tank/media" = {
+          useTemplate = ["storage"];
+        };
+        "tank/games" = {
+          useTemplate = ["storage"];
+        };
+        # Skip tank/tmp - it's temporary data
+      };
+    };
 
     # Home directory backup
     systemd.services.home-backup = {

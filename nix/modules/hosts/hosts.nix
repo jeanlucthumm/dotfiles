@@ -6,45 +6,6 @@
   inputs,
   ...
 }: {
-  flake.nixosConfiguration."desktop" = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; let
-      themeSetting = {
-        name = "rose-pine";
-        darkMode = false;
-      };
-    in [
-      base
-      amdGpu
-
-      # Avoid evaluating `pkgs` multiple times by importing the one from flake-parts
-      # for this system (via `withSystem`). Also freeze pkgs to avoid surprising local tree
-      # only modifications.
-      inputs.nixpkgs.nixosModules.readOnlyPkgs
-      {
-        # TODO what's the actual system for this
-        nixpkgs.hostPlatform = "x84-64";
-        nixpkgs.pkgs = withSystem "x84-64" ({pkgs, ...}: pkgs);
-      }
-    ];
-  };
-
-  flake.nixosConfiguration."server" = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; [
-      base
-      homeServer
-
-      # Avoid evaluating `pkgs` multiple times by importing the one from flake-parts
-      # for this system (via `withSystem`). Also freeze pkgs to avoid surprising local tree
-      # only modifications.
-      inputs.nixpkgs.nixosModules.readOnlyPkgs
-      {
-        # TODO what's the actual system for this
-        nixpkgs.hostPlatform = "x84-64";
-        nixpkgs.pkgs = withSystem "x84-64" ({pkgs, ...}: pkgs);
-      }
-    ];
-  };
-
   flake.darwinConfigurations."macbook" = inputs.nix-darwin.lib.darwinSystem {
     modules = with config.flake.modules.darwin; let
       themeSetting = {

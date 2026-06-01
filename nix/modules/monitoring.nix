@@ -1,5 +1,11 @@
 {
-  flake.modules.nixos.homeServer = {pkgs, ...}: {
+  flake.modules.nixos.homeServer = {
+    config,
+    pkgs,
+    ...
+  }: let
+    port = "19999";
+  in {
     services.netdata = {
       enable = true;
       package = pkgs.netdata.override {withCloudUi = true;};
@@ -27,7 +33,7 @@
 
         web = {
           "bind to" = "127.0.0.1"; # Only bind to localhost
-          "default port" = "19999"; # Explicit port setting
+          "default port" = port; # Explicit port setting
           "allow connections from" = "localhost 192.168.*"; # Allow LAN access
           "allow dashboard from" = "localhost 192.168.*";
           "allow badges from" = "*";
@@ -55,6 +61,22 @@
         enable = true;
         recommendedPythonPackages = false; # Keep it minimal for now
       };
+    };
+
+    # Reverse proxy entry
+    services.nginx.virtualHosts.${config.networking.hostName}.locations."/netdata/" = {
+      proxyPass = "http://127.0.0.1:${port}/";
+      proxyWebsockets = true;
+      extraConfig = ''
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 300s;
+      '';
     };
   };
 }

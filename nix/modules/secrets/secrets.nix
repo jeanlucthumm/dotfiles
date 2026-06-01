@@ -6,6 +6,7 @@
 }: {
   flake.modules.generic.secrets = {
     age = {
+      # TODO rel paths broken
       secrets = {
         openai = {
           file = ../../secrets/jeanluc-openai.age;
@@ -33,7 +34,11 @@
     };
   };
 
-  flake.modules.nixos.secrets = {pkgs, ...}: {
+  flake.modules.nixos.secrets = {
+    pkgs,
+    lib,
+    ...
+  }: {
     imports = [
       inputs.agenix.nixosModules.default
     ];
@@ -42,6 +47,12 @@
       inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
       pkgs.age-plugin-yubikey
     ];
+
+    age = {
+      # TODO this is duplicated throughout this file
+      # Inline PATH so age finds the plugin and can prompt for PIN interactively
+      ageBin = "PATH=$PATH:${lib.makeBinPath [pkgs.age-plugin-yubikey]} ${pkgs.age}/bin/age";
+    };
 
     home-manager.sharedModules = [config.flake.modules.homeManager.secrets];
   };

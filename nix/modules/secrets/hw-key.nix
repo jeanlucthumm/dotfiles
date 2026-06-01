@@ -6,6 +6,11 @@
     ];
   };
 
+  flake.modules.nixos.secrets = {pkgs, ...}: {
+    # PCSC daemon for smart card support (Yubikey)
+    service.pscd.enable = true;
+  };
+
   flake.modules.homeManager.secrets = {pkgs, ...}: {
     home.packages = with pkgs; [
       yubikey-manager # ykman CLI

@@ -1,6 +1,13 @@
 # Development tools
 fp: {
   flake.modules.nixos.dev = {pkgs, ...}: {
+    environment.systemPackages = with pkgs; [
+      # Docker Compose alternative for Podman
+      podman-compose
+      # Android Debug Bridge (ADB) for Android development
+      android-tools
+    ];
+
     home-manager.sharedMoules = [fp.config.flake.modules.homeManager.dev];
   };
 
