@@ -141,15 +141,25 @@ fp: {
         else throw "unknown theme ${t}";
     };
 
-    home-manager.sharedModules = [fp.config.flake.modules.homeManager.theme];
+    home-manager.sharedModules = [
+      fp.config.flake.modules.homeManager.theme
+      {
+        theme = config.theme;
+      }
+    ];
   };
 
-  flake.modules.darwin.theme = darwinParams: {
+  flake.modules.darwin.theme = {config, ...}: {
     imports = [
       fp.inputs.stylix.darwinModules.stylix
       fp.config.flake.modules.generic.theme
     ];
 
-    home-manager.sharedModules = [fp.config.flake.modules.homeManager.theme];
+    home-manager.sharedModules = [
+      fp.config.flake.modules.homeManager.theme
+      {
+        theme = config.theme;
+      }
+    ];
   };
 }
