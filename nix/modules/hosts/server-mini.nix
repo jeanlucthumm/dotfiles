@@ -31,6 +31,10 @@ fp: {
         environment.systemPackages = [pkgs.zfs];
 
         system.stateVersion = "24.05";
+
+        home-manager.users.jeanluc = {
+          home.stateVersion = "24.05";
+        };
       })
     ];
   };
