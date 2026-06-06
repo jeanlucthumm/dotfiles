@@ -1,6 +1,10 @@
 # Cloud VM dev profile - headless remote VMs
 # Username is "developer", no secrets/YubiKey/signing available.
-{pkgs, lib, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [
     ../modules/cli/foundation.nix
     ../modules/cli/dev.nix
