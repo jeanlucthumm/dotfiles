@@ -1,5 +1,5 @@
 # SSH
-fps: {
+fp: {
   flake.modules.nixos.base = {lib, ...}: {
     services.openssh = {
       enable = true;
@@ -27,7 +27,7 @@ fps: {
     pkgs,
     ...
   }:
-    fps.mkHomeManager pkgs {
+    fp.jlib.mkHomeManager pkgs {
       generic = {
         programs.ssh.enableDefaultConfig = false;
         programs.ssh.matchBlocks."*" = {

@@ -135,10 +135,14 @@ fp: {
           printf '$ %s\n%s' "$cmd" "$output" | clip
         '';
       in {
-        home.packages = with pkgs; [
+        home.packages = with pkgs; let
+          system = pkgs.stdenv.hostPlatform.system;
+          fpkgs = fp.withSystem system ({config, ...}: config.packages);
+        in [
+          fpkgs.notify # Cross-platform notifications
+
           copy-last-cmd
           neovide # Neovim GUI
-          notify # Cross-platform notifications
           ffmpeg # Media processing toolkit
           usbutils # USB utilities
         ];
