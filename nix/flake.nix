@@ -92,6 +92,7 @@
   };
 
   # TODO: add jlib to specialArgs in mkFlake
+  # TODO: add inputs.flake-parts.flakeModules.modules to fp imports
 
   outputs = inputs @ {
     self,
