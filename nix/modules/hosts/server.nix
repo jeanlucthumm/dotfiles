@@ -40,6 +40,15 @@
         services.atd.enable = true;
 
         system.stateVersion = "24.05";
+
+        home-manager.users.jeanluc = {
+          # TODO directly use the reddit-easy-post flake output
+          # home.packages = with pkgs; [
+          #   reddit-easy-post # YAML to Reddit posting CLI
+          # ];
+
+          home.stateVersion = "24.05";
+        };
       }
     ];
   };
