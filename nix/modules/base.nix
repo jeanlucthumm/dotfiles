@@ -75,7 +75,7 @@ fp: {
           configurationLimit = 20;
         };
       };
-      supportedFilesystems = ["zfs" "ntfs"];
+      supportedFilesystems = ["ntfs"];
     };
 
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];

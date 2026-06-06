@@ -9,7 +9,6 @@ fp: {
       git # Version control
       nushell # Shell so I don't have to use bash for sysadmin
       yadm # Dotfile manager
-      zfs # ZFS filesystem tools
       vim # Text editor
     ];
   };

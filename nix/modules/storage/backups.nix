@@ -7,7 +7,10 @@
       rsync
       restoreBackups
       smartmontools # for disk health monitoring
+      zfs # ZFS filesystem tools
     ];
+
+    boot.supportedFilesystems = ["zfs"];
 
     # Sanoid automated snapshots
     services.sanoid = {

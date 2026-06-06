@@ -1,27 +1,18 @@
-{
-  config,
-  inputs,
-  ...
-}: {
-  flake.nixosConfigurations."server" = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; [
+fp: {
+  flake.nixosConfigurations."server-mini" = fp.inputs.nixpkgs.lib.nixosSystem {
+    modules = with fp.config.flake.modules.nixos; [
       base
-      homeServer
-      {
-        imports = [./_host-specific/server];
+      ({pkgs, ...}: {
+        imports = [./_host-specific/server-mini];
 
-        networking.hostName = "server";
+        networking.hostName = "server-mini";
         networking.hostId = "1d9f895e";
         jl.system = "x86_64-linux";
-
-        age.identityPaths = [
-          "/home/jeanluc/.ssh/id_ed25519"
-        ];
 
         swapDevices = [
           {
             device = "/swapfile";
-            size = 8 * 1024; # 8 GiB
+            size = 8 * 1024;
           }
         ];
 
@@ -30,17 +21,17 @@
           macbook.fido2.auth
           phone
         ];
-
         users.users.jeanluc.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
           desktop.fido2.auth
           macbook.fido2.auth
           phone
         ];
 
-        services.atd.enable = true;
+        boot.supportedFilesystems = ["zfs"];
+        environment.systemPackages = [pkgs.zfs];
 
         system.stateVersion = "24.05";
-      }
+      })
     ];
   };
 }
