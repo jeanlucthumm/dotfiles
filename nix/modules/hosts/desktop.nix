@@ -20,12 +20,12 @@ fp: {
             package = pkgs.nerd-fonts.jetbrains-mono;
           };
         };
+
         # TODO: let's just create per fp module options, e.g. `fpmodule.secrets.idPath`
-        age = {
-          identityPaths = [
-            ./_host-specific/desktop/yubikey-identity.txt
-          ];
-        };
+        age.identityPaths = [
+          ./_host-specific/desktop/yubikey-identity.txt
+        ];
+
         # Block distracting websites
         networking.extraHosts = ''
           127.0.0.1 chess.com
@@ -52,6 +52,39 @@ fp: {
         # connectivity
         systemd.services.NetworkManager-wait-online.enable = false;
         system.stateVersion = "24.05";
+
+        home-manager.users.jeanluc = {
+          imports = [fp.config.flake.modules.generic.monitor];
+
+          age.identityPaths = [
+            ./_host-specific/desktop/yubikey-identity.txt
+          ];
+          home.stateVersion = "24.05";
+
+          monitors.primary = {
+            manufacturer = "Shenzhen KTC Technology Group";
+            model = "M32P10";
+            serial = "0000000000001";
+            width = 3840;
+            height = 2160;
+            refresh = 144.0;
+            rotation = 0;
+            position_x = 0;
+            position_y = 0;
+          };
+
+          monitors.secondary = {
+            manufacturer = "PNP(AOC)";
+            model = "U2790B";
+            serial = "0x00029BC0";
+            width = 3840;
+            height = 2160;
+            refresh = 60.0;
+            rotation = 270;
+            position_x = 3840;
+            position_y = -900;
+          };
+        };
       }
     ];
   };
