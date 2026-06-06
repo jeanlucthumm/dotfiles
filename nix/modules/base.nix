@@ -78,6 +78,10 @@ fp: {
       supportedFilesystems = ["ntfs"];
     };
 
+    # TODO: reconcile this with the full config for the server
+    # All NixOS devices should be nodes
+    services.syncthing.enable = true;
+
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];
   };
 
