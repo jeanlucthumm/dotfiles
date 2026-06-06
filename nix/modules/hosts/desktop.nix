@@ -20,6 +20,7 @@ fp: {
             package = pkgs.nerd-fonts.jetbrains-mono;
           };
         };
+        # TODO: let's just create per fp module options, e.g. `fpmodule.secrets.idPath`
         age = {
           identityPaths = [
             ./_host-specific/desktop/yubikey-identity.txt
