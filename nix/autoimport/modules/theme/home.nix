@@ -44,7 +44,7 @@
           then "rose-pine_moon.conf"
           else "${n}_${themeDarkMode}.conf";
       in ''
-        include ${../../themes/kitty}/${kittyThemeFile}
+        include ${./themes/kitty}/${kittyThemeFile}
       '';
     };
 
@@ -195,7 +195,7 @@
         then
           if theme.darkMode
           then "snazzy"
-          else "${../../themes/vivid/snazzy-light.yml}"
+          else "${./themes/vivid/snazzy-light.yml}"
         else if n == "rose-pine"
         then
           if theme.darkMode

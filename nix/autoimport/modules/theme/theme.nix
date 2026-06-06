@@ -79,12 +79,12 @@ fp: {
             then
               if d
               then "${pkgs.base16-schemes}/share/themes/zenbones.yaml"
-              else ../../themes/zenbones-light.yaml
+              else ./themes/zenbones-light.yaml
             else if t == "snazzy"
             then
               if d
               then "${pkgs.base16-schemes}/share/themes/snazzy.yaml"
-              else ../../themes/snazzy-light.yaml
+              else ./themes/snazzy-light.yaml
             else if t == "rose-pine"
             then
               if d
@@ -137,7 +137,7 @@ fp: {
         then
           if d
           then "snazzy"
-          else ../../themes/vivid/snazzy-light.yml
+          else ./themes/vivid/snazzy-light.yml
         else throw "unknown theme ${t}";
     };
 
