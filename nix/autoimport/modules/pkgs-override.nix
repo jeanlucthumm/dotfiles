@@ -1,0 +1,51 @@
+# Sets `pkgs` for all `perSystem` sets and allows for customization like overlays
+fp: {
+  perSystem = {system, ...}: {
+    _module.args.pkgs = import fp.inputs.nixpkgs {
+      inherit system;
+      overlays = [
+        (final: prev: {
+          # Extend pkgs.sem (Semaphore CI CLI) to Darwin — upstream is pure Go and
+          # ships Darwin arm64 binaries, but the nixpkgs meta restricts it to Linux.
+          sem = prev.sem.overrideAttrs (old: {
+            meta =
+              old.meta
+              // {
+                platforms = old.meta.platforms ++ prev.lib.platforms.darwin;
+              };
+          });
+        })
+
+        # Darwin overrides
+        (final: prev:
+          prev.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
+            # TODO: Remove once pysilero-vad > 3.3.0 lands in nixpkgs (nixpkgs#491459)
+            # Upstream fix: rhasspy/pysilero-vad#15 (merged, but no release cut yet)
+            # Darwin fixes
+            python3 = prev.python3.override {
+              packageOverrides = pyFinal: pyPrev: {
+                pysilero-vad = pyPrev.pysilero-vad.overridePythonAttrs {
+                  version = "3.3.0-unstable-2026-02-12";
+                  src = prev.fetchFromGitHub {
+                    owner = "rhasspy";
+                    repo = "pysilero-vad";
+                    rev = "d5fb763a592f5ffb633a494fd073ee93fe8b5445";
+                    hash = "sha256-gQDZuu8hN0s+yfkp22w39/Aje5/6qdX0W95FPu6obw0=";
+                    fetchSubmodules = true;
+                  };
+                };
+              };
+            };
+            python3Packages = final.python3.pkgs;
+
+            # Temporary: pull nushell from a pinned nixpkgs with the darwin test-skip fix.
+            # Drop once inputs.nixpkgs catches up.
+            nushell =
+              (import fp.inputs.nixpkgs-nushell {
+                inherit (prev.stdenv.hostPlatform) system;
+              }).nushell;
+          })
+      ];
+    };
+  };
+}

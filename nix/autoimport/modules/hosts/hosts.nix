@@ -27,7 +27,6 @@ fp: {
         system.stateVersion = 4;
         system.primaryUser = "jeanluc";
       }
-      # TODO: overlays
     ];
   };
 }
