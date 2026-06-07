@@ -51,13 +51,10 @@
     };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # TODO
     import-tree = {
       url = "github:vic/import-tree";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Personal fork — switch to upstream once user isolation implemented
@@ -92,159 +89,15 @@
     };
   };
 
-  # TODO: add jlib to specialArgs in mkFlake
-  # TODO: import disko somewhere
-
-  outputs = inputs @ {flake-parts, ...}: flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./autoimport);
-
-  outputss = inputs @ {
-    self,
-    nixpkgs,
-    agenix,
-    home-manager,
-    stylix,
-    nix-darwin,
-    zen-browser,
-    niri,
-    disko,
-    deploy-rs,
-    reddit-easy-post,
-    taskwarrior-enhanced,
+  outputs = inputs @ {
     flake-parts,
-    nix-openclaw,
-    pyproject-nix,
-    uv2nix,
-    pyproject-build-systems,
-    claude-code,
+    self,
     ...
-  }: {
-    # System configurations for NixOS hosts.
-    nixosConfigurations = {
-      "desktop" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
-        modules = [
-          stylix.nixosModules.stylix
-          home-manager.nixosModules.home-manager
-          agenix.nixosModules.default
-          niri.nixosModules.niri
-          ./system/modules/home-manager.nix
-          ./system/hosts/desktop
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-              hostName = "desktop";
-            };
-            home-manager.users.jeanluc = import ./home/hosts/desktop.nix;
-            nixpkgs.overlays = import ./overlays inputs;
-          }
-        ];
+  }:
+    flake-parts.lib.mkFlake {
+      inherit inputs;
+      specialArgs = {
+        jlib = self.modules.generic.jlib;
       };
-
-      # System configuration for my server.
-      # This is a headless 24/7 system.
-      "server" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
-        modules = [
-          stylix.nixosModules.stylix
-          home-manager.nixosModules.home-manager
-          agenix.nixosModules.default
-          disko.nixosModules.disko
-          ./system/modules/home-manager.nix
-          ./system/hosts/server
-          {
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-              hostName = "server";
-            };
-            home-manager.users.jeanluc = import ./home/hosts/server.nix;
-            nixpkgs.overlays = import ./overlays inputs;
-          }
-        ];
-      };
-
-      # Minimal backup server - receives ZFS replication from main server
-      "server-mini" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
-        modules = [
-          stylix.nixosModules.stylix
-          home-manager.nixosModules.home-manager
-          agenix.nixosModules.default
-          disko.nixosModules.disko
-          ./system/modules/home-manager.nix
-          ./system/hosts/server-mini
-          {
-            home-manager.extraSpecialArgs.hostName = "server-mini";
-            home-manager.users.jeanluc = import ./home/hosts/server-mini.nix;
-          }
-        ];
-      };
-
-      # Custom live installer ISO with SSH keys pre-configured
-      "iso" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
-        modules = [
-          ./system/hosts/iso.nix
-        ];
-      };
-    };
-
-    # System configurations for Darwin hosts.
-    darwinConfigurations."macbook" = nix-darwin.lib.darwinSystem {
-      specialArgs = {inherit inputs;};
-      modules = [
-        stylix.darwinModules.stylix
-        home-manager.darwinModules.home-manager
-        agenix.darwinModules.default
-        ./system/modules/home-manager.nix
-        ./system/hosts/macbook
-        {
-          home-manager.extraSpecialArgs.hostName = "macbook";
-          home-manager.users.jeanluc = import ./home/hosts/macbook.nix;
-          nixpkgs.overlays = import ./overlays inputs;
-        }
-      ];
-    };
-
-    # Standalone home-manager configurations for non-NixOS hosts.
-    homeConfigurations."developer@cloud-vm" = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      extraSpecialArgs = {
-        inherit inputs;
-        hostName = "cloud-vm";
-      };
-      modules = [
-        ./home/hosts/cloud-vm.nix
-        {
-          nixpkgs.overlays = import ./overlays inputs;
-          nixpkgs.config.allowUnfree = true;
-        }
-      ];
-    };
-
-    deploy.nodes.server = {
-      hostname = "server.lan";
-      sshUser = "jeanluc";
-      user = "root";
-      # wheel group has passwordless sudo on server, so interactive sudo prompts are unnecessary
-      interactiveSudo = false;
-      profiles.system = {
-        path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
-      };
-    };
-
-    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
-
-    templates = {
-      python = {
-        path = ./templates/python;
-        description = "Python development environment using devenv";
-      };
-    };
-  };
+    } (inputs.import-tree ./autoimport);
 }
