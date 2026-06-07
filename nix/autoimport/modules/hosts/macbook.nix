@@ -9,14 +9,7 @@ fp @ {jlib, ...}: {
       {
         networking.hostName = "macbook";
         jl.system = "aarch64-darwin";
-        home-manager.users.jeanluc.imports = [
-          {
-            age.identityPaths = [
-              ./_host-specific/macbook/yubikey-identity.txt
-            ];
-          }
-        ];
-        users.users.jeanluc.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
+        users.users.jeanluc.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
           desktop.fido2.auth
           phone
         ];
@@ -26,6 +19,16 @@ fp @ {jlib, ...}: {
         };
         system.stateVersion = 4;
         system.primaryUser = "jeanluc";
+
+        home-manager.users.jeanluc.imports = [
+          {
+            age.identityPaths = [
+              ./_host-specific/macbook/yubikey-identity.txt
+            ];
+
+            home.stateVersion = "24.05";
+          }
+        ];
       }
     ];
   };

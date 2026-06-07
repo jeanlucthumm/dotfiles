@@ -5,11 +5,6 @@ fp @ {withSystem, ...}: {
     lib,
     ...
   }: {
-    imports = [
-      # No local tree modifications of nixpkgs so we have the same pkgsc
-      fp.inputs.nixpkgs.nixosModules.readOnlyPkgs
-    ];
-
     options.jl.system = lib.mkOption {
       type = lib.types.str;
       description = "System string";
@@ -20,6 +15,13 @@ fp @ {withSystem, ...}: {
       # for this system.
       nixpkgs.pkgs = withSystem config.jl.system ({pkgs, ...}: pkgs);
     };
+  };
+
+  # readOnlyPkgs forbids any module from setting nixpkgs.overlays/.config later.
+  # NixOS-only: nix-darwin's own nixpkgs module declares config and
+  # collides with readOnlyPkgs on Darwin.
+  flake.modules.nixos.base = {
+    imports = [fp.inputs.nixpkgs.nixosModules.readOnlyPkgs];
   };
 
   perSystem = {system, ...}: {

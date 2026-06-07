@@ -2,7 +2,10 @@
 fp @ {jlib, ...}: {
   # Allows for setting `flake.modules`.
   # Only needs to be imported in one file per eval so base is natural fit.
-  imports = [fp.inputs.flake-parts.flakeModules.modules];
+  imports = [
+    fp.inputs.flake-parts.flakeModules.modules
+    fp.inputs.nix-darwin.flakeModules.default
+  ];
 
   flake.modules.generic.base = {
     nix = {
@@ -14,9 +17,11 @@ fp @ {jlib, ...}: {
       settings.download-buffer-size = 134217728; # 128MB
 
       # Nix store gets full of old stuff, so clean it up periodically.
+      # The `dates`/`interval` schedule is set per-platform below since the
+      # option shape differs (NixOS: systemd OnCalendar string;
+      # Darwin: launchd calendar submodule).
       gc = {
         automatic = true;
-        dates = "weekly";
         options = "--delete-older-than 30d";
       };
     };
@@ -80,6 +85,8 @@ fp @ {jlib, ...}: {
     # All NixOS devices should be nodes
     services.syncthing.enable = true;
 
+    nix.gc.dates = "weekly";
+
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];
   };
 
@@ -88,6 +95,13 @@ fp @ {jlib, ...}: {
       fp.inputs.home-manager.darwinModules.home-manager
       fp.config.flake.modules.generic.base
     ];
+
+    # Weekly GC (Sunday 03:15)
+    nix.gc.interval = {
+      Hour = 3;
+      Minute = 15;
+      Weekday = 7;
+    };
 
     system.defaults.NSGlobalDomain = {
       InitialKeyRepeat = 10;
