@@ -25,6 +25,8 @@ fp: {
     ...
   }: let
     configDir = config.xdg.configHome;
+    system = pkgs.stdenv.hostPlatform.system;
+    taskwarrior-enhanced = fp.inputs.taskwarrior-enhanced.packages.${system}.taskwarrior-enhanced;
   in {
     home.packages = with pkgs; [
       # Core dev tools
@@ -45,7 +47,7 @@ fp: {
 
       # Workflow-specific
       timewarrior # time tracker
-      taskwarrior-enhanced # Enhanced taskwarrior companion CLI
+      taskwarrior-enhanced # Enhanced taskwarrior companion CLI (from input flake)
     ];
 
     programs = {

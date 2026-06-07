@@ -7,14 +7,14 @@
         tw = "taskwarrior-enhanced tree";
       };
       extraConfig = builtins.concatStringsSep "\n" [
-        (builtins.readFile ./git.nu)
-        (builtins.readFile ./task.nu)
-        (builtins.readFile ./pr.nu)
-        (builtins.readFile ./parallel.nu)
-        (builtins.readFile ./gh.nu)
-        (builtins.readFile ./notion.nu)
-        (builtins.readFile ./config-dev.nu)
-        (builtins.readFile ./init.nu)
+        (builtins.readFile ./scripts/git.nu)
+        (builtins.readFile ./scripts/task.nu)
+        (builtins.readFile ./scripts/pr.nu)
+        (builtins.readFile ./scripts/parallel.nu)
+        (builtins.readFile ./scripts/gh.nu)
+        (builtins.readFile ./scripts/notion.nu)
+        (builtins.readFile ./scripts/config-dev.nu)
+        (builtins.readFile ./scripts/init.nu)
       ];
     };
   };

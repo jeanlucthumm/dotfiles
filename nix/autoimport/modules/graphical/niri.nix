@@ -1,11 +1,17 @@
 {
-  flake.modules.homeManager.graphical = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }:
-    lib.mkIf pkgs.hostPlatform.isLinux {
+  inputs,
+  jlib,
+  ...
+}: {
+  flake.modules.homeManager.graphical = jlib.mkHomeManager {
+    nixos = {
+      config,
+      pkgs,
+      lib,
+      ...
+    }: {
+      imports = [inputs.niri.homeModules.niri];
+
       programs.niri = {
         enable = true;
         settings = {
@@ -219,4 +225,5 @@
         swayosd.enable = true;
       };
     };
+  };
 }

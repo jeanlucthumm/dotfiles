@@ -1,12 +1,16 @@
 # LLM / AI tooling
-fp @ {jlib, ...}: {
+fp @ {
+  jlib,
+  withSystem,
+  ...
+}: {
   flake.modules.homeManager.dev = {
     pkgs,
     lib,
     ...
   }: let
     system = pkgs.stdenv.hostPlatform.system;
-    fpkgs = fp.withSystem system ({config, ...}: config.packages);
+    fpkgs = withSystem system ({config, ...}: config.packages);
   in
     jlib.mkHomeManager {
       generic = {

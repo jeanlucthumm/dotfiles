@@ -1,5 +1,9 @@
 # GUI
-fp @ {jlib, ...}: {
+fp @ {
+  jlib,
+  withSystem,
+  ...
+}: {
   flake.modules.nixos.graphical = {
     config,
     pkgs,
@@ -62,6 +66,10 @@ fp @ {jlib, ...}: {
       };
     };
 
+    # xdg.portal: since we installed Home Manager via its NixOS module and
+    # 'home-manager.useUserPackages' is enabled, we need:
+    environment.pathsToLink = ["/share/applications" "/share/xdg-desktop-portal"];
+
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.graphical];
   };
 
@@ -88,7 +96,7 @@ fp @ {jlib, ...}: {
     in {
       home.packages = with pkgs; let
         system = pkgs.stdenv.hostPlatform.system;
-        fpkgs = fp.withSystem system ({config, ...}: config.packages);
+        fpkgs = withSystem system ({config, ...}: config.packages);
       in [
         fpkgs.notify # Cross-platform notifications
 

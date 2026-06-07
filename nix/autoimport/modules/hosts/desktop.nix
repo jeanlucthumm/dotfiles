@@ -7,7 +7,11 @@ fp @ {jlib, ...}: {
       secrets
       theme
       amdGpu
-      {
+      ({pkgs, ...}: {
+        imports = [
+          ./_host-specific/desktop/hardware-configuration.nix
+        ];
+
         networking.hostName = "desktop";
         networking.hostId = "17646629";
         jl.system = "x86_64-linux";
@@ -85,7 +89,7 @@ fp @ {jlib, ...}: {
             position_y = -900;
           };
         };
-      }
+      })
     ];
   };
 }

@@ -513,6 +513,9 @@ fp @ {jlib, ...}: {
         fi
       '';
     in {
+      # TODO: fix this
+      # imports = [fp.inputs.niri.homeModules.niri];
+
       home.packages = [
         pkgs.wtype # For simulating keypresses in Wayland
         toggleVad
@@ -520,7 +523,7 @@ fp @ {jlib, ...}: {
       ];
 
       # Niri keybind for VAD toggle
-      programs.niri.settings.binds."Mod+Shift+O".action.spawn = ["toggle-vad"];
+      # programs.niri.settings.binds."Mod+Shift+O".action.spawn = ["toggle-vad"];
     };
   };
 }
