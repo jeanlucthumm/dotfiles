@@ -1,13 +1,13 @@
 # TODO seperate lua files
 # Hammerspoon
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.homeManager.graphical = {
     config,
     lib,
     pkgs,
     ...
   }:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       darwin = {
         options.programs.hammerspoon.extraConfig = lib.mkOption {
           type = lib.types.lines;

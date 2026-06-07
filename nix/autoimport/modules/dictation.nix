@@ -1,5 +1,5 @@
 # TODO this files has a shit ton of duplication
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.nixos.graphical = {pkgs, ...}: {
     # Set ROCm support globally for this system
     nixpkgs.config.rocmSupport = true;
@@ -42,7 +42,7 @@ fp: {
     };
   };
   flake.modules.homeManager.graphical = {pkgs, ...}:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       darwin = let
         # Available models (speed vs accuracy tradeoff):
         #   tiny, tiny.en, base, base.en, small, medium, large-v3, large-v3-turbo

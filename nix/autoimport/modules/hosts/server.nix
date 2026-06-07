@@ -14,9 +14,10 @@
         networking.hostId = "1d9f895e";
         jl.system = "x86_64-linux";
 
-        age.identityPaths = [
-          "/home/jeanluc/.ssh/id_ed25519"
-        ];
+        # TODO: figure out the secrets story for server
+        # age.identityPaths = [
+        #   "/home/jeanluc/.ssh/id_ed25519"
+        # ];
 
         swapDevices = [
           {

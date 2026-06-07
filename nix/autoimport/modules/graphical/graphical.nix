@@ -1,5 +1,5 @@
 # GUI
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.nixos.graphical = {
     config,
     pkgs,
@@ -126,7 +126,7 @@ fp: {
     lib,
     ...
   }:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       generic = let
         # `clip` comes from the cli profile (always co-imported at host level).
         copy-last-cmd = pkgs.writeShellScriptBin "copy-last-cmd" ''

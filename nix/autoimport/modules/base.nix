@@ -1,5 +1,5 @@
 # Base for all module systems
-fp: {
+fp @ {jlib, ...}: {
   # Allows for setting `flake.modules`.
   # Only needs to be imported in one file per eval so base is natural fit.
   imports = [fp.inputs.flake-parts.flakeModules.modules];
@@ -132,12 +132,12 @@ fp: {
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];
   };
 
-  flake.modules.homeManager = {
+  flake.modules.homeManager.base = {
     config,
     pkgs,
     ...
   }:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       nixos = {
         services.hyprpolkitagent.enable = true;
       };

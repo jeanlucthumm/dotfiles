@@ -1,14 +1,15 @@
 # Path / env fixes: nushell doesn't source POSIX shell scripts, so it
 #   misses nix-darwin's set-environment. We replicate that setup in env.nu
 #   using osConfig as source of truth (the nushell equivalent of fish-fix).
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.homeManager.base = {
     config,
     pkgs,
     lib,
     osConfig,
+    ...
   }:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       darwin = let
         homeDir = config.home.homeDirectory;
         user = config.home.username;

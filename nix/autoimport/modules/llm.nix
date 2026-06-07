@@ -1,5 +1,5 @@
 # LLM / AI tooling
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.homeManager.dev = {
     pkgs,
     lib,
@@ -8,7 +8,7 @@ fp: {
     system = pkgs.stdenv.hostPlatform.system;
     fpkgs = fp.withSystem system ({config, ...}: config.packages);
   in
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       generic = {
         home.packages = [
           fpkgs.mcp-flutter # MCP server for Flutter app debugging

@@ -1,4 +1,4 @@
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.nixos.base = {pkgs, ...}: {
     # Basic system wide packages
     environment.systemPackages = with pkgs; [
@@ -25,7 +25,7 @@ fp: {
     osConfig,
     ...
   }:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       generic = {
         home.packages = [pkgs.nushell];
 

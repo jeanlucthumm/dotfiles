@@ -1,5 +1,5 @@
 # SSH
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.nixos.base = {lib, ...}: {
     services.openssh = {
       enable = true;
@@ -27,7 +27,7 @@ fp: {
     pkgs,
     ...
   }:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       generic = {
         programs.ssh.enableDefaultConfig = false;
         programs.ssh.matchBlocks."*" = {

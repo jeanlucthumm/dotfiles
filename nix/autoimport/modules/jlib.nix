@@ -1,6 +1,6 @@
 # Custom library functions
 {lib, ...}: {
-  flake.modules.generic.jlib = {
+  _module.args.jlib = {
     # Creates per system home manager config
     mkHomeManager = pkgs: {
       generic ? null,

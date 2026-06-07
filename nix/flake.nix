@@ -89,15 +89,9 @@
     };
   };
 
-  outputs = inputs @ {
-    flake-parts,
-    self,
-    ...
-  }:
-    flake-parts.lib.mkFlake {
-      inherit inputs;
-      specialArgs = {
-        jlib = self.modules.generic.jlib;
-      };
-    } (inputs.import-tree ./autoimport);
+  outputs = inputs: let
+    config = {inherit inputs;};
+    modules = inputs.import-tree ./autoimport;
+  in
+    inputs.flake-parts.lib.mkFlake config modules;
 }

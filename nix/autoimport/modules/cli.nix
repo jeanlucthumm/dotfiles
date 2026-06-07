@@ -1,5 +1,5 @@
 # CLI
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.nixos.base = {pkgs, ...}: {
     # Basic system wide packages
     environment.systemPackages = with pkgs; [
@@ -18,7 +18,7 @@ fp: {
     pkgs,
     ...
   }:
-    fp.jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager pkgs {
       generic = let
         clip = pkgs.writeShellScriptBin "clip" ''
           if [ -n "$TMUX" ]; then
