@@ -1,16 +1,16 @@
-fp: {
+fp @ {jlib, ...}: {
   flake.modules.nixos.graphical = {
     hardware.logitech.wireless.enable = true;
     hardware.logitech.wireless.enableGraphical = true;
   };
 
-  flake.modules.homeManager.graphical = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }:
-    lib.mkIf pkgs.hostPlatform.isLinux {
+  flake.modules.homeManager.graphical = jlib.mkHomeManager {
+    nixos = {
+      config,
+      pkgs,
+      lib,
+      ...
+    }: {
       imports = [
         fp.config.flake.modules.homeManager.opt-solaar
       ];
@@ -35,4 +35,5 @@ fp: {
         ];
       };
     };
+  };
 }

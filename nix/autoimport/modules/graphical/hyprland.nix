@@ -1,12 +1,12 @@
 # NixOS graphical home manager setup
-{
-  flake.modules.homeManager.graphical = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }:
-    lib.mkIf pkgs.hostPlatform.isLinux {
+{jlib, ...}: {
+  flake.modules.homeManager.graphical = jlib.mkHomeManager {
+    nixos = {
+      config,
+      pkgs,
+      lib,
+      ...
+    }: {
       wayland.windowManager.hyprland = {
         enable = true;
         settings = {
@@ -292,4 +292,5 @@
         hyprpaper.enable = true;
       };
     };
+  };
 }

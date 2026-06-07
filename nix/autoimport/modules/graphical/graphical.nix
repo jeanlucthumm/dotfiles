@@ -5,12 +5,6 @@ fp @ {jlib, ...}: {
     pkgs,
     ...
   }: {
-    # Configure keymap in X11;
-    xserver.xkb = {
-      layout = "us";
-      variant = "";
-    };
-
     # Fonts
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
@@ -32,6 +26,12 @@ fp @ {jlib, ...}: {
       };
 
       blueman.enable = true;
+
+      # Configure keymap in X11;
+      xserver.xkb = {
+        layout = "us";
+        variant = "";
+      };
     };
 
     hardware.bluetooth = {
@@ -97,58 +97,54 @@ fp @ {jlib, ...}: {
         ffmpeg # Media processing toolkit
         usbutils # USB utilities
       ];
+      programs = {
+        zathura.enable = true;
 
-      programs.zathura.enable = true;
+        nushell = {
+          # Enables kitty's new key handling protocol in nushell
+          settings.use_kitty_protocol = true;
+          shellAliases.nv = "neovide --frame transparent --fork";
+        };
 
-      programs.nushell = {
-        # Enables kitty's new key handling protocol in nushell
-        settings.use_kitty_protocol = true;
-        shellAliases.nv = "neovide --frame transparent --fork";
+        # Terminal with GPU acceleration
+        kitty = {
+          enable = true;
+          # See https://github.com/kovidgoyal/kitty/issues/8167
+          package =
+            if pkgs.stdenv.hostPlatform.isDarwin
+            then pkgs.emptyDirectory
+            else pkgs.kitty;
+          shellIntegration.enableFishIntegration = true;
+          shellIntegration.mode = "no-cursor";
+
+          settings = {
+            enable_audio_bell = false;
+            bell_on_tab = "🔔 ";
+            tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
+            window_alert_on_bell = true;
+            window_padding_width = 8;
+            allow_remote_control = "yes";
+            listen_on = "unix:/tmp/kitty";
+            repaint_delay = 5;
+            input_delay = 1;
+            cursor_shape = "block";
+            paste_actions = "quote-urls-at-prompt";
+            enabled_layouts = "tall:bias=50;full_size=1;mirrored=true";
+          };
+
+          actionAliases = {
+            kitty_scrollback_nvim = "kitten ${config.home.homeDirectory}/.local/share/nvim/lazy/kitty-scrollback.nvim/python/kitty_scrollback_nvim.py";
+          };
+
+          keybindings = {
+            "kitty_mod+h" = "kitty_scrollback_nvim";
+            "kitty_mod+g" = "kitty_scrollback_nvim --config ksb_builtin_last_cmd_output";
+            "kitty_mod+y" = "launch --type=background copy-last-cmd";
+            "ctrl+shift+right" = "mouse_select_command_output";
+            "shift+enter" = "send_text all \\e\\r";
+          };
+        };
       };
-
-      # Terminal with GPU acceleration
-      kitty = {
-        enable = true;
-        # See https://github.com/kovidgoyal/kitty/issues/8167
-        package =
-          if pkgs.stdenv.hostPlatform.isDarwin
-          then pkgs.emptyDirectory
-          else pkgs.kitty;
-        shellIntegration.enableFishIntegration = true;
-        shellIntegration.mode = "no-cursor";
-
-        settings = {
-          enable_audio_bell = false;
-          bell_on_tab = "🔔 ";
-          tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
-          window_alert_on_bell = true;
-          window_padding_width = 8;
-          allow_remote_control = "yes";
-          listen_on = "unix:/tmp/kitty";
-          repaint_delay = 5;
-          input_delay = 1;
-          cursor_shape = "block";
-          paste_actions = "quote-urls-at-prompt";
-          enabled_layouts = "tall:bias=50;full_size=1;mirrored=true";
-        };
-
-        actionAliases = {
-          kitty_scrollback_nvim = "kitten ${config.home.homeDirectory}/.local/share/nvim/lazy/kitty-scrollback.nvim/python/kitty_scrollback_nvim.py";
-        };
-
-        keybindings = {
-          "kitty_mod+h" = "kitty_scrollback_nvim";
-          "kitty_mod+g" = "kitty_scrollback_nvim --config ksb_builtin_last_cmd_output";
-          "kitty_mod+y" = "launch --type=background copy-last-cmd";
-          "ctrl+shift+right" = "mouse_select_command_output";
-          "shift+enter" = "send_text all \\e\\r";
-        };
-      };
-
-      zathura.enable = true;
-
-      # Enables using Kitty's new key handling protocol in nushell
-      nushell.settings.use_kitty_protocol = true;
     };
 
     darwin = {config, ...}: {
