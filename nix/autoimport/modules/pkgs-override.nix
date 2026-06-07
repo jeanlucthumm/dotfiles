@@ -6,6 +6,9 @@ fp: {
       config = {
         # Bite me
         allowUnfree = true;
+        # TODO can't tell if we need this line. This is bc we have read-only nixpkgs, and
+        # previously host config would do `nixpkgs.hostPlatform = ` which is not allowed.
+        hostPlatform = system;
       };
       overlays = [
         (final: prev: {

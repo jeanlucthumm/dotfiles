@@ -19,7 +19,6 @@
     };
 
     config = {
-      nixpkgs.hostPlatform = config.jl.system;
       # Avoid evaluating `pkgs` multiple times by importing the one from flake-parts
       # for this system.
       nixpkgs.pkgs = withSystem config.jl.system ({pkgs, ...}: pkgs);
