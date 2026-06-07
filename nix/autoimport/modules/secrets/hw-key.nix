@@ -10,7 +10,7 @@ fp: {
 
   flake.modules.nixos.secrets = {pkgs, ...}: {
     # PCSC daemon for smart card support (Yubikey)
-    service.pscd.enable = true;
+    services.pcscd.enable = true;
 
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.secrets];
   };

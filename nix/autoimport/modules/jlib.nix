@@ -6,36 +6,36 @@
       generic ? null, # module func or attrs
       darwin ? null, # module func or attrs
       nixos ? null, # module func or attrs
-    }: {
-      # We use filtered imports list so that the module system doesn't encounter null as an entry
-      # Which can happen with a bare lib.mkMerge and lib.mkIf combo.
+    }: let
+      # Wraps a module so its `config` only applies when `cond pkgs` is true.
+      # `options` and `imports` apply unconditionally (declaring unused options is
+      # harmless; nested imports must themselves be platform-safe).
       #
-      # Moreover, because our condition depends on `pkgs` which comes from module args, which
-      # requires `config` to be resolved already, which in turn requires imports to be resolved,
-      # we can't just filter directly in the imports list.
-      #
-      # Only the _body_ of each imported module is allowed to reference pkgs, so we move the
-      # condition there.
+      # We can't gate via `imports = lib.optional ...` because that would force
+      # `pkgs` while resolving imports (pkgs ← _module.args ← config ← imports = ∞).
+      # Gating inside the body defers the pkgs reference past import resolution.
+      gate = cond: mod: ({pkgs, ...} @ args: let
+        inner =
+          if lib.isFunction mod
+          then mod args
+          else mod;
+        isModuleForm =
+          builtins.isAttrs inner
+          && (inner ? imports || inner ? options || inner ? config);
+        cfg =
+          if isModuleForm
+          then (inner.config or {})
+          else inner;
+      in {
+        options = lib.optionalAttrs isModuleForm (inner.options or {});
+        imports = lib.optionals isModuleForm (inner.imports or []);
+        config = lib.mkIf (cond pkgs) cfg;
+      });
+    in {
       imports =
         lib.optional (generic != null) generic
-        ++ lib.optional (darwin != null) ({pkgs, ...} @ args: {
-          config =
-            lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-            (
-              if lib.isFunction darwin
-              then darwin args
-              else darwin
-            );
-        })
-        ++ lib.optional (nixos != null) ({pkgs, ...} @ args: {
-          config =
-            lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-            (
-              if lib.isFunction nixos
-              then nixos args
-              else nixos
-            );
-        });
+        ++ lib.optional (darwin != null) (gate (pkgs: pkgs.stdenv.hostPlatform.isDarwin) darwin)
+        ++ lib.optional (nixos != null) (gate (pkgs: pkgs.stdenv.hostPlatform.isLinux) nixos);
     };
 
     # Easy ignored themeing
