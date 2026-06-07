@@ -106,6 +106,13 @@ fp: {
           };
           homeManagerIntegration.followSystem = false;
           enableReleaseChecks = false;
+
+          # IMPORTANT
+          # Disable overalys because otherwise stylix allows modules to do `nixpkgs.overlays` which
+          # is a no-no with our read-only nixpkgs. Unfortunately this means we don't get themeing
+          # for a few things. So far only gtksourceview, nixos-icons, and gdm stuff, none of which
+          # is used.
+          overlays.enable = false;
         };
       };
     };
