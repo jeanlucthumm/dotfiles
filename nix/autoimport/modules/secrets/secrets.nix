@@ -9,19 +9,19 @@
       # TODO rel paths broken
       secrets = {
         openai = {
-          file = ../../secrets/jeanluc-openai.age;
+          file = ./age/jeanluc-openai.age;
           mode = "400";
         };
         anthropic = {
-          file = ../../secrets/jeanluc-anthropic.age;
+          file = ./age/jeanluc-anthropic.age;
           mode = "400";
         };
         notion = {
-          file = ../../secrets/jeanluc-notion.age;
+          file = ./age/jeanluc-notion.age;
           mode = "400";
         };
         taskwarrior = {
-          file = ../../secrets/jeanluc-taskwarrior.age;
+          file = ./age/jeanluc-taskwarrior.age;
           mode = "400";
           # Workaround since taskwarrior config does not support shell eval
           # And Darwin `path` includes it.

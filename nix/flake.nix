@@ -53,6 +53,7 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     # TODO
     import-tree = {
       url = "github:vic/import-tree";
@@ -92,9 +93,11 @@
   };
 
   # TODO: add jlib to specialArgs in mkFlake
-  # TODO: add inputs.flake-parts.flakeModules.modules to fp imports
+  # TODO: import disko somewhere
 
-  outputs = inputs @ {
+  outputs = inputs @ {flake-parts, ...}: flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./autoimport);
+
+  outputss = inputs @ {
     self,
     nixpkgs,
     agenix,
