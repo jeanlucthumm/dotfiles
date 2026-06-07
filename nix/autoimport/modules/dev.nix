@@ -8,7 +8,7 @@ fp: {
       android-tools
     ];
 
-    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.dev];
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.dev];
   };
 
   flake.modules.darwin.dev = {pkgs, ...}: {
@@ -16,7 +16,7 @@ fp: {
       qemu
     ];
 
-    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.dev];
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.dev];
   };
 
   flake.modules.homeManager.dev = {

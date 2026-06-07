@@ -5,14 +5,14 @@ fp: {
       pkgs.age-plugin-yubikey
     ];
 
-    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.secrets];
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.secrets];
   };
 
   flake.modules.nixos.secrets = {pkgs, ...}: {
     # PCSC daemon for smart card support (Yubikey)
     service.pscd.enable = true;
 
-    home-manager.sharedMoules = [fp.config.flake.modules.homeManager.secrets];
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.secrets];
   };
 
   flake.modules.homeManager.secrets = {pkgs, ...}: {
