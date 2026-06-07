@@ -21,9 +21,6 @@ fp: {
       };
     };
 
-    # Bite me
-    nixpkgs.config.allowUnfree = true;
-
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
@@ -32,8 +29,9 @@ fp: {
 
   flake.modules.nixos.base = {pkgs, ...}: {
     imports = [
-      fp.inputs.home-manager.nixosModules.home-manager
       fp.config.flake.modules.generic.base
+      fp.inputs.home-manager.nixosModules.home-manager
+      fp.inputs.disko.nixosModules.disko
     ];
 
     environment.systemPackages = with pkgs; [

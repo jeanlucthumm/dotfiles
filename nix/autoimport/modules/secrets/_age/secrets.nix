@@ -1,6 +1,6 @@
 # TODO: agenix-rekey
 let
-  keys = import ../pubkeys.nix;
+  keys = import ../_pubkeys.nix;
   workstations = [keys.desktop.age keys.macbook.age];
   withServer = workstations ++ [keys.server];
 in {

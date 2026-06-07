@@ -3,6 +3,10 @@ fp: {
   perSystem = {system, ...}: {
     _module.args.pkgs = import fp.inputs.nixpkgs {
       inherit system;
+      config = {
+        # Bite me
+        allowUnfree = true;
+      };
       overlays = [
         (final: prev: {
           # Extend pkgs.sem (Semaphore CI CLI) to Darwin — upstream is pure Go and
