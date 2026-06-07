@@ -22,12 +22,8 @@ fp @ {jlib, ...}: {
     };
   };
 
-  flake.modules.homeManager.base = {
-    lib,
-    pkgs,
-    ...
-  }:
-    jlib.mkHomeManager pkgs {
+  flake.modules.homeManager.base =
+    jlib.mkHomeManager {
       generic = {
         programs.ssh.enableDefaultConfig = false;
         programs.ssh.matchBlocks."*" = {
@@ -38,6 +34,10 @@ fp @ {jlib, ...}: {
       };
 
       nixos = {
+        lib,
+        pkgs,
+        ...
+      }: {
         programs.nushell.environmentVariables.SSH_AUTH_SOCK = lib.hm.nushell.mkNushellInline ''$"($env.XDG_RUNTIME_DIR)/ssh-agent"'';
 
         # Pre-load SSH key handles into agent at login so all programs can use them.
@@ -55,7 +55,7 @@ fp @ {jlib, ...}: {
         };
       };
 
-      darwin = {
+      darwin = {pkgs, ...}: {
         home.packages = [
           pkgs.openssh # FIDO2-capable SSH (macOS system SSH lacks libfido2)
         ];

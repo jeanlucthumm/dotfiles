@@ -75,7 +75,7 @@
     lib,
     ...
   }:
-    jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager {
       generic = {
         imports = [inputs.agenix.homeManagerModules.default];
         home.packages = let

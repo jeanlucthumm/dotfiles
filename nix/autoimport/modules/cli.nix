@@ -18,7 +18,7 @@ fp @ {jlib, ...}: {
     pkgs,
     ...
   }:
-    jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager {
       generic = let
         clip = pkgs.writeShellScriptBin "clip" ''
           if [ -n "$TMUX" ]; then

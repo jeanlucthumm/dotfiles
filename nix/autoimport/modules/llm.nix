@@ -8,7 +8,7 @@ fp @ {jlib, ...}: {
     system = pkgs.stdenv.hostPlatform.system;
     fpkgs = fp.withSystem system ({config, ...}: config.packages);
   in
-    jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager {
       generic = {
         home.packages = [
           fpkgs.mcp-flutter # MCP server for Flutter app debugging

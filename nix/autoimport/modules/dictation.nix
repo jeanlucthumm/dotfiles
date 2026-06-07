@@ -41,9 +41,9 @@ fp @ {jlib, ...}: {
       ROCM_PATH = "${pkgs.rocmPackages.clr}";
     };
   };
-  flake.modules.homeManager.graphical = {pkgs, ...}:
-    jlib.mkHomeManager pkgs {
-      darwin = let
+  flake.modules.homeManager.graphical =
+    jlib.mkHomeManager {
+      darwin = {pkgs, ...}: let
         # Available models (speed vs accuracy tradeoff):
         #   tiny, tiny.en, base, base.en, small, medium, large-v3, large-v3-turbo
         model = "base.en";
@@ -344,7 +344,7 @@ fp @ {jlib, ...}: {
         };
       };
 
-      nixos = let
+      nixos = {pkgs, ...}: let
         # Available models (speed vs accuracy tradeoff):
         #   tiny, tiny.en, base, base.en, small, medium, large-v3, large-v3-turbo
         model = "base.en";

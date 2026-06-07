@@ -120,13 +120,8 @@ fp @ {jlib, ...}: {
     home-manager.sharedMoules = [fp.config.flake.modules.homeManager.graphical];
   };
 
-  flake.modules.homeManager.graphical = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }:
-    jlib.mkHomeManager pkgs {
+  flake.modules.homeManager.graphical = {pkgs, ...}:
+    jlib.mkHomeManager {
       generic = let
         # `clip` comes from the cli profile (always co-imported at host level).
         copy-last-cmd = pkgs.writeShellScriptBin "copy-last-cmd" ''
@@ -156,7 +151,7 @@ fp @ {jlib, ...}: {
         };
       };
 
-      darwin = {
+      darwin = {config, ...}: {
         imports = [
           fp.config.flake.modules.homeManager.opt-hammerspoon
         ];

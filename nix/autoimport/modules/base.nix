@@ -132,23 +132,18 @@ fp @ {jlib, ...}: {
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];
   };
 
-  flake.modules.homeManager.base = {
-    config,
-    pkgs,
-    ...
-  }:
-    jlib.mkHomeManager pkgs {
-      nixos = {
-        services.hyprpolkitagent.enable = true;
-      };
-      darwin = {
-        home.sessionPath = [
-          # Homebrew puts its stuff here instead of /usr/bin
-          "/opt/homebrew/bin"
-          # TODO: move this to dev
-          # Any Dart dev requires this in path
-          "${config.home.homeDirectory}/.pub-cache/bin"
-        ];
-      };
+  flake.modules.homeManager.base = jlib.mkHomeManager {
+    nixos = {
+      services.hyprpolkitagent.enable = true;
     };
+    darwin = {config, ...}: {
+      home.sessionPath = [
+        # Homebrew puts its stuff here instead of /usr/bin
+        "/opt/homebrew/bin"
+        # TODO: move this to dev
+        # Any Dart dev requires this in path
+        "${config.home.homeDirectory}/.pub-cache/bin"
+      ];
+    };
+  };
 }

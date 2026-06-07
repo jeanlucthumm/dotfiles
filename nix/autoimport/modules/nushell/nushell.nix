@@ -22,10 +22,9 @@ fp @ {jlib, ...}: {
   flake.modules.homeManager.base = {
     pkgs,
     lib,
-    osConfig,
     ...
   }:
-    jlib.mkHomeManager pkgs {
+    jlib.mkHomeManager {
       generic = {
         home.packages = [pkgs.nushell];
 
@@ -82,7 +81,7 @@ fp @ {jlib, ...}: {
         ];
       };
 
-      darwin = {
+      darwin = {osConfig, ...}: {
         programs.nushell.extraConfig = ''
           def nrs []: [nothing -> nothing] {
               nh darwin switch -H ${osConfig.networking.hostName}

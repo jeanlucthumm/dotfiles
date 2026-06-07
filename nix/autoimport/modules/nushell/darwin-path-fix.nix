@@ -2,15 +2,14 @@
 #   misses nix-darwin's set-environment. We replicate that setup in env.nu
 #   using osConfig as source of truth (the nushell equivalent of fish-fix).
 fp @ {jlib, ...}: {
-  flake.modules.homeManager.base = {
-    config,
-    pkgs,
-    lib,
-    osConfig,
-    ...
-  }:
-    jlib.mkHomeManager pkgs {
-      darwin = let
+  flake.modules.homeManager.base =
+    jlib.mkHomeManager {
+      darwin = {
+        config,
+        lib,
+        osConfig,
+        ...
+      }: let
         homeDir = config.home.homeDirectory;
         user = config.home.username;
 
