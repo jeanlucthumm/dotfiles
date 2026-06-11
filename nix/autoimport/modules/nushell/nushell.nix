@@ -22,6 +22,7 @@ fp @ {jlib, ...}: {
   flake.modules.homeManager.base = {
     pkgs,
     lib,
+    config,
     ...
   }:
     jlib.mkHomeManager {
@@ -37,8 +38,12 @@ fp @ {jlib, ...}: {
             cat = "bat";
             man = "batman";
           };
+          # TODO: write an adapter that re-emits `home.sessionVariables` as
+          # nu env-sets so we don't have to dual-declare here. HM's POSIX
+          # `hm-session-vars.sh` isn't nu-parseable.
           environmentVariables = {
             GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
+            NH_FLAKE = config.home.homeDirectory + "/nix";
           };
           settings = {
             completions.algorithm = "fuzzy";
