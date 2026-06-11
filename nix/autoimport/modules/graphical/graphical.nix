@@ -106,7 +106,8 @@ fp @ {
         usbutils # USB utilities
       ];
       programs = {
-        zathura.enable = true;
+        # TODO: re-enable on darwin once appstream builds again (nixpkgs Darwin breakage)
+        zathura.enable = pkgs.stdenv.hostPlatform.isLinux;
 
         nushell = {
           # Enables kitty's new key handling protocol in nushell
