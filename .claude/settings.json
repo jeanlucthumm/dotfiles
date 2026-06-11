@@ -58,10 +58,23 @@
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
+  "enabledPlugins": {
+    "home-assistant-skills@home-assistant-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "home-assistant-skills": {
+      "source": {
+        "source": "github",
+        "repo": "homeassistant-ai/skills"
+      }
+    }
+  },
   "effortLevel": "high",
   "voiceEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754846298344
   },
-  "model": "opus"
+  "theme": "light-daltonized",
+  "preferredNotifChannel": "kitty",
+  "fileCheckpointingEnabled": false
 }
