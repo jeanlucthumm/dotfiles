@@ -4,9 +4,8 @@
     pkgs,
     lib,
     ...
-  }:
-    lib.mkIf pkgs.hostPlatform.isLinux {
-      programs.starship = {
+  }: {
+    programs.starship = {
         enable = true;
         enableFishIntegration = true;
         enableZshIntegration = true;
