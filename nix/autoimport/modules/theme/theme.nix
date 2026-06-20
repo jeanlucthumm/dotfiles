@@ -109,7 +109,6 @@ fp: {
           terminal = config.theme.fontCoding.size;
         };
       };
-      homeManagerIntegration.followSystem = false;
       enableReleaseChecks = false;
 
       # IMPORTANT
@@ -155,6 +154,7 @@ fp: {
 
     home-manager.sharedModules = [
       fp.config.flake.modules.generic.theme
+      fp.config.flake.modules.homeManager.theme
       {
         theme = config.theme;
       }
@@ -170,6 +170,7 @@ fp: {
 
     home-manager.sharedModules = [
       fp.config.flake.modules.generic.theme
+      fp.config.flake.modules.homeManager.theme
       {
         theme = config.theme;
       }
