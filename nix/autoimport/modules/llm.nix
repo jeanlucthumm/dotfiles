@@ -33,7 +33,7 @@ fp @ {
 
       nixos = {
         home.packages = [
-          fpkgs.mcp-reddit
+          fpkgs.reddit-mcp-server
         ];
       };
     };
