@@ -16,7 +16,10 @@ fp: {
     };
   };
 
-  flake.checks =
-    builtins.mapAttrs (system: deployLib: deployLib.deployChecks fp.config.flake.deploy)
-    fp.inputs.deploy-rs.lib;
+  # Only emit deploy checks under the systems we actually deploy to. Mapping over
+  # all of deploy-rs.lib would place the x86_64-linux server activation under
+  # checks.aarch64-darwin too, so `nix flake check` on the macbook tries to build
+  # an x86_64-linux derivation and fails with a platform mismatch.
+  flake.checks.x86_64-linux =
+    fp.inputs.deploy-rs.lib.x86_64-linux.deployChecks fp.config.flake.deploy;
 }
