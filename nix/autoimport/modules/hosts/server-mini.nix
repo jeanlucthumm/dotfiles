@@ -16,12 +16,12 @@ fp: {
           }
         ];
 
-        users.users.root.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
+        users.users.root.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
           desktop.fido2.auth
           macbook.fido2.auth
           phone
         ];
-        users.users.jeanluc.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
+        users.users.jeanluc.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
           desktop.fido2.auth
           macbook.fido2.auth
           phone
