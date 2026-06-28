@@ -6,7 +6,7 @@
 # explicitly (it's not in `base`) so untheme'd hosts don't drag it in.
 fp @ {jlib, ...}: {
   flake.modules.homeManager.theme = {
-    osConfig,
+    osConfig ? throw "Theme not supported in standalone HM",
     pkgs,
     config,
     lib,
@@ -149,76 +149,76 @@ fp @ {jlib, ...}: {
         };
 
         programs.wofi.style = with config.lib.stylix.colors; ''
-      window {
-        border: solid 2px;
-      }
+          window {
+            border: solid 2px;
+          }
 
-      #input {
-        padding: 10px;
-        margin: 20px;
-        padding-left: 10px;
-        padding-right: 10px;
-        border-radius: 20px;
-      }
+          #input {
+            padding: 10px;
+            margin: 20px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 20px;
+          }
 
-      #input:focus {
-        border: none;
-        outline: none;
-      }
+          #input:focus {
+            border: none;
+            outline: none;
+          }
 
-      #inner-box {
-        margin: 10px;
-        margin-top: 0px;
-        border-radius: 20px;
-      }
+          #inner-box {
+            margin: 10px;
+            margin-top: 0px;
+            border-radius: 20px;
+          }
 
-      #outer-box {
-        border: none;
-      }
+          #outer-box {
+            border: none;
+          }
 
-      #scroll {
-        margin: 0px 10px 20px 10px;
-      }
+          #scroll {
+            margin: 0px 10px 20px 10px;
+          }
 
-      #text:selected {
-        color: #fff;
-      }
+          #text:selected {
+            color: #fff;
+          }
 
-      #img {
-        background: transparent;
-        margin-right: 10px;
-        margin-left: 5px;
-      }
+          #img {
+            background: transparent;
+            margin-right: 10px;
+            margin-left: 5px;
+          }
 
-      #entry {
-        padding: 10px;
-        border: none;
-        border-radius: 20px;
-      }
+          #entry {
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+          }
 
-      #entry:selected {
-        outline: none;
-        border: none;
-      }
+          #entry:selected {
+            outline: none;
+            border: none;
+          }
 
-      #entry:nth-child(odd) {
-        background-color: ${base00};
-      }
-      #entry:nth-child(even) {
-        background-color: ${base01};
-      }
-      #entry:selected {
-        background-color: ${base02};
-      }
-      #input {
-        background-color: ${base01};
-        color: ${base04};
-        border-color: ${base02};
-      }
-      #input:focus {
-        border-color: ${base0A};
-      }
-    '';
+          #entry:nth-child(odd) {
+            background-color: ${base00};
+          }
+          #entry:nth-child(even) {
+            background-color: ${base01};
+          }
+          #entry:selected {
+            background-color: ${base02};
+          }
+          #input {
+            background-color: ${base01};
+            color: ${base04};
+            border-color: ${base02};
+          }
+          #input:focus {
+            border-color: ${base0A};
+          }
+        '';
       };
     };
 }
