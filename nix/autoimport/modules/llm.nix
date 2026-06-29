@@ -4,16 +4,18 @@ fp @ {
   withSystem,
   ...
 }: {
-  flake.modules.homeManager.dev = {
-    pkgs,
-    lib,
-    ...
-  }: let
-    system = pkgs.stdenv.hostPlatform.system;
-    fpkgs = withSystem system ({config, ...}: config.packages);
+  flake.modules.homeManager.dev = let
+    mkFpkgs = system: withSystem system ({config, ...}: config.packages);
   in
     jlib.mkHomeManager {
       generic = {
+        pkgs,
+        lib,
+        system,
+        ...
+      }: let
+        fpkgs = mkFpkgs system;
+      in {
         home.packages = [
           fpkgs.mcp-flutter # MCP server for Flutter app debugging
           fpkgs.mcp-language-server # MCP server that exposes language servers to LLMs
@@ -31,7 +33,9 @@ fp @ {
         };
       };
 
-      nixos = {
+      nixos = {system, ...}: let
+        fpkgs = mkFpkgs system;
+      in {
         home.packages = [
           fpkgs.reddit-mcp-server
         ];

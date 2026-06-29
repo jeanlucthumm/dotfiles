@@ -19,89 +19,92 @@ fp @ {jlib, ...}: {
     environment.shells = ["/etc/profiles/per-user/jeanluc/bin/nu"];
   };
 
-  flake.modules.homeManager.base = {
-    pkgs,
-    lib,
-    config,
-    ...
-  }:
-    jlib.mkHomeManager {
-      generic = {
-        home.packages = [pkgs.nushell];
+  flake.modules.homeManager.base = jlib.mkHomeManager {
+    generic = {
+      config,
+      lib,
+      pkgs,
+      ...
+    }: {
+      home.packages = [pkgs.nushell];
 
-        programs.nushell = {
-          enable = true;
-          shellAliases = {
-            vim = "nvim";
-            fg = "job unfreeze";
-            cd = "z";
-            cat = "bat";
-            man = "batman";
-          };
-          # TODO: write an adapter that re-emits `home.sessionVariables` as
-          # nu env-sets so we don't have to dual-declare here. HM's POSIX
-          # `hm-session-vars.sh` isn't nu-parseable.
-          environmentVariables = {
-            GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
-            NH_FLAKE = config.home.homeDirectory + "/nix";
-          };
-          settings = {
-            completions.algorithm = "fuzzy";
-          };
-          extraConfig = builtins.concatStringsSep "\n" [
-            (builtins.readFile ./scripts/config-base.nu)
-            (builtins.readFile ./scripts/config-qol.nu)
-          ];
+      programs.nushell = {
+        enable = true;
+        shellAliases = {
+          vim = "nvim";
+          fg = "job unfreeze";
+          cd = "z";
+          cat = "bat";
+          man = "batman";
         };
-
-        # Custom integration in config-qol.nu with path fallback
-        programs.carapace.enableNushellIntegration = false;
-        programs.direnv.enableNushellIntegration = true;
-        programs.yazi = {
-          shellWrapperName = "y";
-          enableNushellIntegration = true;
+        # TODO: write an adapter that re-emits `home.sessionVariables` as
+        # nu env-sets so we don't have to dual-declare here. HM's POSIX
+        # `hm-session-vars.sh` isn't nu-parseable.
+        environmentVariables = {
+          GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
+          NH_FLAKE = config.home.homeDirectory + "/nix";
         };
-        programs.zoxide.enableNushellIntegration = true;
-      };
-
-      nixos = {
-        programs.nushell.extraConfig = builtins.concatStringsSep "\n" [
-          (builtins.readFile ./scripts/nixos-config.nu)
-          ''
-            # TODO: switch back to nh once tty passthrough is fixed (~/Code/nh/issue.md)
-            def nrs []: [nothing -> nothing] {
-                sudo nixos-rebuild switch --flake ~/nix
-                if "HW_KEY_HOST" in $env {
-                  delock # decrypt agenix secrets (YubiKey PIN + touch)
-                }
-            }
-
-            def nra []: [nothing -> nothing] {
-                sudo nixos-rebuild switch --flake ~/nix --upgrade
-                if "HW_KEY_HOST" in $env {
-                  delock # decrypt agenix secrets (YubiKey PIN + touch)
-                }
-            }
-          ''
+        settings = {
+          completions.algorithm = "fuzzy";
+        };
+        extraConfig = builtins.concatStringsSep "\n" [
+          (builtins.readFile ./scripts/config-base.nu)
+          (builtins.readFile ./scripts/config-qol.nu)
         ];
       };
 
-      darwin = {osConfig, ...}: {
-        programs.nushell.extraConfig = ''
+      # Custom integration in config-qol.nu with path fallback
+      programs.carapace.enableNushellIntegration = false;
+      programs.direnv.enableNushellIntegration = true;
+      programs.yazi = {
+        shellWrapperName = "y";
+        enableNushellIntegration = true;
+      };
+      programs.zoxide.enableNushellIntegration = true;
+    };
+
+    nixos = {
+      programs.nushell.extraConfig = builtins.concatStringsSep "\n" [
+        (builtins.readFile ./scripts/nixos-config.nu)
+        ''
+          # TODO: switch back to nh once tty passthrough is fixed (~/Code/nh/issue.md)
           def nrs []: [nothing -> nothing] {
-              nh darwin switch -H ${osConfig.networking.hostName}
+              sudo nixos-rebuild switch --flake ~/nix
               if "HW_KEY_HOST" in $env {
                 delock # decrypt agenix secrets (YubiKey PIN + touch)
               }
           }
 
           def nra []: [nothing -> nothing] {
-              nh darwin switch -H ${osConfig.networking.hostName} -u
+              sudo nixos-rebuild switch --flake ~/nix --upgrade
               if "HW_KEY_HOST" in $env {
                 delock # decrypt agenix secrets (YubiKey PIN + touch)
               }
           }
-        '';
-      };
+        ''
+      ];
     };
+
+    darwin = {
+      lib,
+      osConfig ? null, # null on pure hm configs
+      ...
+    }: {
+      programs.nushell.extraConfig = lib.optionalString (osConfig != null) ''
+        def nrs []: [nothing -> nothing] {
+            nh darwin switch -H ${osConfig.networking.hostName}
+            if "HW_KEY_HOST" in $env {
+              delock # decrypt agenix secrets (YubiKey PIN + touch)
+            }
+        }
+
+        def nra []: [nothing -> nothing] {
+            nh darwin switch -H ${osConfig.networking.hostName} -u
+            if "HW_KEY_HOST" in $env {
+              delock # decrypt agenix secrets (YubiKey PIN + touch)
+            }
+        }
+      '';
+    };
+  };
 }
