@@ -24,7 +24,6 @@ fp @ {
           # Way more up to date than nixpkgs
           fp.inputs.claude-code.packages.${system}.claude-code
 
-          pkgs.aichat # AI chatbot for the terminal
           pkgs.opencode # AI coding agent TUI
         ];
 
