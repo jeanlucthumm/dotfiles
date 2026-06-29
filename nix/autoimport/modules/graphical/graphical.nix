@@ -38,6 +38,12 @@ fp @ {
       };
     };
 
+    programs = {
+      hyprland.enable = true;
+      niri.enable = true;
+      sway.enable = true;
+    };
+
     hardware.bluetooth = {
       enable = true;
       powerOnBoot = true;

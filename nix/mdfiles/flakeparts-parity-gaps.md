@@ -1,30 +1,5 @@
 # Flake-parts migration: parity gaps vs `master`
 
-## Eval-breakers (these hosts do not build today)
-
-### E2. `macbook-work` — undefined `config` + non-evaluating stub
-
-File: `autoimport/modules/hosts/macbook-work.nix`.
-
-- **Immediate:** line 11 `with config.flake.pubkeys` — `config` isn't bound (arg is
-  `fp @ {jlib, ...}`). Change to `fp.config.flake.pubkeys`.
-- **To evaluate at all:** needs `system.primaryUser` + `system.stateVersion = 4` and
-  a `home-manager.users.jeanluc.imports = [{ home.stateVersion = "24.05"; }]` (mirror
-  `macbook.nix`).
-- **Full parity is BLOCKED — own task.** Master ran this host as user
-  **`jeanlucthumm`** (corporate, `/Users/jeanlucthumm`) under **Determinate Nix**
-  (`nix.enable = false; ids.gids.nixbld = 350; environment.shells = [".../jeanlucthumm/bin/nu"]`)
-  and imported `inputs.dotfiles-private.homeModules.work` + work packages
-  (`_1password-cli pnpm ngrok google-cloud-sdk sem`) + git signing override
-  (`signByDefault = lib.mkForce false; format = null`; no FIDO2 key) + `gtk.gtk4.theme = null`.
-  Blockers: (a) `dotfiles-private` is **not a declared flake input** on this branch
-  (it's a git+ssh private repo — must be re-added to `flake.nix`); (b) the darwin
-  `base` slot hardcodes user `jeanluc` (`jeanluc.nix:2,31-36`), so `jeanlucthumm`
-  needs the slot user-parameterized or a host-local override. Decide jeanluc vs
-  jeanlucthumm before doing this.
-
-______________________________________________________________________
-
 ## High severity (live functional drops)
 
 ### H1. System-level WM sessions not enabled (desktop can't launch a WM via `ly`)
