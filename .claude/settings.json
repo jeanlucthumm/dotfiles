@@ -70,11 +70,13 @@
     }
   },
   "effortLevel": "high",
+  "skipWorkflowUsageWarning": true,
+  "theme": "light-daltonized",
+  "preferredNotifChannel": "kitty",
+  "fileCheckpointingEnabled": false,
   "voiceEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754846298344
   },
-  "theme": "light-daltonized",
-  "preferredNotifChannel": "kitty",
-  "fileCheckpointingEnabled": false
+  "skipDangerousModePermissionPrompt": true
 }
