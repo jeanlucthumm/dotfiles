@@ -83,9 +83,21 @@ fp @ {jlib, ...}: {
       supportedFilesystems = ["ntfs"];
     };
 
-    # TODO: reconcile this with the full config for the server
-    # All NixOS devices should be nodes
-    services.syncthing.enable = true;
+    services = {
+      # TODO: reconcile this with the full config for the server
+      # All NixOS devices should be nodes
+      syncthing.enable = true;
+
+      upower.enable = true;
+      udisks2.enable = true;
+
+      # Allows `.local` DNS discovery
+      avahi = {
+        enable = true;
+        nssmdns4 = true;
+        nssmdns6 = true;
+      };
+    };
 
     nix.gc.dates = "weekly";
 

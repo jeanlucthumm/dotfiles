@@ -129,7 +129,6 @@ fp @ {
             if pkgs.stdenv.hostPlatform.isDarwin
             then pkgs.emptyDirectory
             else pkgs.kitty;
-          shellIntegration.enableFishIntegration = true;
           shellIntegration.mode = "no-cursor";
 
           settings = {

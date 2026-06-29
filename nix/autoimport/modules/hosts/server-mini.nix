@@ -6,7 +6,7 @@ fp: {
         imports = [./_host-specific/server-mini];
 
         networking.hostName = "server-mini";
-        networking.hostId = "1d9f895e";
+        networking.hostId = "3333bb65";
         jl.system = "x86_64-linux";
 
         swapDevices = [

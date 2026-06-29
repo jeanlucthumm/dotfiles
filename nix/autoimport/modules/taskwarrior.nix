@@ -1,6 +1,8 @@
 # Personal taskwarrior configuration - imports common and adds sync + personal contexts.
 {...}: {
-  flake.modules.homeManager.dev = {
+  # In secrets because it requires a hwkey.
+  # Ideally we'd have this be in the intersection secret and dev, but alas.
+  flake.modules.homeManager.secrets = {
     pkgs,
     config,
     lib,
