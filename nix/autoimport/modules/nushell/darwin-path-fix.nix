@@ -6,7 +6,7 @@ fp @ {jlib, ...}: {
     darwin = {
       config,
       lib,
-      osConfig ? null,
+      osConfig,
       ...
     }: let
       homeDir = config.home.homeDirectory;
