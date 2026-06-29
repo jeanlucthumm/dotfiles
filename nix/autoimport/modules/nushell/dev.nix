@@ -12,7 +12,6 @@
         (builtins.readFile ./scripts/pr.nu)
         (builtins.readFile ./scripts/parallel.nu)
         (builtins.readFile ./scripts/gh.nu)
-        (builtins.readFile ./scripts/notion.nu)
         (builtins.readFile ./scripts/config-dev.nu)
         (builtins.readFile ./scripts/init.nu)
       ];

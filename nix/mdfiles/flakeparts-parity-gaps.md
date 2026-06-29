@@ -2,46 +2,6 @@
 
 ## High severity (live functional drops)
 
-### H1. System-level WM sessions not enabled (desktop can't launch a WM via `ly`)
-
-Master `system/modules/graphical.nix:34-38` set `programs.hyprland.enable`,
-`programs.niri.enable`, `programs.sway.enable`. The NixOS modules register the
-session `.desktop` entries for the `ly` display manager and wire polkit /
-xdg-desktop-portal-\* / graphics / dconf / xwayland. autoimport only has the
-home-manager side. **Without these, `ly` has no session to launch.**
-
-Fix in `autoimport/modules/graphical/graphical.nix`, `flake.modules.nixos.graphical`:
-
-```nix
-imports = [fp.inputs.niri.nixosModules.niri];   # hyprland & sway are nixpkgs built-ins
-programs.hyprland.enable = true;
-programs.niri.enable = true;
-programs.sway.enable = true;
-```
-
-**Gotcha (hit during testing):** enabling the niri *NixOS* module auto-imports the
-niri *home* module into home-manager. So in `autoimport/modules/graphical/niri.nix`
-you must then:
-
-- remove the manual `imports = [inputs.niri.homeModules.niri];` (else
-  `programs.niri.finalConfig` is double-declared), and
-- remove `enable = true;` from the `programs.niri` block (the auto-imported variant
-  has no `enable` option — niri is implied on; config via `settings`).
-
-After this, re-enable the dictation keybind in
-`autoimport/modules/dictation.nix:517,526` (uncomment the
-`programs.niri.settings.binds."Mod+Shift+O".action.spawn = ["toggle-vad"]`; leave the
-manual niri import commented — it's auto-imported now). See also §M-dictation.
-
-### H2. `notion-cli` dropped from `home.packages` (breaks `notion.nu` at runtime)
-
-Master `home/modules/cli/dev-custom.nix:6` installed `notion-cli`. autoimport still
-builds it (`packages/packages.nix:13`, mislabeled `# TODO don't think this is used`)
-but never installs it — yet `autoimport/modules/nushell/scripts/notion.nu` calls
-`notion-cli db query` / `page retrieve`. Add `fpkgs.notion-cli` to the generic
-`home.packages` in `modules/dev.nix` (or `llm.nix`), and fix the wrong TODO at
-`packages.nix:12`.
-
 ### H3. jeanluc `hashedPassword` dropped on all NixOS hosts
 
 Master `system/modules/user-jeanluc.nix:25` set it; `autoimport/modules/jeanluc.nix:23`
