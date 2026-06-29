@@ -39,6 +39,8 @@ fp @ {jlib, ...}: {
       fp.inputs.disko.nixosModules.disko
     ];
 
+    home-manager.extraSpecialArgs.system = fp.config.jl.system;
+
     environment.systemPackages = with pkgs; [
       deploy-rs
     ];
@@ -95,6 +97,8 @@ fp @ {jlib, ...}: {
       fp.inputs.home-manager.darwinModules.home-manager
       fp.config.flake.modules.generic.base
     ];
+
+    home-manager.extraSpecialArgs.system = fp.config.jl.system;
 
     # Weekly GC (Sunday 03:15)
     nix.gc.interval = {

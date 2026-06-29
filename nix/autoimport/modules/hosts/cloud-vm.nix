@@ -1,7 +1,14 @@
 fp @ {withSystem, ...}: {
-  flake.homeConfigurations."developer@cloud-vm" = withSystem "x86_64-linux" ({pkgs, ...}:
+  flake.homeConfigurations."developer@cloud-vm" = withSystem "x86_64-linux" ({
+    pkgs,
+    system,
+    ...
+  }:
     fp.inputs.home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
+      extraSpecialArgs = {
+        inherit system; # required to make jlib.mkHomeManager work
+      };
       modules = with fp.config.flake.modules.homeManager; [
         base
         dev
