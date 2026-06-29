@@ -63,7 +63,6 @@
         gammastep # Redshifting at night
         brightnessctl # Screen brightness controls
         wl-clipboard # Copy paste in Wayland
-        bitwarden-desktop # Password management
         grim # Screenshots
         slurp # For selecting screen regions
         kooha # Screen recording for Wayland
@@ -83,7 +82,7 @@
         google-cloud-sdk # Google Cloud CLI
         chromium # For Dart dev and PWAs
 
-        wasistlos # Chat (WhatsApp client)
+        karere # Chat (WhatsApp client)
         obsidian # Note taking
         smile # emoji picker
         transmission_4 # BitTorrent client
@@ -121,12 +120,7 @@
         };
 
         # New-age Firefox based browser
-        zen-browser = {
-          enable = true;
-          suppressXdgMigrationWarning = true;
-        };
-
-        nushell.shellAliases.nv = "neovide --fork";
+        zen-browser.enable = true;
 
         # Hack to allow copy pasting images in Claude Code with Kitty.
         kitty.keybindings = {
@@ -154,6 +148,7 @@
         userDirs = {
           enable = true;
           createDirectories = true;
+          setSessionVariables = false;
           pictures = "${homeDir}/media";
           music = "${homeDir}/media";
           videos = "${homeDir}/media";

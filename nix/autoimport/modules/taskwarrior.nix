@@ -2,7 +2,7 @@
 {...}: {
   # In secrets because it requires a hwkey.
   # Ideally we'd have this be in the intersection secret and dev, but alas.
-  flake.modules.homeManager.secrets = {
+  flake.modules.homeManager.dev = {
     pkgs,
     config,
     lib,
@@ -47,13 +47,16 @@
       config = {
         # Sync to GCP. Solutions like Syncthing don't work because its a
         # sqlite DB.
-        sync = {
-          gcp = {
-            bucket = "taskwarrior-23423478";
-            credential_path = config.age.secrets.taskwarrior.path;
-          };
-          encryption_secret = "not-required";
-        };
+        sync =
+          if (config ? age && config.age ? secrets)
+          then {
+            gcp = {
+              bucket = "taskwarrior-23423478";
+              credential_path = config.age.secrets.taskwarrior.path;
+            };
+            encryption_secret = "not-required";
+          }
+          else builtins.warn "no secret config, taskwarrior running without sync" {};
         context = lib.mergeAttrsList (lib.lists.map makeContextEntry contextLabels);
       };
     };

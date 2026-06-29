@@ -5,7 +5,7 @@
     lib,
     ...
   }:
-    lib.mkIf pkgs.hostPlatform.isLinux (with config.lib.stylix.colors; let
+    lib.mkIf pkgs.stdenv.hostPlatform. isLinux (with config.lib.stylix.colors; let
       primary = with config.monitors.primary; "${manufacturer} - ${model}";
     in {
       home.packages = with pkgs; [

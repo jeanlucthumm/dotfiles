@@ -57,6 +57,11 @@ fp @ {jlib, ...}: {
         systemd.services.NetworkManager-wait-online.enable = false;
         system.stateVersion = "24.05";
 
+        users.users.jeanluc.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
+          macbook.fido2.auth
+          phone
+        ];
+
         home-manager.users.jeanluc = {
           imports = [fp.config.flake.modules.generic.monitor];
 

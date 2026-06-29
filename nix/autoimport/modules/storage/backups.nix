@@ -10,7 +10,10 @@
       zfs # ZFS filesystem tools
     ];
 
-    boot.supportedFilesystems = ["zfs"];
+    boot = {
+      supportedFilesystems = ["zfs"];
+      zfs.forceImportRoot = false;
+    };
 
     # Sanoid automated snapshots
     services.sanoid = {

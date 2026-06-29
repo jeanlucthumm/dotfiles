@@ -32,14 +32,18 @@ fp @ {jlib, ...}: {
     };
   };
 
-  flake.modules.nixos.base = {pkgs, ...}: {
+  flake.modules.nixos.base = {
+    config,
+    pkgs,
+    ...
+  }: {
     imports = [
       fp.config.flake.modules.generic.base
       fp.inputs.home-manager.nixosModules.home-manager
       fp.inputs.disko.nixosModules.disko
     ];
 
-    home-manager.extraSpecialArgs.system = fp.config.jl.system;
+    home-manager.extraSpecialArgs.system = config.jl.system;
 
     environment.systemPackages = with pkgs; [
       deploy-rs
@@ -81,6 +85,8 @@ fp @ {jlib, ...}: {
         };
       };
       supportedFilesystems = ["ntfs"];
+
+      zfs.forceImportRoot = false;
     };
 
     services = {
@@ -104,13 +110,13 @@ fp @ {jlib, ...}: {
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.base];
   };
 
-  flake.modules.darwin.base = {
+  flake.modules.darwin.base = {config, ...}: {
     imports = [
       fp.inputs.home-manager.darwinModules.home-manager
       fp.config.flake.modules.generic.base
     ];
 
-    home-manager.extraSpecialArgs.system = fp.config.jl.system;
+    home-manager.extraSpecialArgs.system = config.jl.system;
 
     # Weekly GC (Sunday 03:15)
     nix.gc.interval = {
