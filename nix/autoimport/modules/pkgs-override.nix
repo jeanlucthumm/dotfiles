@@ -50,6 +50,27 @@ fp @ {withSystem, ...}: {
         # Darwin overrides
         (final: prev:
           prev.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
+            # afdko 5.0.1's addfeatures hmtx optimizer underflows a size_t
+            # (`size() - 2` when size < 2), which traps with SIGTRAP on darwin:
+            # it fails afdko's own test suite and breaks consumers like nototools.
+            # Backport the upstream one-line fix until our nixpkgs carries it
+            # (already on nixpkgs master via commit bf959d333).
+            # Fix: https://github.com/adobe-type-tools/afdko/pull/1843
+            python3 = prev.python3.override {
+              packageOverrides = pyFinal: pyPrev: {
+                afdko = pyPrev.afdko.overridePythonAttrs (old: {
+                  patches =
+                    (old.patches or [])
+                    ++ [
+                      (prev.fetchpatch {
+                        name = "afdko-addfeatures-hmtx-underflow.patch";
+                        url = "https://github.com/adobe-type-tools/afdko/commit/91833ab6c1a769f82f30dbf126362d079905bfc6.patch";
+                        hash = "sha256-GZtjJbqwR33CxpBpkcs6GaOztJ20QkFDVpvzT+Nh9EE=";
+                      })
+                    ];
+                });
+              };
+            };
             python3Packages = final.python3.pkgs;
 
             # Temporary: pull nushell from a pinned nixpkgs with the darwin test-skip fix.
