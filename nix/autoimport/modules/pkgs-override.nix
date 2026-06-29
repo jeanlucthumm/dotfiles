@@ -72,13 +72,6 @@ fp @ {withSystem, ...}: {
               };
             };
             python3Packages = final.python3.pkgs;
-
-            # Temporary: pull nushell from a pinned nixpkgs with the darwin test-skip fix.
-            # Drop once inputs.nixpkgs catches up.
-            nushell =
-              (import fp.inputs.nixpkgs-nushell {
-                inherit (prev.stdenv.hostPlatform) system;
-              }).nushell;
           })
       ];
     };

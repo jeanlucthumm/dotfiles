@@ -5,10 +5,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # Pinned to nixpkgs PR #510439 (nushell 0.112.2) for darwin test-skip fix.
-    # Drop once nixos-unstable catches up.
-    nixpkgs-nushell.url = "github:NixOS/nixpkgs/e787d9e711e78599f0ad3ec517fcef8192efd47e";
-
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";

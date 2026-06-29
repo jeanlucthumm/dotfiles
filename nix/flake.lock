@@ -546,22 +546,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-nushell": {
-      "locked": {
-        "lastModified": 1776332524,
-        "narHash": "sha256-qpkL/mcJ9iaFp1gwmyLmGn/+jettac2ScDUNVpgNW7w=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e787d9e711e78599f0ad3ec517fcef8192efd47e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e787d9e711e78599f0ad3ec517fcef8192efd47e",
-        "type": "github"
-      }
-    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1782498288,
@@ -801,7 +785,6 @@
         "nix-darwin": "nix-darwin",
         "nix-openclaw": "nix-openclaw",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-nushell": "nixpkgs-nushell",
         "pyproject-build-systems": "pyproject-build-systems",
         "pyproject-nix": "pyproject-nix",
         "reddit-easy-post": "reddit-easy-post",
