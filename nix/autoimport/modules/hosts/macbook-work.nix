@@ -8,7 +8,7 @@ fp @ {jlib, ...}: {
       {
         networking.hostName = "macbook-work";
         jl.system = "aarch64-darwin";
-        users.users.jeanluc.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
+        users.users.jeanluc.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
           desktop.fido2.auth
           phone
         ];
