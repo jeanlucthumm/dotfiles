@@ -9,7 +9,6 @@
       extraConfig = builtins.concatStringsSep "\n" [
         (builtins.readFile ./scripts/git.nu)
         (builtins.readFile ./scripts/task.nu)
-        (builtins.readFile ./scripts/pr.nu)
         (builtins.readFile ./scripts/parallel.nu)
         (builtins.readFile ./scripts/gh.nu)
         (builtins.readFile ./scripts/config-dev.nu)
