@@ -13,14 +13,8 @@ fp @ {
         lib,
         system,
         ...
-      }: let
-        fpkgs = mkFpkgs system;
-      in {
+      }: {
         home.packages = [
-          fpkgs.mcp-flutter # MCP server for Flutter app debugging
-          fpkgs.mcp-language-server # MCP server that exposes language servers to LLMs
-          fpkgs.mcp-opennutrition # OpenNutrition dataset MCP server
-
           # Way more up to date than nixpkgs
           fp.inputs.claude-code.packages.${system}.claude-code
 
