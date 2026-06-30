@@ -1,4 +1,4 @@
-# Nix Configuration and dotfiles for Jean-Luc
+# Nix Configuration and Dotfiles for Jean-Luc
 
 Config for all my systems.
 
@@ -13,11 +13,13 @@ A flake-parts, dendiritic based configuration with the following modules:
 - **theme** — Themeing via stylix and custom
 - **homeServer** — For headless server managing a home
 
-All modules in [`./autoimport`](./autoimport).
+All modules in [`./nix/autoimport`](./nix/autoimport).
+
+Note: nix config is in `./nix`. I commit some dotfiles raw.
 
 ## How the config comes together
 
-Assuming no background knowledge, here's me trying to explain piece by piece:
+Assuming no background knowledge, here's a piece by piece explanation:
 
 ### What are modules?
 
@@ -75,25 +77,27 @@ In the NixOS module system, `x` is the config, and `f` is all of our modules. So
 
 ### There's more than one fixpoint (config)
 
-A flake will usually define multiple hosts. Each one of those hosts is a fixpoint. So you might have a few nixos ones, a few darwin ones, etc.
-All those come from one evaluation of modules each.
+A flake will usually define multiple hosts, e.g. a couple NixOS ones, a darwin one, etc. Each one computes a fixpoint, from one evaluation of modules each.
 
-Home manager config is a different fixpoint! It's synergetic to the overall system config, but it gets attached per user and evaluated seperately.
+Home manager config is a different fixpoint as well! It's synergetic to the overall system config, but it gets attached per user and evaluated seperately.
 
-### So what is flake-parts?
+### So what is Flake Parts?
 
-Flake-parts asks a big question: what if we applied the NixOS module system to the flake itself?
+[Flake Parts](https://flake.parts/) asks a big question: what if we applied the NixOS module system to the flake itself? Then the fixpoint
+would be an actual flake, and you could express it across multiple modules and files.
 
-So you end up with multiple layers of configs:
+Overall you end up with multiple layers of configs:
 
+```
 flake -> systems (nixos/darwin/...) -> home manager
+```
 
 Each are a seperate set of modules evaluated to sepereate configs. That's why you hear the new term
 "flake modules".
 
 ### Dendritic pattern, i.e. an inverted model
 
-Flake parts is usable on its own, but this repo has a cooler pattern layered on top.
+Flake Parts is usable on its own, but this repo has a cooler pattern layered on top.
 
 Traditionally, we bundle up modules hierarchically: you make a low level module for e.g. fish, then you import it into a CLI module,
 and the CLI module into a dev module, which then gets imported into your host. Sometimes even more layers in between.
@@ -103,7 +107,7 @@ The key realization is that you don't _need_ all this abstraction, and you get b
 > [!TIP]
 > Instead of top level modules importing lower level modules, lower modules directly contribute to top modules
 
-See an example [here](./autoimport/modules/tailscale.nix). Notice how we just add to the `base`
+See an example [here](./nix/autoimport/modules/tailscale.nix). Notice how we just add to the `base`
 module for NixOS, and there's no explicit definition of `base` which imports `tailscale.nix`.
 
-Then at the very end, hosts import only a select few top level modules.
+At the very end, hosts import only a select few top level modules.
