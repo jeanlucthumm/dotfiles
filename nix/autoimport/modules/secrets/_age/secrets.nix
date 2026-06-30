@@ -1,0 +1,14 @@
+# TODO: agenix-rekey
+let
+  keys = import ../_pubkeys.nix;
+  workstations = [keys.desktop.age keys.macbook.age];
+  withServer = workstations ++ [keys.server];
+in {
+  "jeanluc-openai.age".publicKeys = workstations;
+  "jeanluc-anthropic.age".publicKeys = workstations;
+  "jeanluc-taskwarrior.age".publicKeys = workstations;
+  "jeanluc-notion.age".publicKeys = workstations;
+
+  "moltbot-telegram.age".publicKeys = withServer;
+  "moltbot-anthropic-token.age".publicKeys = withServer;
+}
