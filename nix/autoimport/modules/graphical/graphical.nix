@@ -63,9 +63,10 @@ fp @ {
       ];
       config = {
         common.default = "gtk";
-        # Route specific portal interfaces to the right backend for niri
+        # Route specific portal interfaces to the right backend for niri.
+        # Note: no `default` here — nixpkgs' niri module sets it to "gnome;gtk",
+        # and re-defining it conflicts. We only override the screen-capture backends.
         niri = {
-          default = "gtk";
           "org.freedesktop.impl.portal.ScreenCast" = "wlr"; # Screen recording/sharing
           "org.freedesktop.impl.portal.Screenshot" = "wlr"; # Screenshots
         };
