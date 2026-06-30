@@ -7,7 +7,9 @@ fp @ {jlib, ...}: {
     fp.inputs.nix-darwin.flakeModules.default
   ];
 
-  flake.modules.generic.base = {
+  flake.modules.generic.base = {pkgs, ...}: {
+    environment.systemPackages = [pkgs.deploy-rs];
+
     nix = {
       enable = true;
 
@@ -44,10 +46,6 @@ fp @ {jlib, ...}: {
     ];
 
     home-manager.extraSpecialArgs.system = config.jl.system;
-
-    environment.systemPackages = with pkgs; [
-      deploy-rs
-    ];
 
     # Timezone and locale
     time.timeZone = "America/Los_Angeles";
