@@ -12,7 +12,9 @@ fp: {
     # PCSC daemon for smart card support (Yubikey)
     services.pcscd.enable = true;
 
-    home-manager.sharedModules = [fp.config.flake.modules.homeManager.secrets];
+    # NOTE: homeManager.secrets is injected into home-manager.sharedModules by
+    # secrets.nix's nixos.secrets. Do not inject it here too -- a duplicate
+    # import makes the module system declare jl.secretDeposit options twice.
   };
 
   flake.modules.homeManager.secrets = {pkgs, ...}: {
