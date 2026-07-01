@@ -45,7 +45,10 @@ _: {
       }
 
       ${lib.concatStringsSep "\n      " (lib.mapAttrsToList (
-          name: t: "deposit ${lib.escapeShellArgs [name t.source "${t.remoteUser}@${t.host}" t.path t.owner t.group t.mode]}"
+          # `source` is injected unquoted so the shell expands runtime vars in
+          # agenix paths (e.g. $XDG_RUNTIME_DIR), matching the get-key-* scripts.
+          # Everything else is escaped.
+          name: t: "deposit ${lib.escapeShellArg name} ${t.source} ${lib.escapeShellArgs ["${t.remoteUser}@${t.host}" t.path t.owner t.group t.mode]}"
         )
         cfg.targets)}
 
