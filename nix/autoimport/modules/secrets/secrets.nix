@@ -56,6 +56,14 @@ fp @ {jlib, ...}: {
           file = ./_age/jeanluc-notion.age;
           mode = "400";
         };
+        hermes-anthropic = {
+          file = ./_age/hermes-anthropic.age;
+          mode = "400";
+        };
+        hermes-telegram = {
+          file = ./_age/hermes-telegram.age;
+          mode = "400";
+        };
         taskwarrior = {
           file = ./_age/jeanluc-taskwarrior.age;
           mode = "400";
@@ -83,6 +91,31 @@ fp @ {jlib, ...}: {
           age # Age encryption tool
           pinentry-tty # Enter password in terminal
         ];
+
+      # Push Hermes secrets to the keyless server. Decrypted locally behind the
+      # hardware key, then written over SSH (FIDO2 touch) as env files that the
+      # Hermes NixOS module reads via environmentFiles. See secret-deposit.nix.
+      jl.secretDeposit = {
+        enable = true;
+        targets = {
+          hermes-telegram = {
+            source = config.age.secrets.hermes-telegram.path;
+            host = "server";
+            path = "/var/lib/hermes-secrets/telegram.env";
+            owner = "hermes";
+            group = "hermes";
+            mode = "0400";
+          };
+          hermes-anthropic = {
+            source = config.age.secrets.hermes-anthropic.path;
+            host = "server";
+            path = "/var/lib/hermes-secrets/anthropic.env";
+            owner = "hermes";
+            group = "hermes";
+            mode = "0400";
+          };
+        };
+      };
     };
 
     darwin = {
