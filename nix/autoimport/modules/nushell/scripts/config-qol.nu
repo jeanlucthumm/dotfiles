@@ -2,6 +2,11 @@
 
 alias lss = ls
 
+# Always make bypass-permissions mode available as a selectable option
+def claude --wrapped [...rest] {
+  ^claude --allow-dangerously-skip-permissions ...$rest
+}
+
 def ls --wrapped [...rest]: [nothing -> string] {
   ^eza -s name --group-directories-first -1 --icons=always ...$rest
 }
