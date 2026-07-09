@@ -43,7 +43,7 @@ fp: {
       tree-sitter # Syntax parser extensively used by NeoVim
       mdformat # Markdown formatter
       gcc # GNU Compiler Collection
-      graphite-cli # Stacked branch management
+      jujutsu # Better git
 
       # Workflow-specific
       timewarrior # time tracker
