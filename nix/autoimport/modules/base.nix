@@ -7,11 +7,18 @@ fp @ {jlib, ...}: {
     fp.inputs.nix-darwin.flakeModules.default
   ];
 
-  flake.modules.generic.base = {pkgs, ...}: {
+  flake.modules.generic.base = {
+    pkgs,
+    lib,
+    config,
+    ...
+  }: {
     environment.systemPackages = [pkgs.deploy-rs];
 
     nix = {
-      enable = true;
+      # mkDefault so hosts where another installer manages Nix
+      # (e.g. Determinate on the work macbook) can turn this off
+      enable = lib.mkDefault true;
 
       # Enable flakes
       settings.experimental-features = ["nix-command" "flakes"];
@@ -23,7 +30,9 @@ fp @ {jlib, ...}: {
       # option shape differs (NixOS: systemd OnCalendar string;
       # Darwin: launchd calendar submodule).
       gc = {
-        automatic = true;
+        # Only when nix-darwin/NixOS manages Nix itself; hosts that delegate
+        # to another installer (nix.enable = false) handle GC there instead.
+        automatic = config.nix.enable;
         options = "--delete-older-than 30d";
       };
     };
