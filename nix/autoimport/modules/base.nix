@@ -125,6 +125,16 @@ fp @ {jlib, ...}: {
 
     home-manager.extraSpecialArgs.system = config.jl.system;
 
+    # TODO: nix-darwin's HTML manual fails to build because nixpkgs removed
+    # nixos-render-docs' --toc-depth flag. Re-enable both once this is fixed
+    # and the nix-darwin input is updated:
+    # https://github.com/nix-darwin/nix-darwin/issues/1817
+    # The uninstaller evaluates its own internal darwin system with default
+    # options, so it builds the broken manual even with doc.enable = false.
+    # When actually uninstalling, use `nix run nix-darwin#darwin-uninstaller`.
+    documentation.doc.enable = false;
+    system.tools.darwin-uninstaller.enable = false;
+
     # Weekly GC (Sunday 03:15)
     nix.gc.interval = {
       Hour = 3;
