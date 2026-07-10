@@ -26,10 +26,12 @@ fp @ {jlib, ...}: {
     jlib.mkHomeManager {
       generic = {
         programs.ssh.enableDefaultConfig = false;
-        programs.ssh.matchBlocks."*" = {
-          controlMaster = "auto";
-          controlPath = "~/.ssh/sockets/%r@%h-%p";
-          controlPersist = "4h";
+        # Upstream ssh_config(5) directive names (programs.ssh.settings is
+        # freeform; matchBlocks and its camelCase aliases are deprecated).
+        programs.ssh.settings."*" = {
+          ControlMaster = "auto";
+          ControlPath = "~/.ssh/sockets/%r@%h-%p";
+          ControlPersist = "4h";
         };
       };
 
