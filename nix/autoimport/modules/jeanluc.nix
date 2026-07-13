@@ -33,5 +33,9 @@ in {
       name = user;
       home = "/Users/${user}";
     };
+
+    # Allows jeanluc additional rights when connecting to the daemon, like managing
+    # caches. This is useful for devenv (which sets a client-specified `system`).
+    nix.settings.trusted-users = [user];
   };
 }
