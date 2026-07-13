@@ -54,6 +54,7 @@
       "WebFetch(domain:github.com)"
     ]
   },
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
@@ -70,6 +71,7 @@
     }
   },
   "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "light-daltonized",
   "preferredNotifChannel": "kitty",
@@ -77,6 +79,5 @@
   "voiceEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754846298344
-  },
-  "skipDangerousModePermissionPrompt": true
+  }
 }
