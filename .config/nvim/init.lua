@@ -323,6 +323,11 @@ local plugin_spec = {
             { buffer = bufnr, noremap = true, silent = true })
         end,
         capabilities = require'common'.capabilities(),
+        settings = {
+          -- Default node heap (~4GB) OOMs tsserver on huge monorepos
+          -- (repl-it-web server project); raise --max-old-space-size.
+          tsserver_max_memory = 10240,
+        },
       }
     end,
   },
