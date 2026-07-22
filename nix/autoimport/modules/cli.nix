@@ -1,5 +1,9 @@
 # CLI
-fp @ {jlib, ...}: {
+fp @ {
+  jlib,
+  withSystem,
+  ...
+}: {
   flake.modules.nixos.base = {pkgs, ...}: {
     # Basic system wide packages
     environment.systemPackages = with pkgs; [
@@ -53,7 +57,12 @@ fp @ {jlib, ...}: {
         paste = "^${paste}/bin/paste";
       };
 
-      home.packages = with pkgs; [
+      home.packages = with pkgs; let
+        system = pkgs.stdenv.hostPlatform.system;
+        fpkgs = withSystem system ({config, ...}: config.packages);
+      in [
+        fpkgs.review-pr # LSP-enabled nvim review of a jj workspace PR
+
         # Foundation — bare essentials
         neovim # IDE (tExT eDiToR)
         tmux # Terminal multiplexer

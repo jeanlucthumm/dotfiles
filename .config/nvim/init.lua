@@ -370,14 +370,16 @@ local plugin_spec = {
   },
   {
     'jeanlucthumm/review.nvim',
+    dev = true, -- local clone at ~/Code/nvim-plugins/review.nvim
     dependencies = {
       'esmuellert/codediff.nvim',
       'MunifTanjim/nui.nvim',
     },
     cmd = { 'Review' },
     keys = {
-      { '<Leader>lR', '<cmd>Review<cr>',         desc = 'Review changes' },
-      { '<Leader>lr', '<cmd>Review commits<cr>', desc = 'Review commits' },
+      { '<Leader>lR', '<cmd>Review<cr>',           desc = 'Review changes' },
+      { '<Leader>lr', '<cmd>Review commits<cr>',   desc = 'Review commits' },
+      { '<Leader>lw', '<cmd>Review workspace<cr>', desc = 'Review workspace vs $REVIEW_BASE' },
     },
     opts = {},
   },
