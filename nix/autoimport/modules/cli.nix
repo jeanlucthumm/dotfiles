@@ -33,7 +33,9 @@ fp @ {jlib, ...}: {
 
       paste = pkgs.writeShellScriptBin "paste" ''
         if [ -n "$TMUX" ]; then
-          tmux showb -t 0
+          # No -t/-b flag: plain showb prints the most recent buffer, and the
+          # old `-t 0` index form errors out on tmux >= 3.x ("unknown flag -t")
+          tmux showb
         elif [ "$(uname)" = "Darwin" ]; then
           pbpaste
         elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
@@ -43,6 +45,14 @@ fp @ {jlib, ...}: {
         fi
       '';
     in {
+      # Aliases resolve before PATH lookup, so nix devshells that put
+      # coreutils first (e.g. repl-it-web via direnv) can't shadow the
+      # clipboard wrappers with POSIX paste, which hangs reading stdin.
+      programs.nushell.shellAliases = {
+        clip = "^${clip}/bin/clip";
+        paste = "^${paste}/bin/paste";
+      };
+
       home.packages = with pkgs; [
         # Foundation — bare essentials
         neovim # IDE (tExT eDiToR)
