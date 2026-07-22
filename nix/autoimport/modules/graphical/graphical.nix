@@ -152,9 +152,17 @@ fp @ {
           };
 
           keybindings = {
+            # Sessions: snapshot tabs/windows/cwds to a file, restore via picker.
+            # Overrides rarely-used defaults (paste_from_selection,
+            # pass_selection_to_program). Deliberately no --use-foreground-process:
+            # restores get fresh shells, never re-run saved commands.
+            "kitty_mod+s" = "save_as_session --base-dir ~/.local/share/kitty/sessions";
+            "kitty_mod+o" = "goto_session ~/.local/share/kitty/sessions";
             "kitty_mod+h" = "kitty_scrollback_nvim";
             "kitty_mod+g" = "kitty_scrollback_nvim --config ksb_builtin_last_cmd_output";
             "kitty_mod+y" = "launch --type=background copy-last-cmd";
+            # Like kitty_mod+e (open URL) but copies the URL to clipboard instead
+            "kitty_mod+l" = "kitten hints --type url --program @";
             "ctrl+shift+right" = "mouse_select_command_output";
             "shift+enter" = "send_text all \\e\\r";
           };
