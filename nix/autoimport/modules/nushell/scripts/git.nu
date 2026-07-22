@@ -60,7 +60,7 @@ def "ngit prcontext" [
 # Generate git branch name based off taskwarrior ticket
 def gbranch [name: string]: [nothing -> string] {
   let branch_name = $name |
-    str downcase |
+    str lowercase |
     str replace ' ' '-' |
     str replace '[^a-z0-9-]' '' |
     str trim -c '-'

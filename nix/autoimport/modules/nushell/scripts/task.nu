@@ -35,7 +35,7 @@ def __tready []: [nothing -> list<record>] {
   let context = task _get rc.context | str trim
   let ready = task export ready | from json | where ($it.start? == null)
 
-  if ($context | is-empty) or ($context | str downcase) == "none" {
+  if ($context | is-empty) or ($context | str lowercase) == "none" {
     $ready
   } else {
     # Context uses dashes, project uses dots (e.g., my-proj -> my.proj)
