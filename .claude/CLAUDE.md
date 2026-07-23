@@ -1,5 +1,72 @@
-- The user primarily uses nushell. If outputting commands for the **user** to run, output in Nushell. Continue using bash for Bash tool.
+# Context
+
+## Memory
+
+We keep project context (md files) in ~/memory/projects.
+
+When working on a PR and it seems like its part of a bigger project, you may find more context
+in there. Start from the `## Index` in ~/memory/projects/CLAUDE.md — don't ls/glob; project
+folders keep their own `## Index` in their CLAUDE.md/AGENTS.md. For open-ended searches use
+`~/memory/bm25.py <directory> "<query>"` (`-k N`, `--full`).
+
+### Updating memory
+
+Memory updates are first-class work — do them as milestones land (a PR merged, an
+investigation concluded, a decision made), not as an afterthought:
+
+- Record outcomes in the project's home doc in ~/memory/projects. Focus on the big
+  picture and final state, not debugging detours or specific tech details.
+- Work log style: flat bullet list, each top-level bullet a dated chunk, sub-bullets details.
+- Every fact has exactly one home doc; update it there and point to it from elsewhere.
+  Never restate project status in indexes or entry-point files.
+- Deletion is the expected outcome at checkpoints: when work has executed or a decision
+  is superseded, delete its instruction-shaped content — the work-log line is its residue.
+- Each doc states its admission bar in its header; read it before writing, and give new docs one.
+- Made a decision worth telling as a story? Archive it via the /decision command.
+- Do not reference ~/memory paths in source code, PR descriptions, or commit messages —
+  inline whatever context is needed instead.
+
+## Misc Notes
+
 - You are allowed to disagree with me.
 - If you're about to say "You're absolutely right", make sure that I actually am right.
 - If the user's request seems misguided and they are likely confused, bring it up and explain.
-- User likes committing frequently. They use the /com skill for that.
+- New PRs should be created as drafts
+- GitHub username: @jeanlucthumm (e.g. for finding my PR review comments).
+
+<important>We use jj not git! Do not use git commands</important>
+
+## Jujutsu workflow
+
+- Map PRs 1:1 with a commit: all follow-up work lands in the PR's single commit and
+  the bookmark is force-pushed — no fixup commits.
+- To iterate on a PR: `jj edit <change>` (the PR commit itself), then edit files — any
+  subsequent jj command (`jj st`, another `jj edit`, etc.) auto-snapshots the working
+  copy into that commit and auto-rebases descendants. There is no separate "commit"
+  step in jj; editing the commit directly IS the model.
+- Do NOT use the git-style `jj new <bookmark>` + edit + `jj squash` sequence for PR
+  iteration — that's carrying git habits into jj. `jj squash` is only for when work
+  genuinely started in the wrong commit.
+- Use colocated repos (`jj git init --colocate .`) so Git tools stay interoperable;
+  track `main@origin` plus the current PR bookmark.
+
+## GitHub API Usage
+
+`gh api` is auto-allowed for read-only operations (fetching repo data, listing issues, reading trees, etc.). However, **always ask the user before** performing any `gh api` call that is visible to others or mutates state. This includes but is not limited to:
+
+- Posting or editing comments on issues/PRs
+- Creating, closing, or merging PRs or issues
+- Creating or deleting branches, tags, or releases
+- Modifying repo settings, labels, or permissions
+- Any use of `-X POST`, `-X PUT`, `-X PATCH`, `-X DELETE`, or `-f`/`-F`/`--field` flags
+
+Exception (pre-approved, no need to ask): updating the description/title of a PR
+you created or are actively iterating on for me (e.g. `gh pr edit --body-file`).
+Comments, reviews, merges, closes, and anything on other people's PRs still
+require asking first.
+
+## Work additions
+
+Work-specific guidance (deployed by the work machine's home-manager config; absent elsewhere):
+
+@~/.claude/CLAUDE.work.md
