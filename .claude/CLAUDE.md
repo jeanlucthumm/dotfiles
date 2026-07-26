@@ -63,21 +63,6 @@ are easy to name.
 - Use colocated repos (`jj git init --colocate .`) so Git tools stay interoperable;
   track `main@origin` plus the current PR bookmark.
 
-## GitHub API Usage
-
-`gh api` is auto-allowed for read-only operations (fetching repo data, listing issues, reading trees, etc.). However, **always ask the user before** performing any `gh api` call that is visible to others or mutates state. This includes but is not limited to:
-
-- Posting or editing comments on issues/PRs
-- Creating, closing, or merging PRs or issues
-- Creating or deleting branches, tags, or releases
-- Modifying repo settings, labels, or permissions
-- Any use of `-X POST`, `-X PUT`, `-X PATCH`, `-X DELETE`, or `-f`/`-F`/`--field` flags
-
-Exception (pre-approved, no need to ask): updating the description/title of a PR
-you created or are actively iterating on for me (e.g. `gh pr edit --body-file`).
-Comments, reviews, merges, closes, and anything on other people's PRs still
-require asking first.
-
 ## Work additions
 
 Work-specific guidance (deployed by the work machine's home-manager config; absent elsewhere):
