@@ -98,7 +98,10 @@ fp @ {
       programs = {
         carapace.enable = true;
         bat.enable = true; # cat replacement
-        direnv.enable = true;
+        direnv = {
+          enable = true;
+          nix-direnv.enable = true; # caches dev shells so cd is instant
+        };
         zoxide.enable = true; # cd replacement
 
         yazi = {
