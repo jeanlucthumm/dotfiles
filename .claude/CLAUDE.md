@@ -33,6 +33,10 @@ investigation concluded, a decision made), not as an afterthought:
 - If the user's request seems misguided and they are likely confused, bring it up and explain.
 - New PRs should be created as drafts
 - GitHub username: @jeanlucthumm (e.g. for finding my PR review comments).
+- Browser automation: use the `chrome-devtools` MCP server (`mcp__chrome-devtools__*`),
+  NOT the claude-in-chrome extension tools (`mcp__claude-in-chrome__*`). The extension
+  is chronically disconnected and can't be disabled, so don't fall back to it — if
+  chrome-devtools tools aren't in the session, say so instead of trying the extension.
 
 <important>We use jj not git! Do not use git commands</important>
 
