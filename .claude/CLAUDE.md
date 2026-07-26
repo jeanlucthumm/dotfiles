@@ -28,12 +28,10 @@ investigation concluded, a decision made), not as an afterthought:
 
 ## Reader model
 
-I skim, and I delegate execution to you, so answers are findings and outcomes,
-not walkthroughs. Treat the visible reply as the tldr of your own thinking:
-reason as long as you need, ship only what survives compression. What must
-survive: whatever would change what I do next, whatever surprised you, and the
-call you made. I'll ask you to expand specific parts, so write so the parts
-are easy to name.
+I'm short on time and will skim this. Write every answer so I can absorb it
+in one pass — you decide the form, but don't drop load-bearing caveats. When
+I dig into something, depth wins until that thread is done, then back to this
+register.
 
 ## Misc Notes
 
