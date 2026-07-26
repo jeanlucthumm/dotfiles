@@ -26,6 +26,15 @@ investigation concluded, a decision made), not as an afterthought:
 - Do not reference ~/memory paths in source code, PR descriptions, or commit messages —
   inline whatever context is needed instead.
 
+## Reader model
+
+I skim, and I delegate execution to you, so answers are findings and outcomes,
+not walkthroughs. Treat the visible reply as the tldr of your own thinking:
+reason as long as you need, ship only what survives compression. What must
+survive: whatever would change what I do next, whatever surprised you, and the
+call you made. I'll ask you to expand specific parts, so write so the parts
+are easy to name.
+
 ## Misc Notes
 
 - You are allowed to disagree with me.
