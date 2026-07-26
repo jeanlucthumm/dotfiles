@@ -7,38 +7,38 @@
 # A rebase conflict halts syncing and leaves the repo mid-rebase for manual
 # resolution. (The upstream module also syncs on repo changes via launchd
 # WatchPaths; that's forced off below so the cadence is purely interval-based.)
-{
-  flake.modules.homeManager.dev = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: let
-    cfg = config.jl.agentMemory;
-    remote = "git@github.com:jeanlucthumm/agent-memory.git";
-  in {
-    options.jl.agentMemory = {
-      enable = lib.mkEnableOption "agent memory repo auto-sync";
+{jlib, ...}: {
+  flake.modules.homeManager.dev = jlib.mkHomeManager {
+    generic = {
+      config,
+      lib,
+      pkgs,
+      ...
+    }: let
+      cfg = config.jl.agentMemory;
+      remote = "git@github.com:jeanlucthumm/agent-memory.git";
+    in {
+      options.jl.agentMemory = {
+        enable = lib.mkEnableOption "agent memory repo auto-sync";
 
-      path = lib.mkOption {
-        type = lib.types.str;
-        default = "${config.home.homeDirectory}/memory";
-        description = "Location of the agent memory git repo";
+        path = lib.mkOption {
+          type = lib.types.str;
+          default = "${config.home.homeDirectory}/memory";
+          description = "Location of the agent memory git repo";
+        };
+
+        interval = lib.mkOption {
+          type = lib.types.int;
+          default = 43200;
+          description = ''
+            Seconds between sync passes. A pass only commits if the repo is
+            dirty, so this caps commit frequency (default ~2/day). Coarser
+            intervals mean a bigger window for cross-host rebase conflicts.
+          '';
+        };
       };
 
-      interval = lib.mkOption {
-        type = lib.types.int;
-        default = 43200;
-        description = ''
-          Seconds between sync passes. A pass only commits if the repo is
-          dirty, so this caps commit frequency (default ~2/day). Coarser
-          intervals mean a bigger window for cross-host rebase conflicts.
-        '';
-      };
-    };
-
-    config = lib.mkIf cfg.enable (lib.mkMerge [
-      {
+      config = lib.mkIf cfg.enable {
         services.git-sync = {
           enable = true;
           repositories.agent-memory = {
@@ -61,12 +61,19 @@
             run ${pkgs.git}/bin/git -C "${cfg.path}" config --bool git-sync.syncNewFiles true
           fi
         '';
-      }
-      (lib.mkIf pkgs.stdenv.isDarwin {
-        # Sync on the interval only — without this, launchd also fires a
-        # sync every time the repo top level changes.
+      };
+    };
+
+    darwin = {
+      config,
+      lib,
+      ...
+    }: {
+      # Sync on the interval only — without this, launchd also fires a
+      # sync every time the repo top level changes.
+      config = lib.mkIf config.jl.agentMemory.enable {
         launchd.agents.git-sync-agent-memory.config.WatchPaths = lib.mkForce [];
-      })
-    ]);
+      };
+    };
   };
 }
