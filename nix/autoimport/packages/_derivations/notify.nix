@@ -23,25 +23,70 @@ writeShellApplication {
         printf '%s' "$s"
       }
     '';
-    withTitle =
+    send =
       if stdenv.isDarwin
-      then ''/usr/bin/osascript -e "display notification \"$(esc "$message")\" with title \"$(esc "$title")\""''
-      else ''notify-send "$title" "$message"'';
-    withoutTitle =
-      if stdenv.isDarwin
-      then ''/usr/bin/osascript -e "display notification \"$(esc "$message")\""''
-      else ''notify-send "$message"'';
+      then ''
+        cmd="display notification \"$(esc "$message")\""
+        if [[ -n "$title" ]]; then
+          cmd+=" with title \"$(esc "$title")\""
+        fi
+        if [[ -n "$sound" ]]; then
+          cmd+=" sound name \"$(esc "$sound")\""
+        fi
+        /usr/bin/osascript -e "$cmd"
+      ''
+      else ''
+        args=()
+        if [[ -n "$sound" ]]; then
+          # Best effort: honored only by notification daemons that support
+          # the freedesktop sound-name hint.
+          args+=(-h string:sound-name:bell)
+        fi
+        if [[ -n "$title" ]]; then
+          notify-send "''${args[@]}" "$title" "$message"
+        else
+          notify-send "''${args[@]}" "$message"
+        fi
+      '';
   in ''
     ${lib.optionalString stdenv.isDarwin darwinPrelude}
     title=""
     message=""
+    sound=""
+
+    usage() {
+      cat <<'EOF'
+    Usage: notify [-t|--title TITLE] [-s|--sound[=NAME]] MESSAGE
+
+    Send a desktop notification (osascript on macOS, notify-send on Linux).
+
+    Options:
+      -t, --title TITLE   Set the notification title
+      -s, --sound         Play the default sound (Glass) with the notification
+          --sound=NAME    Play a specific macOS sound (e.g. Funk, Ping);
+                          best-effort sound-name hint on Linux
+      -h, --help          Show this help
+    EOF
+    }
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
       case "$1" in
+        -h|--help)
+          usage
+          exit 0
+          ;;
         -t|--title)
           title="$2"
           shift 2
+          ;;
+        -s|--sound)
+          sound="Glass"
+          shift
+          ;;
+        --sound=*)
+          sound="''${1#--sound=}"
+          shift
           ;;
         *)
           message="$1"
@@ -51,15 +96,11 @@ writeShellApplication {
     done
 
     if [[ -z "$message" ]]; then
-      echo "Usage: notify [-t|--title TITLE] MESSAGE" >&2
+      usage >&2
       exit 1
     fi
 
-    if [[ -n "$title" ]]; then
-    	${withTitle}
-    else
-    	${withoutTitle}
-    fi
+    ${send}
   '';
 
   meta = {
