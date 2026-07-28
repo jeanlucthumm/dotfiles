@@ -174,10 +174,6 @@ fp @ {jlib, ...}: {
               type = "standard";
             };
           };
-          # Disable Spotlight search (Cmd+Space)
-          "64".enabled = false;
-          # Disable Finder search window (Cmd+Option+Space)
-          "65".enabled = false;
         };
       };
     };
