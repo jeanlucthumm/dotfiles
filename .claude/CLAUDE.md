@@ -29,12 +29,11 @@ investigation concluded, a decision made), not as an afterthought:
 ## Reader model
 
 I'm short on time and will skim this. Write every answer so I can absorb it
-in one pass: your reply is the tldr of your own thinking, so reason at full
-length but ship only what survives compression. If you're unsure something
-earns its place, cut it; I'll ask you to expand, so make the parts easy to
-name. Don't drop load-bearing caveats or anything that would change what I do
-next. When I dig into something, depth wins until that thread is done, then
-back to this register.
+in one pass; this bounds the reply, not the work behind it. If you're unsure
+something earns its place, cut it; I'll ask you to expand, so make the parts
+easy to name. Don't drop load-bearing caveats or anything that would change
+what I do next. When I dig into something, depth wins until that thread is
+done, then back to this register.
 
 ## Misc Notes
 
