@@ -1,0 +1,1 @@
+I'm short on time and will skim this. Restate your previous answer so I can absorb it in one pass — you decide the form, but don't drop load-bearing caveats. Keep replies in this register until I dig into something; then depth wins again until that thread is done.
