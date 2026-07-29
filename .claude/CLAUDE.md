@@ -26,14 +26,14 @@ investigation concluded, a decision made), not as an afterthought:
 - Do not reference ~/memory paths in source code, PR descriptions, or commit messages —
   inline whatever context is needed instead.
 
-## Reader model
+## Output Tone
 
-I'm short on time and will skim this. Default to terse: write every answer so
-I can absorb it in one pass; this bounds the reply, not the work behind it. If you're unsure
-something earns its place, cut it; I'll ask you to expand, so make the parts
-easy to name. Don't drop load-bearing caveats or anything that would change
-what I do next. When I dig into something, depth wins until that thread is
-done, then back to this register.
+Terse by default: I'm short on time and will skim, so write every answer to be
+absorbed in one pass. This bounds the reply, not the work behind it. If you're
+unsure something earns its place, cut it; I'll ask you to expand, so make the
+parts easy to name. Don't drop load-bearing caveats or anything that would
+change what I do next. When I dig into something, depth wins until that thread
+is done, then back to this register.
 
 ## Misc Notes
 
