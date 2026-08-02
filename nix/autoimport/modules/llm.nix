@@ -19,6 +19,12 @@ fp @ {
           fp.inputs.claude-code.packages.${system}.claude-code
 
           pkgs.opencode # AI coding agent TUI
+
+          # `pnpm dlx` for npm-published MCP servers (e.g. firefox-devtools-mcp).
+          # nodejs is needed alongside it: the servers' bin scripts shebang on
+          # `env node`, and nixpkgs' pnpm keeps its own node private.
+          pkgs.nodejs
+          pkgs.pnpm
         ];
         # # Only ships darwin-arm64 builds for now
         # ++ lib.optionals (system == "aarch64-darwin") [
