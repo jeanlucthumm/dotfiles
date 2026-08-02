@@ -13,7 +13,13 @@ fp @ {withSystem, ...}: {
     config = {
       # Avoid evaluating `pkgs` multiple times by importing the one from flake-parts
       # for this system.
-      nixpkgs.pkgs = withSystem config.jl.system ({pkgs, ...}: pkgs);
+      #
+      # mkDefault so evaluators that supply their own pkgs can win without a
+      # conflict. The NixOS test framework does exactly this: it sets
+      # `nixpkgs.pkgs = node.pkgs` on every node, and `nixpkgs.pkgs` is
+      # unmergeable, so two normal-priority definitions abort the eval. Real
+      # hosts are unaffected -- nothing else defines it there.
+      nixpkgs.pkgs = lib.mkDefault (withSystem config.jl.system ({pkgs, ...}: pkgs));
     };
   };
 
