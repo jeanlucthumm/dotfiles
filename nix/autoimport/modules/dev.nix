@@ -1,5 +1,5 @@
 # Development tools
-fp: {
+fp @ {withSystem, ...}: {
   flake.modules.nixos.dev = {pkgs, ...}: {
     environment.systemPackages = with pkgs; [
       # Docker Compose alternative for Podman
@@ -27,6 +27,7 @@ fp: {
     configDir = config.xdg.configHome;
     system = pkgs.stdenv.hostPlatform.system;
     taskwarrior-enhanced = fp.inputs.taskwarrior-enhanced.packages.${system}.taskwarrior-enhanced;
+    fpkgs = withSystem system ({config, ...}: config.packages);
   in {
     home.packages = with pkgs; [
       # Core dev tools
@@ -44,6 +45,7 @@ fp: {
       mdformat # Markdown formatter
       gcc # GNU Compiler Collection
       jujutsu # Better git
+      fpkgs.hex-cli # Hex (hex.tech) notebook CLI: author/run projects from the terminal
 
       # Workflow-specific
       timewarrior # time tracker
