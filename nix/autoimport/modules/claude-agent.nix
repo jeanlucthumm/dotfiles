@@ -115,18 +115,24 @@ fp: {
       #
       # TELEGRAM_ALLOWED_USERS is a comma-separated list of numeric Telegram
       # user IDs, and lives in the same deposited env file as the bot token.
+      # Deliberately a warning, not a hard failure. This host is deployed with
+      # deploy-rs, where a unit that fails to start aborts activation and rolls
+      # the entire deployment back -- a missing secret must not be able to veto
+      # unrelated server config. The session still comes up so you can attach,
+      # and the plugin itself exits loudly if the bot token is also absent.
       if [ -z "''${TELEGRAM_ALLOWED_USERS:-}" ]; then
-        echo "claude-agent: TELEGRAM_ALLOWED_USERS is unset in ${envFile}." >&2
-        echo "  Without it the allowlist is empty and the bot silently drops" >&2
-        echo "  every message. Add it with: agenix -e claude-telegram.age" >&2
-        exit 1
+        echo "claude-agent: WARNING -- TELEGRAM_ALLOWED_USERS is unset in ${envFile}." >&2
+        echo "  Leaving access.json untouched; the bot drops every inbound" >&2
+        echo "  message until this is set. Fix with 'deposit-secrets" >&2
+        echo "  claude-telegram', then: systemctl restart claude-agent" >&2
+      else
+        ${pkgs.jq}/bin/jq -n --arg ids "$TELEGRAM_ALLOWED_USERS" '{
+          dmPolicy: "allowlist",
+          allowFrom: ($ids | split(",") | map(gsub("[[:space:]]"; "")) | map(select(length > 0))),
+          groups: {},
+          pending: {}
+        }' > ${stateDir}/access.json
       fi
-      ${pkgs.jq}/bin/jq -n --arg ids "$TELEGRAM_ALLOWED_USERS" '{
-        dmPolicy: "allowlist",
-        allowFrom: ($ids | split(",") | map(gsub("[[:space:]]"; "")) | map(select(length > 0))),
-        groups: {},
-        pending: {}
-      }' > ${stateDir}/access.json
 
       # Copied, not symlinked: the agent must be able to write its own state
       # into ~/.claude, but nix reasserts these two files on every restart.
@@ -168,10 +174,20 @@ fp: {
       description = "Claude Code Telegram agent";
     };
 
+    # The unit's directory tree, declaratively. ExecStartPre also mkdir -p's
+    # these, but that is too late for WorkingDirectory, which systemd applies
+    # before any Exec* runs.
+    systemd.tmpfiles.rules = [
+      "d ${home} 0700 ${user} ${user} -"
+      "d ${home}/.claude 0700 ${user} ${user} -"
+      "d ${workspace} 0700 ${user} ${user} -"
+      "d ${stateDir} 0700 ${user} ${user} -"
+    ];
+
     systemd.services.claude-agent = {
       description = "Claude Code Telegram agent (tmux session)";
       wantedBy = ["multi-user.target"];
-      after = ["network-online.target"];
+      after = ["network-online.target" "systemd-tmpfiles-setup.service"];
       wants = ["network-online.target"];
       path = agentPath;
 
@@ -189,7 +205,9 @@ fp: {
         RemainAfterExit = true;
         User = user;
         Group = user;
-        WorkingDirectory = workspace;
+        # $HOME, not the workspace: systemd chdir's here before ExecStartPre
+        # runs, so it must already exist. runAgent cd's into the workspace.
+        WorkingDirectory = home;
 
         # Optional so a missing deposit surfaces as the bootstrap's explicit
         # error rather than an opaque systemd failure.
