@@ -71,12 +71,12 @@ _: {
         default = {};
         example = lib.literalExpression ''
           {
-            hermes = {
-              source = config.age.secrets.hermes-token.path;
+            claude-telegram = {
+              source = config.age.secrets.claude-telegram.path;
               host = "server";
-              path = "/var/lib/hermes/token";
-              owner = "hermes";
-              group = "hermes";
+              path = "/var/lib/claude-agent/telegram.env";
+              owner = "claude-agent";
+              group = "claude-agent";
             };
           }
         '';

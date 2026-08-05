@@ -56,12 +56,8 @@ fp @ {jlib, ...}: {
           file = ./_age/jeanluc-notion.age;
           mode = "400";
         };
-        hermes-anthropic = {
-          file = ./_age/hermes-anthropic.age;
-          mode = "400";
-        };
-        hermes-telegram = {
-          file = ./_age/hermes-telegram.age;
+        claude-telegram = {
+          file = ./_age/claude-telegram.age;
           mode = "400";
         };
         taskwarrior = {
@@ -92,26 +88,24 @@ fp @ {jlib, ...}: {
           pinentry-tty # Enter password in terminal
         ];
 
-      # Push Hermes secrets to the keyless server. Decrypted locally behind the
-      # hardware key, then written over SSH (FIDO2 touch) as env files that the
-      # Hermes NixOS module reads via environmentFiles. See secret-deposit.nix.
+      # Push the Telegram bot token to the keyless server. Decrypted locally
+      # behind the hardware key, then written over SSH (FIDO2 touch) as an env
+      # file that the claude-agent unit reads via EnvironmentFile. See
+      # secret-deposit.nix and claude-agent.nix.
+      #
+      # No Anthropic key is deposited on purpose: the agent authenticates with
+      # the claude.ai subscription via `claude auth login`, and an
+      # ANTHROPIC_API_KEY in its environment would silently outrank that
+      # credential -- billing API credits and dropping the claude.ai connectors.
       jl.secretDeposit = {
         enable = true;
         targets = {
-          hermes-telegram = {
-            source = config.age.secrets.hermes-telegram.path;
+          claude-telegram = {
+            source = config.age.secrets.claude-telegram.path;
             host = "server";
-            path = "/var/lib/hermes-secrets/telegram.env";
-            owner = "hermes";
-            group = "hermes";
-            mode = "0400";
-          };
-          hermes-anthropic = {
-            source = config.age.secrets.hermes-anthropic.path;
-            host = "server";
-            path = "/var/lib/hermes-secrets/anthropic.env";
-            owner = "hermes";
-            group = "hermes";
+            path = "/var/lib/claude-agent/telegram.env";
+            owner = "claude-agent";
+            group = "claude-agent";
             mode = "0400";
           };
         };
