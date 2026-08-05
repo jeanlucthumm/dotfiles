@@ -89,17 +89,6 @@
       url = "github:jeanlucthumm/terminal-browser/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Self-improving AI agent (Telegram gateway on server). Nix is a Tier 2
-    # best-effort platform upstream, so flake.lock pinning matters here.
-    hermes-agent = {
-      url = "github:NousResearch/hermes-agent";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.pyproject-nix.follows = "pyproject-nix";
-      inputs.uv2nix.follows = "uv2nix";
-      inputs.pyproject-build-systems.follows = "pyproject-build-systems";
-    };
   };
 
   outputs = inputs: let
