@@ -314,10 +314,10 @@ Three Studio-specific settings:
   iCloud has no ignore mechanism, so this surface cannot be configured away; it is inherent to
   sharing `.obsidian/` across devices over iCloud. Mitigation is behavioural: don't leave
   Obsidian open on two devices, and don't run it on the Studio at all.
-- **Pre-existing conflict artifacts need a one-time cleanup.** The daily-note ` 2.md` copies
-  are near-empty stubs (the base files hold the real content) and are safe to delete. One
-  exception: `Meeting with Insomnia 2.md` has **no base file** — that copy is the only
-  surviving version of the note and should be renamed, not deleted.
+- **Conflict artifacts were cleaned up 2026-08-02.** 10 iCloud duplicates removed (7 daily-note
+  ` 2.md` stubs, all 10-byte skeletons whose base files held the real content, plus the 3
+  `.obsidian/` config duplicates). `Meeting with Insomnia 2.md` was a 50KB note with no base
+  file, so it was renamed rather than deleted. Vault is now clean of conflict artifacts.
 - **Commit timestamps reflect Syncthing delivery, not editing time.** Acceptable, but worth
   knowing when reading history.
 - **A commit can catch a torn mid-transfer state.** Self-correcting — the next hourly commit
