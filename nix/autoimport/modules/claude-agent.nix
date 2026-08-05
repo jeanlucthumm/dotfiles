@@ -20,11 +20,7 @@
 # tears the session down and rebuilds it, which doubles as the context reset --
 # the only way to clear a session the channel can't send slash commands to.
 fp: {
-  flake.modules.nixos.homeServer = {
-    lib,
-    pkgs,
-    ...
-  }: let
+  flake.modules.nixos.homeServer = {pkgs, ...}: let
     user = "claude-agent";
     home = "/var/lib/${user}";
 
@@ -32,16 +28,19 @@ fp: {
     # ~/.claude as its project directory.
     workspace = "${home}/workspace";
 
-    # Telegram plugin state: access.json (the allowlist) and its bot.pid lock.
-    stateDir = "${home}/channels/telegram";
+    # Telegram plugin state: access.json (the allowlist), its bot.pid lock and
+    # inbox/. This is the plugin's own default location, left alone on purpose
+    # so the upstream docs' paths match what is actually on disk.
+    stateDir = "${home}/.claude/channels/telegram";
 
     # Deposited by `deposit-secrets` (see secrets/secrets.nix). Env-file format.
     # The plugin reads TELEGRAM_BOT_TOKEN from the real environment, which wins
     # over the .env file it would otherwise look for in stateDir.
     envFile = "${home}/telegram.env";
 
-    socket = "claude";
-    channel = "plugin:telegram@claude-plugins-official";
+    # Named socket, so `tmux -L claude attach` finds the session regardless of
+    # what else the user is running.
+    tmuxCmd = "${pkgs.tmux}/bin/tmux -L claude";
 
     claudePkg = fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
 
@@ -106,16 +105,18 @@ fp: {
       set -euo pipefail
       umask 077
 
-      mkdir -p ${home}/.claude ${stateDir} ${workspace}
+      # Also creates ~/.claude, being a parent. The workspace comes from
+      # StateDirectory.
+      mkdir -p ${stateDir}
 
       # Static access mode: the plugin snapshots access.json at boot and never
       # re-reads or writes it, so the pairing dance is unnecessary and the
       # allowlist is fully declarative. dmPolicy "pairing" would be downgraded
-      # to "allowlist" anyway, so state it directly.
+      # to "allowlist" anyway, so state it directly. TELEGRAM_ALLOWED_USERS is a
+      # comma-separated list of numeric Telegram user IDs, and lives in the same
+      # deposited env file as the bot token.
       #
-      # TELEGRAM_ALLOWED_USERS is a comma-separated list of numeric Telegram
-      # user IDs, and lives in the same deposited env file as the bot token.
-      # Deliberately a warning, not a hard failure. This host is deployed with
+      # Missing is a warning, not a hard failure: this host is deployed with
       # deploy-rs, where a unit that fails to start aborts activation and rolls
       # the entire deployment back -- a missing secret must not be able to veto
       # unrelated server config. The session still comes up so you can attach,
@@ -155,7 +156,9 @@ fp: {
     # `claude auth login` before the agent can start at all.
     runAgent = pkgs.writeShellScript "claude-agent-run" ''
       cd ${workspace}
-      ${claudePkg}/bin/claude --channels ${channel} --permission-mode auto || true
+      ${claudePkg}/bin/claude \
+        --channels plugin:telegram@claude-plugins-official \
+        --permission-mode auto || true
       echo
       echo "claude exited. Session kept for inspection."
       echo "  re-auth:  claude auth login"
@@ -174,26 +177,15 @@ fp: {
       description = "Claude Code Telegram agent";
     };
 
-    # The unit's directory tree, declaratively. ExecStartPre also mkdir -p's
-    # these, but that is too late for WorkingDirectory, which systemd applies
-    # before any Exec* runs.
-    systemd.tmpfiles.rules = [
-      "d ${home} 0700 ${user} ${user} -"
-      "d ${home}/.claude 0700 ${user} ${user} -"
-      "d ${workspace} 0700 ${user} ${user} -"
-      "d ${stateDir} 0700 ${user} ${user} -"
-    ];
-
     systemd.services.claude-agent = {
       description = "Claude Code Telegram agent (tmux session)";
       wantedBy = ["multi-user.target"];
-      after = ["network-online.target" "systemd-tmpfiles-setup.service"];
+      after = ["network-online.target"];
       wants = ["network-online.target"];
       path = agentPath;
 
       environment = {
         HOME = home;
-        TELEGRAM_STATE_DIR = stateDir;
         TERM = "xterm-256color";
         # Deliberately no ANTHROPIC_API_KEY: it outranks the subscription
         # credential in ~/.claude/.credentials.json, so its presence would
@@ -205,6 +197,16 @@ fp: {
         RemainAfterExit = true;
         User = user;
         Group = user;
+
+        # systemd creates and chowns these under /var/lib before any Exec* runs,
+        # which tmpfiles cannot guarantee: activation applies new tmpfiles rules
+        # via systemd-tmpfiles-resetup.service, and ordering against it is not
+        # something this unit can rely on. Everything deeper (.claude and the
+        # channel state dir) is created by the bootstrap, which can, because the
+        # home is owned by the service user by then.
+        StateDirectory = [user "${user}/workspace"];
+        StateDirectoryMode = "0700";
+
         # $HOME, not the workspace: systemd chdir's here before ExecStartPre
         # runs, so it must already exist. runAgent cd's into the workspace.
         WorkingDirectory = home;
@@ -216,10 +218,10 @@ fp: {
         ExecStartPre = "${bootstrap}";
         # -A: attach-or-create, so ExecStart is idempotent if a session somehow
         # outlives systemd's view of the unit.
-        ExecStart = "${pkgs.tmux}/bin/tmux -L ${socket} new-session -d -A -s main ${runAgent}";
+        ExecStart = "${tmuxCmd} new-session -d -A -s main ${runAgent}";
         # Leading '-': kill-server exits non-zero when no session exists, which
         # would otherwise make `stop` report failure.
-        ExecStop = "-${pkgs.tmux}/bin/tmux -L ${socket} kill-server";
+        ExecStop = "-${tmuxCmd} kill-server";
 
         # tmux's socket lives under /tmp/tmux-<uid>/. A private /tmp namespace
         # would hide it from `sudo -u claude-agent tmux attach` over SSH, which
@@ -227,8 +229,5 @@ fp: {
         PrivateTmp = false;
       };
     };
-
-    # Convenience for the interactive half of the workflow.
-    environment.systemPackages = [pkgs.tmux];
   };
 }
