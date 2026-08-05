@@ -65,10 +65,27 @@ fp: {
       bashInteractive
     ];
 
-    # User-level settings. `auto` is only honoured from *user* settings -- Claude
-    # Code ignores defaultMode: "auto" in project/local files so a repo cannot
-    # grant itself the mode.
+    marketplace = "claude-plugins-official";
+    plugin = "telegram@${marketplace}";
+
+    # User-level settings, and the whole of them: nix rewrites this file on every
+    # restart, so anything Claude Code persists here is lost. That is why the
+    # plugin is *declared* rather than installed -- `claude plugin install`
+    # writes these same two keys, and the next restart would silently drop them,
+    # leaving an on-disk plugin that no longer loads.
+    #
+    # `auto` is only honoured from *user* settings -- Claude Code ignores
+    # defaultMode: "auto" in project/local files so a repo cannot grant itself
+    # the mode.
     settingsJson = pkgs.writeText "claude-agent-settings.json" (builtins.toJSON {
+      # HTTPS, not the `anthropics/${marketplace}` shorthand: that resolves to
+      # git@github.com and this box has no GitHub SSH key (and no outbound :22).
+      extraKnownMarketplaces.${marketplace}.source = {
+        source = "git";
+        url = "https://github.com/anthropics/${marketplace}.git";
+      };
+      enabledPlugins.${plugin} = true;
+
       permissions = {
         # Classifier-backed: actions run without prompting, but a background
         # model blocks escalation, exfiltration and prompt-injection-shaped
@@ -140,13 +157,11 @@ fp: {
       install -m 600 ${settingsJson} ${home}/.claude/settings.json
       install -m 600 ${claudeMd} ${home}/.claude/CLAUDE.md
 
-      # Idempotent -- only touches the network on first boot or after a wipe.
-      # Non-fatal: a transient failure here shouldn't block the session coming
-      # up, and the channel notice at startup names the problem clearly.
-      if ! claude plugin list 2>/dev/null | grep -q 'telegram@claude-plugins-official'; then
-        claude plugin marketplace add anthropics/claude-plugins-official || true
-        claude plugin install telegram@claude-plugins-official --scope user || true
-      fi
+      # Clones the marketplace declared above on first boot, and refreshes it
+      # afterwards -- the plugin cache lives outside the store, so without this
+      # a declared-but-uncloned marketplace fails to load with "cache-miss".
+      # Non-fatal: a transient network failure must not veto activation.
+      claude plugin marketplace update ${marketplace} || true
     '';
 
     # The command tmux runs. On exit it drops to a shell rather than letting the
@@ -157,7 +172,7 @@ fp: {
     runAgent = pkgs.writeShellScript "claude-agent-run" ''
       cd ${workspace}
       ${claudePkg}/bin/claude \
-        --channels plugin:telegram@claude-plugins-official \
+        --channels plugin:${plugin} \
         --permission-mode auto || true
       echo
       echo "claude exited. Session kept for inspection."
@@ -166,6 +181,12 @@ fp: {
       exec ${pkgs.bashInteractive}/bin/bash -i
     '';
   in {
+    # `path` below only reaches the unit, so without this `claude` exists for
+    # the service and nowhere else -- including `sudo -u claude-agent claude
+    # auth login`, which is how the agent gets its credential in the first
+    # place. Chicken-and-egg, so put it on the system PATH.
+    environment.systemPackages = [claudePkg];
+
     users.groups.${user} = {};
     users.users.${user} = {
       isSystemUser = true;
