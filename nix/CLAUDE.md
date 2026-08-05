@@ -25,7 +25,6 @@ options; there is no central list of imports to update.
   (`cli.nix`, `graphical/`, `secrets/`, `storage/`, ...).
 - **`autoimport/modules/hosts/`** — one file per machine, wiring role modules together.
 - **`autoimport/packages/`** — custom derivations.
-- **`autoimport/lab/`** — VM lab (see below).
 - **`autoimport/templates/`** — `nix flake init` templates.
 
 **Directories and files prefixed with `_` are skipped by import-tree.** That is
@@ -81,28 +80,6 @@ specialArg, because `imports` cannot depend on `config`/`pkgs`.
 Evaluation is cross-platform: `nix eval` of an `x86_64-linux` host works fine from
 the macbook, so type errors can be caught without a Linux builder. Only *building*
 needs the right platform.
-
-## VM lab (`autoimport/lab/`)
-
-Boots the real host roles as networked QEMU VMs so config changes can be validated
-end to end before touching hardware.
-
-```
-nix build .#checks.x86_64-linux.lab-home-lan   # run assertions, pass/fail
-nix run   .#lab-home-lan                       # interactive driver REPL
-```
-
-Requires a Linux host with `/dev/kvm` — in practice `desktop`. Nodes land on
-`192.168.1.0/24` with the real short hostnames, so subnet-scoped ACLs behave as
-they do IRL.
-
-The lab works because nixpkgs' test framework re-evaluates each node through
-`qemu-vm.nix`, which `mkVMOverride`s `fileSystems`/`swapDevices`/bootloader. **This
-only holds if lab nodes import role modules (`base`, `homeServer`, ...) and never
-the `_host-specific` hardware trees.** Keep hardware out of role modules.
-
-Not covered: `secrets` (needs a YubiKey touch), `graphical`, and Darwin hosts
-(cannot be VM nodes).
 
 ## Secrets
 
