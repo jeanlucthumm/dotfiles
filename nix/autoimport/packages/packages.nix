@@ -8,6 +8,7 @@ fp: {
       };
       reddit-mcp-server = pkgs.callPackage ./_derivations/reddit-mcp-server.nix {};
       hex-cli = pkgs.callPackage ./_derivations/hex-cli.nix {};
+      bt = pkgs.callPackage ./_derivations/bt.nix {};
       mcp-flutter = pkgs.callPackage ./_derivations/mcp-flutter.nix {};
       notify = pkgs.callPackage ./_derivations/notify.nix {};
       review-pr = pkgs.callPackage ./_derivations/review-pr.nix {};
