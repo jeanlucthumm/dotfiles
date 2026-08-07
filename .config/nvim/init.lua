@@ -143,7 +143,7 @@ local plugin_spec = {
       },
       format_on_save = function(bufnr)
         local bufname = vim.api.nvim_buf_get_name(bufnr)
-        if bufname:match('/%.claude/agents/.*%.md$') then
+        if bufname:match('/%.claude/agents/.*%.md$') or bufname:match('/SKILL%.md$') then
           return nil
         end
         return {
@@ -381,7 +381,9 @@ local plugin_spec = {
       { '<Leader>lr', '<cmd>Review commits<cr>',   desc = 'Review commits' },
       { '<Leader>lw', '<cmd>Review workspace<cr>', desc = 'Review workspace vs $REVIEW_BASE' },
     },
-    opts = {},
+    opts = {
+      codediff = { wrap = true },
+    },
   },
 
   --- Theme
