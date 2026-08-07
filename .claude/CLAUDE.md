@@ -65,6 +65,11 @@ is done, then back to this register.
 - Use colocated repos (`jj git init --colocate .`) so Git tools stay interoperable;
   track `main@origin` plus the current PR bookmark.
 
+## Oncall
+
+- When investigating an incident, mark claims in-chat as measured or inferred.
+- Be careful contradicting human input from Slack. You must be absolutely sure.
+
 ## Work additions
 
 Work-specific guidance (deployed by the work machine's home-manager config; absent elsewhere):
