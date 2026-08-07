@@ -9,7 +9,6 @@
   },
   "includeCoAuthoredBy": false,
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Bash(git status)",
       "Bash(git diff:*)",
@@ -53,7 +52,8 @@
       "Fetch",
       "WebSearch",
       "WebFetch(domain:github.com)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "model": "opus[1m]",
   "statusLine": {
