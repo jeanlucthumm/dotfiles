@@ -41,6 +41,8 @@ is done, then back to this register.
 - If you're about to say "You're absolutely right", make sure that I actually am right.
 - If the user's request seems misguided and they are likely confused, bring it up and explain.
 - New PRs should be created as drafts
+- Don't reference Linear tickets (or other issue trackers) in code comments unless
+  the comment is a TODO.
 - GitHub username: @jeanlucthumm (e.g. for finding my PR review comments).
 - Browser automation: use the `chrome-devtools` MCP server (`mcp__chrome-devtools__*`),
   NOT the claude-in-chrome extension tools (`mcp__claude-in-chrome__*`). The extension
