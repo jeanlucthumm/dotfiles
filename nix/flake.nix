@@ -83,6 +83,12 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Personal fork branch — switch to upstream if the flake PR lands
+    terminal-browser = {
+      url = "github:jeanlucthumm/terminal-browser/nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: let

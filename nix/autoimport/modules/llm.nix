@@ -20,18 +20,33 @@ fp @ {
 
           pkgs.opencode # AI coding agent TUI
         ];
-
-        programs = lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
-          codex.enable = true;
-        };
+        # # Only ships darwin-arm64 builds for now
+        # ++ lib.optionals (system == "aarch64-darwin") [
+        #   fp.inputs.terminal-browser.packages.${system}.default
+        # ];
       };
 
-      nixos = {system, ...}: let
+      darwin = {system, ...}: {
+        home.packages = [
+          fp.inputs.terminal-browser.packages.${system}.default
+        ];
+      };
+
+      nixos = {
+        lib,
+        pkgs,
+        system,
+        ...
+      }: let
         fpkgs = mkFpkgs system;
       in {
         home.packages = [
           fpkgs.reddit-mcp-server
         ];
+
+        programs = {
+          codex.enable = true;
+        };
       };
     };
 }
