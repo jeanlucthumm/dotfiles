@@ -27,6 +27,17 @@ Launch a human code review of a jj workspace's PR commit in Neovide via
    .../<ws>/.claude/worktrees/<ws>". Pass the absolute workspace path instead:
    `review-pr --spawn <repo>/.claude/worktrees/<workspace-name>`.
 
+   **Base selection (stacked PRs):** the diff base defaults to `@-` (the
+   tip's parent), so the review shows exactly one PR layer — right for the
+   1-commit-per-PR workflow, including upper layers of a stack. Pass
+   `--base 'trunk()'` only when Jean-Luc explicitly wants the whole
+   unmerged stack as one combined view (any revset works; the script takes
+   its merge-base with the tip). To review a mid-stack layer no workspace
+   sits on, create a workspace on that commit first. Installed copies
+   older than the `--base` flag always diff against merge-base with trunk
+   (combined view); if `--base` errors as unknown, use the ad-hoc build
+   below or rebuild via `nh`.
+
    If `review-pr` is not on PATH (home config not rebuilt yet), build it ad hoc:
 
    ```
