@@ -29,11 +29,13 @@
 
         interval = lib.mkOption {
           type = lib.types.int;
-          default = 43200;
+          default = 1800;
           description = ''
             Seconds between sync passes. A pass only commits if the repo is
-            dirty, so this caps commit frequency (default ~2/day). Coarser
-            intervals mean a bigger window for cross-host rebase conflicts.
+            dirty, so this caps commit frequency. Commits use an email not
+            linked to any GitHub account, so frequent syncs don't spam the
+            contribution graph. Coarser intervals mean a bigger window for
+            cross-host rebase conflicts.
           '';
         };
       };
@@ -59,6 +61,9 @@
           if [ -e "${cfg.path}/.git" ]; then
             run ${pkgs.git}/bin/git -C "${cfg.path}" config --bool branch.main.sync true
             run ${pkgs.git}/bin/git -C "${cfg.path}" config --bool git-sync.syncNewFiles true
+            # Keep memory commits off the GitHub contribution graph: author
+            # them with an email not linked to any account.
+            run ${pkgs.git}/bin/git -C "${cfg.path}" config user.email "git-sync@agent-memory.local"
           fi
         '';
       };
