@@ -16,12 +16,17 @@ writeShellApplication {
   text = ''
     usage() {
       cat >&2 <<'EOF'
-    Usage: review-pr [--spawn|--headless] <workspace-name-or-path>
+    Usage: review-pr [--spawn|--headless] [--base <revset>] <workspace-name-or-path>
 
     LSP-enabled nvim code review of a jj workspace's PR commit: diffs the
-    working tree against the merge-base with trunk using review.nvim's
-    workspace mode. When the editor closes, prints the review comments
-    (REVIEW.md) to stdout for agent handoff.
+    working tree against a base commit using review.nvim's workspace mode.
+    When the editor closes, prints the review comments (REVIEW.md) to
+    stdout for agent handoff.
+
+    The base defaults to '@-' (the tip's parent), so a stacked PR shows
+    only its own layer. Pass --base 'trunk()' for the combined diff of
+    every unmerged layer vs main. Any jj revset works; the actual base is
+    the merge-base of the tip and the resolved revset.
 
     Modes:
       (default)   run nvim in the current terminal
@@ -36,10 +41,12 @@ writeShellApplication {
 
     mode=terminal
     ws_arg=""
+    base_revset="@-"
     while [[ $# -gt 0 ]]; do
       case "$1" in
         --spawn) mode=spawn; shift ;;
         --headless) mode=headless; shift ;;
+        --base) [[ $# -ge 2 ]] || usage; base_revset="$2"; shift 2 ;;
         -h|--help) usage ;;
         -*) echo "review-pr: unknown flag: $1" >&2; usage ;;
         *) ws_arg="$1"; shift ;;
@@ -87,11 +94,17 @@ writeShellApplication {
     fi
 
     # Snapshot the workspace so @ reflects the files on disk, then resolve
-    # the tip and the base (merge-base of tip and trunk).
+    # the tip and the base. The base revset defaults to '@-' so a stacked
+    # PR diffs only its own layer; taking the merge-base with the tip keeps
+    # any revset safe (e.g. --base 'trunk()' yields the merge-base with
+    # main, not main's tip, so newer main commits never appear reversed).
     jj -R "$ws_dir" status >/dev/null
     tip=$(jj -R "$ws_dir" log --ignore-working-copy --no-graph -r @ -T 'commit_id')
-    trunk=$(jj -R "$ws_dir" log --ignore-working-copy --no-graph -r 'trunk()' -T 'commit_id')
-    base=$(git --git-dir "$git_dir" merge-base "$tip" "$trunk")
+    base_commit=$(jj -R "$ws_dir" log --ignore-working-copy --no-graph -r "$base_revset" -T 'commit_id') || {
+      echo "review-pr: cannot resolve base revset '$base_revset'" >&2
+      exit 1
+    }
+    base=$(git --git-dir "$git_dir" merge-base "$tip" "$base_commit")
 
     # Git shim: make git treat the workspace as a clean checkout of tip, even
     # though the workspace has no .git. The throwaway index (populated from
@@ -120,7 +133,7 @@ writeShellApplication {
     {
       echo "review-pr: workspace=$ws_name dir=$ws_dir"
       echo "review-pr: tip=$tip"
-      echo "review-pr: base=$base (merge-base with trunk)"
+      echo "review-pr: base=$base (revset: $base_revset)"
       echo "review-pr: socket=$socket"
     } >&2
 
