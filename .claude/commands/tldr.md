@@ -1,1 +1,5 @@
-I'm short on time and will skim this. Restate your previous answer so I can absorb it in one pass — you decide the form, but don't drop load-bearing caveats. Keep replies in this register until I dig into something; then depth wins again until that thread is done.
+I'm short on time. Restate your previous answer so I absorb it in one
+pass: the bound is my attention, not a line count. Shrink by cutting whole
+items, never caveats, never grammar. Per item: verdict + the one fact
+behind it; name what you cut so I can ask. Stay in this register until I
+dig into a thread; depth wins there until done, then back.
