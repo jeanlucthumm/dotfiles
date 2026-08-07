@@ -46,6 +46,7 @@ fp @ {withSystem, ...}: {
       gcc # GNU Compiler Collection
       jujutsu # Better git
       fpkgs.hex-cli # Hex (hex.tech) notebook CLI: author/run projects from the terminal
+      fpkgs.bt # Braintrust CLI: query traces/logs with BTQL (bt sql / view / sync pull)
 
       # Workflow-specific
       timewarrior # time tracker
