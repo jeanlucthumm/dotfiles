@@ -18,6 +18,27 @@ _: {
   }: let
     cfg = config.jl.secretDeposit;
 
+    # One `deposit` call per target. Every argument is shell-escaped except
+    # `source`, which is injected raw so the shell expands runtime vars in
+    # agenix paths (e.g. $XDG_RUNTIME_DIR), matching the get-key-* scripts. It
+    # goes last so that if it ever does word-split, the extra words land past
+    # the end of the argument list instead of shifting the escaped ones.
+    depositCall = name: t: let
+      quoted = lib.escapeShellArgs [
+        name
+        "${t.remoteUser}@${t.host}"
+        t.path
+        t.owner
+        t.group
+        t.mode
+      ];
+    in "deposit ${quoted} ${t.source}";
+
+    depositCalls = lib.pipe cfg.targets [
+      (lib.mapAttrsToList depositCall)
+      lib.concatLines
+    ];
+
     depositScript = pkgs.writeShellScriptBin "deposit-secrets" ''
       set -euo pipefail
       umask 077
@@ -30,8 +51,10 @@ _: {
         return 1
       }
 
+      # Argument order mirrors the generated calls below: the escaped args
+      # first, then the unescaped source path last.
       deposit() {
-        local name="$1" src="$2" dest="$3" path="$4" owner="$5" group="$6" mode="$7"
+        local name="$1" dest="$2" path="$3" owner="$4" group="$5" mode="$6" src="$7"
         should_run "$name" || return 0
         if [ ! -r "$src" ]; then
           echo "ERROR: $name: source '$src' not readable -- run 'delock' first?" >&2
@@ -44,14 +67,7 @@ _: {
           "install -D -m '$mode' -o '$owner' -g '$group' /dev/stdin '$path'" < "$src"
       }
 
-      ${lib.concatStringsSep "\n      " (lib.mapAttrsToList (
-          # `source` is injected unquoted so the shell expands runtime vars in
-          # agenix paths (e.g. $XDG_RUNTIME_DIR), matching the get-key-* scripts.
-          # Everything else is escaped.
-          name: t: "deposit ${lib.escapeShellArg name} ${t.source} ${lib.escapeShellArgs ["${t.remoteUser}@${t.host}" t.path t.owner t.group t.mode]}"
-        )
-        cfg.targets)}
-
+      ${depositCalls}
       echo "All requested secrets deposited."
     '';
   in {
