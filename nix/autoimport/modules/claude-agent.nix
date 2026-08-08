@@ -171,7 +171,16 @@ fp: {
     # `claude auth login` before the agent can start at all.
     runAgent = pkgs.writeShellScript "claude-agent-run" ''
       cd ${workspace}
+      # --continue picks up the newest conversation in ${workspace}, so a
+      # restart resumes rather than starting cold. Safe unconditionally: with no
+      # prior conversation it just starts one. Note --session-id cannot do this
+      # -- it refuses an ID that already exists ("already in use"), so it can
+      # only name a *new* session, never reattach to one.
+      #
+      # The tradeoff: restarting is no longer a context reset. To actually
+      # clear, attach and use /clear.
       ${claudePkg}/bin/claude \
+        --continue \
         --channels plugin:${plugin} \
         --permission-mode auto || true
       echo
