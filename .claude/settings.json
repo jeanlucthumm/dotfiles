@@ -4,9 +4,6 @@
     "type": "command",
     "command": "python3 ~/.claude/hooks/hook_file_suggestion.py"
   },
-  "env": {
-    "DISABLE_TELEMETRY": "1"
-  },
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
@@ -61,7 +58,7 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "home-assistant-skills@home-assistant-skills": true
+    "home-assistant-skills@home-assistant-skills": false
   },
   "extraKnownMarketplaces": {
     "home-assistant-skills": {
