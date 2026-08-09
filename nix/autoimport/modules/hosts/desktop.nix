@@ -4,10 +4,14 @@ fp @ {jlib, ...}: {
       base
       dev
       graphical
-      secrets
+      # secrets
       theme
       amdGpu
-      ({pkgs, ...}: {
+      ({
+        pkgs,
+        lib,
+        ...
+      }: {
         imports = [
           ./_host-specific/desktop/hardware-configuration.nix
         ];
@@ -26,9 +30,9 @@ fp @ {jlib, ...}: {
         };
 
         # TODO: let's just create per fp module options, e.g. `fpmodule.secrets.idPath`
-        age.identityPaths = [
-          ./_host-specific/desktop/yubikey-identity.txt
-        ];
+        # age.identityPaths = [
+        #   ./_host-specific/desktop/yubikey-identity.txt
+        # ];
 
         # Block distracting websites
         networking.extraHosts = ''
@@ -65,9 +69,12 @@ fp @ {jlib, ...}: {
         home-manager.users.jeanluc = {
           imports = [fp.config.flake.modules.generic.monitor];
 
-          age.identityPaths = [
-            ./_host-specific/desktop/yubikey-identity.txt
-          ];
+          # age.identityPaths = [
+          #   ./_host-specific/desktop/yubikey-identity.txt
+          # ];
+
+          programs.git.signing.signByDefault = lib.mkForce false;
+
           home.stateVersion = "24.05";
 
           monitors.primary = {
