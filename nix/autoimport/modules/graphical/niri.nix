@@ -14,6 +14,10 @@
 
       programs.niri = {
         enable = true;
+        # niri-flake's own package asserts libdisplay-info 0.2.0, which nixpkgs
+        # removed. Use nixpkgs' niri, which is also what the NixOS-level
+        # programs.niri module installs, so the session and PATH agree.
+        package = pkgs.niri;
         settings = {
           input = {
             keyboard = {
