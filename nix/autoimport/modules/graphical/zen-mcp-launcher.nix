@@ -1,7 +1,6 @@
 # Launches the normal Zen Browser -- same profile, same logins -- but with the
 # remote-debugging endpoints the firefox-devtools MCP server attaches to (it
-# runs with `--connectExisting`). Driving the real signed-in profile is the
-# entire point: a throwaway profile would offer nothing over the Chrome path.
+# runs with `--connectExisting`).
 #
 # Two endpoints are needed, and they are enabled differently:
 #   - Marionette (127.0.0.1:2828) -- the attach channel. Can be turned on with
@@ -14,7 +13,7 @@
 # MOZ_MARIONETTE and a lone `remote.log.level` pref), so it can only come from
 # the `--remote-debugging-port` command line flag. Raycast, the Dock and
 # Spotlight all launch the .app bundle directly and never pass argv, hence this
-# wrapper bundle in ~/Applications. Use it instead of the plain Zen entry.
+# wrapper bundle in ~/Applications.
 {jlib, ...}: {
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
     darwin = {
