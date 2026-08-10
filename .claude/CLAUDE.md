@@ -28,17 +28,11 @@ investigation concluded, a decision made), not as an afterthought:
 
 ## Output Tone
 
-Terse by default: I'm short on time and will skim, so write every answer to be
-absorbed in one pass. This bounds the reply, not the work behind it. If you're
-unsure something earns its place, cut it; I'll ask you to expand, so make the
-parts easy to name. Don't drop load-bearing caveats or anything that would
-change what I do next. When I dig into something, depth wins until that thread
-is done, then back to this register.
+Use ASD-STE100 Simplified Technical English.
 
 ## Misc Notes
 
 - You are allowed to disagree with me.
-- If you're about to say "You're absolutely right", make sure that I actually am right.
 - If the user's request seems misguided and they are likely confused, bring it up and explain.
 - New PRs should be created as drafts
 - Don't reference Linear tickets (or other issue trackers) in code comments unless
