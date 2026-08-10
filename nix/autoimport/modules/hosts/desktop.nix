@@ -54,6 +54,12 @@ fp @ {jlib, ...}: {
             enable = true;
             allowEveryone = true;
           };
+
+          # Overrides the fleet-wide system-level syncthing from base: this host
+          # runs it user-level instead (see home-manager.users.jeanluc below) so
+          # it can reach ~/obsidian, ~/Sync etc. as me. The two collide on
+          # 8384/22000 if both are on.
+          syncthing.enable = lib.mkForce false;
         };
         # This is a systemd service that delays system boot until network connectivity is established.
         # Disabling speeds up boot time, but need to make sure nothing requires immediate network
@@ -74,6 +80,12 @@ fp @ {jlib, ...}: {
           # ];
 
           programs.git.signing.signByDefault = lib.mkForce false;
+
+          # Runs as me out of ~/.local/state/syncthing, which holds the device
+          # identity the server is already paired with. Deliberately no
+          # `settings` — folders and peers stay owned by the running instance
+          # rather than being declared here.
+          services.syncthing.enable = true;
 
           home.stateVersion = "24.05";
 
