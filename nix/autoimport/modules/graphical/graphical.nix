@@ -81,10 +81,6 @@ fp @ {
   };
 
   flake.modules.darwin.graphical = {pkgs, ...}: {
-    environment.systemPackages = with pkgs; [
-      raycast
-    ];
-
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.graphical];
   };
 

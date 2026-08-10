@@ -1,6 +1,10 @@
 # Raycast (package added in graphical.nix)
-_: {
+{
   flake.modules.darwin.graphical = {
+    environment.systemPackages = with pkgs; [
+      raycast
+    ];
+
     system.defaults.CustomUserPreferences = {
       "com.raycast.macos" = {
         # Bind Cmd+Space (keycode 49 = Space) as the global hotkey.
