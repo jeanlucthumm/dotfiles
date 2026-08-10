@@ -49,6 +49,22 @@ is done, then back to this register.
   is chronically disconnected and can't be disabled, so don't fall back to it — if
   chrome-devtools tools aren't in the session, say so instead of trying the extension.
 
+<important>We use jj not git! Do not use git commands</important>
+
+## Jujutsu workflow
+
+- Map PRs 1:1 with a commit: all follow-up work lands in the PR's single commit and
+  the bookmark is force-pushed — no fixup commits.
+- To iterate on a PR: `jj edit <change>` (the PR commit itself), then edit files — any
+  subsequent jj command (`jj st`, another `jj edit`, etc.) auto-snapshots the working
+  copy into that commit and auto-rebases descendants. There is no separate "commit"
+  step in jj; editing the commit directly IS the model.
+- Do NOT use the git-style `jj new <bookmark>` + edit + `jj squash` sequence for PR
+  iteration — that's carrying git habits into jj. `jj squash` is only for when work
+  genuinely started in the wrong commit.
+- Use colocated repos (`jj git init --colocate .`) so Git tools stay interoperable;
+  track `main@origin` plus the current PR bookmark.
+
 ## Oncall
 
 - When investigating an incident, mark claims in-chat as measured or inferred.
