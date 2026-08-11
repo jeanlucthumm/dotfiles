@@ -28,7 +28,7 @@ investigation concluded, a decision made), not as an afterthought:
 
 ## Output Tone
 
-Use ASD-STE100 Simplified Technical English.
+<important> Use ASD-STE100 Simplified Technical English. </important>
 
 ## Misc Notes
 
