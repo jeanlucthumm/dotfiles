@@ -370,7 +370,6 @@ local plugin_spec = {
   },
   {
     'jeanlucthumm/review.nvim',
-    dev = true, -- local clone at ~/Code/nvim-plugins/review.nvim
     dependencies = {
       'esmuellert/codediff.nvim',
       'MunifTanjim/nui.nvim',
