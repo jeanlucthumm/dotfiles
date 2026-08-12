@@ -1,7 +1,15 @@
 # Review Guide: terminal-native narrated code review
 
-Status: proposal. Nothing is built yet.
+Status: parked endgame reference. Superseded as a build plan on 2026-08-12.
 Date: 2026-08-12
+
+> **Pivot (2026-08-12).** We start minimal instead: the `pr-walkthrough`
+> skill walks a diff as stepwise cards (`stepwise-explainer` mechanic over
+> `terminal-browser`), comments happen in chat, and the only piece of the
+> coverage machinery that survives is a final "not covered" card. This doc
+> keeps the research and the bulletproof design (guide.json, validator,
+> in-page comment layer) for when the minimal skill grows pain points that
+> demand structure.
 
 ## Goal
 
