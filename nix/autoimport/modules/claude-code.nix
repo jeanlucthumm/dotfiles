@@ -16,11 +16,17 @@
 #
 # Deliberately NOT declared, so each host keeps its own value:
 #   model, theme            -- /model and /config choices should stick
-#   hooks                   -- worktree hooks reference host-local scripts
 #   feedbackSurveyState     -- pure runtime state
 #   enabledPlugins extras   -- e.g. datadog on the work machine (object merge
 #                              preserves them; only declared plugin keys are
 #                              asserted)
+#
+# Array-element gotcha: the union compares whole elements, so *editing* a
+# declared array entry (a hook object, an allow rule) leaves the old on-disk
+# variant behind next to the new one until it is pruned from the file by hand.
+# Keep declared entries byte-identical to what Claude Code has on disk -- the
+# hook commands below use the absolute home path, not `~`, for exactly this
+# reason.
 #
 # Enforcement is switch-time only: a live session that rewrites the file wins
 # until the next switch reasserts the baseline. Removing a key from the
@@ -88,6 +94,35 @@ _: {
         voiceEnabled = true;
         preferredNotifChannel = "kitty";
         tui = "fullscreen";
+
+        # jj worktree hooks: EnterWorktree creates jj workspaces instead of git
+        # worktrees (git worktrees corrupt colocated jj checkouts). Scripts are
+        # yadm-tracked alongside hook_file_suggestion.py.
+        hooks = let
+          hookDir = "${config.home.homeDirectory}/.claude/hooks";
+        in {
+          WorktreeCreate = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "${hookDir}/worktree-create.sh";
+                }
+              ];
+            }
+          ];
+          WorktreeRemove = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "${hookDir}/worktree-remove.sh";
+                  timeout = 600;
+                }
+              ];
+            }
+          ];
+        };
 
         extraKnownMarketplaces.home-assistant-skills.source = {
           source = "github";
