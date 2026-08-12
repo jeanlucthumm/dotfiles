@@ -202,6 +202,10 @@ local plugin_spec = {
       })
       require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets/lua-snippets' } })
       require'luasnip.loaders.from_vscode'.lazy_load({ paths = { './snippets/flutter-riverpod-snippets' } })
+      local ls = require'luasnip'
+      vim.keymap.set({ 'i', 's' }, '<C-l>', function()
+        if ls.choice_active() then ls.change_choice(1) end
+      end, { desc = 'LuaSnip: cycle choice node' })
     end,
   },
   {
@@ -900,3 +904,32 @@ if HasGoogle then Google.setup() end
 
 -- Formatting
 local auformat = vim.api.nvim_create_augroup('Formatting', {})
+
+-- New SKILL.md files (Claude Code skills) start from the frontmatter
+-- scaffold snippet in snippets/lua-snippets/markdown.lua.
+local auskill = vim.api.nvim_create_augroup('SkillTemplate', {})
+vim.api.nvim_create_autocmd('FileType', {
+  group = auskill,
+  pattern = 'markdown',
+  callback = function(ev)
+    local path = vim.api.nvim_buf_get_name(ev.buf)
+    if not path:match('SKILL%.md$') then return end
+    if vim.fn.filereadable(path) == 1 then return end
+    if vim.api.nvim_buf_line_count(ev.buf) > 1 then return end
+    if (vim.api.nvim_buf_get_lines(ev.buf, 0, 1, false)[1] or '') ~= '' then return end
+    -- FileType can fire more than once for the same buffer; the flag must be
+    -- set before the deferred expand or both firings pass the guards above
+    if vim.b[ev.buf].skill_template_done then return end
+    vim.b[ev.buf].skill_template_done = true
+    -- Deferred so LuaSnip's own lazy_load FileType autocmd runs first
+    vim.schedule(function()
+      local ls = require'luasnip'
+      for _, snip in ipairs(ls.get_snippets('markdown') or {}) do
+        if snip.trigger == 'skill' then
+          ls.snip_expand(snip)
+          return
+        end
+      end
+    end)
+  end,
+})
