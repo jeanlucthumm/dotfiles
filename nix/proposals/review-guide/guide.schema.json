@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review-guide/guide.schema.json",
+  "title": "Review guide",
+  "description": "LLM-generated narrated review guide over a PR diff. Hunks are enumerated by tooling; chunks are model output validated to be an exact partition of the hunks.",
+  "type": "object",
+  "required": ["version", "diff_hash", "source", "hunks", "chunks"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "diff_hash": {
+      "type": "string",
+      "description": "sha256 of the raw diff text. Cache key for the whole guide."
+    },
+    "source": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["linear-diff", "github-pr", "jj-diff"] },
+        "id": {
+          "type": "string",
+          "description": "Diff ID, PR number, or revset, per kind."
+        },
+        "title": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "hunks": {
+      "type": "array",
+      "description": "Enumerated by tooling from the raw diff, never by the model.",
+      "items": {
+        "type": "object",
+        "required": ["id", "file", "old", "new"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^.+#h[0-9]+$",
+            "description": "Stable hunk ID: '<path>#h<index>', index is the hunk's position within its file."
+          },
+          "file": { "type": "string" },
+          "old": {
+            "$ref": "#/$defs/lineRange",
+            "description": "[start, end] line range on the old side."
+          },
+          "new": {
+            "$ref": "#/$defs/lineRange",
+            "description": "[start, end] line range on the new side."
+          },
+          "context_fn": {
+            "type": "string",
+            "description": "Enclosing function/class name, when tooling can find it."
+          }
+        }
+      }
+    },
+    "chunks": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Model output. Validator enforces: hunk_ids across all chunks form an exact partition of hunks[].id. Order is reading order.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "kind", "label", "narrative", "hunk_ids"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^c[0-9]+$"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "5-10 words."
+          },
+          "kind": {
+            "enum": ["core", "supporting", "mechanical"],
+            "description": "Renderer collapses 'mechanical' by default. Validator appends a forced trailing mechanical chunk for any unassigned hunks."
+          },
+          "label": {
+            "enum": [
+              "schema",
+              "core-logic",
+              "call-site",
+              "ui",
+              "tests",
+              "config",
+              "error-handling",
+              "refactor",
+              "docs",
+              "generated",
+              "other"
+            ]
+          },
+          "narrative": {
+            "type": "string",
+            "maxLength": 1200,
+            "description": "One paragraph. Intent first, then consequence. Never reproduces code."
+          },
+          "anchors": {
+            "type": "array",
+            "description": "Line-anchored claims from the narrative, rendered as links into the diff.",
+            "items": {
+              "type": "object",
+              "required": ["claim", "hunk", "line"],
+              "additionalProperties": false,
+              "properties": {
+                "claim": { "type": "string" },
+                "hunk": { "type": "string" },
+                "line": {
+                  "type": "integer",
+                  "description": "New-side line number; negative means old side (abs value)."
+                }
+              }
+            }
+          },
+          "linking_symbol": {
+            "type": "string",
+            "description": "Shared symbol that justifies grouping these hunks. Required for multi-file chunks, by the validator."
+          },
+          "hunk_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "Member hunks, in display order within the chunk."
+          },
+          "narration_cache_key": {
+            "type": "string",
+            "description": "sha256 over member hunk contents. Re-narrate only when this changes."
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "lineRange": {
+      "type": "array",
+      "prefixItems": [{ "type": "integer" }, { "type": "integer" }],
+      "minItems": 2,
+      "maxItems": 2
+    }
+  }
+}
