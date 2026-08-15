@@ -45,6 +45,7 @@ fp @ {withSystem, ...}: {
       mdformat # Markdown formatter
       gcc # GNU Compiler Collection
       jujutsu # Better git
+      flarectl # Cloudflare CLI (zones, DNS, WAF)
       fpkgs.hex-cli # Hex (hex.tech) notebook CLI: author/run projects from the terminal
       fpkgs.bt # Braintrust CLI: query traces/logs with BTQL (bt sql / view / sync pull)
 
