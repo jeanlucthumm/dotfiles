@@ -1,9 +1,8 @@
 ---
 name: edit-skill
 description: Open a skill's SKILL.md in Neovide for Jean-Luc to hand edit or review, then pick up his changes when he closes the window. Trigger on "let me hand edit that skill", "open the skill in neovide/nvim", "/edit-skill <name>". NOT for authoring skills from scratch (skill-writing) or code review (review-nvim).
+disable-model-invocation: true
 ---
-
-# edit-skill
 
 Pop the target skill's SKILL.md in Neovide, let Jean-Luc edit by hand, and pick
 up his changes when he closes the window.
@@ -31,5 +30,6 @@ up his changes when he closes the window.
 
 5. **When the task completes**, re-read the file and diff against your
    snapshot. Summarize what he changed. If the edits correct something you
-   wrote, that is feedback on skill style — worth remembering. If he wants
-   other files from the skill (references/, assets/), same pattern.
+   wrote, generalize the lesson and add it to the "Pointers from hand edits"
+   section at the bottom of the skill-writing skill — guidance, not the
+   concrete diff.

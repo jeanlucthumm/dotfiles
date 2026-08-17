@@ -22,3 +22,16 @@ Two additions:
 - The `description` frontmatter is the trigger surface, not a summary. Write
   it for the moment of deciding whether to load the skill: concrete trigger
   phrases, and what it is NOT for when misfires are likely.
+
+## Pointers from hand edits
+
+Generalized guidance distilled from Jean-Luc's hand edits to skills (via
+edit-skill). Append the lesson, not the diff; merge into an existing bullet
+when one already covers it.
+
+- Skills that only make sense as an explicit user action (slash-command style)
+  get `disable-model-invocation: true` in frontmatter.
+- No H1 restating the skill name — frontmatter already carries it. Start with
+  the point.
+- Cut "in case he also wants X" contingency lines; the reader can derive the
+  same pattern.
