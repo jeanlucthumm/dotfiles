@@ -38,6 +38,11 @@ investigation concluded, a decision made), not as an afterthought:
 - Don't reference Linear tickets (or other issue trackers) in code comments unless
   the comment is a TODO.
 - GitHub username: @jeanlucthumm (e.g. for finding my PR review comments).
+- Do not use bare PR or ticket numbers as nouns — I don't memorize them. In any
+  effort with more than one PR, give each PR a short stable tag at first mention
+  (example: web-endpoints, mcp-tools, statsig-sdk), then use the tag everywhere,
+  with the number as a parenthetical: "mcp-tools (#110280)". Same idea for
+  tickets: lead with what the thing is.
 - Browser automation: use the `chrome-devtools` MCP server (`mcp__chrome-devtools__*`),
   NOT the claude-in-chrome extension tools (`mcp__claude-in-chrome__*`). The extension
   is chronically disconnected and can't be disabled, so don't fall back to it — if
