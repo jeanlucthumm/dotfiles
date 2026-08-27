@@ -170,10 +170,60 @@ fp @ {
       };
     };
 
-    darwin = {config, ...}: {
+    darwin = {
+      config,
+      pkgs,
+      ...
+    }: let
+      # URL opener for kitty: Slack permalinks go straight to the desktop app
+      # instead of bouncing through the browser (which leaves stray tabs).
+      # Slack's slack:// deep links need the workspace team ID, which isn't in
+      # the permalink, so known workspaces are mapped here. The message param
+      # is undocumented but verified working (docs only cover channel-level).
+      smart-open-url = pkgs.writeShellScriptBin "smart-open-url" ''
+        team_for() {
+          case "$1" in
+            replit) echo T03UB4UGP ;;
+          esac
+        }
+
+        for url in "$@"; do
+          if [[ "$url" =~ ^https://([a-z0-9-]+)\.slack\.com/archives/([A-Z0-9]+)(/p([0-9]+))? ]]; then
+            team=$(team_for "''${BASH_REMATCH[1]}")
+            if [[ -n "$team" ]]; then
+              deep="slack://channel?team=$team&id=''${BASH_REMATCH[2]}"
+              ts="''${BASH_REMATCH[4]}"
+              # p1785958209167579 -> message=1785958209.167579
+              if [[ -n "$ts" ]]; then
+                deep+="&message=''${ts:0:-6}.''${ts: -6}"
+              fi
+              if [[ "$url" =~ [?\&]thread_ts=([0-9.]+) ]]; then
+                deep+="&thread_ts=''${BASH_REMATCH[1]}"
+              fi
+              /usr/bin/open "$deep"
+              continue
+            fi
+          fi
+          case "$url" in
+            # Linear desktop app: linear:// mirrors the https path
+            https://linear.app/*)
+              /usr/bin/open "linear://''${url#https://linear.app/}"
+              continue
+              ;;
+            https://linear.review/*)
+              /usr/bin/open "linear://review/''${url#https://linear.review/}"
+              continue
+              ;;
+          esac
+          /usr/bin/open "$url"
+        done
+      '';
+    in {
       imports = [
         fp.config.flake.modules.homeManager.opt-hammerspoon
       ];
+
+      home.packages = [smart-open-url];
 
       programs = {
         hammerspoon = {
@@ -188,6 +238,8 @@ fp @ {
             macos_titlebar_color = "background";
             # macOS GUI apps don't inherit shell PATH, so tell kitty where to find nvim
             exe_search_path = "/etc/profiles/per-user/${config.home.username}/bin";
+            # Used by open_url_with_hints (kitty_mod+e) and URL clicks
+            open_url_with = "${smart-open-url}/bin/smart-open-url";
           };
           keybindings = {
             "cmd+p" = "previous_tab";
