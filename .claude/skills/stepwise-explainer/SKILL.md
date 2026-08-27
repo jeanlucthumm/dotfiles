@@ -18,8 +18,8 @@ teaching.
   Advance only on ack.
 - Cards: single-file HTML in the job tmp dir, ~100 lines, plain SVG/CSS, no
   libraries. One idea, big text, consistent styling, "N of M" kicker (e.g.
-  "Lesson 3 of 7"). Show via one reused pane — follow the `terminal-browser`
-  skill.
+  "Lesson 3 of 7"). Always light theme. Show via one reused pane — follow
+  the `terminal-browser` skill.
 - Narration in chat: a few plain sentences per card. If jargon slips and he
   asks, translate and re-teach; that's signal, not failure.
 - Detours are the best part. Answer follow-ups fully, add bonus cards (2b, 4b),
