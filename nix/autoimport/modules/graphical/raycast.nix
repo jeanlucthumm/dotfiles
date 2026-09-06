@@ -1,6 +1,6 @@
 # Raycast (package added in graphical.nix)
 {
-  flake.modules.darwin.graphical = {
+  flake.modules.darwin.graphical = {pkgs, ...}: {
     environment.systemPackages = with pkgs; [
       raycast
     ];
