@@ -18,8 +18,6 @@ fp @ {
           # Way more up to date than nixpkgs
           fp.inputs.claude-code.packages.${system}.claude-code
 
-          pkgs.opencode # AI coding agent TUI
-
           # `pnpm dlx` for npm-published MCP servers (e.g. firefox-devtools-mcp).
           # nodejs is needed alongside it: the servers' bin scripts shebang on
           # `env node`, and nixpkgs' pnpm keeps its own node private.
