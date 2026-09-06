@@ -3,8 +3,13 @@
 # runs with `--connectExisting`).
 #
 # Two endpoints are needed, and they are enabled differently:
-#   - Marionette (127.0.0.1:2828) -- the attach channel. Can be turned on with
-#     the `marionette.enabled` pref or MOZ_MARIONETTE=1.
+#   - Marionette (127.0.0.1:2828) -- the attach channel. Passed as the
+#     `--marionette` flag below. Do NOT enable it via the `marionette.enabled`
+#     pref in the profile's user.js/prefs.js: that makes Marionette run on every
+#     launch, Gecko then reports `navigator.webdriver = true` to every page, and
+#     Cloudflare Turnstile treats the session as a bot -- the checkbox loops
+#     forever or the widget never renders. Keep it on the command line so only
+#     deliberate MCP sessions are flagged.
 #   - WebDriver BiDi (127.0.0.1:9222) -- what the tool calls actually ride on.
 #     Without it the MCP server connects but every call fails with
 #     "missing webSocketUrl capability".
