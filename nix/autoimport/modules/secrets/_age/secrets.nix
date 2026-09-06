@@ -13,4 +13,5 @@ in {
   "moltbot-anthropic-token.age".publicKeys = withServer;
 
   "claude-telegram.age".publicKeys = workstations;
+  "odyssey-telegram.age".publicKeys = workstations;
 }

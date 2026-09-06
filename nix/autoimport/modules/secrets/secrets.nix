@@ -60,6 +60,10 @@ fp @ {jlib, ...}: {
           file = ./_age/claude-telegram.age;
           mode = "400";
         };
+        odyssey-telegram = {
+          file = ./_age/odyssey-telegram.age;
+          mode = "400";
+        };
         taskwarrior = {
           file = ./_age/jeanluc-taskwarrior.age;
           mode = "400";
@@ -106,6 +110,18 @@ fp @ {jlib, ...}: {
             path = "/var/lib/claude-agent/telegram.env";
             owner = "claude-agent";
             group = "claude-agent";
+            mode = "0400";
+          };
+          # root-owned unlike claude-telegram above: the odyssey-watch unit
+          # runs as a DynamicUser, so there is no stable uid to chown to.
+          # systemd reads EnvironmentFile as root before dropping privileges,
+          # so the unit still gets it. See odyssey-watch/watch.nix.
+          odyssey-telegram = {
+            source = config.age.secrets.odyssey-telegram.path;
+            host = "server";
+            path = "/var/lib/odyssey-watch-secrets/telegram.env";
+            owner = "root";
+            group = "root";
             mode = "0400";
           };
         };
