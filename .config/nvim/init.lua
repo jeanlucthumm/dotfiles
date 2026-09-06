@@ -26,11 +26,10 @@ end
 
 HasGoogle = file_exists(fn.stdpath('config') .. '/lua/google.lua')
 
--- Interview practice mode: `MOCK_MODE=1 nvim` replicates the CodeSignal/
--- CoderPad editor. Real LSP stays ON; the delta is only what the platforms
--- lack: no auto-import completions, no snippets, no Python format-on-save.
--- Spec: ~/Code/resume/practice/mocks/environment.md
-InterviewMode = env.MOCK_MODE == '1' or env.NVIM_INTERVIEW == '1'
+-- Mock-interview mode. Strips editor affordances that CodeSignal/CoderPad do
+-- not have, so practice runs cost what the real thing costs: no auto-import,
+-- no snippets, no format-on-save for python. Launch with MOCK_MODE=1.
+MockMode = env.MOCK_MODE ~= nil
 
 --- Lazy bootstrap
 local lazypath = fn.stdpath('data') .. '/lazy/lazy.nvim'
@@ -98,15 +97,18 @@ local plugin_spec = {
         },
       }
 
-      vim.lsp.enable('lua_ls')
-      vim.lsp.enable('source_kit')
-      if InterviewMode then
+      if MockMode then
         vim.lsp.config.pyright = {
           settings = {
-            python = { analysis = { autoImportCompletions = false } },
+            python = {
+              analysis = { autoImportCompletions = false },
+            },
           },
         }
       end
+
+      vim.lsp.enable('lua_ls')
+      vim.lsp.enable('source_kit')
       vim.lsp.enable('pyright')
       vim.lsp.enable('nil_ls')
       -- ts_ls disabled: typescript-tools.nvim provides TS LSP instead
@@ -155,9 +157,11 @@ local plugin_spec = {
         nix = { 'alejandra' },
       },
       format_on_save = function(bufnr)
-        if InterviewMode and vim.bo[bufnr].filetype == 'python' then return nil end
         local bufname = vim.api.nvim_buf_get_name(bufnr)
         if bufname:match('/%.claude/agents/.*%.md$') or bufname:match('/SKILL%.md$') then
+          return nil
+        end
+        if MockMode and vim.bo[bufnr].filetype == 'python' then
           return nil
         end
         return {
@@ -214,7 +218,7 @@ local plugin_spec = {
         region_check_events = 'InsertEnter',
         delete_check_events = 'InsertLeave',
       })
-      if not InterviewMode then
+      if not MockMode then
         require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets/lua-snippets' } })
         require'luasnip.loaders.from_vscode'.lazy_load({ paths = { './snippets/flutter-riverpod-snippets' } })
       end
@@ -275,7 +279,7 @@ local plugin_spec = {
             end
           end, { 'i', 's' }),
         },
-        sources = InterviewMode and {
+        sources = MockMode and {
           { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
           { name = 'nvim_lsp_signature_help', priority = 10 },
           { name = 'buffer',                  priority = 1 },
