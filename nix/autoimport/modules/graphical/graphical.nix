@@ -112,6 +112,7 @@ fp @ {
         ffmpeg # Media processing toolkit
         usbutils # USB utilities
       ];
+      xdg.configFile."kitty/auto_pad.py".source = ./_kitty-auto-pad.py;
       programs = {
         # TODO: re-enable on darwin once appstream builds again (nixpkgs Darwin breakage)
         zathura.enable = pkgs.stdenv.hostPlatform.isLinux;
@@ -138,6 +139,8 @@ fp @ {
             tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
             window_alert_on_bell = true;
             window_padding_width = 8;
+            # Auto-centers wide single windows; see _kitty-auto-pad.py
+            watcher = "auto_pad.py";
             allow_remote_control = "yes";
             listen_on = "unix:/tmp/kitty";
             repaint_delay = 5;
@@ -251,6 +254,10 @@ fp @ {
             "cmd+h" = "previous_window";
             "cmd+l" = "next_window";
             "cmd+enter" = "new_window_with_cwd";
+            "cmd+i" = let
+              pad = "900";
+            in "remote_control set-spacing padding-left=${pad} padding-right=${pad}";
+            "cmd+o" = "remote_control set-spacing padding=default";
           };
         };
         nushell.shellAliases.nv = "neovide --frame transparent --fork";
