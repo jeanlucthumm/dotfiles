@@ -26,15 +26,29 @@ fp @ {
           pkgs.nodejs
           pkgs.pnpm
         ];
-        # # Only ships darwin-arm64 builds for now
-        # ++ lib.optionals (system == "aarch64-darwin") [
-        #   fp.inputs.terminal-browser.packages.${system}.default
-        # ];
       };
 
-      darwin = {system, ...}: {
-        home.packages = [
-          fp.inputs.terminal-browser.packages.${system}.default
+      darwin = {
+        pkgs,
+        system,
+        ...
+      }: {
+        home.packages = let
+          tb = fp.inputs.terminal-browser.packages.${system}.default;
+        in [
+          # Wrapped so every caller (nushell, agents, scripts) gets the palette
+          # off cmd+p, which kitty owns. The flag must trail the args, and
+          # `action` rejects unknown flags, so only browser launches get it.
+          (pkgs.writeShellScriptBin "terminal-browser" ''
+            case "$1" in
+              action | ls | setup | help)
+                exec ${tb}/bin/terminal-browser "$@"
+                ;;
+              *)
+                exec ${tb}/bin/terminal-browser "$@" --palette-key=ctrl+p
+                ;;
+            esac
+          '')
         ];
       };
 
