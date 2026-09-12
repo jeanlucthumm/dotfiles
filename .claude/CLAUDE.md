@@ -63,6 +63,7 @@ investigation concluded, a decision made), not as an afterthought:
   genuinely started in the wrong commit.
 - Use colocated repos (`jj git init --colocate .`) so Git tools stay interoperable;
   track `main@origin` plus the current PR bookmark.
+- For pushing use `~/.local/bin/jj-push <bookmark>`. DO NOT attempt to push via `jj git push ...`
 
 ## Oncall
 
