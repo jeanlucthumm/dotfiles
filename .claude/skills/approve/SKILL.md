@@ -23,3 +23,5 @@ If clean, comment on the PR:
 
 The reason MUST come from the arguments. Do not invent a reason ever. If you
 don't have one, ask the user.
+
+Once approval is in, merge the PR unless the user said otherwise.
