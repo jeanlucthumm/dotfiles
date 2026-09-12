@@ -56,3 +56,17 @@ load-bearing:
 
 Everything else (sizes, critical-path drawings, doc headers) is taste;
 add what helps, enforce nothing.
+
+Last, a cleanliness pass: the doc grew by accretion (elicitations,
+adversarial fixes), so facts repeat. Rewrite crisp, each fact one home,
+no information loss.
+
+Then a graph overview as an html-explainer (that skill's rules apply):
+the dependency graph with phases and launch waves, a node click showing
+spec, fix list, edges, and the verification story (job checks, behavior
+check, review tier, human gate) plus a matrix of that story across nodes;
+the rollout timeline with what each step
+requires and how it reverts; the list of what the coordinator needs from
+the user. The user reads the map before saying "start the graph", which
+is the last cheap moment to catch a wrong edge or a missing human gate.
+The plan doc stays the source of truth; the page is derived from it.
