@@ -26,6 +26,12 @@ end
 
 HasGoogle = file_exists(fn.stdpath('config') .. '/lua/google.lua')
 
+-- Interview practice mode: `MOCK_MODE=1 nvim` replicates the CodeSignal/
+-- CoderPad editor. Real LSP stays ON; the delta is only what the platforms
+-- lack: no auto-import completions, no snippets, no Python format-on-save.
+-- Spec: ~/Code/resume/practice/mocks/environment.md
+InterviewMode = env.MOCK_MODE == '1' or env.NVIM_INTERVIEW == '1'
+
 --- Lazy bootstrap
 local lazypath = fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not file_exists(lazypath) then
@@ -94,6 +100,13 @@ local plugin_spec = {
 
       vim.lsp.enable('lua_ls')
       vim.lsp.enable('source_kit')
+      if InterviewMode then
+        vim.lsp.config.pyright = {
+          settings = {
+            python = { analysis = { autoImportCompletions = false } },
+          },
+        }
+      end
       vim.lsp.enable('pyright')
       vim.lsp.enable('nil_ls')
       -- ts_ls disabled: typescript-tools.nvim provides TS LSP instead
@@ -142,6 +155,7 @@ local plugin_spec = {
         nix = { 'alejandra' },
       },
       format_on_save = function(bufnr)
+        if InterviewMode and vim.bo[bufnr].filetype == 'python' then return nil end
         local bufname = vim.api.nvim_buf_get_name(bufnr)
         if bufname:match('/%.claude/agents/.*%.md$') or bufname:match('/SKILL%.md$') then
           return nil
@@ -200,8 +214,10 @@ local plugin_spec = {
         region_check_events = 'InsertEnter',
         delete_check_events = 'InsertLeave',
       })
-      require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets/lua-snippets' } })
-      require'luasnip.loaders.from_vscode'.lazy_load({ paths = { './snippets/flutter-riverpod-snippets' } })
+      if not InterviewMode then
+        require'luasnip.loaders.from_lua'.lazy_load({ paths = { './snippets/lua-snippets' } })
+        require'luasnip.loaders.from_vscode'.lazy_load({ paths = { './snippets/flutter-riverpod-snippets' } })
+      end
       local ls = require'luasnip'
       vim.keymap.set({ 'i', 's' }, '<C-l>', function()
         if ls.choice_active() then ls.change_choice(1) end
@@ -259,7 +275,11 @@ local plugin_spec = {
             end
           end, { 'i', 's' }),
         },
-        sources = {
+        sources = InterviewMode and {
+          { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
+          { name = 'nvim_lsp_signature_help', priority = 10 },
+          { name = 'buffer',                  priority = 1 },
+        } or {
           { name = 'luasnip',                 priority = 50 },
           { name = 'nvim_lsp',                priority = 10, max_item_count = 20 },
           { name = 'nvim_lsp_signature_help', priority = 10 },
