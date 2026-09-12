@@ -11,6 +11,11 @@ you don't have to do it manually.
 If curious, status can be reported via `.git/claude/hooks/main-lock.py status`
 (in the main worktree folder)
 
+Release the claim as soon as you're done with main (tests finished, stack no
+longer needed): `python3 .git/claude/hooks/main-lock.py release`. Holding it
+blocks every other session's mutating ops on main; the 30-min stale-steal is a
+safety net, not the release mechanism.
+
 To wait for the local stack to come up, use `.git/claude/wait-for-stack.sh` in a loop/monitor
 
 ```
