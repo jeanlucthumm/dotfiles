@@ -45,7 +45,7 @@ function M.on_attach(client, bufnr)
   vim.keymap.set({ 'v', 'n' }, '<Leader>a', require('actions-preview').code_actions)
 
   -- Capability specific commands
-  if client:supports_method('documentHighlightProvider', bufnr) then
+  if client:supports_method('textDocument/documentHighlight', bufnr) then
     api.nvim_clear_autocmds({ group = auhigh, buffer = bufnr })
     -- Highlight symbol in document on hover. Delay is controlled by |updatetime|
     api.nvim_create_autocmd('CursorHold', {
