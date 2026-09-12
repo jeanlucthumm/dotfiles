@@ -76,6 +76,23 @@ jj -R "$REPO" workspace add --name "$NAME" -r "$REV" "$WORKTREE_PATH" >&2
 # never the main checkout. jj ignores .git entirely.
 git init -q "$WORKTREE_PATH"
 
+# The dummy repo must also LOOK fully committed and pushed: Claude Code's
+# session-deletion checks run `git status --porcelain` (any output counts as
+# uncommitted work) and `git rev-list --max-count=1 HEAD --not --remotes`
+# (an unborn HEAD errors, which reads as "commits not pushed anywhere" and
+# blocks deletion even when forced). Commit the empty tree, plant a fake
+# origin ref at it, and hide untracked files through config so status stays
+# empty. Do NOT do this with an exclude-all in .git/info/exclude: nx's file
+# walker honors that file and then sees zero projects in the workspace.
+git -C "$WORKTREE_PATH" config status.showUntrackedFiles no
+export GIT_AUTHOR_NAME=dummy GIT_AUTHOR_EMAIL=dummy@localhost
+export GIT_COMMITTER_NAME=dummy GIT_COMMITTER_EMAIL=dummy@localhost
+DUMMY_TREE=$(git -C "$WORKTREE_PATH" hash-object -t tree /dev/null)
+DUMMY_COMMIT=$(git -C "$WORKTREE_PATH" commit-tree "$DUMMY_TREE" -m 'dummy identity commit')
+git -C "$WORKTREE_PATH" update-ref "$(git -C "$WORKTREE_PATH" symbolic-ref HEAD)" "$DUMMY_COMMIT"
+git -C "$WORKTREE_PATH" update-ref refs/remotes/origin/master "$DUMMY_COMMIT"
+unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+
 # Personal gitignored files every workspace needs. This replaces .worktreeinclude,
 # which Claude Code does not process when a WorktreeCreate hook is configured.
 for f in .env .claude/settings.local.json CLAUDE.local.md .claude/hooks; do
