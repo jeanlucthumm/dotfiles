@@ -918,11 +918,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785531147,
-        "narHash": "sha256-M7AWDTBDcx2VFjxAXcz7MBLXytKfcuKtaI9dIjsO/Bk=",
+        "lastModified": 1789078157,
+        "narHash": "sha256-ZWNk2hFX6Mbzhp5575L9kQGtmmYDMN/FoZLWfHQC9a0=",
         "owner": "jeanlucthumm",
         "repo": "terminal-browser",
-        "rev": "571fc27b50e8d5555b742c49da3b6150bb463387",
+        "rev": "b0e84b42cd1255deca82d0a2023f566c3bd9cae6",
         "type": "github"
       },
       "original": {
