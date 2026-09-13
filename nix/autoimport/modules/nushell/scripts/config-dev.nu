@@ -21,7 +21,7 @@ let abbreviations = {
 # Add abbreviation keybindings and menu (order-independent)
 $env.config.keybindings ++= [
   {
-    name: abbr_menu
+    name: abbr_menu_enter
     modifier: none
     keycode: enter
     mode: [emacs, vi_normal, vi_insert]
@@ -31,7 +31,7 @@ $env.config.keybindings ++= [
     ]
   }
   {
-    name: abbr_menu
+    name: abbr_menu_space
     modifier: none
     keycode: space
     mode: [emacs, vi_normal, vi_insert]
