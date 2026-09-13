@@ -83,7 +83,6 @@
         chromium # For Dart dev and PWAs
 
         karere # Chat (WhatsApp client)
-        obsidian # Note taking
         smile # emoji picker
         transmission_4 # BitTorrent client
 
