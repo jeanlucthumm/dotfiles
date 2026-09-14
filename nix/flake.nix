@@ -3,7 +3,7 @@
 
   # Pin nixpkgs for every imput to avoid multiple evaluations.
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     agenix = {
       url = "github:ryantm/agenix";
