@@ -19,6 +19,13 @@
 # the `--remote-debugging-port` command line flag. Raycast, the Dock and
 # Spotlight all launch the .app bundle directly and never pass argv, hence this
 # wrapper bundle in ~/Applications.
+#
+# The profile's user.js must also carry `remote.prefs.recommended = false`
+# (enforced by the activation below). Otherwise the remote agent applies its
+# automation "recommended preferences" (focusmanager.testmode, safebrowsing off,
+# app updates off, ~90 prefs) and only clears them at xpcom-shutdown -- after
+# prefs.js has been flushed -- so they leak into every subsequent normal
+# launch. Symptom: external links open a tab but Zen's window is never raised.
 {jlib, ...}: {
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
     darwin = {
@@ -90,6 +97,18 @@
         if [ -f "${zenApp}/Contents/Resources/firefox.icns" ]; then
           $DRY_RUN_CMD /bin/cp "${zenApp}/Contents/Resources/firefox.icns" \
             "$target/Contents/Resources/zen.icns"
+        fi
+
+        # Keep the remote agent from persisting its recommended prefs into the
+        # default profile (see header). user.js is only read at startup, so
+        # appending while Zen runs is safe.
+        zenData="$HOME/Library/Application Support/zen"
+        profDir=$(/usr/bin/awk -F= '/^\[Install/{f=1;next} /^\[/{f=0} f && /^Default=/{print $2; exit}' \
+          "$zenData/profiles.ini" 2>/dev/null || true)
+        userJs="$zenData/$profDir/user.js"
+        if [ -n "$profDir" ] && [ -d "$zenData/$profDir" ] \
+            && ! /usr/bin/grep -q 'user_pref("remote.prefs.recommended"' "$userJs" 2>/dev/null; then
+          $DRY_RUN_CMD /bin/sh -c "printf '\n%s\n' 'user_pref(\"remote.prefs.recommended\", false);' >> \"$userJs\""
         fi
       '';
     };
