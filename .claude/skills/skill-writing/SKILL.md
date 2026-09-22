@@ -13,15 +13,15 @@ In Jean-Luc's words:
   thing. Trust the reader's intelligence.
 - Corollary of the above: keep everything as terse as possible. Skills pollute
   context and have butterfly effect. The less tokens the better.
+- What's the minimal version that conveys enough information for future you to figure
+  it out on its own?
 
 Two additions:
 
-- Explain the why, not just the what. A reader who knows the intent can derive
-  the steps; a reader with only steps breaks on the first case you didn't
-  anticipate.
 - The `description` frontmatter is the trigger surface, not a summary. Write
   it for the moment of deciding whether to load the skill: concrete trigger
-  phrases, and what it is NOT for when misfires are likely.
+  phrases, and what it is NOT for when misfires are likely. Keep it short since
+  its loaded into every session's preamble.
 
 ## Pointers from hand edits
 
