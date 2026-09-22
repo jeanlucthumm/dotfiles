@@ -69,6 +69,7 @@ specialArg, because `imports` cannot depend on `config`/`pkgs`.
 | `macbook` | nix-darwin, aarch64 | Personal laptop |
 | `macbook-work` | nix-darwin, aarch64 | Imports `homeModules.work` from the private repo |
 | `developer@cloud-vm` | Home Manager only | Standalone HM for cloud dev boxes |
+| `root@claude-cloud` | Home Manager only | Claude Code cloud sessions (claude.ai/code); bootstrapped by the environment setup script, see `hosts/claude-cloud.nix` |
 
 ## Common commands
 

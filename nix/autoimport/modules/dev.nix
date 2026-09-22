@@ -19,40 +19,11 @@ fp @ {withSystem, ...}: {
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.dev];
   };
 
-  flake.modules.homeManager.dev = {
-    config,
-    pkgs,
-    ...
-  }: let
+  # Version control config on its own so hosts that cannot carry the rest of
+  # `dev` (see hosts/claude-cloud.nix) still get git, jj, delta and gh.
+  flake.modules.homeManager.vcs = {config, ...}: let
     configDir = config.xdg.configHome;
-    system = pkgs.stdenv.hostPlatform.system;
-    taskwarrior-enhanced = fp.inputs.taskwarrior-enhanced.packages.${system}.taskwarrior-enhanced;
-    fpkgs = withSystem system ({config, ...}: config.packages);
   in {
-    home.packages = with pkgs; [
-      # Core dev tools
-      gh # GitHub CLI
-      git # Version control system
-      git-lfs # Git extension for large files
-      git-filter-repo # Git tool for rewriting history
-      git-crypt # Encrypt files in git repos
-      devenv # Development environment manager
-      gnumake # Build automation tool
-      entr # Run arbitrary commands when files change
-      just # Handy task runner
-      lua-language-server # Lua language server
-      tree-sitter # Syntax parser extensively used by NeoVim
-      mdformat # Markdown formatter
-      gcc # GNU Compiler Collection
-      flarectl # Cloudflare CLI (zones, DNS, WAF)
-      fpkgs.hex-cli # Hex (hex.tech) notebook CLI: author/run projects from the terminal
-      fpkgs.bt # Braintrust CLI: query traces/logs with BTQL (bt sql / view / sync pull)
-
-      # Workflow-specific
-      timewarrior # time tracker
-      taskwarrior-enhanced # Enhanced taskwarrior companion CLI (from input flake)
-    ];
-
     programs = {
       git = {
         enable = true;
@@ -137,5 +108,37 @@ fp @ {withSystem, ...}: {
         };
       };
     };
+  };
+
+  flake.modules.homeManager.dev = {pkgs, ...}: let
+    system = pkgs.stdenv.hostPlatform.system;
+    taskwarrior-enhanced = fp.inputs.taskwarrior-enhanced.packages.${system}.taskwarrior-enhanced;
+    fpkgs = withSystem system ({config, ...}: config.packages);
+  in {
+    imports = [fp.config.flake.modules.homeManager.vcs];
+
+    home.packages = with pkgs; [
+      # Core dev tools
+      gh # GitHub CLI
+      git # Version control system
+      git-lfs # Git extension for large files
+      git-filter-repo # Git tool for rewriting history
+      git-crypt # Encrypt files in git repos
+      devenv # Development environment manager
+      gnumake # Build automation tool
+      entr # Run arbitrary commands when files change
+      just # Handy task runner
+      lua-language-server # Lua language server
+      tree-sitter # Syntax parser extensively used by NeoVim
+      mdformat # Markdown formatter
+      gcc # GNU Compiler Collection
+      flarectl # Cloudflare CLI (zones, DNS, WAF)
+      fpkgs.hex-cli # Hex (hex.tech) notebook CLI: author/run projects from the terminal
+      fpkgs.bt # Braintrust CLI: query traces/logs with BTQL (bt sql / view / sync pull)
+
+      # Workflow-specific
+      timewarrior # time tracker
+      taskwarrior-enhanced # Enhanced taskwarrior companion CLI (from input flake)
+    ];
   };
 }
