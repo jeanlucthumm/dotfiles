@@ -18,5 +18,8 @@
     ],
     "deny": [],
     "ask": []
+  },
+  "worktree": {
+    "bgIsolation": "none"
   }
 }
