@@ -67,6 +67,10 @@ in {
       options.jl.syncthing.enable = lib.mkEnableOption "this host's Syncthing node";
 
       config = lib.mkIf config.jl.syncthing.enable {
+        # Bootstrap path: deploy, read the ID off the node, register it, redeploy.
+        warnings = lib.optional (!(devices ? ${self}))
+          "syncthing: ${self} is not in the device registry; it will run with no folders and peers will reject it until its ID is added";
+
         services.syncthing = {
           enable = true;
           overrideDevices = true;
