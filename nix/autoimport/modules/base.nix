@@ -97,10 +97,6 @@ fp @ {jlib, ...}: {
     };
 
     services = {
-      # TODO: reconcile this with the full config for the server
-      # All NixOS devices should be nodes
-      syncthing.enable = true;
-
       upower.enable = true;
       udisks2.enable = true;
 

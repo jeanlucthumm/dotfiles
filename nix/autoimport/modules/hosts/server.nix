@@ -40,9 +40,22 @@
 
         services.atd.enable = true;
 
+        # Syncthing runs as a user service; keep it up without a login session.
+        users.users.jeanluc.linger = true;
+
         system.stateVersion = "24.05";
 
         home-manager.users.jeanluc = {
+          # Backup-side replica: never originates changes.
+          jl.syncthing = {
+            enable = true;
+            folders = {
+              default.type = "receiveonly";
+              timewarrior.type = "receiveonly";
+              obsidian.type = "receiveonly";
+            };
+          };
+
           # TODO directly use the reddit-easy-post flake output
           # home.packages = with pkgs; [
           #   reddit-easy-post # YAML to Reddit posting CLI
