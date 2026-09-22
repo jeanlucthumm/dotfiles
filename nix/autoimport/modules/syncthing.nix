@@ -61,30 +61,32 @@ in {
       osConfig ? {},
       ...
     }: let
-      self = osConfig.networking.hostName;
-      mine = lib.filterAttrs (_: f: f.devices ? ${self}) folders;
+      host = osConfig.networking.hostName;
+      mine = lib.filterAttrs (_: f: f.devices ? ${host}) folders;
     in {
       options.jl.syncthing.enable = lib.mkEnableOption "this host's Syncthing node";
 
       config = lib.mkIf config.jl.syncthing.enable {
         # Bootstrap path: deploy, read the ID off the node, register it, redeploy.
-        warnings = lib.optional (!(devices ? ${self}))
-          "syncthing: ${self} is not in the device registry; it will run with no folders and peers will reject it until its ID is added";
+        warnings =
+          lib.optional (!(devices ? ${host}))
+          "syncthing: ${host} is not in the device registry; it will run with no folders and peers will reject it until its ID is added";
 
         services.syncthing = {
           enable = true;
           overrideDevices = true;
           overrideFolders = true;
           settings = {
-            devices = lib.mapAttrs (_: id: {inherit id;}) (removeAttrs devices [self]);
-            folders = lib.mapAttrs (_: f: {
-              inherit (f) id label;
-              path = "${config.home.homeDirectory}/${f.path}";
-              type = f.devices.${self};
-              devices = lib.attrNames (removeAttrs f.devices [self]);
-              ignorePatterns = f.ignorePatterns or [];
-            })
-            mine;
+            devices = lib.mapAttrs (_: id: {inherit id;}) (removeAttrs devices [host]);
+            folders =
+              lib.mapAttrs (_: f: {
+                inherit (f) id label;
+                path = "${config.home.homeDirectory}/${f.path}";
+                type = f.devices.${host};
+                devices = lib.attrNames (removeAttrs f.devices [host]);
+                ignorePatterns = f.ignorePatterns or [];
+              })
+              mine;
             options = {
               urAccepted = -1;
               localAnnounceEnabled = true;
