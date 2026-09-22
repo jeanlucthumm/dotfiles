@@ -21,7 +21,7 @@ from kitty.boss import Boss
 from kitty.fast_data_types import add_timer, cell_size_for_window, get_options, pt_to_px
 from kitty.window import Window
 
-MAX_COLS = 170
+MAX_COLS = 120
 
 # window id -> (allotted width px, cell width px) at the last decision.
 # Presence also means "this window was last seen alone in its tab".
