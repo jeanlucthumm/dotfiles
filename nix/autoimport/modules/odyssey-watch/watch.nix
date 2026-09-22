@@ -59,6 +59,9 @@
     };
 
     systemd.timers.odyssey-watch = {
+      # TODO paused for now; OnBootSec fires during activation and a network
+      # blip there fails the deploy.
+      enable = false;
       wantedBy = ["timers.target"];
       timerConfig = {
         OnBootSec = "5m";
