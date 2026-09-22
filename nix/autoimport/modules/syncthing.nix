@@ -4,22 +4,18 @@
 # node. Runs as me so it can reach ~/obsidian etc. Identity (cert/key, hence
 # device ID) lives in the daemon's state dir.
 {jlib, ...}: let
-  # `path` is the default location relative to $HOME; nodes may override it.
   folders = {
     default = {
       id = "default";
       label = "Default Folder";
-      path = "Sync";
     };
     timewarrior = {
       id = "px27y-bxdsz";
       label = "Timewarrior";
-      path = ".timewarrior/data";
     };
     obsidian = {
       id = "xyrfm-qkrya";
       label = "Obsidian";
-      path = "obsidian/vault";
       ignorePatterns = [
         ".devenv*"
         ".direnv"
@@ -32,21 +28,21 @@
     };
   };
 
-  # Per folder: `type` (default sendreceive) and `path` (default from catalog).
+  # Per folder: `path` relative to $HOME, `type` (default sendreceive).
   nodes = {
     desktop = {
       id = "4HQJBVL-WNGE7IM-NEFU2LX-LBRKDXV-VJOHS2C-C6UCUXH-3VQIJIZ-72MZYQ5";
       folders = {
-        default = {};
-        timewarrior = {};
-        obsidian = {};
+        default.path = "Sync";
+        timewarrior.path = ".timewarrior/data";
+        obsidian.path = "obsidian/vault";
       };
     };
     macbook = {
       id = "PN3Q2MY-XB3YVM3-SV2BMT4-R4Q535H-Q7XV2LL-ETQKOZZ-VDF6MK3-2YNDAA6";
       folders = {
-        default = {};
-        timewarrior = {};
+        default.path = "Sync";
+        timewarrior.path = ".timewarrior/data";
         # iCloud-synced so the phone sees it too.
         obsidian.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault";
       };
@@ -55,9 +51,18 @@
     server = {
       id = "OSR5MAJ-K355Y22-LILPBYZ-5QV7OTN-FD3XCTW-HDZ5FTO-IYB3HUX-VXDSQAN";
       folders = {
-        default.type = "receiveonly";
-        timewarrior.type = "receiveonly";
-        obsidian.type = "receiveonly";
+        default = {
+          path = "Sync";
+          type = "receiveonly";
+        };
+        timewarrior = {
+          path = ".timewarrior/data";
+          type = "receiveonly";
+        };
+        obsidian = {
+          path = "obsidian/vault";
+          type = "receiveonly";
+        };
       };
     };
   };
@@ -92,7 +97,7 @@ in {
                 c = folders.${name};
               in {
                 inherit (c) id label;
-                path = "${config.home.homeDirectory}/${f.path or c.path}";
+                path = "${config.home.homeDirectory}/${f.path}";
                 type = f.type or "sendreceive";
                 devices = lib.attrNames (lib.filterAttrs (_: n: n.folders ? ${name}) peers);
                 ignorePatterns = c.ignorePatterns or [];
