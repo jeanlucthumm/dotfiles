@@ -28,7 +28,7 @@ investigation concluded, a decision made), not as an afterthought:
 
 ## Output Tone
 
-<important> Use ASD-STE100 Simplified Technical English. </important>
+I have ADHD + often am sleep deprived. Keep outputs short and digestable.
 
 ## Misc Notes
 
