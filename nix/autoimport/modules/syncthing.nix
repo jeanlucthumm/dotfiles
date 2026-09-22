@@ -112,6 +112,29 @@ in {
         };
       };
     };
+
+    # Folders bridged through iCloud must stay fully downloaded, or Syncthing
+    # sees `.icloud` stubs instead of files. Same xattr Finder's "Keep
+    # Downloaded" sets; per folder, so Optimize Mac Storage can stay on.
+    darwin = {
+      config,
+      lib,
+      osConfig ? {},
+      ...
+    }: let
+      me = nodes.${osConfig.networking.hostName} or {folders = {};};
+      inICloud = lib.filter (f: lib.hasPrefix "Library/Mobile Documents/" f.path) (lib.attrValues me.folders);
+    in {
+      home.activation.syncthingKeepDownloaded = lib.mkIf (config.jl.syncthing.enable && inICloud != []) (
+        lib.hm.dag.entryAfter ["writeBoundary"] (lib.concatMapStrings (f: ''
+            p="${config.home.homeDirectory}/${f.path}"
+            if [ -d "$p" ]; then
+              run /usr/bin/xattr -w 'com.apple.fileprovider.pinned#PX' 1 "$p"
+            fi
+          '')
+          inICloud)
+      );
+    };
   };
 
   # HM can't open the firewall: sync transport plus local discovery.
