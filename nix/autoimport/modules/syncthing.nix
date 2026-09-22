@@ -1,47 +1,25 @@
-# Fleet-wide Syncthing at the Home Manager layer. All state is here: the
-# device registry and, per folder, which devices carry it and how. A host
-# only sets `jl.syncthing.enable`; its hostname picks its row.
-# Runs as me so it can reach ~/obsidian etc. Identity (cert/key, hence
+# Fleet-wide Syncthing at the Home Manager layer. All state is here: `folders`
+# is the catalog (identity only), `nodes` says per node which folders it carries,
+# how, and where. A host only sets `jl.syncthing.enable`; its hostname picks its
+# node. Runs as me so it can reach ~/obsidian etc. Identity (cert/key, hence
 # device ID) lives in the daemon's state dir.
 {jlib, ...}: let
-  devices = {
-    desktop = "4HQJBVL-WNGE7IM-NEFU2LX-LBRKDXV-VJOHS2C-C6UCUXH-3VQIJIZ-72MZYQ5";
-    macbook = "PN3Q2MY-XB3YVM3-SV2BMT4-R4Q535H-Q7XV2LL-ETQKOZZ-VDF6MK3-2YNDAA6";
-    server = "OSR5MAJ-K355Y22-LILPBYZ-5QV7OTN-FD3XCTW-HDZ5FTO-IYB3HUX-VXDSQAN";
-  };
-
-  # `path` is relative to $HOME. The server is the backup-side replica and
-  # never originates changes.
+  # `path` is the default location relative to $HOME; nodes may override it.
   folders = {
     default = {
       id = "default";
       label = "Default Folder";
       path = "Sync";
-      devices = {
-        desktop = "sendreceive";
-        macbook = "sendreceive";
-        server = "receiveonly";
-      };
     };
     timewarrior = {
       id = "px27y-bxdsz";
       label = "Timewarrior";
       path = ".timewarrior/data";
-      devices = {
-        desktop = "sendreceive";
-        macbook = "sendreceive";
-        server = "receiveonly";
-      };
     };
     obsidian = {
       id = "xyrfm-qkrya";
       label = "Obsidian";
       path = "obsidian/vault";
-      devices = {
-        desktop = "sendreceive";
-        macbook = "sendreceive";
-        server = "receiveonly";
-      };
       ignorePatterns = [
         ".devenv*"
         ".direnv"
@@ -53,6 +31,36 @@
       ];
     };
   };
+
+  # Per folder: `type` (default sendreceive) and `path` (default from catalog).
+  nodes = {
+    desktop = {
+      id = "4HQJBVL-WNGE7IM-NEFU2LX-LBRKDXV-VJOHS2C-C6UCUXH-3VQIJIZ-72MZYQ5";
+      folders = {
+        default = {};
+        timewarrior = {};
+        obsidian = {};
+      };
+    };
+    macbook = {
+      id = "PN3Q2MY-XB3YVM3-SV2BMT4-R4Q535H-Q7XV2LL-ETQKOZZ-VDF6MK3-2YNDAA6";
+      folders = {
+        default = {};
+        timewarrior = {};
+        # iCloud-synced so the phone sees it too.
+        obsidian.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault";
+      };
+    };
+    # Backup-side replica: never originates changes.
+    server = {
+      id = "OSR5MAJ-K355Y22-LILPBYZ-5QV7OTN-FD3XCTW-HDZ5FTO-IYB3HUX-VXDSQAN";
+      folders = {
+        default.type = "receiveonly";
+        timewarrior.type = "receiveonly";
+        obsidian.type = "receiveonly";
+      };
+    };
+  };
 in {
   flake.modules.homeManager.base = jlib.mkHomeManager {
     generic = {
@@ -62,31 +70,34 @@ in {
       ...
     }: let
       host = osConfig.networking.hostName;
-      mine = lib.filterAttrs (_: f: f.devices ? ${host}) folders;
+      me = nodes.${host} or {folders = {};};
+      peers = removeAttrs nodes [host];
     in {
       options.jl.syncthing.enable = lib.mkEnableOption "this host's Syncthing node";
 
       config = lib.mkIf config.jl.syncthing.enable {
         # Bootstrap path: deploy, read the ID off the node, register it, redeploy.
         warnings =
-          lib.optional (!(devices ? ${host}))
-          "syncthing: ${host} is not in the device registry; it will run with no folders and peers will reject it until its ID is added";
+          lib.optional (!(nodes ? ${host}))
+          "syncthing: ${host} is not in the node table; it will run with no folders and peers will reject it until its ID is added";
 
         services.syncthing = {
           enable = true;
           overrideDevices = true;
           overrideFolders = true;
           settings = {
-            devices = lib.mapAttrs (_: id: {inherit id;}) (removeAttrs devices [host]);
+            devices = lib.mapAttrs (_: n: {inherit (n) id;}) peers;
             folders =
-              lib.mapAttrs (_: f: {
-                inherit (f) id label;
-                path = "${config.home.homeDirectory}/${f.path}";
-                type = f.devices.${host};
-                devices = lib.attrNames (removeAttrs f.devices [host]);
-                ignorePatterns = f.ignorePatterns or [];
+              lib.mapAttrs (name: f: let
+                c = folders.${name};
+              in {
+                inherit (c) id label;
+                path = "${config.home.homeDirectory}/${f.path or c.path}";
+                type = f.type or "sendreceive";
+                devices = lib.attrNames (lib.filterAttrs (_: n: n.folders ? ${name}) peers);
+                ignorePatterns = c.ignorePatterns or [];
               })
-              mine;
+              me.folders;
             options = {
               urAccepted = -1;
               localAnnounceEnabled = true;
