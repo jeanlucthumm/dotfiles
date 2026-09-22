@@ -9,6 +9,7 @@ fp @ {jlib, ...}: {
       {
         networking.hostName = "macbook";
         jl.system = "aarch64-darwin";
+
         users.users.jeanluc.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
           desktop.fido2.auth
           phone
@@ -25,6 +26,8 @@ fp @ {jlib, ...}: {
             age.identityPaths = [
               ./_host-specific/macbook/yubikey-identity.txt
             ];
+
+            jl.syncthing.enable = true;
 
             home.stateVersion = "24.05";
           }
