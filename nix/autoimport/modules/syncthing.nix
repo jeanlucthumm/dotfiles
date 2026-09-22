@@ -1,6 +1,8 @@
-# Fleet-wide Syncthing at the Home Manager layer. One device registry and
-# folder catalog; each host opts in with `jl.syncthing` and says only which
-# catalog folders it carries and how. Runs as me so it can reach ~/obsidian etc.
+# Fleet-wide Syncthing at the Home Manager layer. All state is here: the
+# device registry and, per folder, which devices carry it and how. A host
+# only sets `jl.syncthing.enable`; its hostname picks its row.
+# Runs as me so it can reach ~/obsidian etc. Identity (cert/key, hence
+# device ID) lives in the daemon's state dir.
 {jlib, ...}: let
   devices = {
     desktop = "4HQJBVL-WNGE7IM-NEFU2LX-LBRKDXV-VJOHS2C-C6UCUXH-3VQIJIZ-72MZYQ5";
@@ -8,22 +10,38 @@
     server = "OSR5MAJ-K355Y22-LILPBYZ-5QV7OTN-FD3XCTW-HDZ5FTO-IYB3HUX-VXDSQAN";
   };
 
-  # `path` is relative to $HOME; hosts can override with an absolute path.
-  catalog = {
+  # `path` is relative to $HOME. The server is the backup-side replica and
+  # never originates changes.
+  folders = {
     default = {
       id = "default";
       label = "Default Folder";
       path = "Sync";
+      devices = {
+        desktop = "sendreceive";
+        macbook = "sendreceive";
+        server = "receiveonly";
+      };
     };
     timewarrior = {
       id = "px27y-bxdsz";
       label = "Timewarrior";
       path = ".timewarrior/data";
+      devices = {
+        desktop = "sendreceive";
+        macbook = "sendreceive";
+        server = "receiveonly";
+      };
     };
     obsidian = {
       id = "xyrfm-qkrya";
       label = "Obsidian";
       path = "obsidian/vault";
+      devices = {
+        desktop = "sendreceive";
+        macbook = "sendreceive";
+        server = "receiveonly";
+      };
       ignorePatterns = [
         ".devenv*"
         ".direnv"
@@ -43,62 +61,26 @@ in {
       osConfig ? {},
       ...
     }: let
-      cfg = config.jl.syncthing;
-      peers = lib.attrNames (removeAttrs devices [cfg.device]);
+      self = osConfig.networking.hostName;
+      mine = lib.filterAttrs (_: f: f.devices ? ${self}) folders;
     in {
-      options.jl.syncthing = {
-        enable = lib.mkEnableOption "declarative Syncthing node";
+      options.jl.syncthing.enable = lib.mkEnableOption "this host's Syncthing node";
 
-        device = lib.mkOption {
-          type = lib.types.enum (lib.attrNames devices);
-          default = osConfig.networking.hostName;
-          description = "This host's name in the device registry";
-        };
-
-        folders = lib.mkOption {
-          default = {};
-          description = "Catalog folders this host carries, keyed by catalog name";
-          type = lib.types.attrsOf (lib.types.submodule {
-            options = {
-              type = lib.mkOption {
-                type = lib.types.enum ["sendreceive" "sendonly" "receiveonly"];
-                default = "sendreceive";
-              };
-              path = lib.mkOption {
-                type = lib.types.nullOr lib.types.str;
-                default = null;
-                description = "Absolute path override; defaults to $HOME/<catalog path>";
-              };
-              devices = lib.mkOption {
-                type = lib.types.listOf (lib.types.enum (lib.attrNames devices));
-                default = peers;
-                description = "Peers to share with; defaults to every other registered device";
-              };
-            };
-          });
-        };
-      };
-
-      config = lib.mkIf cfg.enable {
+      config = lib.mkIf config.jl.syncthing.enable {
         services.syncthing = {
           enable = true;
           overrideDevices = true;
           overrideFolders = true;
           settings = {
-            devices = lib.genAttrs peers (name: {id = devices.${name};});
-            folders =
-              lib.mapAttrs (name: f: let
-                c = catalog.${name};
-              in {
-                inherit (c) id label;
-                inherit (f) type devices;
-                path =
-                  if f.path != null
-                  then f.path
-                  else "${config.home.homeDirectory}/${c.path}";
-                ignorePatterns = c.ignorePatterns or [];
-              })
-              cfg.folders;
+            devices = lib.mapAttrs (_: id: {inherit id;}) (removeAttrs devices [self]);
+            folders = lib.mapAttrs (_: f: {
+              inherit (f) id label;
+              path = "${config.home.homeDirectory}/${f.path}";
+              type = f.devices.${self};
+              devices = lib.attrNames (removeAttrs f.devices [self]);
+              ignorePatterns = f.ignorePatterns or [];
+            })
+            mine;
             options = {
               urAccepted = -1;
               localAnnounceEnabled = true;
