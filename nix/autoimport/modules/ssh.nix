@@ -34,6 +34,10 @@ fp @ {jlib, ...}: {
         ControlMaster = "auto";
         ControlPath = "~/.ssh/sockets/%r@%h-%p";
         ControlPersist = "4h";
+        # A master orphaned by a network switch otherwise hangs every later
+        # `ssh host` until killed by hand; this tears it down in ~45s.
+        ServerAliveInterval = 15;
+        ServerAliveCountMax = 3;
       };
       # ssh does not create the ControlPath directory; without it every
       # connection silently falls back to a fresh master (and a touch).
