@@ -22,68 +22,73 @@ fp @ {jlib, ...}: {
     };
   };
 
-  flake.modules.homeManager.base =
-    jlib.mkHomeManager {
-      generic = {
-        programs.ssh.enableDefaultConfig = false;
-        # Upstream ssh_config(5) directive names (programs.ssh.settings is
-        # freeform; matchBlocks and its camelCase aliases are deprecated).
-        programs.ssh.settings."*" = {
-          ControlMaster = "auto";
-          ControlPath = "~/.ssh/sockets/%r@%h-%p";
-          ControlPersist = "4h";
-        };
+  flake.modules.homeManager.base = jlib.mkHomeManager {
+    generic = {
+      programs.ssh.enable = true;
+      programs.ssh.enableDefaultConfig = false;
+      # Upstream ssh_config(5) directive names (programs.ssh.settings is
+      # freeform; matchBlocks and its camelCase aliases are deprecated).
+      # Multiplexing: one YubiKey touch per host per ControlPersist window.
+      programs.ssh.settings."*" = {
+        AddKeysToAgent = "yes";
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/sockets/%r@%h-%p";
+        ControlPersist = "4h";
       };
+      # ssh does not create the ControlPath directory; without it every
+      # connection silently falls back to a fresh master (and a touch).
+      home.file.".ssh/sockets/.keep".text = "";
+    };
 
-      nixos = {
-        lib,
-        pkgs,
-        ...
-      }: {
-        programs.nushell.environmentVariables.SSH_AUTH_SOCK = lib.hm.nushell.mkNushellInline ''$"($env.XDG_RUNTIME_DIR)/ssh-agent"'';
+    nixos = {
+      lib,
+      pkgs,
+      ...
+    }: {
+      programs.nushell.environmentVariables.SSH_AUTH_SOCK = lib.hm.nushell.mkNushellInline ''$"($env.XDG_RUNTIME_DIR)/ssh-agent"'';
 
-        # Pre-load SSH key handles into agent at login so all programs can use them.
-        systemd.user.services.ssh-add-keys = {
-          Unit = {
-            Description = "Load SSH keys into agent";
-            After = ["ssh-agent.service"];
-          };
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519_sk_auth";
-            Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
-          };
-          Install.WantedBy = ["default.target"];
+      # Pre-load SSH key handles into agent at login so all programs can use them.
+      systemd.user.services.ssh-add-keys = {
+        Unit = {
+          Description = "Load SSH keys into agent";
+          After = ["ssh-agent.service"];
         };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519_sk_auth";
+          Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
+        };
+        Install.WantedBy = ["default.target"];
       };
+    };
 
-      darwin = {pkgs, ...}: {
-        home.packages = [
-          pkgs.openssh # FIDO2-capable SSH (macOS system SSH lacks libfido2)
-        ];
+    darwin = {pkgs, ...}: {
+      home.packages = [
+        pkgs.openssh # FIDO2-capable SSH (macOS system SSH lacks libfido2)
+      ];
 
-        # Use nix-provided ssh-agent instead of macOS launchd agent (which lacks SK/FIDO2 support)
-        services.ssh-agent.enable = true;
+      # Use nix-provided ssh-agent instead of macOS launchd agent (which lacks SK/FIDO2 support)
+      services.ssh-agent.enable = true;
 
-        # Point system-wide SSH_AUTH_SOCK to FIDO2-capable agent, preload auth key.
-        launchd.agents.ssh-fido2-setup = {
-          enable = true;
-          config = {
-            ProgramArguments = [
-              "/bin/bash"
-              "-c"
-              ''
-                SOCK="$(getconf DARWIN_USER_TEMP_DIR)ssh-agent"
-                launchctl setenv SSH_AUTH_SOCK "$SOCK"
-                while [ ! -S "$SOCK" ]; do sleep 0.5; done
-                export SSH_AUTH_SOCK="$SOCK"
-                ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519_sk_auth" 2>/dev/null
-              ''
-            ];
-            RunAtLoad = true;
-            KeepAlive = false;
-          };
+      # Point system-wide SSH_AUTH_SOCK to FIDO2-capable agent, preload auth key.
+      launchd.agents.ssh-fido2-setup = {
+        enable = true;
+        config = {
+          ProgramArguments = [
+            "/bin/bash"
+            "-c"
+            ''
+              SOCK="$(getconf DARWIN_USER_TEMP_DIR)ssh-agent"
+              launchctl setenv SSH_AUTH_SOCK "$SOCK"
+              while [ ! -S "$SOCK" ]; do sleep 0.5; done
+              export SSH_AUTH_SOCK="$SOCK"
+              ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519_sk_auth" 2>/dev/null
+            ''
+          ];
+          RunAtLoad = true;
+          KeepAlive = false;
         };
       };
     };
+  };
 }
