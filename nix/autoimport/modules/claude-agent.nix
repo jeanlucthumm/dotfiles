@@ -63,6 +63,9 @@ fp: {
       nodejs
       openssh
       bashInteractive
+      python3 # stdlib only: arithmetic, and scripts handed over by other agents
+      sqlite # sqlite3 CLI, the step after jq if the log outgrows it
+      perl # multi-line edits where sed falls short
     ];
 
     marketplace = "claude-plugins-official";
