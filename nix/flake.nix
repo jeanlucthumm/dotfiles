@@ -89,6 +89,9 @@
       url = "github:jeanlucthumm/terminal-browser/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Installs Homebrew itself; nix-darwin's `homebrew` module only drives it.
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
   outputs = inputs: let
