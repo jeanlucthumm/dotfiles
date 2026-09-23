@@ -33,6 +33,13 @@ configs, disko layouts), `_age/` (encrypted secrets), `_derivations/`,
 `_pubkeys.nix`. If you add a file that is *not* a flake-parts module, it must be
 `_`-prefixed or it will be imported and fail.
 
+`_` is for data, not logic. Don't write a helper as `_foo/default.nix` and
+`import` it by path from another module: that hides an edge the option system
+can't see. Shared logic is a normal module contributing to an option. If no
+option fits, declare one at the flake-parts level where it is consumed (a list
+or attrs so files merge) and contribute from anywhere — `jl.overlays` in
+`pkgs-override.nix` / `sign-stable.nix` is the pattern.
+
 ### Module classes
 
 Modules are published under `flake.modules.<class>.<name>` and merged across
