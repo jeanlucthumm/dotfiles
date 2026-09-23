@@ -36,6 +36,9 @@ fp @ {withSystem, ...}: {
       };
       overlays = [
         (final: prev: {
+          # Rebuild-stable code signatures for macOS TCC grants; see the file.
+          signStable = import ./_sign-stable {pkgs = final;};
+
           # Extend pkgs.sem (Semaphore CI CLI) to Darwin — upstream is pure Go and
           # ships Darwin arm64 binaries, but the nixpkgs meta restricts it to Linux.
           sem = prev.sem.overrideAttrs (old: {

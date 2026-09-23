@@ -2,9 +2,11 @@
 # fn+i/o/p are safe: macOS reserves other Globe combos (fn+E, fn+Q, ...).
 {jlib, ...}: {
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
-    darwin = {
+    darwin = {pkgs, ...}: {
       services.skhd = {
         enable = true;
+        # Needs Accessibility; a stable signature keeps the grant across upgrades.
+        package = pkgs.signStable pkgs.skhd;
         # Absolute path: skhd execs through $SHELL (nushell here), whose
         # `open` builtin shadows the macOS launcher and has no -a flag.
         config = ''

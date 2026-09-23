@@ -104,10 +104,11 @@ fp @ {
         fpkgs.notify # Cross-platform notifications
 
         copy-last-cmd
-        neovide # Neovim GUI
         ffmpeg # Media processing toolkit
         usbutils # USB utilities
-        obsidian # Note taking; also provides the official `obsidian-cli`
+        # signStable: keep macOS permission grants across upgrades.
+        (signStable neovide) # Neovim GUI
+        (signStable obsidian) # Note taking; also provides the official `obsidian-cli`
       ];
       xdg.configFile."kitty/auto_pad.py".source = ./_kitty-auto-pad.py;
       programs = {

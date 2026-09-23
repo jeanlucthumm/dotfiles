@@ -15,8 +15,9 @@ fp @ {
         ...
       }: {
         home.packages = [
-          # Way more up to date than nixpkgs
-          fp.inputs.claude-code.packages.${system}.claude-code
+          # Way more up to date than nixpkgs. signStable: when run outside a
+          # terminal (launchd), macOS folder grants key on claude itself.
+          (pkgs.signStable fp.inputs.claude-code.packages.${system}.claude-code)
 
           # `pnpm dlx` for npm-published MCP servers (e.g. firefox-devtools-mcp).
           # nodejs is needed alongside it: the servers' bin scripts shebang on

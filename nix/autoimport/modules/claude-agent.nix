@@ -42,7 +42,7 @@ fp: {
     # what else the user is running.
     tmuxCmd = "${pkgs.tmux}/bin/tmux -L claude";
 
-    claudePkg = fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+    claudePkg = pkgs.signStable fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
 
     # Everything the agent can reach. Nix is the only way it gains capabilities
     # -- there is no self-install loop, which is the price of a read-only store
