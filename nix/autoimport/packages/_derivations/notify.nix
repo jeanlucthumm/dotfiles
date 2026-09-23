@@ -11,7 +11,7 @@ writeShellApplication {
   # dependency at all. (This used terminal-notifier, but it's abandoned
   # upstream and its ancient Xcode project stopped linking under newer
   # nixpkgs darwin toolchains — cctools ld crashes with SIGTRAP.)
-  runtimeInputs = lib.optionals (!stdenv.isDarwin) [libnotify];
+  runtimeInputs = lib.optionals (!stdenv.hostPlatform.isDarwin) [libnotify];
 
   text = let
     darwinPrelude = ''
@@ -24,7 +24,7 @@ writeShellApplication {
       }
     '';
     send =
-      if stdenv.isDarwin
+      if stdenv.hostPlatform.isDarwin
       then ''
         cmd="display notification \"$(esc "$message")\""
         if [[ -n "$title" ]]; then
@@ -49,7 +49,7 @@ writeShellApplication {
         fi
       '';
   in ''
-    ${lib.optionalString stdenv.isDarwin darwinPrelude}
+    ${lib.optionalString stdenv.hostPlatform.isDarwin darwinPrelude}
     title=""
     message=""
     sound=""

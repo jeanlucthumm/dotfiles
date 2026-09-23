@@ -1,7 +1,7 @@
 fp @ {jlib, ...}: {
   flake.modules.nixos.graphical = {
     hardware.logitech.wireless.enable = true;
-    hardware.logitech.wireless.enableGraphical = true;
+    programs.solaar.enable = true;
   };
 
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
