@@ -1,4 +1,10 @@
-fp: {
+fp @ {lib, ...}: let
+  # Which nodes belong to which system, for the per-system checks below.
+  nodesBySystem = {
+    x86_64-linux = ["server"];
+    aarch64-darwin = ["macmini"];
+  };
+in {
   flake.deploy = {
     nodes = {
       server = {
@@ -13,13 +19,31 @@ fp: {
             fp.config.flake.nixosConfigurations.server;
         };
       };
+
+      macmini = {
+        hostname = "macmini";
+        sshUser = "jeanluc";
+        user = "root";
+        interactiveSudo = false;
+        profiles.system = {
+          path =
+            fp.inputs.deploy-rs.lib.aarch64-darwin.activate.darwin
+            fp.config.flake.darwinConfigurations.macmini;
+        };
+      };
     };
   };
 
-  # Only emit deploy checks under the systems we actually deploy to. Mapping over
-  # all of deploy-rs.lib would place the x86_64-linux server activation under
-  # checks.aarch64-darwin too, so `nix flake check` on the macbook tries to build
-  # an x86_64-linux derivation and fails with a platform mismatch.
-  flake.checks.x86_64-linux =
-    fp.inputs.deploy-rs.lib.x86_64-linux.deployChecks fp.config.flake.deploy;
+  # deployChecks builds every node's activation, so each system only gets the
+  # nodes it can build: otherwise `nix flake check` on the macbook would try to
+  # build the x86_64-linux server closure and fail with a platform mismatch.
+  flake.checks =
+    lib.mapAttrs (
+      system: names:
+        fp.inputs.deploy-rs.lib.${system}.deployChecks (fp.config.flake.deploy
+          // {
+            nodes = lib.filterAttrs (n: _: lib.elem n names) fp.config.flake.deploy.nodes;
+          })
+    )
+    nodesBySystem;
 }
