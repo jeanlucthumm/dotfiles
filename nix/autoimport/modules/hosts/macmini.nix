@@ -38,6 +38,8 @@ fp: {
 
         home-manager.users.jeanluc.imports = [
           {
+            jl.syncthing.enable = true;
+
             home.stateVersion = "24.05";
           }
         ];

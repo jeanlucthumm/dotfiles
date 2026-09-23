@@ -47,6 +47,14 @@
         obsidian.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault";
       };
     };
+    # Always-on iCloud bridge: carries the vault so the phone's edits reach the
+    # fleet even when the macbook is asleep. Only the vault.
+    macmini = {
+      id = "DSEXLE4-P5O7DGU-K3AL5WR-IB4GHFL-R3MS35A-BWZARAD-7O4J6AA-K6SSCAM";
+      folders = {
+        obsidian.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault";
+      };
+    };
     # Backup-side replica: never originates changes.
     server = {
       id = "OSR5MAJ-K355Y22-LILPBYZ-5QV7OTN-FD3XCTW-HDZ5FTO-IYB3HUX-VXDSQAN";
