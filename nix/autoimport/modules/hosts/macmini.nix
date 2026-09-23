@@ -28,6 +28,10 @@ fp: {
           sleep.display = 10;
         };
 
+        # deploy-rs activates over SSH with no TTY for a sudo password. SSH is
+        # key-only (see ssh.nix), so this is no wider than the SSH grant.
+        security.sudo.extraConfig = "jeanluc ALL=(ALL) NOPASSWD: ALL";
+
         # Standalone build (not App Store): tailscaled runs as a system daemon,
         # so the tailnet is up before anyone logs in. Not managed by nix on
         # Darwin on purpose; the macbook has the same app installed by hand.

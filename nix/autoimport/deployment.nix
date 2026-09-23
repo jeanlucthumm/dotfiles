@@ -13,6 +13,7 @@ in {
         user = "root";
         # wheel group has passwordless sudo on server, so interactive sudo prompts are unnecessary
         interactiveSudo = false;
+        remoteBuild = true;
         profiles.system = {
           path =
             fp.inputs.deploy-rs.lib.x86_64-linux.activate.nixos
@@ -25,6 +26,10 @@ in {
         sshUser = "jeanluc";
         user = "root";
         interactiveSudo = false;
+        # macOS /tmp is a symlink to /private/tmp; the magic-rollback watcher
+        # sees canary events under the real path and never matches /tmp, so
+        # it times out and rolls back a deploy that already activated fine.
+        tempPath = "/private/tmp";
         profiles.system = {
           path =
             fp.inputs.deploy-rs.lib.aarch64-darwin.activate.darwin
