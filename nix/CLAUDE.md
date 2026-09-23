@@ -54,8 +54,9 @@ specialArg, because `imports` cannot depend on `config`/`pkgs`.
 - Every host must declare `jl.system`.
 - Never set `nixpkgs.overlays`/`nixpkgs.config` in a host or module. NixOS configs
   import `readOnlyPkgs`, and `pkgs` comes from the central flake-parts registry via
-  `withSystem` (see `autoimport/modules/pkgs-override.nix`). Add overlays in the
-  `perSystem` block there.
+  `withSystem` (see `autoimport/modules/pkgs-override.nix`). To add an overlay,
+  append it to the flake-parts option `jl.overlays` from any file (see
+  `sign-stable.nix`).
 - All Home Manager modules get the `system` specialArg for use with `withSystem`.
 
 ### Hosts
