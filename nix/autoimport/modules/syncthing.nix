@@ -43,12 +43,12 @@
       folders = {
         default.path = "Sync";
         timewarrior.path = ".timewarrior/data";
-        # iCloud-synced so the phone sees it too.
-        obsidian.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault";
+        obsidian.path = "obsidian/vault";
       };
     };
-    # Always-on iCloud bridge: carries the vault so the phone's edits reach the
-    # fleet even when the macbook is asleep. Only the vault.
+    # The one iCloud<->Syncthing bridge: its vault lives in iCloud Drive so the
+    # phone sees it. Exactly one node may do this, or the two sync paths
+    # deliver every edit twice and each side files a conflict.
     macmini = {
       id = "DSEXLE4-P5O7DGU-K3AL5WR-IB4GHFL-R3MS35A-BWZARAD-7O4J6AA-K6SSCAM";
       folders = {
