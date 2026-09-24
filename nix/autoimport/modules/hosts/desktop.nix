@@ -2,6 +2,7 @@ fp @ {jlib, ...}: {
   flake.nixosConfigurations."desktop" = fp.inputs.nixpkgs.lib.nixosSystem {
     modules = with fp.config.flake.modules.nixos; [
       base
+      agents
       dev
       graphical
       # secrets

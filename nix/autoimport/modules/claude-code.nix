@@ -32,8 +32,8 @@
 # until the next switch reasserts the baseline. Removing a key from the
 # baseline stops asserting it but does not delete it from disk; if removal is
 # ever needed, add a prune list that runs jq del() before the merge.
-_: {
-  flake.modules.homeManager.dev = {
+fp: {
+  flake.modules.homeManager.agents = {
     config,
     lib,
     pkgs,
@@ -64,6 +64,14 @@ _: {
       deepmerge(.; $declared[0])
     '';
   in {
+    options.jl.claude.package = lib.mkOption {
+      type = lib.types.package;
+      # Way more up to date than nixpkgs. signStable: when run outside a
+      # terminal (launchd), macOS folder grants key on claude itself.
+      default = pkgs.signStable fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+      description = "The Claude Code package to install and run.";
+    };
+
     options.jl.claude.settings = lib.mkOption {
       inherit (settingsFormat) type;
       default = {};
@@ -75,6 +83,8 @@ _: {
     };
 
     config = {
+      home.packages = [cfg.package];
+
       jl.claude.settings = {
         "$schema" = "https://json.schemastore.org/claude-code-settings.json";
         fileSuggestion = {

@@ -49,7 +49,7 @@ files — many files can contribute to the same module name.
 - `nixos`, `darwin` — system-level
 - `homeManager` — user-level
 
-Current NixOS roles: `base`, `dev`, `graphical`, `homeServer`, `secrets`,
+Current NixOS roles: `base`, `agents`, `dev`, `graphical`, `homeServer`, `secrets`,
 `theme`, `amdGpu`.
 
 Use `jlib.mkHomeManager { generic, nixos, darwin }` for Home Manager modules that
@@ -71,7 +71,7 @@ specialArg, because `imports` cannot depend on `config`/`pkgs`.
 | Host | Kind | Notes |
 | --- | --- | --- |
 | `desktop` | NixOS, x86_64 | Full graphical workstation (niri/hyprland), YubiKey-gated secrets |
-| `server` | NixOS, x86_64 | Headless 24/7 `homeServer` role, deployed with deploy-rs |
+| `server` | NixOS, x86_64 | Headless 24/7 `homeServer` + `agents`, deployed with deploy-rs |
 | `server-mini` | NixOS, x86_64 | Second small server |
 | `iso` | NixOS, x86_64 | Bootstrap installer ISO for nixos-anywhere |
 | `macbook` | nix-darwin, aarch64 | Personal laptop |

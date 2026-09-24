@@ -8,7 +8,7 @@
 # resolution. (The upstream module also syncs on repo changes via launchd
 # WatchPaths; that's forced off below so the cadence is purely interval-based.)
 {jlib, ...}: {
-  flake.modules.homeManager.dev = jlib.mkHomeManager {
+  flake.modules.homeManager.agents = jlib.mkHomeManager {
     generic = {
       config,
       lib,

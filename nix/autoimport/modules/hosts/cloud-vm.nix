@@ -11,6 +11,7 @@ fp @ {withSystem, ...}: {
       };
       modules = with fp.config.flake.modules.homeManager; [
         base
+        agents
         dev
         ({lib, ...}: {
           # No signing keys on cloud VMs
