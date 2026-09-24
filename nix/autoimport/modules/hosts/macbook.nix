@@ -2,6 +2,7 @@ fp @ {jlib, ...}: {
   flake.darwinConfigurations."macbook" = fp.inputs.nix-darwin.lib.darwinSystem {
     modules = with fp.config.flake.modules.darwin; [
       base
+      agents
       dev
       graphical
       secrets

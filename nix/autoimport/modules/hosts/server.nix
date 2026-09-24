@@ -7,6 +7,7 @@
     modules = with config.flake.modules.nixos; [
       base
       homeServer
+      agents
       {
         imports = [./_host-specific/server];
 
