@@ -49,6 +49,9 @@
         home-manager.users.jeanluc = {
           jl.syncthing.enable = true;
 
+          # Always-on remote control, driven from claude.ai/code and the app.
+          jl.claude.rc.dirs.dotfiles = "/home/jeanluc/dotfiles";
+
           # TODO directly use the reddit-easy-post flake output
           # home.packages = with pkgs; [
           #   reddit-easy-post # YAML to Reddit posting CLI

@@ -64,6 +64,14 @@ fp: {
       deepmerge(.; $declared[0])
     '';
   in {
+    options.jl.claude.package = lib.mkOption {
+      type = lib.types.package;
+      # Way more up to date than nixpkgs. signStable: when run outside a
+      # terminal (launchd), macOS folder grants key on claude itself.
+      default = pkgs.signStable fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+      description = "The Claude Code package to install and run.";
+    };
+
     options.jl.claude.settings = lib.mkOption {
       inherit (settingsFormat) type;
       default = {};
@@ -75,11 +83,7 @@ fp: {
     };
 
     config = {
-      home.packages = [
-        # Way more up to date than nixpkgs. signStable: when run outside a
-        # terminal (launchd), macOS folder grants key on claude itself.
-        (pkgs.signStable fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code)
-      ];
+      home.packages = [cfg.package];
 
       jl.claude.settings = {
         "$schema" = "https://json.schemastore.org/claude-code-settings.json";
