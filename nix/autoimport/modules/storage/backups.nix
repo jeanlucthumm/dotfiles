@@ -67,6 +67,27 @@
       };
     };
 
+    # Obsidian vault, including the server-local git history that
+    # obsidian-vault.nix accumulates. Runs before sanoid's 14:15 snapshot.
+    systemd.services.vault-backup = {
+      description = "Backup Obsidian vault to ZFS pool";
+      serviceConfig = {
+        Type = "oneshot";
+        User = "jeanluc";
+        Group = "users";
+        ExecStart = "${pkgs.rsync}/bin/rsync -a --delete /home/jeanluc/obsidian/vault/ /srv/backups/vault/";
+      };
+    };
+
+    systemd.timers.vault-backup = {
+      description = "Nightly Obsidian vault backup";
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "*-*-* 14:00:00";
+        Persistent = true;
+      };
+    };
+
     # Home Assistant backup
     systemd.services.homeassistant-backup = {
       description = "Backup Home Assistant data to ZFS pool";
@@ -127,6 +148,7 @@
     # Ensure backup directories exist
     systemd.tmpfiles.rules = [
       "d /srv/backups/home 0755 jeanluc users -"
+      "d /srv/backups/vault 0755 jeanluc users -"
       "d /srv/backups/homeassistant 0755 root root -"
       "d /srv/backups/plex 0755 root root -"
       "d /srv/backups/openclaw 0755 root root -"
