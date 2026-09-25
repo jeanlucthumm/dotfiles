@@ -36,6 +36,7 @@ fp @ {
     in {
       # git, git-lfs, gh and jj come from their programs.* below.
       home.packages = with pkgs; [
+        devenv # per-project dev environments; loaded into sessions by claude-devenv-env
         just
         gnumake
         gcc

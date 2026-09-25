@@ -44,6 +44,23 @@ fp: {
     declared = settingsFormat.generate "claude-settings-declared.json" cfg.settings;
     jq = "${pkgs.jq}/bin/jq";
 
+    # SessionStart hook: load the project's devenv into the session so every
+    # Bash call runs inside it, the way `use devenv` does for direnv. Claude
+    # Code sources whatever the hook appends to $CLAUDE_ENV_FILE before each
+    # command. Installed as a bin so the hook command stays a stable name (a
+    # store path would leave a stale duplicate behind on every edit; see the
+    # array-element gotcha above).
+    devenvHook = pkgs.writeShellScriptBin "claude-devenv-env" ''
+      set -euo pipefail
+      [ -n "''${CLAUDE_ENV_FILE:-}" ] || exit 0
+      cd "$(${jq} -r .cwd)"
+      [ -f devenv.nix ] || exit 0
+      ${pkgs.devenv}/bin/devenv print-dev-env >>"$CLAUDE_ENV_FILE"
+      # print-dev-env replaces PATH wholesale; keep the session's tools
+      # reachable behind the project's, as nix develop does.
+      printf 'export PATH="$PATH:%s"\n' "$PATH" >>"$CLAUDE_ENV_FILE"
+    '';
+
     # Deep merge with the declared side winning. jq's builtin `*` would replace
     # arrays wholesale, which drops runtime permission grants; this unions them
     # instead. `$b == null` means the key only exists on disk: keep it.
@@ -83,7 +100,10 @@ fp: {
     };
 
     config = {
-      home.packages = [cfg.package];
+      home.packages = [
+        cfg.package
+        devenvHook
+      ];
 
       jl.claude.settings = {
         "$schema" = "https://json.schemastore.org/claude-code-settings.json";
@@ -117,6 +137,18 @@ fp: {
                 {
                   type = "command";
                   command = "${hookDir}/worktree-create.sh";
+                }
+              ];
+            }
+          ];
+          SessionStart = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "claude-devenv-env";
+                  # First run may build the env.
+                  timeout = 600;
                 }
               ];
             }
