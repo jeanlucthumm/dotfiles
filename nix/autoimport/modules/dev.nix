@@ -41,7 +41,6 @@ fp @ {
         # Core dev tools
         git-filter-repo # Git tool for rewriting history
         git-crypt # Encrypt files in git repos
-        devenv # Development environment manager
         lua-language-server # Lua language server
         tree-sitter # Syntax parser extensively used by NeoVim
         mdformat # Markdown formatter
