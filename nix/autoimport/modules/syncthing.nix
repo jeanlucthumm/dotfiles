@@ -55,7 +55,10 @@
         obsidian.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault";
       };
     };
-    # Backup-side replica: never originates changes.
+    # Backup-side replica for everything except the vault: the always-on
+    # `claude rc` agents (claude-rc.nix) write into it, and a receiveonly
+    # folder would hold those edits back as "locally changed items" instead
+    # of syncing them out.
     server = {
       id = "OSR5MAJ-K355Y22-LILPBYZ-5QV7OTN-FD3XCTW-HDZ5FTO-IYB3HUX-VXDSQAN";
       folders = {
@@ -67,10 +70,7 @@
           path = ".timewarrior/data";
           type = "receiveonly";
         };
-        obsidian = {
-          path = "obsidian/vault";
-          type = "receiveonly";
-        };
+        obsidian.path = "obsidian/vault";
       };
     };
   };
