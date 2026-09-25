@@ -181,7 +181,7 @@ local plugin_spec = {
       }
     end,
   },
-  { 'mfussenegger/nvim-dap',   config = function() require'dap_config' end },
+  { 'mfussenegger/nvim-dap', config = function() require'dap_config' end },
   {
     'rcarriga/nvim-dap-ui',
     opts = {},
