@@ -88,12 +88,10 @@ _: {
         Install.WantedBy = ["default.target"];
       };
     };
-    absDir = lib.types.strMatching "/.*";
-
     rcDir = lib.types.submodule {
       options = {
         dir = lib.mkOption {
-          type = absDir;
+          type = lib.types.strMatching "/.*";
           description = "Absolute directory the sessions start in.";
         };
         spawn = lib.mkOption {
@@ -109,11 +107,10 @@ _: {
     };
   in {
     options.jl.claude.rc.dirs = lib.mkOption {
-      # A bare path means the worktree default.
-      type = lib.types.attrsOf (lib.types.coercedTo absDir (dir: {inherit dir;}) rcDir);
+      type = lib.types.attrsOf rcDir;
       default = {};
       example = {
-        dotfiles = "/home/jeanluc/dotfiles";
+        dotfiles.dir = "/home/jeanluc/dotfiles";
         chore = {
           dir = "/home/jeanluc/obsidian/vault/chore";
           spawn = "same-dir";
