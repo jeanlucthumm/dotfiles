@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Global WorktreeRemove hook: counterpart of worktree-create.sh.
 # Delegates to the repo's own .claude/hooks/remove-worktree.sh when present;
 # otherwise forgets the jj workspace and deletes the directory.

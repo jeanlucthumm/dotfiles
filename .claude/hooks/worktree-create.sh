@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Global WorktreeCreate hook: jj workspaces for any jj-colocated repo.
 #
 # Claude Code's native EnterWorktree uses `git worktree`, which is wrong for
