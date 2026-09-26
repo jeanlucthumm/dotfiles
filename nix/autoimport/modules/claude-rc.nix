@@ -18,6 +18,9 @@
 # session (instructions, MCP servers, extra readable dirs) comes from the
 # directory itself: its CLAUDE.md chain, .claude/settings.json and .mcp.json.
 # Pointing a unit at a subdirectory is therefore how an agent gets a scope.
+# Secrets follow the same rule: an optional <dir>/.env (KEY=value lines) is
+# loaded into the unit's environment, so a committed .mcp.json can say
+# `${KERNEL_API_KEY}` and the value stays in a gitignored file next to it.
 #
 # Workspace trust is the one interactive gate: on an untrusted dir rc exits
 # with "Workspace not trusted". ExecStartPre seeds it in ~/.claude.json,
@@ -68,6 +71,7 @@ _: {
         };
         Service = {
           WorkingDirectory = dir;
+          EnvironmentFile = "-${dir}/.env";
           ExecStartPre = "${seedTrust dir}";
           ExecStart = lib.escapeShellArgs [
             "${config.jl.claude.package}/bin/claude"
