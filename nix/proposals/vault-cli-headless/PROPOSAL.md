@@ -3,6 +3,10 @@
 Status: parked, research done, nothing built.
 Date: 2026-09-25
 
+First consumer: the media sweeper in `../vault-media-offload/PROPOSAL.md`
+ships a stop-gap for op 1 (wikilink-only rewrite behind a `refs`/`rewrite`
+seam) and swaps to this CLI's `mv` when it exists.
+
 ## Trigger
 
 The chore `claude rc` agent on server (claude-rc.nix) works inside the
