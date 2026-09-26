@@ -301,6 +301,8 @@ Three Studio-specific settings:
 - **No git-LFS.** The 68M of non-markdown is write-once audio and images. Git dedupes by
   content hash, so hourly commits of unchanged binaries cost nothing; real growth tracks
   genuinely new content. Auto-gc on commit should suffice.
+  Superseded 2026-09-26: media leaves the vault and is gitignored, see
+  `nix/proposals/vault-media-offload/PROPOSAL.md`.
 - **The vault's existing `.gitignore` is already correct** — it covers `.st*` (Syncthing temp
   files, `.stfolder`, `.stversions`), `.trash/`, `.obsidian/workspace*.json`, `.DS_Store`, and
   `.direnv`. Reuse as-is. Consider adding `.claude/settings.local.json`.
