@@ -52,18 +52,8 @@ I have ADHD + often am sleep deprived. Keep outputs short and digestable.
 
 ## Jujutsu workflow
 
-- Map PRs 1:1 with a commit: all follow-up work lands in the PR's single commit and
-  the bookmark is force-pushed — no fixup commits.
-- To iterate on a PR: `jj edit <change>` (the PR commit itself), then edit files — any
-  subsequent jj command (`jj st`, another `jj edit`, etc.) auto-snapshots the working
-  copy into that commit and auto-rebases descendants. There is no separate "commit"
-  step in jj; editing the commit directly IS the model.
-- Do NOT use the git-style `jj new <bookmark>` + edit + `jj squash` sequence for PR
-  iteration — that's carrying git habits into jj. `jj squash` is only for when work
-  genuinely started in the wrong commit.
 - Use colocated repos (`jj git init --colocate .`) so Git tools stay interoperable;
   track `main@origin` plus the current PR bookmark.
-- For pushing use `~/.local/bin/jj-push <bookmark>`. DO NOT attempt to push via `jj git push ...`
 
 ## Oncall
 
