@@ -91,6 +91,19 @@ fp @ {
           };
         };
 
+        # Identity and signing come from agents.nix; pager and diff formatter
+        # from delta's jj integration below.
+        jujutsu.settings = {
+          ui.default-command = "log";
+          # Auto-refresh a stale working copy on the next command instead of
+          # erroring and requiring `jj workspace update-stale` (handy with
+          # multiple workspaces).
+          snapshot.auto-update-stale = true;
+          revset-aliases."baseb(to)" = "heads(::to & bookmarks())";
+          # Move the nearest bookmark below the parent up to the parent.
+          aliases.tug = ["bookmark" "move" "--from" "baseb(@-)" "--to" "@-"];
+        };
+
         delta = {
           enable = true;
           enableGitIntegration = true;
