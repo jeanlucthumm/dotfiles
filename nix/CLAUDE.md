@@ -75,7 +75,6 @@ specialArg, because `imports` cannot depend on `config`/`pkgs`.
 | `server-mini` | NixOS, x86_64 | Second small server |
 | `iso` | NixOS, x86_64 | Bootstrap installer ISO for nixos-anywhere |
 | `macbook` | nix-darwin, aarch64 | Personal laptop |
-| `macbook-work` | nix-darwin, aarch64 | Imports `homeModules.work` from the private repo |
 | `developer@cloud-vm` | Home Manager only | Standalone HM for cloud dev boxes |
 
 ## Common commands
