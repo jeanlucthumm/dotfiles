@@ -20,5 +20,8 @@
   };
 
   phone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILASMv9zSPwIF9ihPRdzHCZSgYec9P2PlVceItWMjhuO";
-  server = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIXzzsAaXcrCbDTYz4Yhv7D9rpkqnxI3qmBimZcEW1Pi";
+  server = {
+    ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIXzzsAaXcrCbDTYz4Yhv7D9rpkqnxI3qmBimZcEW1Pi";
+    hostKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONIto/RwMxrIm36BQMy/yNIfAwGgCl+0WZfH3WfcCbl";
+  };
 }
