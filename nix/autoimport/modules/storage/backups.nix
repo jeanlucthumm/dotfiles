@@ -68,7 +68,7 @@
     };
 
     # Obsidian vault, including the server-local git history that
-    # obsidian-vault.nix accumulates. Runs before sanoid's 14:15 snapshot.
+    # obsidian.nix accumulates. Runs before sanoid's 14:15 snapshot.
     systemd.services.vault-backup = {
       description = "Backup Obsidian vault to ZFS pool";
       serviceConfig = {
