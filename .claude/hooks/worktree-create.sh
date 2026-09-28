@@ -100,10 +100,14 @@ unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
 
 # Personal gitignored files every workspace needs. This replaces .worktreeinclude,
 # which Claude Code does not process when a WorktreeCreate hook is configured.
+# Some of these are tracked in some repos (dotfiles tracks .claude/hooks), so
+# the target may already exist. Copying into the PARENT merges a directory
+# into an existing one and -n keeps tracked files; naming the target itself
+# would nest a copy inside it (`cp -R dir existing-dir` -> dir/dir).
 for f in .env .claude/settings.local.json CLAUDE.local.md .claude/hooks; do
   if [ -e "$REPO/$f" ]; then
     mkdir -p "$WORKTREE_PATH/$(dirname "$f")"
-    cp -R "$REPO/$f" "$WORKTREE_PATH/$f"
+    cp -Rn "$REPO/$f" "$WORKTREE_PATH/$(dirname "$f")/"
   fi
 done
 
