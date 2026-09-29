@@ -7,13 +7,20 @@ fp @ {lib, ...}: let
 in {
   flake.deploy = {
     nodes = {
+      # Also deployable from the server itself (agents, or a phone SSH
+      # session). deploy-rs always goes over SSH; on the box `server` resolves
+      # to its own addresses, so the hop is loopback and the magic-rollback
+      # confirm proves sshd survived activation, nothing more. A unit that
+      # fails to start still auto-rolls back as usual.
+      #
+      # No remoteBuild here so that self-deploys build directly. From the
+      # macbook pass --remote-build to skip pulling the closure into its store.
       server = {
-        hostname = "server.lan";
+        hostname = "server";
         sshUser = "jeanluc";
         user = "root";
         # wheel group has passwordless sudo on server, so interactive sudo prompts are unnecessary
         interactiveSudo = false;
-        remoteBuild = true;
         profiles.system = {
           path =
             fp.inputs.deploy-rs.lib.x86_64-linux.activate.nixos

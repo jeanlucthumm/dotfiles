@@ -37,7 +37,13 @@
           desktop.fido2.auth
           macbook.fido2.auth
           phone
+          # deploy-rs run on the server itself SSHes back in to activate and
+          # to confirm the magic-rollback canary.
+          server.ssh
         ];
+
+        # Its own host key, for the same self-SSH hop.
+        programs.ssh.knownHosts.server.publicKey = config.flake.pubkeys.server.hostKey;
 
         services.atd.enable = true;
 
