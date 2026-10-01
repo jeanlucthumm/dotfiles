@@ -58,12 +58,17 @@
           # Always-on remote control, driven from claude.ai/code and the app.
           jl.claude.rc.dirs = {
             dotfiles.dir = "/home/jeanluc/dotfiles";
+            research-pipeline.dir = "/home/jeanluc/research-pipeline";
             # Vault agents work in place: the tree is Syncthing-shared, so a
             # worktree would hide edits from every other device. A subdir
             # unit is a scoped agent: its own CLAUDE.md, .mcp.json and
             # .claude/settings.json live in the vault (synced, so identical
             # on every host), and additionalDirectories there opens the whole
             # vault for reading.
+            vault = {
+              dir = "/home/jeanluc/obsidian/vault";
+              spawn = "same-dir";
+            };
             chore = {
               dir = "/home/jeanluc/obsidian/vault/chore";
               spawn = "same-dir";
