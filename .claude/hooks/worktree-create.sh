@@ -40,6 +40,11 @@ if [ ! -d "$REPO/.jj" ]; then
   exit 1
 fi
 
+# Hand the repo-local hook a cwd that already is the repo root: it derives the
+# workspace path from .cwd verbatim, so a session started in a subdirectory
+# would otherwise get its workspace nested under that subdirectory.
+INPUT=$(jq --arg c "$REPO" '.cwd = $c' <<<"$INPUT")
+
 # Repo-local hook wins outright: it owns quirks this generic script can't know.
 if [ -x "$REPO/.claude/hooks/setup-worktree.sh" ]; then
   exec "$REPO/.claude/hooks/setup-worktree.sh" <<<"$INPUT"
