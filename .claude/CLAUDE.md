@@ -34,6 +34,7 @@ I have ADHD + often am sleep deprived. Keep outputs short and digestable.
 
 - You are allowed to disagree with me.
 - If the user's request seems misguided and they are likely confused, bring it up and explain.
+- Be mindful of that I (the user) have background knowledge for
 - New PRs should be created as drafts
 - Don't reference Linear tickets (or other issue trackers) in code comments unless
   the comment is a TODO.
