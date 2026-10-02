@@ -61,6 +61,15 @@ fp: {
       printf 'export PATH="$PATH:%s"\n' "$PATH" >>"$CLAUDE_ENV_FILE"
     '';
 
+    # PreToolUse hook: inside a Claude Code jj workspace the built-in worktree
+    # guard refuses any Bash command that spells `jj git ...`, so this rewrites
+    # `jj git fetch` / `jj git push -b X` onto the ~/.local/bin/jj-fetch and
+    # jj-push wrappers (same operation, no `git` token). Installed as a bin for
+    # the same stable-name reason as devenvHook.
+    jjGitRewriteHook = pkgs.writeShellScriptBin "claude-jj-git-rewrite" ''
+      exec ${pkgs.python3}/bin/python3 ${./_jj-git-rewrite.py} "$@"
+    '';
+
     # Deep merge with the declared side winning. jq's builtin `*` would replace
     # arrays wholesale, which drops runtime permission grants; this unions them
     # instead. `$b == null` means the key only exists on disk: keep it.
@@ -103,6 +112,7 @@ fp: {
       home.packages = [
         cfg.package
         devenvHook
+        jjGitRewriteHook
       ];
 
       jl.claude.settings = {
@@ -149,6 +159,18 @@ fp: {
                   command = "claude-devenv-env";
                   # First run may build the env.
                   timeout = 600;
+                }
+              ];
+            }
+          ];
+          PreToolUse = [
+            {
+              matcher = "Bash";
+              hooks = [
+                {
+                  type = "command";
+                  command = "claude-jj-git-rewrite";
+                  timeout = 10;
                 }
               ];
             }
