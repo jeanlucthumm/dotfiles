@@ -67,7 +67,12 @@ fp: {
     # jj-push wrappers (same operation, no `git` token). Installed as a bin for
     # the same stable-name reason as devenvHook.
     jjGitRewriteHook = pkgs.writeShellScriptBin "claude-jj-git-rewrite" ''
-      exec ${pkgs.python3}/bin/python3 ${./_jj-git-rewrite.py} "$@"
+      # Runs on every Bash call; only pay for Python when the command text
+      # could possibly match (the script re-checks precisely).
+      input=$(cat)
+      case $input in
+        *jj*git*) printf '%s' "$input" | ${pkgs.python3}/bin/python3 ${./_jj-git-rewrite.py} ;;
+      esac
     '';
 
     # Deep merge with the declared side winning. jq's builtin `*` would replace

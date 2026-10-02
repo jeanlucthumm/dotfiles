@@ -62,6 +62,11 @@ def main() -> None:
         cmd = tool_input.get("command")
         if not isinstance(cmd, str) or "jj" not in cmd or "git" not in cmd:
             return
+        # Heredoc and herestring bodies are data, not commands; a line in one
+        # that starts with `jj git fetch` must stay as written. Leave the whole
+        # command to the guard rather than parse heredocs here.
+        if "<<" in cmd:
+            return
         if not in_workspace(str(data.get("cwd") or "")):
             return
         if not (os.access(JJ_FETCH, os.X_OK) and os.access(JJ_PUSH, os.X_OK)):
