@@ -13,7 +13,42 @@ fp @ {
   jlib,
   withSystem,
   ...
-}: {
+}: let
+  # cora-mcp, the health metrics store: served from server (homeServer below)
+  # and registered with every agent (homeManager.agents below). The Telegram
+  # agent registers it separately in claude/claude-agent.nix.
+  coraPort = 8700;
+  coraUrl = "http://server.tailf2689.ts.net/cora/mcp";
+in {
+  flake.modules.nixos.homeServer = {config, ...}: {
+    imports = [fp.inputs.cora-mcp.nixosModules.default];
+    services.cora-mcp = {
+      enable = true;
+      # Loopback only; nginx below is the way in.
+      listen = "127.0.0.1:${toString coraPort}";
+      openFirewall = false;
+    };
+
+    # /cora/mcp -> cora's /mcp, reachable from the LAN and the tailnet like
+    # the other locations.
+    services.nginx.virtualHosts.${config.networking.hostName}.locations."/cora/" = {
+      proxyPass = "http://127.0.0.1:${toString coraPort}/";
+      extraConfig = ''
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Responses stream as SSE; buffering would hold them back.
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        # The standalone GET stream idles between notifications; outlast
+        # cora's 30-minute session timeout.
+        proxy_read_timeout 1h;
+      '';
+    };
+  };
+
   flake.modules.nixos.agents = {
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.agents];
   };
@@ -48,6 +83,13 @@ fp @ {
         nodejs
         pnpm
       ];
+
+      # User scope, so every session on every host can log and query without
+      # a per-project .mcp.json. The tailnet name resolves on server too.
+      jl.claude.mcpServers.cora = {
+        type = "http";
+        url = coraUrl;
+      };
 
       programs = {
         git = {
