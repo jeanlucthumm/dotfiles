@@ -45,6 +45,11 @@
       url = "github:jeanlucthumm/taskwarrior-enhanced";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Health metrics MCP server, deployed on server (see modules/agents.nix).
+    # Private repo, so fetched over SSH rather than the github: tarball API.
+    # Deliberately not following nixpkgs: it keeps the nixpkgs it was verified
+    # against, so a flake update here cannot move its Go toolchain under it.
+    cora-mcp.url = "git+ssh://git@github.com/jeanlucthumm/cora-mcp.git";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
     };
