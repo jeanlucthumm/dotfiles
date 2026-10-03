@@ -89,6 +89,10 @@ fp: {
       };
       enabledPlugins.${plugin} = true;
 
+      # The workspace's .mcp.json (installed by the bootstrap) would otherwise
+      # sit behind an approval prompt that only the TUI shows.
+      enableAllProjectMcpServers = true;
+
       permissions = {
         # Classifier-backed: actions run without prompting, but a background
         # model blocks escalation, exfiltration and prompt-injection-shaped
@@ -119,6 +123,17 @@ fp: {
         construct. If the session needs /compact or /clear, say so and Jean-Luc
         will attach over SSH.
     '';
+
+    # Project-scope MCP registration in the agent's cwd, the way claude-rc
+    # scopes its units by directory. cora-mcp runs on this very box, but the
+    # tailnet name is the one URL every other agent uses (agents.nix) and it
+    # keeps working if the service's listen address ever changes.
+    mcpJson = pkgs.writeText "claude-agent-mcp.json" (builtins.toJSON {
+      mcpServers.cora = {
+        type = "http";
+        url = "http://server.tailf2689.ts.net:8700/mcp";
+      };
+    });
 
     # Runs before the session starts, as the service user.
     bootstrap = pkgs.writeShellScript "claude-agent-bootstrap" ''
@@ -156,9 +171,10 @@ fp: {
       fi
 
       # Copied, not symlinked: the agent must be able to write its own state
-      # into ~/.claude, but nix reasserts these two files on every restart.
+      # into ~/.claude, but nix reasserts these files on every restart.
       install -m 600 ${settingsJson} ${home}/.claude/settings.json
       install -m 600 ${claudeMd} ${home}/.claude/CLAUDE.md
+      install -m 600 ${mcpJson} ${workspace}/.mcp.json
 
       # Clones the marketplace declared above on first boot, and refreshes it
       # afterwards -- the plugin cache lives outside the store, so without this

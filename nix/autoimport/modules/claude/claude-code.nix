@@ -1,4 +1,5 @@
-# Declarative baseline for Claude Code's user settings (~/.claude/settings.json).
+# Declarative baseline for Claude Code's user settings (~/.claude/settings.json)
+# and user-scope MCP servers (the mcpServers key of ~/.claude.json).
 #
 # The file must stay runtime-mutable: Claude Code appends "always allow"
 # permission grants and rewrites preference keys as you use it. That churn is
@@ -42,6 +43,11 @@ fp: {
     cfg = config.jl.claude;
     settingsFormat = pkgs.formats.json {};
     declared = settingsFormat.generate "claude-settings-declared.json" cfg.settings;
+    # User-scope MCP servers live in ~/.claude.json next to a pile of runtime
+    # state, so they get the same merge treatment as settings.json.
+    declaredUserConfig = settingsFormat.generate "claude-user-config-declared.json" {
+      mcpServers = cfg.mcpServers;
+    };
     jq = "${pkgs.jq}/bin/jq";
 
     # SessionStart hook: load the project's devenv into the session so every
@@ -134,6 +140,24 @@ fp: {
         Settings asserted into ~/.claude/settings.json at activation time.
         Definitions from all modules merge (lists concatenate), so hosts and
         the private repo can add their own keys on top of the baseline below.
+      '';
+    };
+
+    options.jl.claude.mcpServers = lib.mkOption {
+      type = lib.types.attrsOf settingsFormat.type;
+      default = {};
+      example = lib.literalExpression ''
+        {
+          cora = {
+            type = "http";
+            url = "http://server:8700/mcp";
+          };
+        }
+      '';
+      description = ''
+        MCP servers registered at user scope: asserted into the mcpServers key
+        of ~/.claude.json, in the shape `claude mcp add -s user` writes.
+        Servers added by hand on a host are kept.
       '';
     };
 
@@ -278,28 +302,33 @@ fp: {
       };
 
       home.activation.claudeSettings = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        target="$HOME/.claude/settings.json"
-        if [ -s "$target" ] && ! ${jq} empty "$target" 2>/dev/null; then
-          # Never merge over a file we cannot parse; Claude Code may still be
-          # able to recover state from it. Warn instead of failing activation.
-          echo "claude-code: WARNING: $target is not valid JSON; skipping settings merge" >&2
-        else
+        # claudeMerge <target> <declared.json> <label>
+        claudeMerge() {
+          local target=$1 declared=$2 label=$3 current merged tmp
+          if [ -s "$target" ] && ! ${jq} empty "$target" 2>/dev/null; then
+            # Never merge over a file we cannot parse; Claude Code may still be
+            # able to recover state from it. Warn instead of failing activation.
+            echo "claude-code: WARNING: $target is not valid JSON; skipping $label merge" >&2
+            return 0
+          fi
           if [ -s "$target" ]; then
             current=$(cat "$target")
           else
             current='{}'
           fi
           merged=$(printf '%s\n' "$current" \
-            | ${jq} --slurpfile declared ${declared} -f ${mergeFilter})
+            | ${jq} --slurpfile declared "$declared" -f ${mergeFilter})
           if [ "$(printf '%s\n' "$current" | ${jq} -cS .)" \
             != "$(printf '%s\n' "$merged" | ${jq} -cS .)" ]; then
-            verboseEcho "claude-code: asserting declared settings into $target"
-            run mkdir -p "$HOME/.claude"
-            claudeTmp=$(mktemp)
-            printf '%s\n' "$merged" >"$claudeTmp"
-            run mv "$claudeTmp" "$target"
+            verboseEcho "claude-code: asserting declared $label into $target"
+            run mkdir -p "$(dirname "$target")"
+            tmp=$(mktemp)
+            printf '%s\n' "$merged" >"$tmp"
+            run mv "$tmp" "$target"
           fi
-        fi
+        }
+        claudeMerge "$HOME/.claude/settings.json" ${declared} settings
+        claudeMerge "$HOME/.claude.json" ${declaredUserConfig} "MCP servers"
       '';
     };
   };
