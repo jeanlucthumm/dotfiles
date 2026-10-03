@@ -14,17 +14,15 @@ Contract: fail open. Any parse problem, any command shape outside the two
 patterns below, or any cwd outside a workspace produces no output, and the
 command runs untouched. Output carries only `updatedInput` (no permission
 decision), so the rewritten command goes through the normal permission flow.
-Wrappers are named by absolute path because ~/.local/bin is not on PATH in
-the tool shell.
+
+Usage: _jj-git-rewrite.py <jj-fetch path> <jj-push path>. The wrappers are
+passed by absolute store path so the rewrite does not depend on the tool
+shell's PATH.
 """
 import json
 import os
 import re
 import sys
-
-WRAPPER_DIR = os.path.join(os.path.expanduser("~"), ".local", "bin")
-JJ_FETCH = os.path.join(WRAPPER_DIR, "jj-fetch")
-JJ_PUSH = os.path.join(WRAPPER_DIR, "jj-push")
 
 # A command position: start of text, or right after a separator that begins a
 # new simple command. Quoted text (grep patterns, echo arguments, heredocs) is
@@ -43,9 +41,9 @@ PUSH = re.compile(
 )
 
 
-def rewrite(cmd: str) -> str:
-    cmd = FETCH.sub(lambda m: m.group("lead") + JJ_FETCH, cmd)
-    cmd = PUSH.sub(lambda m: m.group("lead") + JJ_PUSH + " " + m.group("bm"), cmd)
+def rewrite(cmd: str, jj_fetch: str, jj_push: str) -> str:
+    cmd = FETCH.sub(lambda m: m.group("lead") + jj_fetch, cmd)
+    cmd = PUSH.sub(lambda m: m.group("lead") + jj_push + " " + m.group("bm"), cmd)
     return cmd
 
 
@@ -55,6 +53,7 @@ def in_workspace(cwd: str) -> bool:
 
 def main() -> None:
     try:
+        jj_fetch, jj_push = sys.argv[1:3]
         data = json.load(sys.stdin)
         if data.get("tool_name") != "Bash":
             return
@@ -69,9 +68,9 @@ def main() -> None:
             return
         if not in_workspace(str(data.get("cwd") or "")):
             return
-        if not (os.access(JJ_FETCH, os.X_OK) and os.access(JJ_PUSH, os.X_OK)):
+        if not (os.access(jj_fetch, os.X_OK) and os.access(jj_push, os.X_OK)):
             return
-        new = rewrite(cmd)
+        new = rewrite(cmd, jj_fetch, jj_push)
         if new == cmd:
             return
         out = {
