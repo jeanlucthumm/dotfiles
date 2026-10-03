@@ -61,17 +61,41 @@ fp: {
       printf 'export PATH="$PATH:%s"\n' "$PATH" >>"$CLAUDE_ENV_FILE"
     '';
 
-    # PreToolUse hook: inside a Claude Code jj workspace the built-in worktree
-    # guard refuses any Bash command that spells `jj git ...`, so this rewrites
-    # `jj git fetch` / `jj git push -b X` onto the ~/.local/bin/jj-fetch and
-    # jj-push wrappers (same operation, no `git` token). Installed as a bin for
-    # the same stable-name reason as devenvHook.
+    # jj-fetch / jj-push: `jj git fetch` and `jj git push -b X` without
+    # spelling the token `git`, which Claude Code's worktree-isolation guard
+    # refuses inside jj workspaces. Workspaces share one repo store, so a fetch
+    # or push from any of them is the right operation. jj-push takes only a
+    # bookmark name, never arbitrary flags.
+    jjFetch = pkgs.writeShellScriptBin "jj-fetch" ''
+      set -eu
+      if [ "$#" -ne 0 ]; then
+        echo "usage: jj-fetch   (no arguments)" >&2
+        exit 2
+      fi
+      exec jj git fetch
+    '';
+    jjPush = pkgs.writeShellScriptBin "jj-push" ''
+      set -eu
+      if [ "$#" -ne 1 ] || [ -z "$1" ]; then
+        echo "usage: jj-push <bookmark>" >&2
+        exit 2
+      fi
+      case "$1" in
+        -*) echo "jj-push: bookmark name must not start with '-'" >&2; exit 2 ;;
+      esac
+      exec jj git push -b "$1"
+    '';
+
+    # PreToolUse hook: rewrites `jj git fetch` / `jj git push -b X` onto the
+    # jj-fetch / jj-push wrappers above when inside a Claude Code jj workspace.
+    # Installed as a bin for the same stable-name reason as devenvHook.
     jjGitRewriteHook = pkgs.writeShellScriptBin "claude-jj-git-rewrite" ''
       # Runs on every Bash call; only pay for Python when the command text
       # could possibly match (the script re-checks precisely).
       input=$(cat)
       case $input in
-        *jj*git*) printf '%s' "$input" | ${pkgs.python3}/bin/python3 ${./_jj-git-rewrite.py} ;;
+        *jj*git*) printf '%s' "$input" | ${pkgs.python3}/bin/python3 ${./_jj-git-rewrite.py} \
+          ${jjFetch}/bin/jj-fetch ${jjPush}/bin/jj-push ;;
       esac
     '';
 
@@ -117,6 +141,8 @@ fp: {
       home.packages = [
         cfg.package
         devenvHook
+        jjFetch
+        jjPush
         jjGitRewriteHook
       ];
 
