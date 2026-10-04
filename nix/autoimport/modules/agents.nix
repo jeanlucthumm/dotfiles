@@ -13,7 +13,24 @@ fp @ {
   jlib,
   withSystem,
   ...
-}: {
+}: let
+  # cora-mcp, the health metrics store: served from server (homeServer below)
+  # and registered with every agent (homeManager.agents below). The Telegram
+  # agent registers it separately in claude/claude-agent.nix.
+  coraPort = 8700;
+  coraUrl = "http://server.tailf2689.ts.net:${toString coraPort}/mcp";
+in {
+  # One SQLite store, so the service runs on server only: nixos.agents is also
+  # imported by desktop and cloud-vm. It binds every interface, but the
+  # module's firewall rule admits the port on tailscale0 alone.
+  flake.modules.nixos.homeServer = {
+    imports = [fp.inputs.cora-mcp.nixosModules.default];
+    services.cora-mcp = {
+      enable = true;
+      listen = "0.0.0.0:${toString coraPort}";
+    };
+  };
+
   flake.modules.nixos.agents = {
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.agents];
   };
@@ -48,6 +65,13 @@ fp @ {
         nodejs
         pnpm
       ];
+
+      # User scope, so every session on every host can log and query without
+      # a per-project .mcp.json. The tailnet name resolves on server too.
+      jl.claude.mcpServers.cora = {
+        type = "http";
+        url = coraUrl;
+      };
 
       programs = {
         git = {
