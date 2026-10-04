@@ -13,7 +13,47 @@ fp @ {
   jlib,
   withSystem,
   ...
-}: {
+}: let
+  # cora-mcp, the health metrics store: served from server (homeServer below)
+  # and registered with every agent (homeManager.agents below). The Telegram
+  # agent registers it separately in claude/claude-agent.nix.
+  coraPort = 8700;
+  coraUrl = "http://server.tailf2689.ts.net/cora/mcp";
+in {
+  flake.modules.nixos.homeServer = {config, ...}: {
+    imports = [fp.inputs.cora-mcp.nixosModules.default];
+    services.cora-mcp = {
+      enable = true;
+      # Loopback only; nginx below is the way in.
+      listen = "127.0.0.1:${toString coraPort}";
+      openFirewall = false;
+    };
+
+    # /cora/mcp -> cora's /mcp. Unlike the other locations this one must not
+    # forward `Host $host`: the MCP SDK's DNS-rebinding guard answers 403 when
+    # a loopback listener sees a non-loopback Host. nginx's default Host (the
+    # upstream address) passes.
+    services.nginx.virtualHosts.${config.networking.hostName}.locations."/cora/" = {
+      proxyPass = "http://127.0.0.1:${toString coraPort}/";
+      extraConfig = ''
+        # Port 80 is open on every interface and cora has no auth, so admit
+        # only the tailnet and the box itself.
+        allow 127.0.0.1;
+        allow ::1;
+        allow 100.64.0.0/10;
+        allow fd7a:115c:a1e0::/48;
+        deny all;
+
+        # Responses stream as SSE; buffering would hold them back.
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        # The standalone GET stream idles between notifications; outlast
+        # cora's 30-minute session timeout.
+        proxy_read_timeout 1h;
+      '';
+    };
+  };
+
   flake.modules.nixos.agents = {
     home-manager.sharedModules = [fp.config.flake.modules.homeManager.agents];
   };
@@ -48,6 +88,13 @@ fp @ {
         nodejs
         pnpm
       ];
+
+      # User scope, so every session on every host can log and query without
+      # a per-project .mcp.json. The tailnet name resolves on server too.
+      jl.claude.mcpServers.cora = {
+        type = "http";
+        url = coraUrl;
+      };
 
       programs = {
         git = {
