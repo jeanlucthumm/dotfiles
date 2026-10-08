@@ -59,6 +59,18 @@ Route each conflicted commit to the job that owns it; a job never
 resolves conflicts in a parent's commit. Budget one wave per risk
 carrier amend and don't fear them; they run without the human.
 
+## GitHub stacks
+
+Link each chain from the plan's Stacks section once its PRs exist:
+`gh stack link <bottom-pr> ... <top-pr>`, by PR number.
+Land with `gh stack merge <pr>`: atomic, everything below included;
+stacked PRs have no auto-merge. A fan-in node lands only after both
+parents have, through their own stacks. After any landing, fetch and
+restack the rest in jj — never the UI "Rebase stack" button. Never
+reorder pushed layers: GitHub marks a PR merged, irreversibly, once its
+head is reachable from its base. Insertion is top-only; otherwise
+unstack and relink.
+
 ## Two review tiers
 
 Every node runs the two-lens-review skill (two read-only reviewer

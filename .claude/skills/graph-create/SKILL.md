@@ -51,6 +51,10 @@ load-bearing:
   goes live when, which nodes actually change live behavior, and where the
   revert points are (dark by construction, flag-gated, redeploy). This
   decides up front whether flag machinery is a node of its own.
+- A Stacks section: one bullet per GitHub stack, its nodes listed bottom to
+  top. A stack is strictly linear and a PR belongs to at most one, so
+  fan-out ends a chain (side chains become their own stacks once their base
+  lands) and fan-in can't be expressed — the edge stays in the doc only.
 - A Run state section, initially empty: the executor owns it (node
   status, PR numbers, agent IDs, accumulated traps).
 
