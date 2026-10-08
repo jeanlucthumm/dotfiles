@@ -46,6 +46,7 @@ fp @ {
         mdformat # Markdown formatter
         tuicr # PR review in the terminal
         flarectl # Cloudflare CLI (zones, DNS, WAF)
+        tuicr # Code review in the terminal
         fpkgs.hex-cli # Hex (hex.tech) notebook CLI: author/run projects from the terminal
         fpkgs.bt # Braintrust CLI: query traces/logs with BTQL (bt sql / view / sync pull)
 
