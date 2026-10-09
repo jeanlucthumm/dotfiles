@@ -1,10 +1,10 @@
 ---
 name: graph-review
-description: Coordinate review of a multi-PR graph or stack until every PR is stamped. Not for reviewing a single PR (pr-walkthrough), running one PR's review-response loop (pr-iteration), or merging.
+description: Coordinate review of a multi-PR graph or stack until every PR is stamped. Not for running one PR's review-response loop (pr-iteration) or merging.
 ---
 
 Coordinator role for getting every PR in a graph reviewed and stamped.
-Compose, don't absorb: pr-walkthrough is the per-PR card mechanic,
+Compose, don't absorb: stepwise-explainer is the per-PR card mechanic,
 pr-iteration the arbiter loop. This skill is the discipline around them.
 
 Card 0 is always the graph overview: nodes with status, the decision

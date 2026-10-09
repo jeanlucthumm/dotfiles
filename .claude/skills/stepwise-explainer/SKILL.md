@@ -1,6 +1,6 @@
 ---
 name: stepwise-explainer
-description: Step through anything with Jean-Luc one small visual card at a time, paced by his acks, in a terminal-browser split pane. Owns the deck mechanic only; the caller (another skill like pr-walkthrough, or the conversation) decides what the cards contain. Bare invocations default to teaching a system or design.
+description: Step through anything with Jean-Luc one small visual card at a time, paced by his acks, in a terminal-browser split pane. Owns the deck mechanic only; the caller (another skill like graph-review, or the conversation) decides what the cards contain. Bare invocations default to teaching a system or design.
 disable-model-invocation: true
 ---
 
@@ -16,10 +16,12 @@ teaching.
 
 - Plan the arc first (5-8 beats), tell him the list, then one card per beat.
   Advance only on ack.
-- Cards: single-file HTML in the job tmp dir, ~100 lines, plain SVG/CSS, no
-  libraries. One idea, big text, consistent styling, "N of M" kicker (e.g.
-  "Lesson 3 of 7"). Always light theme. Show via one reused pane — follow
-  the `terminal-browser` skill.
+- Cards: HTML in the job tmp dir, ~100 lines, built to the `html-explainer`
+  skill's rules (base.css + comment layer by reference, absolute `file://`
+  paths). One idea, big text, "N of M" kicker (e.g. "Lesson 3 of 7"). Show
+  via one reused pane — follow the `terminal-browser` skill — with
+  html-explainer's live mode armed on it, so card comments get answered
+  inline while chat carries the pacing.
 - Narration in chat: a few plain sentences per card. If jargon slips and he
   asks, translate and re-teach; that's signal, not failure.
 - Detours are the best part. Answer follow-ups fully, add bonus cards (2b, 4b),
