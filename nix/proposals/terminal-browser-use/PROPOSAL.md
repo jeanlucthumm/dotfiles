@@ -145,6 +145,17 @@ switch.
 - Move `~/Code/tb-lab/lab.html` into the `terminal-browser` skill as a
   channel self-test once the skill is edited.
 
+### 3b. Live comments (built 2026-10-08, experimental)
+
+`/html-explainer --live`: a Monitor runs `scripts/zc-live-watch.sh <key>`, which polls
+`zcLive.drain()` through `action -- eval` every 1.5s. Each new comment or follow-up wakes
+the session as an event. The session answers with `scripts/zc-live-reply.sh`, which calls
+`zcLive.answer(n, md)`, and the reply renders in the comment's thread. Polling doubles as
+the heartbeat, so the page shows "live" only while a session listens and falls back to
+Copy & clear otherwise. Verified on v0.13.4: a reply eval running alongside the poller
+works, and threads survive a reload. No helper types into the agent pane, so the
+self-drive block does not apply. WebMCP was re-checked the same day and is still absent.
+
 ## Order
 
 1. Section 1, skill text. One edit, removes the `kill` footgun.
