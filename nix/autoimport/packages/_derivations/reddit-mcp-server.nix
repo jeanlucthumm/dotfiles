@@ -5,14 +5,14 @@
 }:
 buildNpmPackage (finalAttrs: {
   pname = "reddit-mcp-server";
-  version = "1.4.8";
+  version = "1.6.3";
 
   # Use the published npm tarball rather than the GitHub source: it ships the
   # prebuilt dist/, so we avoid the pnpm/rolldown/esbuild build toolchain (which
   # gets SIGKILL'd in the darwin build sandbox) and only need the runtime deps.
   src = fetchurl {
     url = "https://registry.npmjs.org/reddit-mcp-server/-/reddit-mcp-server-${finalAttrs.version}.tgz";
-    hash = "sha256-dgSZQhih7q1tTphi9Pj8Xzc5aUSuTUALGo6a49UPg5s=";
+    hash = "sha256-sDbNgEy6Fb8juibXLXgrLZe/aOUfdW5hrvzSEFAvYMc=";
   };
 
   # The npm tarball has no lockfile, so vendor a generated prod-only
@@ -22,7 +22,7 @@ buildNpmPackage (finalAttrs: {
     cp ${./reddit-mcp-server-package-lock.json} package-lock.json
   '';
 
-  npmDepsHash = "sha256-ewYiJ1rmMjPCzQ7LJ5UWN1jqrcakcA2fZxn3UCzruAs=";
+  npmDepsHash = "sha256-mxyh+adMNTGa+wSz05g0EwLxeZZOAO2+FRd/a/X5CvA=";
 
   # dist/ is already built and shipped in the tarball; nothing to compile.
   dontNpmBuild = true;
