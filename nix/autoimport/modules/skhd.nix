@@ -4,7 +4,8 @@
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
     darwin = {pkgs, ...}: {
       services.skhd = {
-        enable = true;
+        # TODO: disabled until it's fixed; flip back to true to restore.
+        enable = false;
         # Needs Accessibility; a stable signature keeps the grant across upgrades.
         package = pkgs.signStable pkgs.skhd;
         # Absolute path: skhd execs through $SHELL (nushell here), whose
