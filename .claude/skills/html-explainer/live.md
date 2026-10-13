@@ -9,6 +9,6 @@ The reader's comments reach this session as they're written, and replies render 
 3. Each event is one comment or follow-up, given as JSON with `n`, `anchor`, `section`, `text` and `followUp`. Reply with:
    `scripts/zc-live-reply.sh <key> <n> <<'MD' ... MD`
    The reply supports paragraphs, `-` lists, inline code, **bold** and fenced code. Keep it short, like a margin note.
-4. If the comment asks for a change to the page, edit the file and reply saying what changed. Then run `action -- eval "location.reload()"`. Threads survive a reload because they live in localStorage.
+4. If the comment asks for a change to the page, edit the file and reply saying what changed. Then run `action -- eval "location.reload()"`. Threads survive a reload because they live in localStorage, and the thread the reader had open reopens.
 
 A `{"closed":true}` event means the pane is gone, so stop.

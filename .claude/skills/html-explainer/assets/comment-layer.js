@@ -12,7 +12,9 @@
   Live mode: dormant until a session polls window.zcLive.drain(). While polls
   keep arriving (<8s apart) the widget shows "live", new comments and
   follow-ups queue for the session, and window.zcLive.answer(n, markdown)
-  renders the reply in the comment's thread. See the skill's live.md.
+  renders the reply in the comment's thread. Asking turns the editor into
+  that thread, which stays open until a click outside it (and across a
+  reload). See the skill's live.md.
 ============================================================= */
 (function () {
   'use strict';
@@ -354,16 +356,20 @@
     }).observe(document.body, { childList: true, subtree: true });
 
     // --- popovers ---------------------------------------------------------
+    // Enter sends, Shift+Enter is a newline (Cmd+Enter is taken by the terminal
+    // the pane lives in). isComposing leaves IME confirmation alone.
+    const isSend = (e) => e.key === 'Enter' && !e.shiftKey && !e.isComposing;
+
     function openEditor(x, y, anchorLabel) {
       killFloaters();
       pop = document.createElement('div');
       pop.className = 'zc-ui zc-pop';
       pop.innerHTML = '<p class="zc-quote" style="margin:0 0 8px"></p><textarea placeholder="Your comment…"></textarea>' +
         '<div class="zc-row"><button class="zc-cancel">Cancel</button><button class="zc-primary zc-save">' +
-        (isLive() ? 'Ask Claude' : 'Save') + '<kbd>⌘↵</kbd></button></div>';
+        (isLive() ? 'Ask Claude' : 'Save') + '<kbd>↵</kbd></button></div>';
       pop.querySelector('.zc-quote').textContent = anchorLabel;
       pop.querySelector('textarea').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) pop.querySelector('.zc-save').click();
+        if (isSend(e)) { e.preventDefault(); pop.querySelector('.zc-save').click(); }
       });
       place(pop, x, y);
       const ta = pop.querySelector('textarea');
@@ -377,9 +383,10 @@
         items.push(it);
         pending = null;
         save();
-        killFloaters();
         renderAll();
-        if (it.state) showToast('Sent C' + it.n + ' to Claude');
+        // Live: the editor becomes the thread, so the reply lands where it was asked.
+        if (it.state) viewItem(it, x, y);
+        else killFloaters();
       });
     }
 
@@ -418,7 +425,7 @@
         (live && it.thread ? '<textarea placeholder="Follow up…"></textarea>' : '') +
         '<div class="zc-row"><button class="zc-del">Delete</button>' +
         (live && !it.thread ? '<button class="zc-primary zc-ask">Ask Claude</button>' : '') +
-        (live && it.thread ? '<button class="zc-primary zc-send">Send<kbd>⌘↵</kbd></button>' : '') + '</div>';
+        (live && it.thread ? '<button class="zc-primary zc-send">Send<kbd>↵</kbd></button>' : '') + '</div>';
       pop.querySelector('.zc-quote').textContent = quoteOf(it);
       place(pop, x, y);
       paintTurns(it);
@@ -446,7 +453,7 @@
           paintTurns(it);
         };
         send.addEventListener('click', go);
-        ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) go(); });
+        ta.addEventListener('keydown', (e) => { if (isSend(e)) { e.preventDefault(); go(); } });
         ta.focus();
       }
     }
@@ -622,6 +629,18 @@
       showToast('Copied ' + n + ' comment' + (n === 1 ? '' : 's') + ' — paste to the agent. Cleared.');
     });
 
+    // Popovers stay open until the reader clicks outside them (or ×/Esc).
+    // Unsent text in the popover keeps it open.
+    document.addEventListener('pointerdown', (e) => {
+      if (!pop || e.target.closest('.zc-ui')) return;
+      const de = document.documentElement;
+      if (e.clientX >= de.clientWidth || e.clientY >= de.clientHeight) return; // page scrollbar
+      const ta = pop.querySelector('textarea');
+      if (ta && ta.value.trim()) return;
+      pending = null;
+      killFloaters();
+    });
+
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
       pending = null;
@@ -635,8 +654,12 @@
     // Session side. drain() doubles as the heartbeat that turns live mode on.
     window.zcLive = {
       drain() {
+        const wasLive = isLive();
         lastSeen = Date.now();
         updateLive();
+        // A thread opened while not live (e.g. reopened after a reload) has no
+        // follow-up box; rebuild it now that the session is back.
+        if (!wasLive && openN != null && !pop.querySelector('textarea')) openItem(openN);
         const out = [];
         for (const it of items) {
           if (it.state !== 'queued') continue;
@@ -668,6 +691,18 @@
       status: () => ({ live: isLive(), pending: items.filter((o) => o.state === 'queued' || o.state === 'sent').map((o) => o.n) }),
     };
     renderAll();
+
+    // The session reloads the page after editing it; reopen the thread that was open.
+    const OPEN_KEY = 'zc-open:' + location.pathname;
+    window.addEventListener('pagehide', () => {
+      try { if (openN != null) sessionStorage.setItem(OPEN_KEY, openN); } catch (e) { /* storage off */ }
+    });
+    let reopen = null;
+    try { reopen = Number(sessionStorage.getItem(OPEN_KEY)) || null; sessionStorage.removeItem(OPEN_KEY); } catch (e) { /* storage off */ }
+    if (reopen) {
+      const go = () => requestAnimationFrame(() => openItem(reopen));
+      if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+    }
   }
 
   if (document.readyState === 'loading') {
