@@ -1,5 +1,20 @@
 {
   flake.modules.nixos.homeServer = {config, ...}: {
+    # Z-Wave S0/S2 network keys. Root-owned 0400 is fine: the zwave-js unit
+    # pulls this in via LoadCredential, which systemd reads as root.
+    age.secrets.zwave-js-keys.file = ./secrets/_age/zwave-js-keys.age;
+
+    # Z-Wave JS server for HA's Z-Wave integration (ws://localhost:3000).
+    # HA runs as a plain container, so there's no Supervisor add-on for this.
+    # Port stays closed in the firewall: the websocket is unauthenticated and
+    # HA reaches it over host networking.
+    services.zwave-js = {
+      enable = true;
+      # by-id so it can't swap with the Zigbee dongle across reboots.
+      serialPort = "/dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00";
+      secretsConfigFile = config.age.secrets.zwave-js-keys.path;
+    };
+
     virtualisation.oci-containers = {
       backend = "podman";
       containers.homeassistant = {

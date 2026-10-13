@@ -9,16 +9,18 @@
       homeServer
       agents
       {
-        imports = [./_host-specific/server];
+        # Plain agenix, not the `secrets` module: that one wires up YubiKey
+        # identities and the workstation-only home-manager secrets. Decrypts
+        # with the SSH host keys (agenix's default identityPaths), so secrets
+        # for this box are encrypted to pubkeys.server.hostKey.
+        imports = [
+          ./_host-specific/server
+          inputs.agenix.nixosModules.default
+        ];
 
         networking.hostName = "server";
         networking.hostId = "1d9f895e";
         jl.system = "x86_64-linux";
-
-        # TODO: figure out the secrets story for server
-        # age.identityPaths = [
-        #   "/home/jeanluc/.ssh/id_ed25519"
-        # ];
 
         swapDevices = [
           {
