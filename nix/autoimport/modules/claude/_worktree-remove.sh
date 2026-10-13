@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
-# Global WorktreeRemove hook: counterpart of worktree-create.sh.
-# Delegates to the repo's own .claude/hooks/remove-worktree.sh when present;
-# otherwise forgets the jj workspace and deletes the directory.
-set -euo pipefail
+# shellcheck shell=bash
+# WorktreeRemove hook (installed by claude-code.nix as claude-worktree-remove):
+# counterpart of _worktree-create.sh. Delegates to the repo's own
+# .claude/hooks/remove-worktree.sh when present; otherwise forgets the jj
+# workspace and deletes the directory.
 
 INPUT=$(cat)
 WORKTREE_PATH=$(echo "$INPUT" | jq -r '.worktree_path // empty')
@@ -23,6 +23,8 @@ if [ -x "$MAIN_REPO/.claude/hooks/remove-worktree.sh" ]; then
 fi
 
 NAME=$(basename "$WORKTREE_PATH")
+# Also removes the workspace's linked Git worktree, so no git metadata is
+# left under the main repo's .git/worktrees.
 jj -R "$MAIN_REPO" workspace forget "$NAME" >&2 || true
 # A bootstrapped worktree can hold hundreds of thousands of files (package
 # manager hardlinks), so deleting it in-line can blow the hook timeout: the

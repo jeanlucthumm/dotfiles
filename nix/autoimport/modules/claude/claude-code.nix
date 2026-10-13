@@ -23,15 +23,16 @@
 #
 # Array-element gotcha: the union compares whole elements, so *editing* a
 # declared array entry (a hook object, an allow rule) leaves the old on-disk
-# variant behind next to the new one until it is pruned from the file by hand.
+# variant behind next to the new one until it is pruned from the file (for
+# hook commands, by listing the old command in retiredHookCommands below).
 # Keep declared entries byte-identical to what Claude Code has on disk -- the
-# hook commands below use the absolute home path, not `~`, for exactly this
-# reason.
+# hook commands below are stable bin names for exactly this reason.
 #
 # Enforcement is switch-time only: a live session that rewrites the file wins
 # until the next switch reasserts the baseline. Removing a key from the
-# baseline stops asserting it but does not delete it from disk; if removal is
-# ever needed, add a prune list that runs jq del() before the merge.
+# baseline stops asserting it but does not delete it from disk. The one
+# removal path is retiredHookCommands: hook entries running one of those
+# commands are dropped before the merge.
 fp: {
   flake.modules.homeManager.agents = {
     config,
@@ -99,6 +100,68 @@ fp: {
       esac
     '';
 
+    # WorktreeCreate / WorktreeRemove: EnterWorktree and isolated subagents get
+    # jj workspaces instead of plain git worktrees (see _worktree-create.sh).
+    # Built against the same jj and git the user runs, so a jj upgrade and the
+    # hooks always ship in the same generation, and the create hook's build
+    # runs both hooks against a scratch repo: a jj behavior change fails the
+    # switch instead of the next subagent spawn.
+    worktreeHookInputs = [
+      config.programs.jujutsu.package
+      config.programs.git.package
+      pkgs.jq
+      pkgs.coreutils
+    ];
+    worktreeRemoveHook = pkgs.writeShellApplication {
+      name = "claude-worktree-remove";
+      runtimeInputs = worktreeHookInputs;
+      text = builtins.readFile ./_worktree-remove.sh;
+    };
+    worktreeCreateHook = pkgs.writeShellApplication {
+      name = "claude-worktree-create";
+      runtimeInputs = worktreeHookInputs;
+      text = builtins.readFile ./_worktree-create.sh;
+      derivationArgs.postCheck = ''
+        export HOME="$TMPDIR/home" JJ_CONFIG="$TMPDIR/jj.toml"
+        export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
+        export PATH="${lib.makeBinPath worktreeHookInputs}:$PATH"
+        mkdir -p "$HOME"
+        printf '[user]\nname = "test"\nemail = "test@localhost"\n' >"$JJ_CONFIG"
+        fail() { echo "worktree hook smoke test: $*" >&2; exit 1; }
+
+        repo=$(realpath "$TMPDIR")/repo
+        jj git init --colocate "$repo"
+        echo hi >"$repo/file"
+        jj -R "$repo" commit -m init
+        jj -R "$repo" bookmark create main -r @-
+        mkdir "$repo/sub"
+
+        # From a subdirectory: the workspace must land at the repo root.
+        wt=$(printf '{"cwd":"%s","name":"t","base_ref":"main"}' "$repo/sub" | "$target")
+        [ "$wt" = "$repo/.claude/worktrees/t" ] || fail "unexpected path $wt"
+        [ -f "$wt/.git" ] || fail "no linked git worktree"
+        [ "$(realpath "$(git -C "$wt" rev-parse --show-toplevel)")" = "$wt" ] \
+          || fail "git toplevel is not the workspace"
+        [ "$(git -C "$wt" rev-parse HEAD)" = "$(jj -R "$repo" log --no-graph -r main -T commit_id)" ] \
+          || fail "git HEAD is not the base"
+        [ -z "$(git -C "$wt" status --porcelain --untracked-files=normal)" ] \
+          || fail "fresh workspace is dirty"
+
+        printf '{"worktree_path":"%s"}' "$wt" | ${worktreeRemoveHook}/bin/claude-worktree-remove
+        [ ! -e "$wt" ] || fail "workspace dir left behind"
+        [ -z "$(ls -A "$repo/.git/worktrees" 2>/dev/null)" ] || fail "git worktree metadata left behind"
+        if jj -R "$repo" workspace list | grep '^t:' >/dev/null; then
+          fail "jj workspace not forgotten"
+        fi
+      '';
+    };
+    # Hook commands from before the hooks moved into nix (the scripts lived
+    # yadm-tracked in ~/.claude/hooks); pruned from settings.json on switch.
+    retiredHookCommands = [
+      "${config.home.homeDirectory}/.claude/hooks/worktree-create.sh"
+      "${config.home.homeDirectory}/.claude/hooks/worktree-remove.sh"
+    ];
+
     # Deep merge with the declared side winning. jq's builtin `*` would replace
     # arrays wholesale, which drops runtime permission grants; this unions them
     # instead. `$b == null` means the key only exists on disk: keep it.
@@ -116,7 +179,17 @@ fp: {
         elif $b == null then $a
         else $b
         end;
-      deepmerge(.; $declared[0])
+      # Drop every on-disk hook group that runs a retired command.
+      def prunehooks($retired):
+        if (.hooks | type) == "object" then
+          .hooks |= map_values(
+            if type == "array"
+            then map(select([.hooks[]?.command | select(IN($retired[]))] | length == 0))
+            else .
+            end)
+        else .
+        end;
+      prunehooks($retired) | deepmerge(.; $declared[0])
     '';
   in {
     options.jl.claude.package = lib.mkOption {
@@ -144,6 +217,8 @@ fp: {
         jjFetch
         jjPush
         jjGitRewriteHook
+        worktreeCreateHook
+        worktreeRemoveHook
       ];
 
       jl.claude.settings = {
@@ -166,18 +241,13 @@ fp: {
         preferredNotifChannel = "kitty";
         tui = "fullscreen";
 
-        # jj worktree hooks: EnterWorktree creates jj workspaces instead of git
-        # worktrees (git worktrees corrupt colocated jj checkouts). Scripts are
-        # yadm-tracked alongside hook_file_suggestion.py.
-        hooks = let
-          hookDir = "${config.home.homeDirectory}/.claude/hooks";
-        in {
+        hooks = {
           WorktreeCreate = [
             {
               hooks = [
                 {
                   type = "command";
-                  command = "${hookDir}/worktree-create.sh";
+                  command = "claude-worktree-create";
                 }
               ];
             }
@@ -211,7 +281,7 @@ fp: {
               hooks = [
                 {
                   type = "command";
-                  command = "${hookDir}/worktree-remove.sh";
+                  command = "claude-worktree-remove";
                   timeout = 600;
                 }
               ];
@@ -290,7 +360,9 @@ fp: {
             current='{}'
           fi
           merged=$(printf '%s\n' "$current" \
-            | ${jq} --slurpfile declared ${declared} -f ${mergeFilter})
+            | ${jq} --slurpfile declared ${declared} \
+              --argjson retired ${lib.escapeShellArg (builtins.toJSON retiredHookCommands)} \
+              -f ${mergeFilter})
           if [ "$(printf '%s\n' "$current" | ${jq} -cS .)" \
             != "$(printf '%s\n' "$merged" | ${jq} -cS .)" ]; then
             verboseEcho "claude-code: asserting declared settings into $target"

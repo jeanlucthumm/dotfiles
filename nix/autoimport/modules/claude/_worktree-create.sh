@@ -1,19 +1,20 @@
-#!/usr/bin/env bash
-# Global WorktreeCreate hook: jj workspaces for any jj-colocated repo.
+# shellcheck shell=bash
+# WorktreeCreate hook (installed by claude-code.nix as claude-worktree-create):
+# jj workspaces for any jj-colocated repo.
 #
-# Claude Code's native EnterWorktree uses `git worktree`, which is wrong for
-# jj repos (moving @ in a colocated checkout from a git worktree corrupts the
-# jj working copy's view of it). This hook makes EnterWorktree create a jj
-# workspace under <repo>/.claude/worktrees/ instead.
+# Claude Code's native EnterWorktree runs plain `git worktree add`, which jj
+# knows nothing about. This hook makes EnterWorktree (and isolated subagents)
+# create a jj workspace under <repo>/.claude/worktrees/ instead; jj itself
+# attaches a real linked Git worktree, so the workspace has its own git
+# identity with HEAD tracking the workspace's @-.
 #
-# Delegation: if the repo carries its own .claude/hooks/setup-worktree.sh
-# (e.g. repl-it-web, which layers NX socket-dir and nix-env quirks on top),
-# that script is exec'd verbatim and owns the whole job. The generic logic
-# below runs only for repos without one.
+# Delegation: a repo carrying its own .claude/hooks/setup-worktree.sh has it
+# exec'd verbatim, owning the whole job. A repo carrying
+# .claude/hooks/worktree-setup.local.sh gets it run after the generic setup
+# below for repo-specific extras.
 #
 # jj-only by design: every repo on this machine is jj-colocated. A non-jj
-# repo fails loudly rather than falling back to git worktrees.
-set -euo pipefail
+# repo fails loudly rather than falling back to plain git worktrees.
 
 INPUT=$(cat)
 NAME=$(echo "$INPUT" | jq -r '.name // empty')
@@ -54,10 +55,8 @@ WORKTREE_PATH="${REPO}/.claude/worktrees/${NAME}"
 mkdir -p "$(dirname "$WORKTREE_PATH")"
 
 # Reuse an existing workspace of the same name instead of failing on
-# `jj workspace add`. EnterWorktree's `path` parameter validates against
-# `git worktree list` and so can never re-enter a jj workspace; re-entry
-# works by passing the same `name` and landing in this branch. base_ref is
-# ignored on reuse -- the workspace stays on whatever it was left at.
+# `jj workspace add`: EnterWorktree re-entry by `name` lands here. base_ref is
+# ignored on reuse; the workspace stays on whatever it was left at.
 # (grep without -q: with pipefail, -q's early exit SIGPIPEs jj and fails the pipeline)
 if [ -d "$WORKTREE_PATH" ] && jj -R "$REPO" workspace list --ignore-working-copy 2>/dev/null | grep "^${NAME}:" >/dev/null; then
   echo "Reusing existing jj workspace $NAME at $WORKTREE_PATH" >&2
@@ -72,31 +71,10 @@ if [ -n "$BASE_REF" ] && jj -R "$REPO" log --no-graph --ignore-working-copy -r "
 fi
 
 echo "Creating jj workspace $NAME at $WORKTREE_PATH (base: $REV)..." >&2
-jj -R "$REPO" workspace add --name "$NAME" -r "$REV" "$WORKTREE_PATH" >&2
-
-# Give the workspace its own (dummy) git identity: Claude Code verifies a
-# worktree's git identity on EnterWorktree and refuses a directory whose git
-# resolves to the parent checkout. An empty repo here satisfies that check,
-# and any real git invocation inside the workspace hits the inert dummy repo,
-# never the main checkout. jj ignores .git entirely.
-git init -q "$WORKTREE_PATH"
-
-# The dummy repo must also LOOK fully committed and pushed: Claude Code's
-# session-deletion checks run `git status --porcelain` (any output counts as
-# uncommitted work) and `git rev-list --max-count=1 HEAD --not --remotes`
-# (an unborn HEAD errors, which reads as "commits not pushed anywhere" and
-# blocks deletion even when forced). Commit the empty tree, plant a fake
-# origin ref at it, and hide untracked files through config so status stays
-# empty. Do NOT do this with an exclude-all in .git/info/exclude: nx's file
-# walker honors that file and then sees zero projects in the workspace.
-git -C "$WORKTREE_PATH" config status.showUntrackedFiles no
-export GIT_AUTHOR_NAME=dummy GIT_AUTHOR_EMAIL=dummy@localhost
-export GIT_COMMITTER_NAME=dummy GIT_COMMITTER_EMAIL=dummy@localhost
-DUMMY_TREE=$(git -C "$WORKTREE_PATH" hash-object -t tree /dev/null)
-DUMMY_COMMIT=$(git -C "$WORKTREE_PATH" commit-tree "$DUMMY_TREE" -m 'dummy identity commit')
-git -C "$WORKTREE_PATH" update-ref "$(git -C "$WORKTREE_PATH" symbolic-ref HEAD)" "$DUMMY_COMMIT"
-git -C "$WORKTREE_PATH" update-ref refs/remotes/origin/master "$DUMMY_COMMIT"
-unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+# --colocate states the requirement instead of leaning on jj's default (which
+# follows the git.colocate setting): Claude Code refuses a worktree without
+# its own git identity.
+jj -R "$REPO" workspace add --colocate --name "$NAME" -r "$REV" "$WORKTREE_PATH" >&2
 
 # Personal gitignored files every workspace needs. This replaces .worktreeinclude,
 # which Claude Code does not process when a WorktreeCreate hook is configured.
@@ -110,8 +88,8 @@ done
 # Optional repo-local extension for post-setup tweaks that don't warrant a
 # full setup-worktree.sh override. Env contract: REPO, WORKTREE_PATH, NAME.
 if [ -x "$REPO/.claude/hooks/worktree-setup.local.sh" ]; then
-  REPO="$REPO" WORKTREE_PATH="$WORKTREE_PATH" NAME="$NAME" \
-    "$REPO/.claude/hooks/worktree-setup.local.sh" >&2
+  export REPO WORKTREE_PATH NAME
+  "$REPO/.claude/hooks/worktree-setup.local.sh" >&2
 fi
 
 echo "$WORKTREE_PATH"
