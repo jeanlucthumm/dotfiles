@@ -1,5 +1,9 @@
 # Manual hardware-key-gated deposit of decrypted secrets to remote (keyless) hosts.
 #
+# TODO: deprecate. The server is now an agenix recipient via its SSH host key
+# (see _age/secrets.nix), so migrate the remaining targets to plain
+# age.secrets on the server and delete this module.
+#
 # Headless servers boot unattended and cannot perform a YubiKey PIN+touch, so
 # they cannot be agenix recipients. Instead, a secret is decrypted here behind
 # the hardware key, then pushed over SSH to the destination. The decryption
