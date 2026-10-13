@@ -48,6 +48,14 @@ not inherit gates from work that left the node.
   carries its meaning inline, like "B2 (dual-era serving)". Comment labels
   get their own namespace, never node names.
 
+## PR decks
+
+Overview card first, then deep dives in dependency order (data model, core
+logic, call sites), tests right after what they test. Judgment calls get
+D-labels on the card where they arise. The last card lists every file or
+hunk that got no card; empty is the goal. Prev/Next nav on every card, clear
+of the comment layer.
+
 ## Evidence
 
 Card claims come from the diff, not the node's plan entry — but the

@@ -1,6 +1,6 @@
 ---
 name: two-lens-review
-description: Autonomous two-subagent code review of a PR or pending change — one fresh-context functionality lens (bugs, removed behavior, cross-file tracing, purpose), one code-quality lens (reuse, simplification, efficiency, altitude) — verified findings only, then one fixup round. Use before marking a PR ready, or whenever an autonomous review is wanted and the human-only /code-review can't be fired. Flag meaty diffs for Jean-Luc to run the real /code-review himself.
+description: Autonomous two-subagent code review of a PR or pending change. Use before marking a PR ready, or whenever an autonomous review is wanted and the human-only /code-review can't be fired.
 ---
 
 # Two-lens review
@@ -19,7 +19,8 @@ Spawn two subagents in parallel (general-purpose, fresh context). Never
 review your own diff in your own context — you wrote it, you will defend it.
 The subagents get the PR URL (or, for unpushed work, the workspace path and
 `jj diff -r <change>` instructions), the change's stated intent, and nothing
-of your reasoning. If you authored the diff, write the reviewer prompts
+of your reasoning. They read code directly in a workspace with the change
+checked out: yours if you wrote it, otherwise find one with `jj workspace list`. If you authored the diff, write the reviewer prompts
 neutrally: don't steer them toward or away from anything — no "I already
 checked X", no hints about which parts you're confident in.
 
@@ -35,8 +36,8 @@ Common spine, in both prompts:
   Unverified hunches stay out or go in marked unconfirmed.
 - An empty findings list is a valid, good outcome.
 - Never comment on the PR; return findings only.
-- Not findings: style nits, anything a linter or typecheck catches,
-  pre-existing issues on untouched lines, restating the PR description.
+- Not findings: anything a linter or typecheck catches, pre-existing
+  issues on untouched lines, restating the PR description.
 - Return structured findings — `{file, line, summary, lens,
   severity: major|minor, confirmed: bool}` — plus a one-line verdict on the
   PR overall.
@@ -60,7 +61,10 @@ Quality lens, in order:
   behavior;
 - (c) efficiency — wasted work only if it plausibly matters in this context;
 - (d) altitude — is the change at the right layer/place, per the surrounding
-  code's conventions and any CLAUDE.md/AGENTS.md rules scoped to these paths.
+  code's conventions and any CLAUDE.md/AGENTS.md rules scoped to these paths;
+- (e) necessity — every piece of the diff should earn its place. Flag anything
+  a reviewer would ask "why is this here?" about: dead or unreachable code, a
+  second home for something defined elsewhere, a comment that restates the code.
 
 These are judgment inputs: `confirmed=true` only when the better alternative
 concretely exists (the agent found the helper, or can sketch the simpler
