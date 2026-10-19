@@ -1,0 +1,4 @@
+.terraform/
+*.tfplan
+# bootstrap/terraform.tfstate is committed on purpose; see bootstrap/main.tf.
+*.tfstate.backup
