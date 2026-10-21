@@ -15,8 +15,8 @@ secret-bearing resources there (keys, API keys), since its state is public.
 
 ## Running
 
-OpenTofu (`tofu`) is on the server's PATH. On a workstation, use
-`nix run nixpkgs#opentofu -- <cmd>`.
+`infra/gcp/devenv.nix` provides OpenTofu (`tofu`); direnv loads it on `cd`. It's also
+on the server's PATH.
 
 ```sh
 cd infra/gcp/<root>
