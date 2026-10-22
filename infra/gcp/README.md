@@ -29,6 +29,6 @@ After a bootstrap apply, commit `terraform.tfstate`.
 
 ## Server credentials
 
-`nix/autoimport/modules/gcp-sandbox.nix` (server only) sets up gcloud and
+`nix/autoimport/modules/gcp/gcp.nix` (server only) sets up gcloud and
 OpenTofu and exports the credentials to every agent session. The key itself is a
 plain file at `~/.config/gcloud-sandbox/key.json`.
