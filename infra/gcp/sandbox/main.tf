@@ -22,3 +22,10 @@ terraform {
 provider "google" {
   project = "agent-sandbox-jeanlucthumm"
 }
+
+# Places API, for restaurant ratings and reviews. Called with the service
+# account's OAuth token, so no API key.
+resource "google_project_service" "places" {
+  service            = "places.googleapis.com"
+  disable_on_destroy = false
+}
