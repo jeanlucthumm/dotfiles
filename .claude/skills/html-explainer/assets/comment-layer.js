@@ -7,6 +7,8 @@
     - Pin (rare) -> click anywhere (e.g. SVG diagrams) -> anchored note
     - widget "Copy all" builds an agent-readable payload and clears
     - optional page hook: window.zcExtraContext = (clickTarget) => string|null
+    - optional page hook: window.zcView = () => string, for pages that swap
+      content per route; comments then render only on the view they were made on
     - test API: window.zergComments = { list, payload }
 
   Live mode: dormant until a session polls window.zcLive.drain(). While polls
@@ -179,6 +181,9 @@
     const hls = hlOk ? { plain: new Highlight(), wait: new Highlight(), done: new Highlight() } : null;
     if (hls) { CSS.highlights.set('zc', hls.plain); CSS.highlights.set('zc-wait', hls.wait); CSS.highlights.set('zc-done', hls.done); }
     const stateOf = (it) => (it.state === 'queued' || it.state === 'sent') ? 'wait' : it.state === 'answered' ? 'done' : 'plain';
+    // Storage is per file, so routed pages need the view id to keep comments
+    // from re-anchoring on matching text in another route.
+    const viewOf = () => (typeof window.zcView === 'function' && window.zcView()) || null;
 
     // --- UI scaffolding -------------------------------------------------
     const widget = document.createElement('div');
@@ -224,6 +229,8 @@
       if (pop) { pop.remove(); pop = null; }
       openN = null;
     }
+    // Unsent text in the popover keeps it open.
+    const hasDraft = () => { const ta = pop && pop.querySelector('textarea'); return !!(ta && ta.value.trim()); };
 
     // --- live session state ------------------------------------------------
     const LIVE_MS = 8000;
@@ -316,7 +323,9 @@
     function renderAll() {
       marks.textContent = '';
       if (hls) Object.values(hls).forEach((h) => h.clear());
+      const view = viewOf();
       for (const it of items) {
+        if (it.view && it.view !== view) continue;
         let x, y;
         if (it.type === 'text') {
           const r = findRange(it);
@@ -490,6 +499,7 @@
         if (!sel.rangeCount || sel.isCollapsed) { if (bubble) { bubble.remove(); bubble = null; } return; }
         const raw = sel.toString();
         if (raw.trim().length < 3) return;
+        if (hasDraft()) return; // a plain selection then, e.g. to copy page text into the draft
         const r = sel.getRangeAt(0);
         const pre = document.createRange();
         pre.setStart(document.body, 0);
@@ -506,6 +516,7 @@
           prefix: pre.toString().slice(-30),
           suffix: post.toString().slice(0, 30),
           section: sectionOf(r.startContainer),
+          view: viewOf(),
         };
         const rect = r.getBoundingClientRect();
         killFloaters();
@@ -543,6 +554,7 @@
         y: e.pageY,
         near: near || e.target.tagName.toLowerCase(),
         section: sectionOf(e.target),
+        view: viewOf(),
         extra: (typeof window.zcExtraContext === 'function') ? window.zcExtraContext(e.target) : null,
       };
       openEditor(e.pageX - 10, e.pageY - 24, '“' + clip(pending.near, 160) + '”' + (pending.extra ? ' · ' + pending.extra : ''));
@@ -635,10 +647,23 @@
       if (!pop || e.target.closest('.zc-ui')) return;
       const de = document.documentElement;
       if (e.clientX >= de.clientWidth || e.clientY >= de.clientHeight) return; // page scrollbar
-      const ta = pop.querySelector('textarea');
-      if (ta && ta.value.trim()) return;
+      if (hasDraft()) return;
       pending = null;
       killFloaters();
+    });
+
+    // Paste and dictation (Wispr Flow pastes) land wherever focus is, and a
+    // click on the popover's quote or replies, or on the page, leaves it on the
+    // body. Route a paste that lands outside any field into the open box.
+    document.addEventListener('paste', (e) => {
+      const ta = pop && pop.querySelector('textarea');
+      const t = e.target;
+      if (!ta || t.isContentEditable || t.closest('input, textarea, select')) return;
+      const text = e.clipboardData.getData('text/plain');
+      if (!text) return;
+      e.preventDefault();
+      ta.focus();
+      document.execCommand('insertText', false, text);
     });
 
     document.addEventListener('keydown', (e) => {
