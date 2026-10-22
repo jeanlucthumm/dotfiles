@@ -236,6 +236,7 @@ fp: {
         skipDangerousModePermissionPrompt = true;
         skipWorkflowUsageWarning = true;
         fileCheckpointingEnabled = false;
+        idleCompaction = false;
         spinnerTipsEnabled = false;
         voiceEnabled = true;
         preferredNotifChannel = "kitty";
