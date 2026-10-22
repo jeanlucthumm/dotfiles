@@ -45,6 +45,8 @@ load-bearing:
 - A gate per node: deterministic where cheap to encode (status codes,
   transcript diffs); otherwise an LLM reads the transcript and judges.
   Don't build assertion machinery a reading settles.
+- For UI-facing nodes, who captures screenshots in the live check and
+  where they land; review decks and PR bodies reuse them.
 - Human gates named: which nodes are risk carriers getting the full
   /code-review, and that reviews gate merges, never development.
 - A rollout paragraph, plan-level not per-node: the critical path of what

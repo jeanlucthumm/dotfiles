@@ -51,10 +51,16 @@ not inherit gates from work that left the node.
 ## PR decks
 
 Overview card first, then deep dives in dependency order (data model, core
-logic, call sites), tests right after what they test. Judgment calls get
+logic, call sites). Skip unit-test cards; a card on validation only when it
+goes beyond unit tests (E2E, live checks, what was actually exercised and on
+which head). For UI-facing PRs, put real screenshots from those runs on the
+cards; they double as PR description material later. Judgment calls get
 D-labels on the card where they arise. The last card lists every file or
 hunk that got no card; empty is the goal. Prev/Next nav on every card, clear
 of the comment layer.
+
+The user reads every card line by line, so a deck holds only what must be
+read. If you would tell him a card is skippable, cut it instead.
 
 ## Evidence
 
