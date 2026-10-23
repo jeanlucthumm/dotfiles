@@ -56,7 +56,16 @@ fp: {
       [ -n "''${CLAUDE_ENV_FILE:-}" ] || exit 0
       cd "$(${jq} -r .cwd)"
       [ -f devenv.nix ] || exit 0
-      ${pkgs.devenv}/bin/devenv print-dev-env >>"$CLAUDE_ENV_FILE"
+      # Claude Code sources the env file with zsh (login shell is nushell), but
+      # print-dev-env is a bash state dump: it assigns LINENO (read-only in zsh,
+      # aborts every Bash call) and defines bash-only function bodies. Let bash
+      # consume it and emit only exported variables. enterShell output goes to
+      # stderr so it can't land in the env file.
+      ${pkgs.bash}/bin/bash -c '
+        dump=$(${pkgs.devenv}/bin/devenv print-dev-env) || exit
+        eval "$dump" >&2
+        export -p | ${pkgs.gnugrep}/bin/grep -Ev "^declare -x (PWD|OLDPWD|SHLVL|_)="
+      ' >>"$CLAUDE_ENV_FILE"
       # print-dev-env replaces PATH wholesale; keep the session's tools
       # reachable behind the project's, as nix develop does.
       printf 'export PATH="$PATH:%s"\n' "$PATH" >>"$CLAUDE_ENV_FILE"
