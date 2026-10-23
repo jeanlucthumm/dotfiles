@@ -26,6 +26,8 @@ fp @ {jlib, ...}: {
       # to be set twice.
       stylix.targets = {
         qutebrowser.enable = false;
+        # Unused, and stylix sets the renamed `programs.rofi.font` (eval warning).
+        rofi.enable = false;
         # Use custom kitty themes instead of Stylix's base16 mapping
         kitty.enable = n != "zenbones" && n != "snazzy" && n != "rose-pine";
       };
