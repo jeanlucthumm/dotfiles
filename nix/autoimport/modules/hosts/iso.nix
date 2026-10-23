@@ -28,7 +28,10 @@ fp: {
           services.avahi = {
             enable = true;
             nssmdns4 = true;
-            publish.enable = true;
+            settings.publish = {
+              disable-publishing = false;
+              publish-addresses = true;
+            };
           };
 
           # SSH access for nixos-anywhere: root over key-only SSH
