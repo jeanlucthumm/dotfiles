@@ -40,10 +40,16 @@
     reddit-easy-post = {
       url = "github:jeanlucthumm/reddit-easy-post";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.pyproject-build-systems.follows = "pyproject-build-systems";
     };
     taskwarrior-enhanced = {
       url = "github:jeanlucthumm/taskwarrior-enhanced";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.pyproject-build-systems.follows = "pyproject-build-systems";
     };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
