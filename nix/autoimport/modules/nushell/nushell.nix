@@ -38,9 +38,10 @@ fp @ {jlib, ...}: {
           man = "batman";
         };
 
-        # TODO: write an adapter that re-emits `home.sessionVariables` as
-        # nu env-sets so we don't have to dual-declare here. HM's POSIX
-        # `hm-session-vars.sh` isn't nu-parseable.
+        # TODO: try `loadSessionVariables = true`. HM now sources
+        # `home.sessionVariables` (and the system env) into env.nu, which
+        # would end the dual-declaring below and maybe darwin-path-fix.nix.
+        loadSessionVariables = false;
         environmentVariables = {
           GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
           NH_FLAKE = config.home.homeDirectory + "/nix";
