@@ -141,6 +141,8 @@ fp @ {jlib, ...}: {
     system.defaults.NSGlobalDomain = {
       InitialKeyRepeat = 10;
       KeyRepeat = 1;
+      # Holding a key repeats it instead of popping the accent menu
+      ApplePressAndHoldEnabled = false;
     };
 
     system.defaults.CustomUserPreferences = {
