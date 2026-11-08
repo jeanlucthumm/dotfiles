@@ -11,6 +11,7 @@ The reader's comments reach this session as they're written, and replies render 
    The reply supports paragraphs, `-` lists, inline code, **bold** and fenced code. Keep it short, like a margin note.
    The reader is reading the page, so your chat message after a reply is just `OK`. No paraphrase, no comment number, no side notes: anything else is noise they have to skim twice.
 4. If the comment asks for a change to the page, edit the file and reply saying what changed. Then run `action -- eval "location.reload()"`. Threads survive a reload because they live in localStorage, and the thread the reader had open reopens.
+5. Treat questions as bug reports on the page, not only as questions. If the reader had to ask, the page has a gap, and the next reader (or this one, rereading tomorrow) will hit it too. So after answering, ask whether the answer belongs on the page: a missing background card, a definition that assumed too much, an example that would have made it click. When the fix is an easy win, make it in the same turn and say so in the reply ("Also added this to the card"). A thread that took several follow-ups to land is the strongest signal: fold the version that finally worked into the page, since the reply thread is where it otherwise dies.
 
 A `{"closed":true}` event means the pane is gone, so stop.
 
