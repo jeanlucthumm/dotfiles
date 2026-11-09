@@ -1,6 +1,7 @@
 # Themeing
 fp: {
   flake.modules.generic.theme = {
+    config,
     lib,
     pkgs,
     ...
@@ -26,7 +27,12 @@ fp: {
           type = types.str;
         };
         darkMode = mkOption {
-          description = "Whether to enable dark mode (T) or light mode (F).";
+          description = ''
+            Default polarity: dark (T) or light (F). Build-time targets (stylix,
+            LS_COLORS, taskwarrior) use it, and live targets (kitty, nvim) fall
+            back to it when the OS reports no preference. Kitty and nvim follow
+            the OS appearance live; flip it with `theme-toggle`.
+          '';
           type = types.bool;
           default = false;
         };
@@ -34,6 +40,40 @@ fp: {
           description = "Optional variant of a theme.";
           type = types.str;
           default = "";
+        };
+        base16Schemes = mkOption {
+          description = "base16 scheme per polarity, derived from name/variant.";
+          internal = true;
+          type = types.attrsOf types.path;
+          default = let
+            t = config.theme.name;
+            s = name: "${pkgs.base16-schemes}/share/themes/${name}.yaml";
+          in
+            if t == "gruvbox"
+            then {
+              dark = s "gruvbox-material-dark-soft";
+              light = s "gruvbox-material-light-soft";
+            }
+            else if t == "zenbones"
+            then {
+              dark = s "zenbones";
+              light = ./themes/zenbones-light.yaml;
+            }
+            else if t == "snazzy"
+            then {
+              dark = s "snazzy";
+              light = ./themes/snazzy-light.yaml;
+            }
+            else if t == "rose-pine"
+            then {
+              dark = s (
+                if config.theme.variant == "moon"
+                then "rose-pine-moon"
+                else "rose-pine"
+              );
+              light = s "rose-pine-dawn";
+            }
+            else throw "unknown theme ${t}";
         };
         fontCoding = mkOption {
           description = "Font used for coding.";
@@ -75,30 +115,9 @@ fp: {
         then "dark"
         else "light";
       base16Scheme =
-        if t == "gruvbox"
-        then
-          if d
-          then "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-soft.yaml"
-          else "${pkgs.base16-schemes}/share/themes/gruvbox-material-light-soft.yaml"
-        else if t == "zenbones"
-        then
-          if d
-          then "${pkgs.base16-schemes}/share/themes/zenbones.yaml"
-          else ./themes/zenbones-light.yaml
-        else if t == "snazzy"
-        then
-          if d
-          then "${pkgs.base16-schemes}/share/themes/snazzy.yaml"
-          else ./themes/snazzy-light.yaml
-        else if t == "rose-pine"
-        then
-          if d
-          then
-            if config.theme.variant == "moon"
-            then "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml"
-            else "${pkgs.base16-schemes}/share/themes/rose-pine.yaml"
-          else "${pkgs.base16-schemes}/share/themes/rose-pine-dawn.yaml"
-        else throw "unknown theme ${t}";
+        if d
+        then config.theme.base16Schemes.dark
+        else config.theme.base16Schemes.light;
       fonts = {
         monospace = {
           package = config.theme.fontCoding.package;
