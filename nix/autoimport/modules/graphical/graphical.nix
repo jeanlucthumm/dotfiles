@@ -87,7 +87,6 @@ fp @ {
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
     generic = {
       config,
-      lib,
       pkgs,
       ...
     }: let
@@ -113,23 +112,7 @@ fp @ {
         (signStable obsidian) # Note taking; also provides the official `obsidian-cli`
       ];
       xdg.configFile."kitty/auto_pad.py".source = ./_kitty-auto-pad.py;
-
-      # Kitty only reads its config at startup, so reload running instances
-      # (SIGUSR1) whenever a switch changed anything under ~/.config/kitty.
-      home.activation.reloadKitty = let
-        pkill =
-          if pkgs.stdenv.hostPlatform.isDarwin
-          then "/usr/bin/pkill"
-          else "${pkgs.procps}/bin/pkill";
-        dir = "home-files/.config/kitty";
-      in
-        lib.hm.dag.entryAfter ["linkGeneration"] ''
-          if [[ -n "''${oldGenPath:-}" ]] \
-            && ! ${pkgs.diffutils}/bin/diff -rq "$oldGenPath/${dir}" "$newGenPath/${dir}" >/dev/null 2>&1; then
-            run ${pkill} -USR1 -x kitty || true
-          fi
-        '';
-
+      xdg.configFile."kitty/url_hints.py".source = ./_kitty-url-hints.py;
       programs = {
         # TODO: re-enable on darwin once appstream builds again (nixpkgs Darwin breakage)
         zathura.enable = pkgs.stdenv.hostPlatform.isLinux;
@@ -181,8 +164,12 @@ fp @ {
             "kitty_mod+h" = "kitty_scrollback_nvim";
             "kitty_mod+g" = "kitty_scrollback_nvim --config ksb_builtin_last_cmd_output";
             "kitty_mod+y" = "launch --type=background copy-last-cmd";
-            # Like kitty_mod+e (open URL) but copies the URL to clipboard instead
-            "kitty_mod+l" = "kitten hints --type url --program @";
+            # Open URL with hints. Unlike the stock open_url_with_hints, follows
+            # OSC 8 hyperlink targets, so URLs a TUI hard-wrapped onto several
+            # lines (Claude Code) open in full; see _kitty-url-hints.py
+            "kitty_mod+e" = "kitten url_hints.py";
+            # Same, but copies the URL to clipboard instead
+            "kitty_mod+l" = "kitten url_hints.py --program @";
             "ctrl+shift+right" = "mouse_select_command_output";
             "shift+enter" = "send_text all \\e\\r";
           };
