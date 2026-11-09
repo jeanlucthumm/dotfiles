@@ -22,11 +22,5 @@
         ++ lib.optionals (darwin != null && hostPlatform.isDarwin) [darwin]
         ++ lib.optionals (nixos != null && hostPlatform.isLinux) [nixos];
     });
-
-    # Easy ignored themeing
-    withLocalThemeOverride = default: let
-      localSettings = lib.optionalAttrs (builtins.pathExists ./theme-setting-local.nix) (import ./theme-setting-local.nix);
-    in
-      default // localSettings;
   };
 }

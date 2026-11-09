@@ -1,7 +1,4 @@
 result
-# Used for frequently changing theme settings so we don't get dirty repo
-# constantly.
-system/hosts/*/theme-setting-local.nix
 *.qcow2
 .claude/settings.local.json
 CLAUDE-HOST.md

@@ -1,4 +1,4 @@
-fp @ {jlib, ...}: {
+fp: {
   flake.nixosConfigurations."desktop" = fp.inputs.nixpkgs.lib.nixosSystem {
     modules = with fp.config.flake.modules.nixos; [
       base
@@ -20,7 +20,7 @@ fp @ {jlib, ...}: {
         networking.hostName = "desktop";
         networking.hostId = "17646629";
         jl.system = "x86_64-linux";
-        theme = jlib.withLocalThemeOverride {
+        theme = {
           name = "gruvbox";
           darkMode = false;
           fontCoding = {

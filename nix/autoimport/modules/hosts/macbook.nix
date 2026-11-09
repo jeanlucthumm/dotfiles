@@ -1,4 +1,4 @@
-fp @ {jlib, ...}: {
+fp: {
   flake.darwinConfigurations."macbook" = fp.inputs.nix-darwin.lib.darwinSystem {
     modules = with fp.config.flake.modules.darwin; [
       base
@@ -15,7 +15,7 @@ fp @ {jlib, ...}: {
           desktop.fido2.auth
           phone
         ];
-        theme = jlib.withLocalThemeOverride {
+        theme = {
           name = "rose-pine";
           darkMode = false;
         };
