@@ -28,10 +28,9 @@ fp: {
         };
         darkMode = mkOption {
           description = ''
-            Default polarity: dark (T) or light (F). Build-time targets (stylix,
-            LS_COLORS, taskwarrior) use it, and live targets (kitty, nvim) fall
-            back to it when the OS reports no preference. Kitty and nvim follow
-            the OS appearance live; flip it with `theme-toggle`.
+            Default polarity: dark (T) or light (F). Used where the OS appearance
+            isn't followed live, or when the OS reports no preference. Flip the
+            live mode with `theme-toggle`.
           '';
           type = types.bool;
           default = false;
@@ -41,39 +40,82 @@ fp: {
           type = types.str;
           default = "";
         };
-        base16Schemes = mkOption {
-          description = "base16 scheme per polarity, derived from name/variant.";
+        modes = mkOption {
+          description = "Per-polarity assets (base16 scheme, kitty colors, vivid theme), derived from name/variant.";
           internal = true;
-          type = types.attrsOf types.path;
+          type = types.attrsOf (types.attrsOf types.anything);
           default = let
-            t = config.theme.name;
-            s = name: "${pkgs.base16-schemes}/share/themes/${name}.yaml";
+            base16 = name: "${pkgs.base16-schemes}/share/themes/${name}.yaml";
+            kittyUpstream = name: "${pkgs.kitty-themes}/share/kitty-themes/themes/${name}.conf";
+            # Custom files where upstream lacks a variant or real bright colors.
+            kittyCustom = name: ./themes/kitty + "/${name}.conf";
+            moon = config.theme.variant == "moon";
           in
-            if t == "gruvbox"
-            then {
-              dark = s "gruvbox-material-dark-soft";
-              light = s "gruvbox-material-light-soft";
+            {
+              gruvbox = {
+                dark = {
+                  base16 = base16 "gruvbox-material-dark-soft";
+                  kitty = kittyUpstream "GruvboxMaterialDarkSoft";
+                  vivid = "gruvbox-dark-soft";
+                };
+                light = {
+                  base16 = base16 "gruvbox-material-light-soft";
+                  kitty = kittyUpstream "GruvboxMaterialLightSoft";
+                  vivid = "gruvbox-light-soft";
+                };
+              };
+              zenbones = {
+                dark = {
+                  base16 = base16 "zenbones";
+                  kitty = kittyUpstream "zenbones_dark";
+                  vivid = "zenburn";
+                };
+                light = {
+                  base16 = ./themes/zenbones-light.yaml;
+                  kitty = kittyUpstream "zenbones_light";
+                  vivid = "zenburn";
+                };
+              };
+              snazzy = {
+                dark = {
+                  base16 = base16 "snazzy";
+                  kitty = kittyCustom "snazzy_dark";
+                  vivid = "snazzy";
+                };
+                light = {
+                  base16 = ./themes/snazzy-light.yaml;
+                  kitty = kittyCustom "snazzy_light";
+                  vivid = "${./themes/vivid/snazzy-light.yml}";
+                };
+              };
+              rose-pine = {
+                dark = {
+                  base16 = base16 (
+                    if moon
+                    then "rose-pine-moon"
+                    else "rose-pine"
+                  );
+                  kitty = kittyCustom (
+                    if moon
+                    then "rose-pine_moon"
+                    else "rose-pine_dark"
+                  );
+                  vivid =
+                    if moon
+                    then "rose-pine-moon"
+                    else "rose-pine";
+                };
+                light = {
+                  base16 = base16 "rose-pine-dawn";
+                  kitty = kittyCustom "rose-pine_light";
+                  vivid = "rose-pine-dawn";
+                };
+              };
             }
-            else if t == "zenbones"
-            then {
-              dark = s "zenbones";
-              light = ./themes/zenbones-light.yaml;
+            .${
+              config.theme.name
             }
-            else if t == "snazzy"
-            then {
-              dark = s "snazzy";
-              light = ./themes/snazzy-light.yaml;
-            }
-            else if t == "rose-pine"
-            then {
-              dark = s (
-                if config.theme.variant == "moon"
-                then "rose-pine-moon"
-                else "rose-pine"
-              );
-              light = s "rose-pine-dawn";
-            }
-            else throw "unknown theme ${t}";
+            or (throw "unknown theme ${config.theme.name}");
         };
         fontCoding = mkOption {
           description = "Font used for coding.";
@@ -95,7 +137,10 @@ fp: {
   }: {
     stylix = let
       t = config.theme.name;
-      d = config.theme.darkMode;
+      polarity =
+        if config.theme.darkMode
+        then "dark"
+        else "light";
     in {
       enable = true;
       image =
@@ -110,14 +155,8 @@ fp: {
         else if t == "rose-pine"
         then ./wallpapers/gruvbox/dark/great-wave-of-kanagawa-gruvbox.png
         else throw "unknown theme ${t}";
-      polarity =
-        if d
-        then "dark"
-        else "light";
-      base16Scheme =
-        if d
-        then config.theme.base16Schemes.dark
-        else config.theme.base16Schemes.light;
+      inherit polarity;
+      base16Scheme = config.theme.modes.${polarity}.base16;
       fonts = {
         monospace = {
           package = config.theme.fontCoding.package;
@@ -139,14 +178,7 @@ fp: {
     };
   };
 
-  flake.modules.nixos.theme = {
-    config,
-    lib,
-    ...
-  }: let
-    t = config.theme.name;
-    d = config.theme.darkMode;
-  in {
+  flake.modules.nixos.theme = {config, ...}: {
     imports = [
       fp.inputs.stylix.nixosModules.stylix
       fp.config.flake.modules.generic.theme
@@ -155,20 +187,7 @@ fp: {
 
     programs.vivid = {
       enable = true;
-      theme =
-        if t == "gruvbox"
-        then
-          if d
-          then "gruvbox-dark-soft"
-          else "gruvbox-light-soft"
-        else if t == "zenbones"
-        then "zenburn"
-        else if t == "snazzy"
-        then
-          if d
-          then "snazzy"
-          else ./themes/vivid/snazzy-light.yml
-        else throw "unknown theme ${t}";
+      theme = config.theme.modes.${config.stylix.polarity}.vivid;
     };
 
     home-manager.sharedModules = [

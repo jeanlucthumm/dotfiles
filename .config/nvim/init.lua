@@ -738,7 +738,7 @@ local function autoTheme()
   local has_theme, theme = pcall(require, 'theme')
   if has_theme then
     theme.setup()
-    lualine_theme = theme.lualine_theme or lualine_theme
+    lualine_theme = theme.lualine_theme
     return
   end
   if env.TERM == 'xterm-kitty' then
