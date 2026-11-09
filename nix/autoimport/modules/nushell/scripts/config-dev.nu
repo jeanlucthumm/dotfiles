@@ -58,7 +58,7 @@ $env.config.menus ++= [
       selected_text: green_reverse
       description_text: yellow
     }
-    source: { |buffer, position|
+    source: { |buffer|
       let match = $abbreviations | columns | where $it == $buffer
       if ($match | is-empty) {
         { value: $buffer }
