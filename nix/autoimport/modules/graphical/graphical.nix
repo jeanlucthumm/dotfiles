@@ -87,6 +87,7 @@ fp @ {
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
     generic = {
       config,
+      lib,
       pkgs,
       ...
     }: let
@@ -112,6 +113,23 @@ fp @ {
         (signStable obsidian) # Note taking; also provides the official `obsidian-cli`
       ];
       xdg.configFile."kitty/auto_pad.py".source = ./_kitty-auto-pad.py;
+
+      # Kitty only reads its config at startup, so reload running instances
+      # (SIGUSR1) whenever a switch changed anything under ~/.config/kitty.
+      home.activation.reloadKitty = let
+        pkill =
+          if pkgs.stdenv.hostPlatform.isDarwin
+          then "/usr/bin/pkill"
+          else "${pkgs.procps}/bin/pkill";
+        dir = "home-files/.config/kitty";
+      in
+        lib.hm.dag.entryAfter ["linkGeneration"] ''
+          if [[ -n "''${oldGenPath:-}" ]] \
+            && ! ${pkgs.diffutils}/bin/diff -rq "$oldGenPath/${dir}" "$newGenPath/${dir}" >/dev/null 2>&1; then
+            run ${pkill} -USR1 -x kitty || true
+          fi
+        '';
+
       programs = {
         # TODO: re-enable on darwin once appstream builds again (nixpkgs Darwin breakage)
         zathura.enable = pkgs.stdenv.hostPlatform.isLinux;
