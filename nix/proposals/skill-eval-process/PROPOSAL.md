@@ -61,6 +61,12 @@ notebook live in the private repo `jeanlucthumm/llm-dreaming-research`
 - Losses teach rails. Every error of commission mapped to one missing
   instruction, and the fix was one line in the next prompt.
 
+- (deslop, run 3) Confirmed: both orders again split close calls (pair 1
+  went 36-35 one way, 39-35 the other); k=2 made a +3-item gap legible
+  (zero spread on the replay, 1 item on the audited dir); the audit was again
+  the most useful ground truth. Losses-teach-rails held: all four smoke
+  guidance lines landed in round 1 (e.g. the swallowing catch removed 4/4).
+
 ## Bucket 2: flipped once already, hold loosely
 
 - "Terse is safer." Run-001: the 11-line prompt won with zero errors; the
@@ -80,6 +86,11 @@ notebook live in the private repo `jeanlucthumm/llm-dreaming-research`
   information loss, which is what canaries were for. Next: embed them inside
   dated entries mid-file.
 
+- (deslop, run 3) Rails edged terse again (pairwise 297-288 on real code,
+  +3 audit items), but rails also made the only regressions (tightened
+  signatures, deleted test-scenario comments) at 2.3x the wall time. Rails
+  buy reach, not safety.
+
 ## Bucket 3: open questions, what more runs are for
 
 - Does any of this transfer beyond skills whose output is a diffable file tree?
@@ -96,6 +107,16 @@ notebook live in the private repo `jeanlucthumm/llm-dreaming-research`
   pair (run-001). Faster vs cleaner attribution. No evidence yet on which to
   prefer.
 - How many runs before prescribing anything. This document's own question.
+
+- (deslop, run 3) New: ground truth can be wrong in every family. An
+  injected trap carried a false why-comment, the audit had a moot item, and
+  replay comments can need data the code lacks (traffic, latency). Let
+  graders void items with evidence. Replay repos also hold the future
+  (landed commits), so prompts must fence revisions.
+- (deslop, run 3) The pre-reg must fix the aggregation formula (pooled vs
+  per-fixture, per-run regressions); ambiguity flipped one ship criterion.
+- (deslop, run 3) Cost: ~7M tokens for 15 executor runs; grading and judging
+  were 60% of it.
 
 ## Numbers for reference
 
