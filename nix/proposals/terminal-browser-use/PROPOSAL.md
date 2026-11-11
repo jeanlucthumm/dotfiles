@@ -1,11 +1,12 @@
 # Better use of terminal-browser
 
-Status: proposal, not started.
-Date: 2026-10-06
+Status: proposal. Live comments built (section 3), the rest not started.
+Date: 2026-10-06, updated 2026-11-09 for v0.15.3.
 
 Admission bar: how the skills in `~/.claude/skills` and the Nix config should
-use terminal-browser, backed by behaviour verified on v0.13.4. Upstream
-packaging work (the flake PR) stays in the fork branch, not here.
+use terminal-browser, backed by behaviour verified on v0.13.4 or read from the
+v0.15.3 source (marked). Upstream packaging work (the flake PR) stays in the
+fork branch, not here.
 
 ## Trigger
 
@@ -60,21 +61,52 @@ Verified unless marked otherwise.
   `/tmp/recordings/<host>-<HHMMSS>/` with a manifest and copies the path to
   the clipboard.
 
+## What v0.15 adds
+
+Read from the v0.15.3 source on 2026-11-09. `.md` rendering and grab
+screenshots have since been run on this machine.
+
+- Grab mode sends a screenshot (verified 2026-11-11). The text is now
+  `[<element html> selector: <css path>]`; the `> ` prefix is gone. In kitty
+  it copies a PNG of the element to the clipboard and sends ctrl+v to the
+  agent pane, so Claude Code attaches it. It overwrites the clipboard, and
+  in the test the image arrived twice. A file is written only when pasting
+  isn't possible.
+- `.md` files render as styled pages: code highlighting, mermaid blocks,
+  GitHub alerts, task lists, terminal theme colours. Scripts are blocked
+  (`script-src 'none'`), so no comment layer and no live mode on them. HTML
+  files still load as `file://`, so explainers and their localStorage threads
+  are unaffected.
+- `TERMINAL_BROWSER_NO_CHROME=1` drops the toolbar, padding and frame. The
+  browser reads it from the environment of the `open` call, so it should
+  apply per pane. With no frame, the blue agent outline probably has nowhere
+  to draw. Both untested.
+- Tab next and previous shortcuts. `ctrl+tab` never reaches the browser
+  because kitty's default binds it to `next_tab`; `cmd+alt+left/right` do.
+- On the first run of each new version, the CLI links upstream's own skill
+  into `~/.agents/skills` and `~/.codex/skills` (and `.cursor`, `.gemini`
+  when present). It skips real directories, so our
+  `~/.claude/skills/terminal-browser` is untouched. That bundled skill is
+  the version's `--help` text plus "run `action done` when finished" and
+  WebMCP guidance. Opt out by writing `no` to
+  `~/.local/state/terminal-browser/skills-choice`.
+- Settings worth knowing: `updates.check`, `telemetry.usage`,
+  `telemetry.crashReports`, `window.transparent`. `DO_NOT_TRACK=1` or
+  `TERMINAL_BROWSER_NO_TELEMETRY=1` turn telemetry off without a settings
+  file.
+- No skill impact: clicks reaching iframes (captchas work), site permission
+  prompts, Google sign-in popups, `clear-browsing-data`, zoom, new terminal
+  backends. There is still no setting for the agent outline, and WebMCP is
+  still absent from the browser source (re-check on the new Electron).
+
 ## Proposal
 
-### 1. Fix the `terminal-browser` skill text
+### 1. Rewrite the `terminal-browser` skill as a thin layer (done)
 
-Cheap and overdue. Replace the gotchas list with:
-
-- `open` prints the instance record; keep `key` and `pane.pane`, not `pid`.
-- Teardown is `kitten @ close-window --match id:<pane>`. Never `kill`.
-- `ls --all` and `--browser <key>` everywhere; `action done` when finished.
-- One `action` at a time per browser; `wait --fn` for blocking on page
-  state; `screenshot /abs/path.png` then read the image to verify layout.
-- Prefer `new-tab --browser` over `navigate` when the user may want to go
-  back.
-- Do not use WebMCP yet; drop the `kill <pid>` and `kitten launch
-  --type=tab` advice in favour of the helper below.
+Done 2026-11-09. The skill keeps only what upstream's help text doesn't
+cover (background placement, teardown, one action at a time, `action done`,
+`.md` viewing, grab lines) and points at `terminal-browser help` for
+commands.
 
 ### 2. `tb-open`: one way to put a page beside the agent
 
@@ -90,24 +122,22 @@ raw `terminal-browser open`:
 - Poll `ls --all --json` until the new key appears, then print
   `{key, pane, tab, targetId}` as one JSON line.
 - Reuse: with `--reuse <key>` call `new-tab --browser <key>` instead.
+- `--bare` sets `TERMINAL_BROWSER_NO_CHROME=1` on the `open` call, once
+  that is tested. Cards and explainers don't need a URL bar.
 - `tb-close <key>` wraps the `close-window` teardown.
 
-### 3. Pull comments and decisions instead of paste-back
+### 3. Live comments instead of paste-back (built)
 
-The comment layer (`html-explainer/assets/comment-layer.js`) builds a
-payload and asks the human to copy it and paste it into chat. Replace that
-round trip:
-
-- Expose `window.zcCollect()` that returns the payload text and clears the
-  store (the "Copy & clear" button stays as a fallback for a dead session).
-- Add a "Done" button that sets `document.body.dataset.zcDone = "1"`.
-- The agent runs `action --browser <key> -- wait --fn
-  "document.body.dataset.zcDone"` in a loop (each call times out at 25s),
-  then `eval "zcCollect()"`. No clipboard, no paste, works while the agent
-  is mid-turn.
-- `pr-walkthrough` and `html-explainer` adopt it directly. `review-guide`
-  already sketched the same pull in its parked design; this is the minimal
-  version of it.
+`/html-explainer --live`, built 2026-10-08. A Monitor runs
+`scripts/zc-live-watch.sh <key>`, which polls `zcLive.drain()` every 1.5s;
+each new comment or follow-up wakes the session as an event, and
+`scripts/zc-live-reply.sh` renders the answer in the comment's thread.
+Polling doubles as the heartbeat, so the page shows "live" only while a
+session listens and falls back to Copy & clear otherwise. Since 2026-10-13
+the watcher polls the bundled agent-browser directly, because polling
+through `action` kept the outline lit. No helper types into the agent
+pane, so the self-drive block does not apply. This replaced the planned
+`zcCollect()` plus Done-button pull.
 
 ### 4. Cards with buttons in `stepwise-explainer`
 
@@ -116,13 +146,19 @@ buttons to the card template that set `document.body.dataset.step`, and
 have the skill wait on that marker between cards. Chat acks keep working;
 the buttons just remove the need to switch focus for the common case.
 Pair with the one-pane-many-tabs mode from section 2 so Back is a real tab
-switch.
+switch (the user can also flip tabs with `cmd+alt+left/right`), and with
+`--bare` so a card is only the card.
 
 ### 5. Nix config
 
-- Add a declarative `settings.json` next to `shortcuts.json` with
-  `updates.check = "off"`. The Nix install is read-only, `terminal-browser
-  upgrade` cannot work, and the update nag is noise.
+- Optional: a declarative `settings.json` next to `shortcuts.json` with
+  `"updates.check": "off"` (flat dotted keys). The check is one request per
+  launch, and its only visible effect is a green "update available, run
+  `terminal-browser upgrade`" line in Settings, which is wrong advice on a
+  read-only Nix install. Low value alone; worth doing only together with the
+  telemetry question below.
+- Leave the upstream skill links alone. They never touch our Claude skill,
+  they follow the installed version, and Codex gets a working skill for free.
 - Keep the flake input on the fork branch until the upstream flake PR
   lands, then flip the URL. `dev.nix` already carries that comment.
 - The flake is `aarch64-darwin` only. Linux hosts stay without the pane
@@ -131,8 +167,6 @@ switch.
 
 ### 6. Later
 
-- Grab mode as the "quote this element" path. Document ctrl+g in the skills
-  so the agent knows the `> ...` lines in a prompt came from the page.
 - Record mode for repro capture: a skill that asks the human to record,
   then reads the manifest from `/tmp/recordings/`.
 - The official Claude Code plugin (`claude-bridge`) renders the browser
@@ -145,25 +179,16 @@ switch.
 - Move `~/Code/tb-lab/lab.html` into the `terminal-browser` skill as a
   channel self-test once the skill is edited.
 
-### 3b. Live comments (built 2026-10-08, experimental)
-
-`/html-explainer --live`: a Monitor runs `scripts/zc-live-watch.sh <key>`, which polls
-`zcLive.drain()` through `action -- eval` every 1.5s. Each new comment or follow-up wakes
-the session as an event. The session answers with `scripts/zc-live-reply.sh`, which calls
-`zcLive.answer(n, md)`, and the reply renders in the comment's thread. Polling doubles as
-the heartbeat, so the page shows "live" only while a session listens and falls back to
-Copy & clear otherwise. Verified on v0.13.4: a reply eval running alongside the poller
-works, and threads survive a reload. No helper types into the agent pane, so the
-self-drive block does not apply. WebMCP was re-checked the same day and is still absent.
-
 ## Order
 
-1. Section 1, skill text. One edit, removes the `kill` footgun.
-2. Section 3, comment pull. Small JS change plus two skill edits.
-3. Section 2, `tb-open`. Needed before any skill runs from a background job.
-4. Section 5, `settings.json`.
-5. Section 4, card buttons.
-6. Section 6 as upstream moves.
+1. A short test on v0.15.3: `NO_CHROME` per pane and whether it hides the
+   outline, a grab screenshot arriving in Claude Code, live mode still
+   working, WebMCP on the new Electron.
+2. Section 2, `tb-open` (with `--bare` if step 1 passes). Needed before any
+   skill runs from a background job.
+3. Section 4, card buttons.
+4. Section 5 if the telemetry question lands on "off".
+5. Section 6 as upstream moves.
 
 ## Open questions
 
@@ -175,3 +200,5 @@ self-drive block does not apply. WebMCP was re-checked the same day and is still
   probably per browser. Unverified.
 - Whether to keep ack pacing in chat as the default and make buttons opt-in,
   or the reverse. Try buttons on a few decks first.
+- Turn telemetry off in the same `settings.json`? Upstream's events are
+  anonymous and logged locally for audit, so this is a preference, not a fix.
