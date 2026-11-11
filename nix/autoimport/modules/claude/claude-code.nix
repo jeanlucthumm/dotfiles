@@ -188,17 +188,22 @@ fp: {
         elif $b == null then $a
         else $b
         end;
-      # Drop every on-disk hook group that runs a retired command.
-      def prunehooks($retired):
+      # Drop every on-disk hook group that runs a retired command, or a
+      # command that a declared group for the same event also runs: the
+      # declared group replaces it. Without this, deepmerge's array union
+      # keeps the old group beside the edited one whenever a declared hook
+      # changes (a new timeout, say), and both stay registered.
+      def prunehooks($retired; $decl):
         if (.hooks | type) == "object" then
-          .hooks |= map_values(
-            if type == "array"
-            then map(select([.hooks[]?.command | select(IN($retired[]))] | length == 0))
-            else .
-            end)
+          .hooks |= with_entries(
+            ([$decl.hooks[.key][]?.hooks[]?.command]) as $owned
+            | if (.value | type) == "array"
+              then .value |= map(select([.hooks[]?.command | select(IN($retired[]) or IN($owned[]))] | length == 0))
+              else .
+              end)
         else .
         end;
-      prunehooks($retired) | deepmerge(.; $declared[0])
+      prunehooks($retired; $declared[0]) | deepmerge(.; $declared[0])
     '';
   in {
     options.jl.claude.package = lib.mkOption {
@@ -258,6 +263,11 @@ fp: {
                 {
                   type = "command";
                   command = "claude-worktree-create";
+                  # Claude Code kills a hook after 600 s by default and reports
+                  # "Hook cancelled". Concurrent creations queue on jj's repo
+                  # lock for the checkout, so a fan-out in a large repo can
+                  # pass 600 s; a kill mid-setup leaves a half-made workspace.
+                  timeout = 1800;
                 }
               ];
             }
