@@ -44,7 +44,9 @@ load-bearing:
 - Dependency edges (launch order falls out of them).
 - A gate per node: deterministic where cheap to encode (status codes,
   transcript diffs); otherwise an LLM reads the transcript and judges.
-  Don't build assertion machinery a reading settles.
+  Don't build assertion machinery a reading settles. Every measurement
+  names its expected value: a check that only records a number passes
+  whatever it records.
 - For UI-facing nodes, who captures screenshots in the live check and
   where they land; review decks and PR bodies reuse them.
 - Human gates named: which nodes are risk carriers getting the full

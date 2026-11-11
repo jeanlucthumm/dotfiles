@@ -81,12 +81,16 @@ Launch prompts also point PR bodies at the pr-description skill.
 Risk carriers, named in the plan, additionally get the full /code-review
 harness, which only the user can fire: review-only, never --fix, one
 writer per change. Its findings JSON is compact; it flows through you,
-and you route fixes to the job owning that change's workspace.
+and you route fixes to the job owning that change's workspace. Every
+fix brief asks for a test that reproduces the finding's failure
+scenario: a fix built on a misreading of the finding still passes
+tests that never set up that scenario.
 
 Reviews gate merges, never development: stack the next node immediately,
 and accept that a structural finding on a parent reworks stacked work.
 
-PR watching stays with the coordinator; dispatched jobs never watch. But
-a dispatched fixer pushes and replies to threads under the user's own
-token, so an armed watcher reads its work as human activity. After
-routing a fix, hold the re-arm until the owner's report lands.
+PR watching stays with the coordinator; dispatched jobs never watch. Keep
+a `Watch:` line of open PRs in the plan doc and arm pr-iteration's watcher
+with `--prs-from` on it. Add `--required-only` when non-required checks fail
+for reasons outside the graph (flaky on main); a real break in one then goes
+unseen.

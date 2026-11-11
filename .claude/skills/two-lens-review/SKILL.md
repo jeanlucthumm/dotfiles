@@ -74,7 +74,9 @@ shape).
 
 Exactly one: fix confirmed-major findings; confirmed-minor at your judgment
 (fix if cheap, otherwise carry them into the report); unconfirmed findings
-are reported, not acted on. Re-run static checks after fixes. Do not loop —
+are reported, not acted on. A behavioral fix ships with a test that sets
+up the finding's inputs/state and fails without the fix. Re-run static
+checks after fixes. Do not loop —
 a second full review pass is the human's call, not yours.
 
 ## Escalation
