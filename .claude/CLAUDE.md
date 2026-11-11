@@ -9,6 +9,9 @@ in there. Start from the `## Index` in ~/memory/projects/CLAUDE.md — don't ls/
 folders keep their own `## Index` in their CLAUDE.md/AGENTS.md. For open-ended searches use
 `~/memory/bm25.py <directory> "<query>"` (`-k N`, `--full`).
 
+- Before writing a doc, review ask or message for a specific person, read
+  `~/memory/people/<Full Name>.md` if it exists (index in `~/memory/people/CLAUDE.md`).
+
 ### Updating memory
 
 Memory updates are first-class work — do them as milestones land (a PR merged, an
