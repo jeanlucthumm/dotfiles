@@ -65,6 +65,7 @@ specialArg, because `imports` cannot depend on `config`/`pkgs`.
   append it to the flake-parts option `jl.overlays` from any file (see
   `sign-stable.nix`).
 - All Home Manager modules get the `system` specialArg for use with `withSystem`.
+- No leaking of work info in this repo. It is public.
 
 ### Hosts
 
