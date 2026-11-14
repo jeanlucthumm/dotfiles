@@ -9,6 +9,13 @@
 # resolve to their real target, plain ones behave as before, and the screen
 # looks unchanged because OSC 8 is invisible.
 #
+# Only links to web-style URLs keep their hint. Claude Code also links every
+# file path it prints, e.g. "Update(src/foo.py)" -> file:///.../src/foo.py,
+# and those are not URLs on screen.
+#
+# Tests: _kitty-url-hints-test.py (offline cases, plus a diff against stock
+# hints in a live kitty with --e2e).
+#
 # Extra args pass through to the hints kitten, e.g. `kitten url_hints.py --program @`.
 import re
 from typing import Any
@@ -19,6 +26,7 @@ from kitty.fast_data_types import get_options
 
 # The escape codes the hints kitten strips: SGR, and OSC terminated by ST.
 ESCAPE = re.compile(r'\x1b(?:\[[0-9;:]*m|\].*?\x1b\\)')
+LINK_END = '\x1b]8;;\x1b\\'
 # Stands in for already-hyperlinked text so a plain URL match can't run into it.
 LINKED = '\x01'
 CLOSERS = {'(': ')', '[': ']', '{': '}', '<': '>', '*': '*', '"': '"', "'": "'", '“': '”', '‘': '’'}
@@ -71,8 +79,32 @@ def trim_end(text: str, s: int, e: int) -> int:
     return e
 
 
+def is_url_link(target: str) -> bool:
+    """Whether an OSC 8 link target is a URL worth a hint (not a file path)."""
+    scheme, sep, _ = target.partition(':')
+    scheme = scheme.lower()
+    return bool(sep) and scheme != 'file' and scheme in get_options().url_prefixes
+
+
+def unlink_non_urls(raw: str) -> str:
+    """Turn OSC 8 links to non-URLs (file paths) back into plain text.
+
+    Their opening code becomes a closing one; their own closing code is then a
+    no-op. Plain URL detection still sees the text, so a visible file:// URL
+    keeps its hint.
+    """
+    def repl(m: 're.Match[str]') -> str:
+        code = m.group()
+        if code.startswith('\x1b]8') and (target := code[4:-2].partition(';')[2]) and not is_url_link(target):
+            return LINK_END
+        return code
+    return ESCAPE.sub(repl, raw)
+
+
 def link_plain_urls(raw: str) -> str:
-    """Wrap every URL in `raw` that is not already inside an OSC 8 hyperlink in one."""
+    """Prepare screen text for hyperlink-mode hints: drop non-URL links, then
+    wrap every URL that is not already inside an OSC 8 link in one."""
+    raw = unlink_non_urls(raw)
     visible: list[str] = []
     offsets: list[int] = []  # raw index of each visible char
     in_link = False
@@ -99,7 +131,7 @@ def link_plain_urls(raw: str) -> str:
         e = trim_end(text, s, m.end())
         url = re.sub(r'[\r\n\x00]', '', text[s:e])
         a, b = offsets[s], offsets[e - 1] + 1
-        out += [raw[last:a], f'\x1b]8;;{url}\x1b\\', raw[a:b], '\x1b]8;;\x1b\\']
+        out += [raw[last:a], f'\x1b]8;;{url}\x1b\\', raw[a:b], LINK_END]
         last = b
     out.append(raw[last:])
     return ''.join(out)
