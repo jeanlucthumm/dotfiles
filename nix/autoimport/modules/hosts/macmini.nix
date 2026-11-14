@@ -8,7 +8,6 @@ fp: {
         # Nix installers newer than the macbook's create nixbld at 350, not 30000.
         ids.gids.nixbld = 350;
         users.users.jeanluc.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
-          desktop.fido2.auth
           macbook.fido2.auth
           phone
         ];

@@ -12,7 +12,6 @@ fp: {
         jl.system = "aarch64-darwin";
 
         users.users.jeanluc.openssh.authorizedKeys.keys = with fp.config.flake.pubkeys; [
-          desktop.fido2.auth
           phone
         ];
         theme = {

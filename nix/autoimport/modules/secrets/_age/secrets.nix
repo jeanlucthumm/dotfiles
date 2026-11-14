@@ -1,7 +1,8 @@
 # TODO: agenix-rekey
 let
   keys = import ../_pubkeys.nix;
-  workstations = [keys.desktop.age keys.macbook.age];
+  # keys.desktop.age dropped 2026-11-11: desktop YubiKey lost. Re-add if found.
+  workstations = [keys.macbook.age];
   # Host key: the server's agenix decrypts with its SSH host keys by default.
   # Workstations stay recipients so secrets survive losing the server.
   withServer = workstations ++ [keys.server.hostKey];

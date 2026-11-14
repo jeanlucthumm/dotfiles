@@ -30,13 +30,11 @@
         ];
 
         users.users.root.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
-          desktop.fido2.auth
           macbook.fido2.auth
           phone
         ];
 
         users.users.jeanluc.openssh.authorizedKeys.keys = with config.flake.pubkeys; [
-          desktop.fido2.auth
           macbook.fido2.auth
           phone
           # deploy-rs run on the server itself SSHes back in to activate and

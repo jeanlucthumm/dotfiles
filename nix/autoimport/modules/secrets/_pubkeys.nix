@@ -1,4 +1,6 @@
 {
+  # Desktop YubiKey lost 2026-11-11. Its age/fido2 keys are kept here for easy
+  # re-adding if found, but nothing references them. Don't authorize them anywhere.
   desktop = {
     ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP66W+zH1wVKLB/fXdWF5VIHR5ggphdRMtWzd26uL7I3";
     # TODO: at cutover, secrets.nix switches from desktop.ssh to desktop.age
