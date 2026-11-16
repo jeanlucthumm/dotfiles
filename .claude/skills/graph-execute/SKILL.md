@@ -96,8 +96,9 @@ and accept that a structural finding on a parent reworks stacked work.
 When a micromanager approve stands in for a domain review, the ask
 carries a ready reason the approver can say yes to. The reason argues why
 skipping that review is safe (blast radius, review evidence,
-reversibility), never what the PR does: the PR already says that. This
-one keeps slipping, so check every reason before it goes out.
+reversibility), never what the PR does: the PR already says that. It's
+public, so review evidence goes in plain words, not private skill or node
+names. This one keeps slipping, so check every reason before it goes out.
 
 PR watching stays with the coordinator; dispatched jobs never watch. Keep
 a `Watch:` line of open PRs in the plan doc and arm pr-iteration's watcher
