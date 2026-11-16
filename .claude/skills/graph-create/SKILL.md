@@ -49,8 +49,11 @@ load-bearing:
   whatever it records.
 - For UI-facing nodes, who captures screenshots in the live check and
   where they land; review decks and PR bodies reuse them.
-- Human gates named: which nodes are risk carriers getting the full
-  /code-review, and that reviews gate merges, never development.
+- Risk carriers named: which nodes also get the full /code-review on top
+  of two-lens, and that reviews gate merges, never development.
+- Which nodes get a deslop pass: the user-level `deslop` skill, not a
+  project's own variant. It runs last, after any code review, since review
+  fixes add code.
 - A rollout paragraph, plan-level not per-node: the critical path of what
   goes live when, which nodes actually change live behavior, and where the
   revert points are (dark by construction, flag-gated, redeploy). This
@@ -69,12 +72,10 @@ Last, a cleanliness pass: the doc grew by accretion (elicitations,
 adversarial fixes), so facts repeat. Rewrite crisp, each fact one home,
 no information loss.
 
-Then a graph overview as an html-explainer (that skill's rules apply):
-the dependency graph with phases and launch waves, a node click showing
-spec, fix list, edges, and the verification story (job checks, behavior
-check, review tier, human gate) plus a matrix of that story across nodes;
-the rollout timeline with what each step
-requires and how it reverts; the list of what the coordinator needs from
-the user. The user reads the map before saying "start the graph", which
-is the last cheap moment to catch a wrong edge or a missing human gate.
-The plan doc stays the source of truth; the page is derived from it.
+## Friction Notes
+
+- A repo rule discouraging PR stacks can be overridden by the user's local
+  instructions; check those before designing a stackless plan.
+- Expected values for test tools (smoke pods, curl probes) were guessed
+  wrong and only the adversarial pass caught it; read the tool's runbook
+  or code before writing the value.

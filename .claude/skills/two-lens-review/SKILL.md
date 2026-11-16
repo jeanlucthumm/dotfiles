@@ -1,17 +1,9 @@
 ---
 name: two-lens-review
-description: Autonomous two-subagent code review of a PR or pending change. Use before marking a PR ready, or whenever an autonomous review is wanted and the human-only /code-review can't be fired.
+description: Cheap autonomous review of a PR or pending change. The default before marking a PR ready.
 ---
 
-# Two-lens review
-
-Why this exists: the bundled /code-review is human-invocation-only, and its
-autonomously reachable form (headless `claude -p`) is a single inline pass —
-no richer than a pass we control, but opaque and unparseable. This is the
-controlled version, extracted from the web-ci-mass-pass workflow's review
-stages. It is deliberately thin: two lenses, verify-before-report, one fixup
-round. It is NOT a substitute for the full multi-angle harness; when a diff
-deserves that, say so (see Escalation).
+Deliberately thin: two lenses, verify before reporting, one fixup round.
 
 ## Shape
 
@@ -78,11 +70,3 @@ are reported, not acted on. A behavioral fix ships with a test that sets
 up the finding's inputs/state and fails without the fix. Re-run static
 checks after fixes. Do not loop —
 a second full review pass is the human's call, not yours.
-
-## Escalation
-
-When the diff is meaty — wide blast radius, subtle semantics, wire/protocol
-changes, framework rewrites — name it in your report as a candidate for
-Jean-Luc's full-harness /code-review. His reviews run async: never block
-dependent work on them. Stack the next change on top and fold his findings
-into the PR commit when they arrive (jj auto-rebases descendants).
