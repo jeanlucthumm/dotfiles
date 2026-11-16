@@ -23,7 +23,7 @@ investigation concluded, a decision made), not as an afterthought:
 - Every fact has exactly one home doc; update it there and point to it from elsewhere.
   Never restate project status in indexes or entry-point files.
 - Deletion is the expected outcome at checkpoints: when work has executed or a decision
-  is superseded, delete its instruction-shaped content — the work-log line is its residue.
+  is superseded, delete its instruction-shaped content.
 - Each doc states its admission bar in its header; read it before writing, and give new docs one.
 - Made a decision worth telling as a story? Archive it via the /decision command.
 - Do not reference ~/memory paths in source code, PR descriptions, or commit messages —
@@ -63,6 +63,14 @@ I have ADHD + often am sleep deprived. Keep outputs short and digestable.
 
 - When investigating an incident, mark claims in-chat as measured or inferred.
 - Be careful contradicting human input from Slack. You must be absolutely sure.
+
+## Friction and Skills
+
+- We strive to continuously improve our workflow and devex
+- Generally, that means taking friction notes somewhere to be incorporated into skills or tooling
+  (ask user for where if you're not sure)
+- For skills specifically, if you encounter friction, create or append to the `## Friction Notes` section in
+  the skill itself. Simple bullet points.
 
 ## Work additions
 
