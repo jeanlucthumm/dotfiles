@@ -2,6 +2,7 @@ fp: {
   flake.darwinConfigurations."macmini" = fp.inputs.nix-darwin.lib.darwinSystem {
     modules = with fp.config.flake.modules.darwin; [
       base
+      syncthing
       {
         networking.hostName = "macmini";
         jl.system = "aarch64-darwin";
@@ -39,13 +40,7 @@ fp: {
         system.stateVersion = 4;
         system.primaryUser = "jeanluc";
 
-        home-manager.users.jeanluc.imports = [
-          {
-            jl.syncthing.enable = true;
-
-            home.stateVersion = "24.05";
-          }
-        ];
+        home-manager.users.jeanluc.home.stateVersion = "24.05";
       }
     ];
   };

@@ -6,6 +6,7 @@ fp: {
       dev
       graphical
       secrets
+      syncthing
       theme
       {
         networking.hostName = "macbook";
@@ -26,8 +27,6 @@ fp: {
             age.identityPaths = [
               ./_host-specific/macbook/yubikey-identity.txt
             ];
-
-            jl.syncthing.enable = true;
 
             home.stateVersion = "24.05";
           }

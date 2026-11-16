@@ -1,4 +1,4 @@
-# Reverse proxy for the Syncthing GUI; the daemon is `jl.syncthing` in Home Manager.
+# Reverse proxy for the Syncthing GUI; the daemon is the `syncthing` role (Home Manager).
 {
   services.nginx.virtualHosts."server".locations."/syncthing/" = {
     proxyPass = "http://127.0.0.1:8384/";

@@ -1,9 +1,9 @@
 # Fleet-wide Syncthing at the Home Manager layer. All state is here: `folders`
 # is the catalog (identity only), `nodes` says per node which folders it carries,
-# how, and where. A host only sets `jl.syncthing.enable`; its hostname picks its
+# how, and where. A host only lists the `syncthing` role; its hostname picks its
 # node. Runs as me so it can reach ~/obsidian etc. Identity (cert/key, hence
 # device ID) lives in the daemon's state dir.
-{jlib, ...}: let
+fp @ {jlib, ...}: let
   folders = {
     default = {
       id = "default";
@@ -75,7 +75,7 @@
     };
   };
 in {
-  flake.modules.homeManager.base = jlib.mkHomeManager {
+  flake.modules.homeManager.syncthing = jlib.mkHomeManager {
     generic = {
       config,
       lib,
@@ -86,36 +86,32 @@ in {
       me = nodes.${host} or {folders = {};};
       peers = removeAttrs nodes [host];
     in {
-      options.jl.syncthing.enable = lib.mkEnableOption "this host's Syncthing node";
+      # Bootstrap path: deploy, read the ID off the node, register it, redeploy.
+      warnings =
+        lib.optional (!(nodes ? ${host}))
+        "syncthing: ${host} is not in the node table; it will run with no folders and peers will reject it until its ID is added";
 
-      config = lib.mkIf config.jl.syncthing.enable {
-        # Bootstrap path: deploy, read the ID off the node, register it, redeploy.
-        warnings =
-          lib.optional (!(nodes ? ${host}))
-          "syncthing: ${host} is not in the node table; it will run with no folders and peers will reject it until its ID is added";
-
-        services.syncthing = {
-          enable = true;
-          overrideDevices = true;
-          overrideFolders = true;
-          settings = {
-            devices = lib.mapAttrs (_: n: {inherit (n) id;}) peers;
-            folders =
-              lib.mapAttrs (name: f: let
-                c = folders.${name};
-              in {
-                inherit (c) id label;
-                path = "${config.home.homeDirectory}/${f.path}";
-                type = f.type or "sendreceive";
-                devices = lib.attrNames (lib.filterAttrs (_: n: n.folders ? ${name}) peers);
-                ignorePatterns = c.ignorePatterns or [];
-              })
-              me.folders;
-            options = {
-              urAccepted = -1;
-              localAnnounceEnabled = true;
-              relaysEnabled = true;
-            };
+      services.syncthing = {
+        enable = true;
+        overrideDevices = true;
+        overrideFolders = true;
+        settings = {
+          devices = lib.mapAttrs (_: n: {inherit (n) id;}) peers;
+          folders =
+            lib.mapAttrs (name: f: let
+              c = folders.${name};
+            in {
+              inherit (c) id label;
+              path = "${config.home.homeDirectory}/${f.path}";
+              type = f.type or "sendreceive";
+              devices = lib.attrNames (lib.filterAttrs (_: n: n.folders ? ${name}) peers);
+              ignorePatterns = c.ignorePatterns or [];
+            })
+            me.folders;
+          options = {
+            urAccepted = -1;
+            localAnnounceEnabled = true;
+            relaysEnabled = true;
           };
         };
       };
@@ -133,7 +129,7 @@ in {
       me = nodes.${osConfig.networking.hostName} or {folders = {};};
       inICloud = lib.filter (f: lib.hasPrefix "Library/Mobile Documents/" f.path) (lib.attrValues me.folders);
     in {
-      home.activation.syncthingKeepDownloaded = lib.mkIf (config.jl.syncthing.enable && inICloud != []) (
+      home.activation.syncthingKeepDownloaded = lib.mkIf (inICloud != []) (
         lib.hm.dag.entryAfter ["writeBoundary"] (lib.concatMapStrings (f: ''
             p="${config.home.homeDirectory}/${f.path}"
             if [ -d "$p" ]; then
@@ -145,17 +141,17 @@ in {
     };
   };
 
-  # HM can't open the firewall: sync transport plus local discovery.
-  flake.modules.nixos.base = {
-    config,
-    lib,
-    ...
-  }: let
-    anyNode = lib.any (u: u.jl.syncthing.enable or false) (lib.attrValues (config.home-manager.users or {}));
-  in {
-    networking.firewall = lib.mkIf anyNode {
+  flake.modules.nixos.syncthing = {
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.syncthing];
+
+    # HM can't open the firewall: sync transport plus local discovery.
+    networking.firewall = {
       allowedTCPPorts = [22000];
       allowedUDPPorts = [22000 21027];
     };
+  };
+
+  flake.modules.darwin.syncthing = {
+    home-manager.sharedModules = [fp.config.flake.modules.homeManager.syncthing];
   };
 }

@@ -8,6 +8,7 @@
       base
       homeServer
       agents
+      syncthing
       {
         # Plain agenix, not the `secrets` module: that one wires up YubiKey
         # identities and the workstation-only home-manager secrets. Decrypts
@@ -53,8 +54,6 @@
         system.stateVersion = "24.05";
 
         home-manager.users.jeanluc = {
-          jl.syncthing.enable = true;
-
           # Always-on remote control, driven from claude.ai/code and the app.
           jl.claude.rc.dirs = {
             dotfiles.dir = "/home/jeanluc/dotfiles";
