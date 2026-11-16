@@ -4,9 +4,11 @@
   flake.modules.homeManager.graphical = jlib.mkHomeManager {
     darwin = {pkgs, ...}: {
       services.skhd = {
-        # TODO: disabled until it's fixed; flip back to true to restore.
+        # TODO: disabled: the Accessibility grant was lost on every upgrade.
+        # signStable alone is not enough, macOS also tracks the store path.
+        # Before re-enabling, route the package through jl.stableExe as well
+        # (see stable-exe.nix).
         enable = false;
-        # Needs Accessibility; a stable signature keeps the grant across upgrades.
         package = pkgs.signStable pkgs.skhd;
         # Absolute path: skhd execs through $SHELL (nushell here), whose
         # `open` builtin shadows the macOS launcher and has no -a flag.

@@ -208,9 +208,9 @@ fp: {
   in {
     options.jl.claude.package = lib.mkOption {
       type = lib.types.package;
-      # Way more up to date than nixpkgs. signStable: when run outside a
-      # terminal (launchd), macOS folder grants key on claude itself.
-      default = pkgs.signStable fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+      # stableExe: run outside a terminal (its own daemon, launchd), claude
+      # is what macOS grants permissions to, by path.
+      default = config.jl.stableExe.claude.finalPackage;
       description = "The Claude Code package to install and run.";
     };
 
@@ -225,6 +225,13 @@ fp: {
     };
 
     config = {
+      jl.stableExe.claude = {
+        # Way more up to date than nixpkgs.
+        package = fp.inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+        exe = "bin/.claude-unwrapped";
+        prefixPath = [pkgs.procps pkgs.ripgrep]; # what upstream's wrapper adds
+      };
+
       home.packages = [
         cfg.package
         devenvHook
@@ -255,6 +262,11 @@ fp: {
         voiceEnabled = true;
         preferredNotifChannel = "kitty";
         tui = "fullscreen";
+
+        # The nix package's wrapper sets DISABLE_AUTOUPDATER=1 (nix owns the CLI
+        # version), which also switches off plugin auto-update. Without this,
+        # marketplace plugins freeze at their install version.
+        env.FORCE_AUTOUPDATE_PLUGINS = "1";
 
         hooks = {
           WorktreeCreate = [
@@ -348,6 +360,7 @@ fp: {
             "Bash(gh release list:*)"
             "Bash(gh release view:*)"
             "Bash(gh search:*)"
+            "Bash(gh stack link:*)"
             "Bash(gh status:*)"
             "Bash(gh browse:*)"
             "Bash(grep:*)"
