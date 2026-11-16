@@ -245,6 +245,11 @@ fp @ {
             macos_titlebar_color = "background";
             # macOS GUI apps don't inherit shell PATH, so tell kitty where to find nvim
             exe_search_path = "/etc/profiles/per-user/${config.home.username}/bin";
+            # The default (`.`) prefers an inherited $SHELL over the login shell,
+            # and `open -a` passes the caller's env through. Launched from a
+            # Claude Code session (or a launcher it relaunched, like Raycast),
+            # that is its bash, so pin nushell explicitly.
+            shell = "/etc/profiles/per-user/${config.home.username}/bin/nu --login --interactive";
             # Used by open_url_with_hints (kitty_mod+e) and URL clicks
             open_url_with = "${smart-open-url}/bin/smart-open-url";
           };
