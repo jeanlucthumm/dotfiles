@@ -12,7 +12,7 @@
 #
 # Contributes to the merged `homeManager.secrets` module, so any hardware-key
 # host gets the option set; the `deposit-secrets` tool only lands on PATH when
-# `jl.secretDeposit.enable` is set.
+# a target is declared.
 _: {
   flake.modules.homeManager.secrets = {
     pkgs,
@@ -76,8 +76,6 @@ _: {
     '';
   in {
     options.jl.secretDeposit = {
-      enable = lib.mkEnableOption "manual hardware-key-gated deposit of decrypted secrets to remote hosts";
-
       targets = lib.mkOption {
         description = ''
           Secrets to push from this hardware-key host to a remote (keyless) host.
@@ -139,6 +137,6 @@ _: {
       };
     };
 
-    config.home.packages = lib.optional cfg.enable depositScript;
+    config.home.packages = lib.optional (cfg.targets != {}) depositScript;
   };
 }

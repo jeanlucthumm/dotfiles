@@ -102,7 +102,6 @@ fp @ {jlib, ...}: {
       # ANTHROPIC_API_KEY in its environment would silently outrank that
       # credential -- billing API credits and dropping the claude.ai connectors.
       jl.secretDeposit = {
-        enable = true;
         targets = {
           claude-telegram = {
             source = config.age.secrets.claude-telegram.path;

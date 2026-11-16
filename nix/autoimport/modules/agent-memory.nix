@@ -15,38 +15,26 @@
       pkgs,
       ...
     }: let
-      cfg = config.jl.agentMemory;
       remote = "git@github.com:jeanlucthumm/agent-memory.git";
+      path = "${config.home.homeDirectory}/memory";
+      # Seconds between sync passes. A pass only commits if the repo is dirty,
+      # so this caps commit frequency. Commits use an email not linked to any
+      # GitHub account, so frequent syncs don't spam the contribution graph.
+      # Coarser intervals mean a bigger window for cross-host rebase conflicts.
+      interval = 1800;
     in {
-      options.jl.agentMemory = {
-        enable = lib.mkEnableOption "agent memory repo auto-sync";
+      # TODO: rollout gate, not a pattern to copy. Memory belongs on every
+      # agents host. It is held back while the repo's top level is all work
+      # context, which would confuse agents elsewhere. Then delete the option
+      # and both mkIfs.
+      options.jl.agentMemory.enable = lib.mkEnableOption "agent memory repo auto-sync";
 
-        path = lib.mkOption {
-          type = lib.types.str;
-          default = "${config.home.homeDirectory}/memory";
-          description = "Location of the agent memory git repo";
-        };
-
-        interval = lib.mkOption {
-          type = lib.types.int;
-          default = 1800;
-          description = ''
-            Seconds between sync passes. A pass only commits if the repo is
-            dirty, so this caps commit frequency. Commits use an email not
-            linked to any GitHub account, so frequent syncs don't spam the
-            contribution graph. Coarser intervals mean a bigger window for
-            cross-host rebase conflicts.
-          '';
-        };
-      };
-
-      config = lib.mkIf cfg.enable {
+      config = lib.mkIf config.jl.agentMemory.enable {
         services.git-sync = {
           enable = true;
           repositories.agent-memory = {
-            path = cfg.path;
+            inherit path interval;
             uri = remote;
-            inherit (cfg) interval;
           };
         };
 
@@ -54,16 +42,16 @@
         # and untracked files are only committed with syncNewFiles. Clone here
         # too since the home-manager module only auto-clones on Linux.
         home.activation.agentMemorySetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          if [ ! -e "${cfg.path}/.git" ]; then
-            run ${pkgs.git}/bin/git clone ${remote} "${cfg.path}" \
-              || verboseEcho "agent-memory: clone failed (offline?); git-sync is inert until ${cfg.path} exists"
+          if [ ! -e "${path}/.git" ]; then
+            run ${pkgs.git}/bin/git clone ${remote} "${path}" \
+              || verboseEcho "agent-memory: clone failed (offline?); git-sync is inert until ${path} exists"
           fi
-          if [ -e "${cfg.path}/.git" ]; then
-            run ${pkgs.git}/bin/git -C "${cfg.path}" config --bool branch.main.sync true
-            run ${pkgs.git}/bin/git -C "${cfg.path}" config --bool git-sync.syncNewFiles true
+          if [ -e "${path}/.git" ]; then
+            run ${pkgs.git}/bin/git -C "${path}" config --bool branch.main.sync true
+            run ${pkgs.git}/bin/git -C "${path}" config --bool git-sync.syncNewFiles true
             # Keep memory commits off the GitHub contribution graph: author
             # them with an email not linked to any account.
-            run ${pkgs.git}/bin/git -C "${cfg.path}" config user.email "git-sync@agent-memory.local"
+            run ${pkgs.git}/bin/git -C "${path}" config user.email "git-sync@agent-memory.local"
           fi
         '';
       };
@@ -74,8 +62,8 @@
       lib,
       ...
     }: {
-      # Sync on the interval only — without this, launchd also fires a
-      # sync every time the repo top level changes.
+      # Sync on the interval only. Without this, launchd also fires a sync
+      # every time the repo top level changes.
       config = lib.mkIf config.jl.agentMemory.enable {
         launchd.agents.git-sync-agent-memory.config.WatchPaths = lib.mkForce [];
       };
