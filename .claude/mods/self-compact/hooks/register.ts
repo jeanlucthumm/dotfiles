@@ -70,7 +70,13 @@ export const register: Register = on => {
     const done = await next(e)
     if (pending && e.agentId === undefined && !e.isAborted) {
       pending = false
-      $.session.compact({}).catch(err => $.ui.toast(`self-compact: ${String(err)}`))
+      // Input already waiting (a peer message, a due wakeup, a task notification)
+      // can start the next turn before this call lands, and compact rejects while
+      // a turn runs. Keep the request so the next main-loop turn end retries.
+      $.session.compact({}).catch(err => {
+        pending = true
+        $.ui.toast(`self-compact: ${String(err)}`)
+      })
     }
     return done
   })
