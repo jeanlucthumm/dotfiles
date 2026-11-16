@@ -35,10 +35,8 @@ configs, disko layouts), `_age/` (encrypted secrets), `_derivations/`,
 
 `_` is for data, not logic. Don't write a helper as `_foo/default.nix` and
 `import` it by path from another module: that hides an edge the option system
-can't see. Shared logic is a normal module contributing to an option. If no
-option fits, declare one at the flake-parts level where it is consumed (a list
-or attrs so files merge) and contribute from anywhere — `jl.overlays` in
-`pkgs-override.nix` / `sign-stable.nix` is the pattern.
+can't see. Shared logic is a normal module contributing to an option (see
+"Roles select, options carry data").
 
 ### Module classes
 
@@ -50,11 +48,34 @@ files — many files can contribute to the same module name.
 - `homeManager` — user-level
 
 Current NixOS roles: `base`, `agents`, `dev`, `graphical`, `homeServer`, `secrets`,
-`theme`, `amdGpu`.
+`syncthing`, `theme`, `amdGpu`.
 
 Use `jlib.mkHomeManager { generic, nixos, darwin }` for Home Manager modules that
 need per-platform branches — it does conditional imports via the `system`
 specialArg, because `imports` cannot depend on `config`/`pkgs`.
+
+### Roles select, options carry data
+
+The dendritic pattern. A file is one narrow feature. A role is wide and says
+what kind of machine this is: `base` every machine, `agents` runs coding
+agents, `dev` a human develops here (always with `agents`), `graphical` has a
+screen. Many files merge into one role, and a host gets everything in the roles
+it lists. The NixOS reflex of `options.foo.enable` plus `mkIf` is wrong here.
+
+- A feature goes in the widest role it naturally belongs to and is on for every
+  host with that role. Ask what the feature is, not which hosts run it today.
+- A file `foo.nix` is no reason for a role `foo`. A new role is the last
+  resort, for a feature no existing role fits (`syncthing`: macmini runs it
+  with only `base`).
+- Hosts differ by data, never by an `enable` option. An option is a value a
+  host supplies (`jl.system`, `jl.claude.rc.dirs`) or a merge point several
+  files add to (`jl.overlays`, `jl.claude.settings`, `jl.stableExe`). (`opt-*`
+  modules mirror upstream's shape and are exempt.)
+- Declare it in the feature's file, in the evaluation that consumes it. There
+  are three: flake-parts (file top level, `jl.overlays`), system (`jl.system`),
+  Home Manager (the rest).
+- `jl.` only marks an option as declared in this repo. It is not a module.
+- No option whose default nobody overrides. Use a `let`.
 
 ### Invariants
 

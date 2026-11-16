@@ -9,6 +9,13 @@ For now, mirroring the directory to match flake outputs. Namely, `modules` for f
 modules (which is the meat of the config), `packages` for custom derivations I'm too lazy to PR
 into nixpkgs, `templates`, and so on.
 
+## Roles and options
+
+Roles (`flake.modules.<class>.<role>`) are few and wide: a file contributes its
+feature to the widest role that fits, and a host lists roles. Options only
+carry data, either a merge point several files add to (`jl.overlays`) or a
+value a host must supply (`jl.system`). No `enable` options.
+
 ## The `jlib` library
 
 Custom utils go under `jlib` attrs (see [here](./modules/jlib.nix)).
