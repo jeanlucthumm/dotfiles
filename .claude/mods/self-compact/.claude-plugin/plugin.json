@@ -1,0 +1,1 @@
+{ "name": "self-compact", "version": "0.1.0", "description": "Gives the model a tool that compacts its own session once the current turn ends" }
