@@ -11,7 +11,8 @@
 #
 # Only links to web-style URLs keep their hint. Claude Code also links every
 # file path it prints, e.g. "Update(src/foo.py)" -> file:///.../src/foo.py,
-# and those are not URLs on screen.
+# and those are not URLs on screen. A link wrapped onto several lines gets one
+# hint, on its top line.
 #
 # Tests: _kitty-url-hints-test.py (offline cases, plus a diff against stock
 # hints in a live kitty with --e2e).
@@ -102,9 +103,7 @@ def unlink_non_urls(raw: str) -> str:
 
 
 def link_plain_urls(raw: str) -> str:
-    """Prepare screen text for hyperlink-mode hints: drop non-URL links, then
-    wrap every URL that is not already inside an OSC 8 link in one."""
-    raw = unlink_non_urls(raw)
+    """Wrap every URL that is not already inside an OSC 8 link in one."""
     visible: list[str] = []
     offsets: list[int] = []  # raw index of each visible char
     in_link = False
@@ -137,6 +136,43 @@ def link_plain_urls(raw: str) -> str:
     return ''.join(out)
 
 
+def merge_wrapped_links(raw: str) -> str:
+    """Give a link a TUI wrapped onto several lines one hint, on its top line.
+
+    Claude Code prints each line of a wrapped URL as its own OSC 8 link with the
+    same id and target. A link repeating the previous link's id and target with
+    only whitespace in between is a continuation: its opening code becomes a
+    closing one, so it gets no hint of its own. The same URL printed again
+    elsewhere keeps its hint.
+    """
+    current = None  # (params, target) of the link we are inside
+    last = None  # the most recent link, while only whitespace follows it
+    pos = 0
+
+    def repl(m: 're.Match[str]') -> str:
+        nonlocal current, last, pos
+        gap, pos = raw[pos:m.start()], m.end()
+        if current is None and gap.strip():
+            last = None
+        code = m.group()
+        if not code.startswith('\x1b]8'):
+            return code
+        params, _, target = code[4:-2].partition(';')
+        if current is not None:
+            last = current
+        current = (params, target) if target else None
+        if current is not None and current == last and 'id=' in params:
+            return LINK_END
+        return code
+    return ESCAPE.sub(repl, raw)
+
+
+def prepare_screen(raw: str) -> str:
+    """Screen text for hyperlink-mode hints: one hint per URL, none for file paths."""
+    # Merging runs last so plain URL detection never looks inside a continuation.
+    return merge_wrapped_links(link_plain_urls(unlink_non_urls(raw)))
+
+
 def main(args: list[str]) -> None:
     pass
 
@@ -149,4 +185,4 @@ def handle_result(args: list[str], answer: Any, target_window_id: int, boss: Bos
     # The same text the hints kitten reads on its own (type_of_input 'screen-ansi').
     text = w.as_text(as_ansi=True, add_wrap_markers=True)
     boss.run_kitten_with_metadata(
-        'hints', ['--type=hyperlink', *args[1:]], input_data=link_plain_urls(text), window=w)
+        'hints', ['--type=hyperlink', *args[1:]], input_data=prepare_screen(text), window=w)

@@ -31,7 +31,7 @@ ESCAPE = re.compile(r'\x1b(?:\[[0-9;:]*?m|\].*?\x1b\\)')
 
 
 def load_kitten():
-    """The kitten's link_plain_urls, with kitty's modules stubbed out."""
+    """The kitten's prepare_screen, with kitty's modules stubbed out."""
     def stub(name: str, **attrs) -> None:
         sys.modules[name] = types.ModuleType(name)
         sys.modules[name].__dict__.update(attrs)
@@ -44,7 +44,7 @@ def load_kitten():
     stub('kitty.fast_data_types', get_options=lambda: opts)
     g = {'__name__': 'kitten'}
     exec(compile(KITTEN.read_text(), str(KITTEN), 'exec'), g)
-    return g['link_plain_urls']
+    return g['prepare_screen']
 
 
 def hint_marks(text: str) -> list[tuple[str, str]]:
@@ -105,9 +105,22 @@ CASES = [
      [same('file:///tmp/x.txt')]),
     ('relative link is not a url', 'see ' + link('docs/readme.md', 'readme') + '\n', []),
     ('plain path is not a url', 'edit autoimport/modules/foo.py now\n', []),
-    ('claude hard-wrapped link opens in full',
+    ('claude hard-wrapped link: one hint, top line, full url',
      '     ' + link(H, H[:100], 'jreqkh') + '\n     ' + link(H, H[100:], 'jreqkh') + '\n',
-     [(H[:100], H), (H[100:], H)]),
+     [(H[:100], H)]),
+    ('three-line wrapped link: one hint',
+     '  ' + link(H, H[:60], 'a1') + '\n  ' + link(H, H[60:120], 'a1') + '\n  ' + link(H, H[120:], 'a1') + '\n',
+     [(H[:60], H)]),
+    ('same link printed twice keeps both hints',
+     link('https://x.example/1', 'first', 'b2') + ' and later ' + link('https://x.example/1', 'again', 'b2') + '\n',
+     [('first', 'https://x.example/1'), ('again', 'https://x.example/1')]),
+    ('no stray hint for a url inside a continuation',
+     link(T := 'https://x.example/login?next=https://y.example/back', T[:28], 'c3') + '\n  '
+     + link(T, T[28:], 'c3') + '\n',
+     [(T[:28], T)]),
+    ('pieces without an id stay separate',
+     link('https://x.example/2', 'top') + '\n' + link('https://x.example/2', 'bottom') + '\n',
+     [('top', 'https://x.example/2'), ('bottom', 'https://x.example/2')]),
     ('claude pr ref', 'merged ' + link('https://github.com/o/r/pull/1234', '#1234') + ' today\n',
      [('#1234', 'https://github.com/o/r/pull/1234')]),
     ('plain url next to a link', link('https://x.example/1', 'one') + ' https://y.example/2\n',
@@ -126,8 +139,10 @@ CASES = [
 
 
 # Cases where the kitten deliberately differs from stock hints, which keeps a
-# trailing "." or ")." and cuts "(…/Foo_(bar))" at the first ")".
-BETTER_THAN_STOCK = {'trailing period dropped', 'balanced parens kept', 'unbalanced paren dropped'}
+# trailing "." or ")." and cuts "(…/Foo_(bar))" at the first ")", and marks a
+# URL that only appears inside the second line of a wrapped link.
+BETTER_THAN_STOCK = {'trailing period dropped', 'balanced parens kept', 'unbalanced paren dropped',
+                     'no stray hint for a url inside a continuation'}
 
 
 def run_offline(prepare) -> int:
