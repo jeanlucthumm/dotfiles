@@ -96,6 +96,10 @@ fp @ {
         output=$(kitty @ get-text --extent last_non_empty_output)
         printf '$ %s\n%s' "$cmd" "$output" | clip
       '';
+      # Opens a clicked `path/to/file.py:42` (see detect_url_regex) in nvim.
+      open-file-ref = pkgs.writeShellScript "open-file-ref" ''
+        exec ${pkgs.neovim}/bin/nvim "+''${1##*:}" "''${1%:*}"
+      '';
     in {
       home.packages = with pkgs; let
         system = pkgs.stdenv.hostPlatform.system;
@@ -113,6 +117,12 @@ fp @ {
       ];
       xdg.configFile."kitty/auto_pad.py".source = ./_kitty-auto-pad.py;
       xdg.configFile."kitty/url_hints.py".source = ./_kitty-url-hints.py;
+      # Overlay on the clicked window: `:q` returns to it. --cwd=current
+      # resolves relative paths against its foreground process.
+      xdg.configFile."kitty/open-actions.conf".text = ''
+        url ^[\w./-]+\.\w+:\d+$
+        action launch --type=overlay --cwd=current ${open-file-ref} ''${URL}
+      '';
       programs = {
         # TODO: re-enable on darwin once appstream builds again (nixpkgs Darwin breakage)
         zathura.enable = pkgs.stdenv.hostPlatform.isLinux;
@@ -147,6 +157,9 @@ fp @ {
             input_delay = 1;
             cursor_shape = "block";
             paste_actions = "quote-urls-at-prompt";
+            # File references (Claude Code, compilers) are clickable; opened
+            # by kitty/open-actions.conf.
+            detect_url_regex = "[[:alnum:]_./-]+\\.[[:alnum:]]+:[0-9]+";
             enabled_layouts = "tall:bias=50;full_size=1;mirrored=true";
           };
 
