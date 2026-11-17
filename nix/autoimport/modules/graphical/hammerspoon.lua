@@ -1,7 +1,7 @@
 -- Timewarrior automatic stop/continue on sleep/lock
 local caffeine = hs.caffeinate.watcher
 local log = hs.logger.new('timew', 'info')
-local timew = '${pkgs.timewarrior}/bin/timew'
+local timew = '@timew@'
 
 local autoStoppedAt = nil
 local maxLockSeconds = 1 * 60 * 60 -- 1 hour

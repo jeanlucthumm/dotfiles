@@ -248,7 +248,9 @@ fp @ {
       programs = {
         hammerspoon = {
           enable = true;
-          extraConfig = builtins.readFile ./hammerspoon.lua;
+          extraConfig =
+            builtins.replaceStrings ["@timew@"] ["${pkgs.timewarrior}/bin/timew"]
+            (builtins.readFile ./hammerspoon.lua);
         };
 
         # These are darwin specific because NixOS relies on the WM for splits.
