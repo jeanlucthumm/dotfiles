@@ -267,6 +267,10 @@ fp: {
         # version), which also switches off plugin auto-update. Without this,
         # marketplace plugins freeze at their install version.
         env.FORCE_AUTOUPDATE_PLUGINS = "1";
+        # Mods are yadm-tracked in ~/.claude/mods, so every host has them.
+        # Each loads in place as a --plugin-dir, so edits hot-reload
+        # (colon-separated list; only read from user settings).
+        env.CLAUDE_CODE_PLUGIN_DIRS = "~/.claude/mods/self-compact";
 
         hooks = {
           WorktreeCreate = [
