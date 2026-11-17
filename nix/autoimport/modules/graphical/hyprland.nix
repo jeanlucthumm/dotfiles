@@ -9,26 +9,72 @@
     }: {
       wayland.windowManager.hyprland = {
         enable = true;
-        configType = "hyprlang";
+        configType = "lua";
+        # Each attribute renders as an `hl.<name>(...)` call, one per list
+        # element. Binds, submaps and autostart are raw Lua in ./_hyprland.lua.
         settings = {
-          "$mod" = "SUPER";
+          config = {
+            input = {
+              kb_layout = "us";
+              kb_options = "caps:super";
+              repeat_rate = 80;
+              repeat_delay = 150;
 
-          input = {
-            kb_layout = "us";
-            kb_options = "caps:super";
-            repeat_rate = 80;
-            repeat_delay = 150;
+              follow_mouse = 1;
 
-            follow_mouse = 1;
+              touchpad = {
+                natural_scroll = true;
+                scroll_factor = 0.3;
+                clickfinger_behavior = true;
+                disable_while_typing = true;
+              };
 
-            touchpad = {
-              natural_scroll = true;
-              scroll_factor = 0.3;
-              clickfinger_behavior = true;
-              disable_while_typing = true;
+              sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
             };
 
-            sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
+            general = {
+              gaps_in = 5;
+              gaps_out = 20;
+              border_size = 3;
+              layout = "dwindle";
+            };
+
+            group = {
+              groupbar = {
+                gradients = false;
+                render_titles = false;
+              };
+            };
+
+            decoration = {
+              rounding = 10;
+            };
+
+            ecosystem.no_update_news = true;
+
+            animations.enabled = true;
+
+            dwindle = {
+              use_active_for_splits = false;
+            };
+
+            master = {
+              new_status = "slave";
+              orientation = "right";
+              slave_count_for_center_master = 0;
+            };
+
+            binds = {
+              scroll_event_delay = 150;
+              # Makes tab go back and forth
+              workspace_back_and_forth = true;
+              # TODO invert this when https://github.com/hyprwm/Hyprland/issues/2263 is done
+              allow_workspace_cycles = true;
+            };
+
+            cursor = {
+              inactive_timeout = 2;
+            };
           };
 
           # TODO: no longer relevant
@@ -37,42 +83,35 @@
             sensitivity = 0.4;
           };
 
-          general = {
-            gaps_in = 5;
-            gaps_out = 20;
-            border_size = 3;
-            layout = "dwindle";
-          };
-
-          group = {
-            groupbar = {
-              gradients = false;
-              render_titles = false;
-            };
-          };
-
           monitor = let
-            name = monitor: "${monitor.manufacturer} - ${monitor.model}";
+            # Hyprland matches a description prefix ("<make> <model> <serial>").
+            # A PNP ID missing from the vendor table is "PNP(AOC)" in our monitor
+            # data (niri) but plain "AOC" in Hyprland.
+            make = monitor: let
+              id = builtins.match "PNP\\((.*)\\)" monitor.manufacturer;
+            in
+              if id == null
+              then monitor.manufacturer
+              else builtins.head id;
+            name = monitor: "desc:${make monitor} ${monitor.model}";
             # Hyprland uses a weird rotation system, so we need to convert
             mkTransform = rotation:
               {
-                "0" = "0";
-                "90" = "1";
-                "180" = "2";
-                "270" = "3";
+                "0" = 0;
+                "90" = 1;
+                "180" = 2;
+                "270" = 3;
               }.${
                 toString rotation
-              } or "0";
+              } or 0;
             s = toString;
-            cfg = monitor:
-              builtins.concatStringsSep "," [
-                "${name monitor}"
-                "${s monitor.width}x${s monitor.height}@${s monitor.refresh}"
-                "${s monitor.position_x}x${s monitor.position_y}"
-                "1" # scale
-                "transform"
-                "${mkTransform monitor.rotation}"
-              ];
+            cfg = monitor: {
+              output = name monitor;
+              mode = "${s monitor.width}x${s monitor.height}@${s monitor.refresh}";
+              position = "${s monitor.position_x}x${s monitor.position_y}";
+              scale = "1";
+              transform = mkTransform monitor.rotation;
+            };
           in
             [
               (cfg config.monitors.primary)
@@ -83,209 +122,64 @@
               (cfg config.monitors.secondary)
             ];
 
-          decoration = {
-            rounding = 10;
-          };
+          curve._args = [
+            "myBezier"
+            {
+              type = "bezier";
+              points = [[0.05 0.9] [0.1 1.05]];
+            }
+          ];
 
-          ecosystem.no_update_news = true;
-
-          animations = let
+          animation = let
             # Default speeds for animations
-            primary = toString 1.5;
-            secondary = toString 4;
-          in {
-            enabled = true;
-            bezier = ["myBezier, 0.05, 0.9, 0.1, 1.05"];
-            animation = [
-              "windows, 1, ${primary}, myBezier"
-              "windowsOut, 1, ${primary}, default, popin 80%"
-              "border, 1, ${secondary}, default"
-              "borderangle, 1, ${secondary}, default"
-              "fade, 1, ${primary}, default"
-              "workspaces, 1, ${primary}, default"
-            ];
-          };
-
-          dwindle = {
-            # Master switch for pseudotiling. Enabling is bound to
-            # mod + P in the keybinds section below.
-            pseudotile = true;
-            use_active_for_splits = false;
-          };
-
-          master = {
-            new_status = "slave";
-            orientation = "right";
-            slave_count_for_center_master = 0;
-          };
-
-          gestures = {
-            workspace_swipe = true;
-          };
-
-          binds = {
-            scroll_event_delay = 150;
-            # Makes tab go back and forth
-            workspace_back_and_forth = true;
-            # TODO invert this when https://github.com/hyprwm/Hyprland/issues/2263 is done
-            allow_workspace_cycles = true;
-          };
-
-          cursor = {
-            inactive_timeout = 2;
-          };
-
-          exec-once = [
-            "kitty --detach --title=\"scratchpad\" --override initial_window_width=235c --override initial_window_height=83c"
+            primary = 1.5;
+            secondary = 4;
+            mk = leaf: speed: bezier: {
+              inherit leaf speed bezier;
+              enabled = true;
+            };
+          in [
+            (mk "windows" primary "myBezier")
+            (mk "windowsOut" primary "default" // {style = "popin 80%";})
+            (mk "border" secondary "default")
+            (mk "borderangle" secondary "default")
+            (mk "fade" primary "default")
+            (mk "workspaces" primary "default")
           ];
 
-          bind =
-            [
-              # Software launching
-              "$mod, RETURN, exec, kitty"
-              "$mod, N, exec, nautilus"
-              "$mod, C, exec, zen-beta"
-              "$mod, X, exec, qutebrowser"
-              "$mod SHIFT, space, togglefloating,"
-              "$mod, D, exec, wofi --show drun"
+          # Three-finger horizontal workspace swipe
+          gesture = {
+            fingers = 3;
+            direction = "horizontal";
+            action = "workspace";
+          };
 
-              # Hyprland control
-              "$mod, F, fullscreen, 0"
-              "$mod, TAB, workspace, previous"
-              "$mod, mouse:277, workspace, previous"
-              "$mod, G, togglegroup"
-              "$mod SHIFT, G, moveoutofgroup"
-              "$mod SHIFT, I, swapactiveworkspaces, 0 1"
-              "$mod, I, changegroupactive"
-              "$mod, P, pseudo, # dwindle"
-              "$mod, E, layoutmsg, togglesplit, # dwindle"
-              "$mod, Q, killactive,"
-              "$mod SHIFT, E, exit,"
-              "$mod, mouse_down, workspace, e+1"
-              "$mod, mouse_up, workspace, e-1"
-
-              # Software control
-              "$mod SHIFT, S, exec, fish ~/.config/hypr/screencap.fish"
-              "$mod, BACKSLASH, exec, makoctl dismiss"
-              "$mod, B, exec, killall -SIGUSR1 waybar"
-              "$mod, V, exec, timew stop; pidof hyprlock || hyprlock"
-
-              # Media control
-              ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
-              ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
-              ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
-              ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
-              ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
-            ]
-            ++ (
-              # TODO don't generate, just explicitly list the nums
-              # workspaces
-              # binds $mod + [shift +] {1..9, 0} to [move to] workspace {1..10}
-              builtins.concatLists (
-                builtins.genList (
-                  x: let
-                    ws = let
-                      c = (x + 1) / 10;
-                    in
-                      builtins.toString (x + 1 - (c * 10));
-                  in [
-                    "$mod, ${ws}, workspace, ${toString (x + 1)}"
-                    "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
-                  ]
-                )
-                10
-              )
-            )
-            ++ (
-              # TODO just iterate of attrs instead of strings for this
-              # Move focus with vim directions
-              # Move windows with SHIFT + vim directions
-              # Swap windows with SHIFT + arrows
-              builtins.concatLists (
-                lib.lists.forEach ["H" "L" "K" "J"] (
-                  x: let
-                    dir =
-                      if x == "H"
-                      then "l"
-                      else if x == "L"
-                      then "r"
-                      else if x == "K"
-                      then "u"
-                      else "d";
-                    arrow =
-                      if x == "H"
-                      then "LEFT"
-                      else if x == "L"
-                      then "RIGHT"
-                      else if x == "K"
-                      then "UP"
-                      else "DOWN";
-                  in [
-                    "$mod, ${x}, movefocus, ${dir}"
-                    "$mod SHIFT, ${x}, swapwindow, ${dir}"
-                    "$mod SHIFT, ${arrow}, movewindow, ${dir}"
-                  ]
-                )
-              )
-            );
-
-          # Mouse bindings
-          bindm = [
-            # Move/resize windows with mod + LMB/RMB and dragging
-            "$mod, mouse:272, movewindow"
-            "$mod, mouse:273, resizewindow"
-          ];
-
-          windowrulev2 = [
+          window_rule = [
             # Floating
-            "float, class:^(kitty)$, title:^(scratchpad)$"
-            "float, class:^(org.gnome.Nautilus)$"
+            {
+              match = {
+                class = "^(kitty)$";
+                title = "^(scratchpad)$";
+              };
+              float = true;
+            }
+            {
+              match.class = "^(org.gnome.Nautilus)$";
+              float = true;
+            }
 
             # Default to special workspace
-            "workspace special, class:^(kitty)$, title:^(scratchpad)$"
+            {
+              match = {
+                class = "^(kitty)$";
+                title = "^(scratchpad)$";
+              };
+              workspace = "special";
+            }
           ];
         };
 
-        extraConfig = ''
-          # Resize
-          bind = $mod, R, submap, resize
-          submap = resize
-          $resizeInc = 20
-          binde = , L, resizeactive, $resizeInc 0
-          binde = , H, resizeactive, -$resizeInc 0
-          binde = , K, resizeactive, 0 -$resizeInc
-          binde = , J, resizeactive, 0 $resizeInc
-          bind = , RETURN, submap, reset
-          bind = , ESCAPE, submap, reset
-          submap = reset
-
-          # Power
-          bind = $mod SHIFT, T, submap, power
-          submap = power
-          bind = , S, exec, systemctl suspend
-          bind = , S, submap, reset
-          bind = , P, exec, systemctl poweroff
-          bind = , P, submap, reset
-          bind = , R, exec, systemctl reboot
-          bind = , R, submap, reset
-          submap = reset
-
-          # Master-Layout
-          bind = $mod, M, submap, master
-          submap = master
-          bind = , RETURN, submap, reset
-          bind = $mod, S, layoutmsg, swapwithmaster
-          bind = $mod, S, submap, reset
-          submap = reset
-
-          # Special workspace
-          bind = $mod, S, submap, special
-          submap = special
-          bind = , RETURN, submap, reset
-          bind = $mod, R, togglespecialworkspace
-          bind = $mod, R, submap, reset
-          submap = reset
-        '';
+        extraConfig = builtins.readFile ./_hyprland.lua;
       };
 
       # Wallpaper manager from same org as Hyprland
