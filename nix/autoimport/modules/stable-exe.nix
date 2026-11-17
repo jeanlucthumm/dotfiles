@@ -4,8 +4,9 @@
 # macOS TCC (Accessibility, Files and Folders, ...) tracks a bare executable by
 # its absolute path. A store path changes with every version, so each upgrade
 # shows up as a new, ungranted entry. Activation copies the real binary to
-# ~/.local/state/stable-exe/<name>/<bin> and `finalPackage` swaps the command
-# for a launcher that execs that copy.
+# ~/.local/state/stable-exe/<name>/<name> and `finalPackage` swaps the command
+# bin/<name> for a launcher that execs that copy. <name> is also what macOS
+# shows in System Settings.
 #
 # The grant also pins the code signature. A vendor-signed binary (claude) is
 # fine as is; one built from source is ad-hoc signed and additionally needs
@@ -24,8 +25,9 @@
     ...
   }: let
     isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
-    stateDir = "${config.home.homeDirectory}/.local/state/stable-exe";
-    entries = lib.attrValues config.jl.stableExe;
+    # Relative to $HOME: the launcher resolves it at run time.
+    stateDir = name: ".local/state/stable-exe/${name}";
+    sourceOf = e: "${e.package}/${e.exe}";
   in {
     options.jl.stableExe = lib.mkOption {
       default = {};
@@ -37,16 +39,11 @@
       }: {
         options = {
           package = lib.mkOption {type = lib.types.package;};
-          bin = lib.mkOption {
-            type = lib.types.str;
-            default = name;
-            description = "Command name under bin/; also the name macOS shows.";
-          };
           exe = lib.mkOption {
             type = lib.types.str;
-            default = "bin/${config.bin}";
+            default = "bin/${name}";
             description = ''
-              The real Mach-O, relative to the package. Differs from bin/<bin>
+              The real Mach-O, relative to the package. Differs from bin/<name>
               when that is a wrapper, e.g. "bin/.foo-unwrapped".
             '';
           };
@@ -58,16 +55,6 @@
               wrapper, so repeat here whatever that wrapper added.
             '';
           };
-          source = lib.mkOption {
-            type = lib.types.str;
-            readOnly = true;
-            default = "${config.package}/${config.exe}";
-          };
-          stablePath = lib.mkOption {
-            type = lib.types.str;
-            readOnly = true;
-            default = "${stateDir}/${name}/${config.bin}";
-          };
           finalPackage = lib.mkOption {
             type = lib.types.package;
             readOnly = true;
@@ -75,54 +62,55 @@
               if !isDarwin
               then config.package
               else
-                pkgs.runCommand "${config.package.name}-stable" {
+                pkgs.symlinkJoin {
+                  name = "${config.package.name}-stable";
                   meta = config.package.meta or {};
-                  # Falls back to the store binary when the copy is missing or
-                  # belongs to another generation (before first activation,
-                  # `nix run`, rollbacks), so the command never breaks.
-                  launcher = ''
-                    #!/bin/sh
-                    ${lib.optionalString (config.prefixPath != []) ''export PATH="${lib.makeBinPath config.prefixPath}:$PATH"''}
-                    d="$HOME/.local/state/stable-exe/${name}"
-                    if [ -r "$d/source" ] && read -r src < "$d/source" && [ "$src" = "${config.source}" ]; then
-                      exec "$d/${config.bin}" "$@"
-                    fi
-                    exec "${config.source}" "$@"
-                  '';
-                  passAsFile = ["launcher"];
-                } ''
-                  mkdir -p $out/bin
-                  for p in ${config.package}/*; do
-                    [ "$(basename "$p")" = bin ] || ln -s "$p" $out/
-                  done
-                  for p in ${config.package}/bin/*; do
-                    ln -s "$p" $out/bin/
-                  done
-                  rm -f $out/bin/${config.bin}
-                  cp "$launcherPath" $out/bin/${config.bin}
-                  chmod +x $out/bin/${config.bin}
-                '';
+                  # First path wins, so the launcher shadows the command.
+                  paths = [
+                    (pkgs.writeTextFile {
+                      name = "${name}-launcher";
+                      destination = "/bin/${name}";
+                      executable = true;
+                      # Falls back to the store binary when the copy is missing
+                      # or belongs to another generation (before first
+                      # activation, `nix run`, rollbacks), so the command never
+                      # breaks.
+                      text = ''
+                        #!/bin/sh
+                        ${lib.optionalString (config.prefixPath != []) ''export PATH="${lib.makeBinPath config.prefixPath}:$PATH"''}
+                        d="$HOME/${stateDir name}"
+                        src="${sourceOf config}"
+                        if [ -r "$d/source" ] && read -r cur < "$d/source" && [ "$cur" = "$src" ]; then
+                          exec "$d/${name}" "$@"
+                        fi
+                        exec "$src" "$@"
+                      '';
+                    })
+                    config.package
+                  ];
+                };
           };
         };
       }));
     };
 
-    config.home.activation.stableExe = lib.mkIf (isDarwin && entries != []) (
+    config.home.activation.stableExe = lib.mkIf (isDarwin && config.jl.stableExe != {}) (
       lib.hm.dag.entryAfter ["writeBoundary"] (
-        lib.concatMapStrings (e: ''
-          d=${lib.escapeShellArg (dirOf e.stablePath)}
-          if [ "$(cat "$d/source" 2>/dev/null)" != ${lib.escapeShellArg e.source} ]; then
-            run mkdir -p "$d"
-            # Copy then rename: processes still running the old binary keep
-            # their file, and the launcher never sees a half-written one.
-            run rm -f "$d/source"
-            run cp ${lib.escapeShellArg e.source} "$d/.new"
-            run chmod 755 "$d/.new"
-            run mv -f "$d/.new" ${lib.escapeShellArg e.stablePath}
-            run sh -c 'printf "%s\n" "$1" > "$2"' _ ${lib.escapeShellArg e.source} "$d/source"
-          fi
-        '')
-        entries
+        lib.concatStrings (lib.mapAttrsToList (name: e: ''
+            d=${lib.escapeShellArg "${config.home.homeDirectory}/${stateDir name}"}
+            src=${lib.escapeShellArg (sourceOf e)}
+            if [ "$(cat "$d/source" 2>/dev/null)" != "$src" ]; then
+              # Marker cleared first and written last, so a launcher never
+              # matches a binary from another generation. Copy then rename:
+              # processes still running the old binary keep their file, and
+              # the launcher never sees a half-written one.
+              run rm -f "$d/source"
+              run install -Dm755 "$src" "$d/.new"
+              run mv -f "$d/.new" "$d"/${lib.escapeShellArg name}
+              run sh -c 'echo "$1" > "$2"' _ "$src" "$d/source"
+            fi
+          '')
+          config.jl.stableExe)
       )
     );
   };
