@@ -1,7 +1,18 @@
 # Projects Release Tracking
 #
 # Track projects we use extensively to periodically catch up with GitHub releases.
-# Constraint: 1 year lookback max, ~50k token budget for release notes.
+# Constraint: 1 year lookback max.
+#
+# How to catch up (one agent per project is fine):
+#   - Range: every release after `version`, up to the installed version
+#     (`<tool> --version`). No `version` yet: the last year of releases.
+#   - Release notes are the primary source; read them in full via `source`.
+#     `gh release list/view -R <repo>` covers github sources.
+#   - Cloning the repo shallowly into a temp dir is allowed when notes are thin or
+#     a change needs detail (docs diff, config schema, `git log` between tags).
+#   - Report new features worth adopting, cross-referenced with our config.
+#     Skip breaking changes (we hit those on use), fixes and internals.
+#   - Bump `version` once the digest has been read.
 #
 # Fields:
 #   repo        - GitHub owner/repo
@@ -20,8 +31,26 @@
 # =============================================================================
 
 [tracked.niri]
-repo = "YaLTeR/niri"
-version = "v25.08"
+repo = "niri-wm/niri"
+version = "v26.04"
+source = "github"
+
+[tracked.nushell]
+repo = "nushell/nushell"
+version = "0.116.1"
+source = "blog"
+url_pattern = "https://www.nushell.sh/blog/{date}-nushell_{version}.html"
+note = "date=YYYY-MM-DD, version=v0_110_0 format; post dates can be a day before the GH release"
+
+[tracked.kitty]
+repo = "kovidgoyal/kitty"
+version = "0.50.0"
+source = "changelog_url"
+url = "https://sw.kovidgoyal.net/kitty/changelog/"
+
+[tracked.hyprland]
+repo = "hyprwm/Hyprland"
+version = "v0.57.1"
 source = "github"
 
 # =============================================================================
@@ -30,25 +59,10 @@ source = "github"
 
 # Top priority (extensive config, daily use)
 
-[todo.nushell]
-repo = "nushell/nushell"
-source = "blog"
-url_pattern = "https://www.nushell.sh/blog/{date}-nushell_{version}.html"
-note = "date=YYYY-MM-DD, version=v0_110_0 format"
-
 [todo.taskwarrior]
 repo = "GothenburgBitFactory/taskwarrior"
 source = "changelog_file"
 path = "ChangeLog"
-
-[todo.kitty]
-repo = "kovidgoyal/kitty"
-source = "changelog_url"
-url = "https://sw.kovidgoyal.net/kitty/changelog/"
-
-[todo.hyprland]
-repo = "hyprwm/Hyprland"
-source = "github"
 
 # Second tier (significant config)
 
