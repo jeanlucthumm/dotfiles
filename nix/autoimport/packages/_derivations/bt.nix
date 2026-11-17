@@ -8,6 +8,7 @@
   stdenvNoCC,
   fetchurl,
   autoPatchelfHook,
+  libgcc,
 }: let
   version = "0.15.1";
 
@@ -46,6 +47,8 @@ in
     sourceRoot = "bt-${artifact.suffix}";
 
     nativeBuildInputs = lib.optionals stdenvNoCC.hostPlatform.isLinux [autoPatchelfHook];
+
+    buildInputs = lib.optionals stdenvNoCC.hostPlatform.isLinux [libgcc];
 
     installPhase = ''
       runHook preInstall
