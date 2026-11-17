@@ -24,21 +24,24 @@ def "worktree parallel" [
   let git_root = git rev-parse --show-toplevel | str trim
   let session = $current_branch | str replace --all '/' '-'
 
-  # Validate all worktrees can be created
   let plans = 1..$count | each { |i|
     let new_branch = $"($current_branch)-($i)"
     let dir_name = $new_branch | split row '/' | last
     let worktree_path = $git_root | path dirname | path join $dir_name
     let work_dir = if ($subdir | is-empty) { $worktree_path } else { $worktree_path | path join $subdir }
 
-    if (git branch --list $new_branch | str trim | is-not-empty) {
-      error make -u { msg: $"Branch already exists: ($new_branch)" }
-    }
-    if ($worktree_path | path exists) {
-      error make -u { msg: $"Path already exists: ($worktree_path)" }
-    }
-
     { branch: $new_branch, dir_name: $dir_name, path: $worktree_path, work_dir: $work_dir }
+  }
+
+  # Validate before creating anything. `for`, not `each`: an error raised
+  # inside `each` comes wrapped in a second "source value" error.
+  for plan in $plans {
+    if (git branch --list $plan.branch | str trim | is-not-empty) {
+      error make -u { msg: $"Branch already exists: ($plan.branch)" }
+    }
+    if ($plan.path | path exists) {
+      error make -u { msg: $"Path already exists: ($plan.path)" }
+    }
   }
 
   # Create all worktrees
@@ -239,7 +242,7 @@ def "worktree tournament" []: [nothing -> record<winner: string, dir: string>] {
   if not ("PR.md" | path exists) {
     error make -u { msg: "PR.md not found in current directory" }
   }
-  let spec = open PR.md
+  let spec = open --raw PR.md
 
   # Filter to non-empty diffs
   let subs = worktree diffs | where { $in.diff | str trim | is-not-empty }
@@ -285,7 +288,7 @@ def "worktree tournament" []: [nothing -> record<winner: string, dir: string>] {
   # Consolidate insights from all rounds
   let insight_files = glob $"($dir)/round-*/**/*_insights.md"
   if ($insight_files | is-not-empty) {
-    let insights = $insight_files | each { open $in } | str join "\n\n"
+    let insights = $insight_files | each { open --raw $in } | str join "\n\n"
     $"# Insights from Eliminated Implementations\n\n($insights)" | save -f $"($dir)/insights.md"
     print $"\nInsights collected: ($dir)/insights.md"
   }

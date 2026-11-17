@@ -76,14 +76,7 @@ def tchild [
 
   let parent_task_list = task $parent export | from json
   if ($parent_task_list | is-empty) {
-    error make {
-      msg: "Parent not found"
-      label: {
-        text: "parent id"
-        span: (metadata $parent).span
-      }
-    }
-    return
+    error make -u { msg: $"Parent ($parent) not found" }
   }
   let parent_task = $parent_task_list.0
 
@@ -330,7 +323,7 @@ def __lowest_parents []: [list<record> -> list<record>] {
   }
 }
 
-# Select a single pending parent, using fzf if multiple
+# Select a single pending parent, prompting if multiple
 def __select_parent []: [list<record> -> record] {
   let parents = $in | where status == "pending" and not ($it | __twaiting)
 
@@ -342,18 +335,11 @@ def __select_parent []: [list<record> -> record] {
     return ($parents | first)
   }
 
-  # Multiple parents - use fzf to select
-  let selection = ($parents
-    | each { |t| $"($t.id): ($t.description)" }
-    | to text
-    | fzf --height=40% --prompt="Select parent: ")
-
-  if ($selection | is-empty) {
+  let selection = $parents | input list --fuzzy --display {|t| $"($t.id): ($t.description)" } "Select parent:"
+  if $selection == null {
     error make -u { msg: "No parent selected" }
   }
-
-  let selected_id = ($selection | split row ":" | first | into int)
-  $parents | where id == $selected_id | first
+  $selection
 }
 
 def __tlookup []: [int -> record] {
@@ -368,7 +354,7 @@ def __tlookup []: [int -> record] {
   $result.0
 }
 
-# Get active task, prompting with fzf if multiple are active
+# Get active task, prompting if multiple are active
 def __tactive_select []: [nothing -> record] {
   let active_list = task +ACTIVE export | from json
 
@@ -382,18 +368,11 @@ def __tactive_select []: [nothing -> record] {
     return ($active_list | first)
   }
 
-  # Multiple active tasks - use fzf to select
-  let selection = ($active_list
-    | each { |task| $"($task.id): ($task.description)" }
-    | to text
-    | fzf --height=40% --prompt="Select active task: ")
-
-  if ($selection | is-empty) {
+  let selection = $active_list | input list --fuzzy --display {|t| $"($t.id): ($t.description)" } "Select active task:"
+  if $selection == null {
     error make -u {
       msg: "No task selected"
     }
   }
-
-  let selected_id = ($selection | split row ":" | first | into int)
-  $active_list | where id == $selected_id | first
+  $selection
 }

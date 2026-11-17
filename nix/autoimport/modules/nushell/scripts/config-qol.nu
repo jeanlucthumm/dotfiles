@@ -29,8 +29,10 @@ def opencode --wrapped [...rest] {
 
 # rg wrapper
 def nrg [pattern: string]: [nothing -> table<file: string, line: int, text: string>] {
-  $'[(rg --json $pattern)]' |
-    from json |
+  # rg exits 1 on no matches and 2 on any error, even one unreadable file
+  # among matches. Keep the matches; rg's stderr still reaches the terminal.
+  do -i { rg --json $pattern } |
+    from json --objects |
     where type == "match" |
     select data.path.text data.line_number data.lines.text |
     rename file line text
@@ -52,13 +54,9 @@ def ccreview [...args: string]: [nothing -> nothing] {
 # Returns null when empty so nushell falls back to file completion
 $env.PATH = ($env.PATH | split row (char esep) | prepend "~/.config/carapace/bin")
 
-let carapace_completer = {|spans|
-  let expanded_alias = (scope aliases | where name == $spans.0 | $in.0?.expansion?)
-  let spans = (if $expanded_alias != null {
-    $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
-  } else { $spans })
-
-  carapace $spans.0 nushell ...$spans
+# $place.command has aliases expanded
+let carapace_completer = {|place|
+  carapace $place.command.0 nushell ...$place.command
   | from json
   | if ($in | is-empty) { null } else { $in }
 }
