@@ -38,8 +38,7 @@
             "[](bg:c2 fg:c1)"
             "$directory"
             "[](fg:c2 bg:c3)"
-            "$git_branch"
-            "$git_status"
+            "$vcs"
             "[](fg:c3 bg:c4)"
             "$c"
             "$elixir"
@@ -89,6 +88,44 @@
           git_status = {
             style = "bg:c3 fg:text";
             format = "[$all_status$ahead_behind ]($style)";
+          };
+
+          # jj first: a colocated repo is also a git repo, where git only
+          # sees a detached HEAD.
+          vcs = {
+            order = ["jj" "git"];
+            git_modules = "$git_branch$git_status";
+            jj_modules = "$jj_bookmark$jj_change$jj_status";
+          };
+
+          # Bookmark on @ or @-, if any.
+          jj_bookmark = {
+            style = "bg:c3 fg:text";
+            format = "[ $symbol$bookmark]($style)";
+            truncation_length = 24;
+          };
+
+          # Change id, shortest unique prefix in bold.
+          jj_change = {
+            prefix_style = "bg:c3 fg:text bold";
+            suffix_style = "bg:c3 fg:text";
+            change_offset_style = "bg:c3 fg:text bold";
+            format = "[ ](bg:c3)$change[ ](bg:c3)";
+          };
+
+          # Nothing for a missing description: that is the normal state mid-work.
+          # Each symbol carries its own trailing space.
+          jj_status = {
+            style = "bg:c3 fg:text";
+            format = "([$all]($style))";
+            description_empty = "";
+            conflicted = "! ";
+            immutable = "◆ ";
+            added = "+$count ";
+            modified = "~$count ";
+            deleted = "−$count ";
+            renamed = "→$count ";
+            copied = "=$count ";
           };
 
           nix_shell = {
