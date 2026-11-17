@@ -220,7 +220,28 @@ fp @ {jlib, ...}: {
       '';
     };
 
-    nixos = {config, ...}: {
+    nixos = {
+      config,
+      osConfig,
+      ...
+    }: {
+      # Coding-font rendering tuned by eye against macOS on desktop's 139 PPI
+      # panel. macOS never hints; grid-fitted glyphs look harsher here.
+      xdg.configFile."fontconfig/conf.d/20-coding-font-no-hinting.conf".text = ''
+        <?xml version="1.0"?>
+        <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+        <fontconfig>
+          <match target="font">
+            <test name="family"><string>${osConfig.theme.fontCoding.name}</string></test>
+            <edit name="hinting" mode="assign"><bool>false</bool></edit>
+            <edit name="hintstyle" mode="assign"><const>hintnone</const></edit>
+          </match>
+        </fontconfig>
+      '';
+      # Thickness of dark-on-light text: kitty defaults to 1.0 0 on Linux and
+      # 1.7 30 on macOS.
+      programs.kitty.settings.text_composition_strategy = "1.3 15";
+
       stylix.targets = {
         # Resets the color-scheme key on every activation, undoing theme-toggle.
         gnome.polarity.enable = false;

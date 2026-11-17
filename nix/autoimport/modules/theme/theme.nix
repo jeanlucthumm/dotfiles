@@ -13,7 +13,7 @@ fp: {
             type = types.str;
           };
           size = mkOption {
-            type = types.int;
+            type = types.number;
           };
           package = mkOption {
             type = types.package;

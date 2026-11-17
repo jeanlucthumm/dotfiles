@@ -21,11 +21,12 @@ fp: {
         networking.hostId = "17646629";
         jl.system = "x86_64-linux";
         theme = {
-          name = "gruvbox";
+          name = "rose-pine";
           darkMode = false;
           fontCoding = {
             name = "JetBrainsMono Nerd Font Mono";
-            size = 10;
+            # 15px em at 96 DPI: the 0.6em advance is exactly 9px, so cells need no rounding.
+            size = 11.25;
             package = pkgs.nerd-fonts.jetbrains-mono;
           };
         };
