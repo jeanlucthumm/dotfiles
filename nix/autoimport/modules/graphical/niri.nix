@@ -156,6 +156,7 @@
             "XF86MonBrightnessDown".action.spawn = ["swayosd-client" "--brightness" "lower"];
 
             "Mod+R".action = switch-preset-column-width;
+            "Mod+Shift+R".action = switch-preset-column-width-back;
             "Mod+V".action = consume-or-expel-window-left;
             "Mod+Shift+V".action = expel-window-from-column;
 
@@ -171,10 +172,10 @@
             # MX Master thumb button (via Solaar mapping to Super+Shift+F10)
             "Mod+Shift+F10".action = toggle-overview;
 
-            # New actions from recent niri versions
-            # TODO: niri-flake is at v25.08, waiting on v25.11 parity (github.com/sodiboo/niri-flake/issues/1493)
+            # Fills the screen edge to edge, ignoring gaps (unlike Mod+F)
+            "Mod+Shift+F".action = maximize-window-to-edges;
+            # TODO: niri-flake's actions lack show-recent-windows (github.com/sodiboo/niri-flake/issues/1493)
             # "Mod+Tab".action = show-recent-windows;
-            # "Mod+Shift+F".action = maximize-window-to-edges;
             "Mod+Escape".action = toggle-keyboard-shortcuts-inhibit;
             "Mod+G".action = center-column;
             "Ctrl+Shift+G".action = center-visible-columns;
