@@ -47,28 +47,43 @@ fp: {
 
     # SessionStart hook: load the project's devenv into the session so every
     # Bash call runs inside it, the way `use devenv` does for direnv. Claude
-    # Code sources whatever the hook appends to $CLAUDE_ENV_FILE before each
-    # command. Installed as a bin so the hook command stays a stable name (a
-    # store path would leave a stale duplicate behind on every edit; see the
-    # array-element gotcha above).
+    # Code pastes the text of $CLAUDE_ENV_FILE into the command string of
+    # every Bash call. Installed as a bin so the hook command stays a stable
+    # name (a store path would leave a stale duplicate behind on every edit;
+    # see the array-element gotcha above).
     devenvHook = pkgs.writeShellScriptBin "claude-devenv-env" ''
       set -euo pipefail
       [ -n "''${CLAUDE_ENV_FILE:-}" ] || exit 0
       cd "$(${jq} -r .cwd)"
       [ -f devenv.nix ] || exit 0
-      # Claude Code sources the env file with zsh (login shell is nushell), but
-      # print-dev-env is a bash state dump: it assigns LINENO (read-only in zsh,
-      # aborts every Bash call) and defines bash-only function bodies. Let bash
-      # consume it and emit only exported variables. enterShell output goes to
-      # stderr so it can't land in the env file.
-      ${pkgs.bash}/bin/bash -c '
+      # The Bash tool runs zsh where Claude Code finds one (macOS) and bash
+      # otherwise (NixOS), so the output has to load in both. print-dev-env is
+      # a bash state dump: it assigns LINENO (read-only in zsh, aborts every
+      # Bash call) and defines bash-only function bodies. Let bash consume it
+      # and emit only exported variables. enterShell output goes to stderr so
+      # it can't land in the dump. CLAUDE_ENV_FILE is dropped so a claude
+      # started from a Bash call does not load this session's file as well.
+      # Captured before anything is written, so a devenv failure leaves the
+      # previous dump in place.
+      env=$(${pkgs.bash}/bin/bash -c '
         dump=$(${pkgs.devenv}/bin/devenv print-dev-env) || exit
         eval "$dump" >&2
-        export -p | ${pkgs.gnugrep}/bin/grep -Ev "^declare -x (PWD|OLDPWD|SHLVL|_)="
-      ' >>"$CLAUDE_ENV_FILE"
+        export -p | ${pkgs.gnugrep}/bin/grep -Ev "^declare -x (PWD|OLDPWD|SHLVL|_|CLAUDE_ENV_FILE)="
+      ')
+      # The env file's text rides in the argv of every Bash call, so it has to
+      # stay tiny and free of secrets: one argument over 128 KiB fails the
+      # spawn with E2BIG, and argv is world-readable through ps. The dump runs
+      # to tens of KB and carries the whole session environment, API keys
+      # included, so it goes to a private sibling and the env file only
+      # sources it. The sibling's name must not match <event>-hook-<N>.sh, or
+      # Claude Code would inline it as well. SessionStart fires again on
+      # resume and /compact, so both writes replace, never append.
+      umask 077
+      out="''${CLAUDE_ENV_FILE%/*}/devenv-env.sh"
       # print-dev-env replaces PATH wholesale; keep the session's tools
       # reachable behind the project's, as nix develop does.
-      printf 'export PATH="$PATH:%s"\n' "$PATH" >>"$CLAUDE_ENV_FILE"
+      printf '%s\nexport PATH="$PATH:%s"\n' "$env" "$PATH" >"$out"
+      printf '. %q\n' "$out" >"$CLAUDE_ENV_FILE"
     '';
 
     # jj-fetch / jj-push: `jj git fetch` and `jj git push -b X` without
