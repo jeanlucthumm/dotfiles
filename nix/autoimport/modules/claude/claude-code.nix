@@ -317,6 +317,11 @@ fp: {
         };
         enabledPlugins."home-assistant-skills@home-assistant-skills" = false;
 
+        extraKnownMarketplaces.jeanluc-skills.source = {
+          source = "github";
+          repo = "jeanlucthumm/skills";
+        };
+
         permissions = {
           # Classifier-backed auto mode; only honoured in user-level settings.
           defaultMode = "auto";
