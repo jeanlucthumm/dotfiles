@@ -92,6 +92,26 @@ _: {
         Install.WantedBy = ["default.target"];
       };
     };
+
+    # Lets a session that no rc unit spawned (a Telegram bot, a cron job)
+    # start one under a unit. See rc-spawn.sh.
+    rcSpawn = pkgs.writeShellApplication {
+      name = "rc-spawn";
+      runtimeInputs = with pkgs; [coreutils gnugrep gnused jq util-linux];
+      text =
+        ''
+          declare -A rc_dirs=(${lib.concatMapAttrsStringSep " " (
+              name: {dir, ...}: "[${lib.escapeShellArg name}]=${lib.escapeShellArg dir}"
+            )
+            cfg.dirs})
+          rc_spawn_inner=${pkgs.writeShellScript "rc-spawn-inner" ''
+            exec ${config.jl.claude.package}/bin/claude --cloud "$RC_SPAWN_PROMPT" \
+              --permission-mode auto --settings "$RC_SPAWN_SETTINGS"
+          ''}
+        ''
+        + builtins.readFile ./rc-spawn.sh;
+    };
+
     rcDir = lib.types.submodule {
       options = {
         dir = lib.mkOption {
@@ -126,6 +146,9 @@ _: {
       '';
     };
 
-    config.systemd.user.services = lib.mapAttrs' mkUnit cfg.dirs;
+    config = {
+      systemd.user.services = lib.mapAttrs' mkUnit cfg.dirs;
+      home.packages = [rcSpawn];
+    };
   };
 }
