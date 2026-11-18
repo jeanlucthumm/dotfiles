@@ -60,6 +60,10 @@ fp @ {jlib, ...}: {
           file = ./_age/claude-telegram.age;
           mode = "400";
         };
+        chore-telegram = {
+          file = ./_age/chore-telegram.age;
+          mode = "400";
+        };
         odyssey-telegram = {
           file = ./_age/odyssey-telegram.age;
           mode = "400";
