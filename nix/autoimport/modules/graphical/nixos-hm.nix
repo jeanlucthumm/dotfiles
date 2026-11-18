@@ -59,6 +59,7 @@
 
       home.packages = with pkgs; [
         signal-desktop # Encrypted messaging
+        swayimg # Image viewer
         meld # Diff tool
         gammastep # Redshifting at night
         brightnessctl # Screen brightness controls
@@ -156,16 +157,48 @@
           templates = null;
         };
 
+        # Vim keys on top of swayimg's defaults, which all stay bound.
+        configFile."swayimg/init.lua".text = ''
+          -- Same direction and step as the arrow keys.
+          local function pan(dx, dy)
+            local pos = swayimg.viewer.get_position()
+            swayimg.viewer.set_abs_position(pos.x + dx, pos.y + dy)
+          end
+          swayimg.viewer.on_key("h", function() pan(10, 0) end)
+          swayimg.viewer.on_key("l", function() pan(-10, 0) end)
+          swayimg.viewer.on_key("k", function() pan(0, 10) end)
+          swayimg.viewer.on_key("j", function() pan(0, -10) end)
+          swayimg.viewer.on_key("n", function() swayimg.viewer.open("next") end)
+          swayimg.viewer.on_key("p", function() swayimg.viewer.open("prev") end)
+
+          for key, dir in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+            swayimg.gallery.on_key(key, function() swayimg.gallery.select(dir) end)
+          end
+        '';
+
         mimeApps = {
           enable = true;
-          defaultApplications = {
-            "x-scheme-handler/http" = ["zen-beta.desktop"];
-            "x-scheme-handler/https" = ["zen-beta.desktop"];
-            "text/html" = ["zen-beta.desktop"];
-            "application/xhtml+xml" = ["zen-beta.desktop"];
-            "application/pdf" = ["org.pwmt.zathura.desktop"];
-            "x-scheme-handler/magnet" = ["transmission-gtk.desktop"];
-          };
+          defaultApplications =
+            lib.genAttrs (map (t: "image/${t}") [
+              "avif"
+              "bmp"
+              "gif"
+              "heif"
+              "jpeg"
+              "jxl"
+              "png"
+              "svg+xml"
+              "tiff"
+              "webp"
+            ]) (_: ["swayimg.desktop"])
+            // {
+              "x-scheme-handler/http" = ["zen-beta.desktop"];
+              "x-scheme-handler/https" = ["zen-beta.desktop"];
+              "text/html" = ["zen-beta.desktop"];
+              "application/xhtml+xml" = ["zen-beta.desktop"];
+              "application/pdf" = ["org.pwmt.zathura.desktop"];
+              "x-scheme-handler/magnet" = ["transmission-gtk.desktop"];
+            };
         };
 
         desktopEntries = {
