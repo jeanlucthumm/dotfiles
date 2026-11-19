@@ -9,12 +9,17 @@ fp @ {
     environment.systemPackages = with pkgs; [
       file # Figure out what a certain file is
       lsof # Open files (but good for ports)
+      iw # Wireless device info and config
+      ethtool # Ethernet link speed, duplex, offloads
+      tcpdump # Packet capture (run with sudo)
       tmux # Terminal multiplexer
       git # Version control
       nushell # Shell so I don't have to use bash for sysadmin
       yadm # Dotfile manager
       vim # Text editor
     ];
+    # traceroute + ping; the module adds the setcap wrapper it needs without sudo.
+    programs.mtr.enable = true;
   };
 
   flake.modules.homeManager.base = jlib.mkHomeManager {
