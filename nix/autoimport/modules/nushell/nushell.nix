@@ -38,10 +38,6 @@ fp @ {jlib, ...}: {
           man = "batman";
         };
 
-        # TODO: try `loadSessionVariables = true`. HM now sources
-        # `home.sessionVariables` (and the system env) into env.nu, which
-        # would end the dual-declaring below and maybe darwin-path-fix.nix.
-        loadSessionVariables = false;
         environmentVariables = {
           GPG_TTY = lib.hm.nushell.mkNushellInline "^tty";
           NH_FLAKE = config.home.homeDirectory + "/nix";
@@ -66,6 +62,9 @@ fp @ {jlib, ...}: {
     };
 
     nixos = {
+      # Home Manager writes `home.sessionVariables` as a POSIX script, which
+      # nushell cannot source. This has env.nu run it and take the result.
+      programs.nushell.loadSessionVariables = true;
       programs.nushell.extraConfig = builtins.concatStringsSep "\n" [
         (builtins.readFile ./scripts/nixos-config.nu)
         ''
@@ -92,6 +91,9 @@ fp @ {jlib, ...}: {
       osConfig ? null, # null on pure hm configs
       ...
     }: {
+      # TODO: try `true`, as on NixOS. It would end declaring NH_FLAKE twice
+      # (above and through `programs.nh`) and maybe darwin-path-fix.nix.
+      programs.nushell.loadSessionVariables = false;
       programs.nushell.extraConfig = lib.optionalString (osConfig != null) ''
         def nrs []: [nothing -> nothing] {
             nh darwin switch -H ${osConfig.networking.hostName}
