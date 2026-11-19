@@ -19,11 +19,24 @@ fp @ {jlib, ...}: let
       ignorePatterns = [
         ".devenv*"
         ".direnv"
-        ".obsidian/workspace.json"
-        ".obsidian/workspace-mobile.json"
+        # Carried by `obsidian-config` below, which the server is not in.
+        ".obsidian"
         ".git"
         ".DS_Store"
         ".Trash-*"
+      ];
+    };
+    # Obsidian's own folder: plugin code and settings, which the app runs as
+    # me wherever the vault is opened. A folder of its own so only the nodes
+    # that run Obsidian carry it: the server's agents write notes, but cannot
+    # change what the apps on other machines execute.
+    obsidian-config = {
+      id = "obsidian-config";
+      label = "Obsidian config";
+      ignorePatterns = [
+        "workspace.json"
+        "workspace-mobile.json"
+        ".DS_Store"
       ];
     };
   };
@@ -36,6 +49,7 @@ fp @ {jlib, ...}: let
         default.path = "Sync";
         timewarrior.path = ".timewarrior/data";
         obsidian.path = "obsidian/vault";
+        obsidian-config.path = "obsidian/vault/.obsidian";
       };
     };
     macbook = {
@@ -44,6 +58,7 @@ fp @ {jlib, ...}: let
         default.path = "Sync";
         timewarrior.path = ".timewarrior/data";
         obsidian.path = "obsidian/vault";
+        obsidian-config.path = "obsidian/vault/.obsidian";
       };
     };
     # The one iCloud<->Syncthing bridge: its vault lives in iCloud Drive so the
@@ -53,6 +68,7 @@ fp @ {jlib, ...}: let
       id = "DSEXLE4-P5O7DGU-K3AL5WR-IB4GHFL-R3MS35A-BWZARAD-7O4J6AA-K6SSCAM";
       folders = {
         obsidian.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault";
+        obsidian-config.path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/vault/.obsidian";
       };
     };
     # Backup-side replica for everything except the vault: the always-on
