@@ -9,14 +9,8 @@ let
 in {
   "jeanluc-openai.age".publicKeys = workstations;
   "jeanluc-anthropic.age".publicKeys = workstations;
-  "jeanluc-taskwarrior.age".publicKeys = workstations;
-  "jeanluc-notion.age".publicKeys = workstations;
-
-  "moltbot-telegram.age".publicKeys = withServer;
-  "moltbot-anthropic-token.age".publicKeys = withServer;
 
   "claude-telegram.age".publicKeys = workstations;
   "chore-telegram.age".publicKeys = withServer;
-  "odyssey-telegram.age".publicKeys = workstations;
   "zwave-js-keys.age".publicKeys = withServer;
 }

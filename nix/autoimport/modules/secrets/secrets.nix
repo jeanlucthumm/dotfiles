@@ -52,10 +52,6 @@ fp @ {jlib, ...}: {
           file = ./_age/jeanluc-anthropic.age;
           mode = "400";
         };
-        notion = {
-          file = ./_age/jeanluc-notion.age;
-          mode = "400";
-        };
         claude-telegram = {
           file = ./_age/claude-telegram.age;
           mode = "400";
@@ -63,19 +59,6 @@ fp @ {jlib, ...}: {
         chore-telegram = {
           file = ./_age/chore-telegram.age;
           mode = "400";
-        };
-        odyssey-telegram = {
-          file = ./_age/odyssey-telegram.age;
-          mode = "400";
-        };
-        taskwarrior = {
-          file = ./_age/jeanluc-taskwarrior.age;
-          mode = "400";
-          # Workaround since taskwarrior config does not support shell eval
-          # And Darwin `path` includes it.
-          path = "/tmp/jeanluc-taskwarrior.age";
-          # Workaround for lack of lchmod on Darwin, so symlinks wouldn't have correct `mode`.
-          symlink = false;
         };
       };
 
@@ -90,7 +73,6 @@ fp @ {jlib, ...}: {
           # Key Getters
           (pkgs.writeShellScriptBin "get-key-anthropic" (makeKeyGetter s.anthropic.path))
           (pkgs.writeShellScriptBin "get-key-openai" (makeKeyGetter s.openai.path))
-          (pkgs.writeShellScriptBin "get-key-notion" (makeKeyGetter s.notion.path))
 
           age # Age encryption tool
           pinentry-tty # Enter password in terminal
@@ -113,18 +95,6 @@ fp @ {jlib, ...}: {
             path = "/var/lib/claude-agent/telegram.env";
             owner = "claude-agent";
             group = "claude-agent";
-            mode = "0400";
-          };
-          # root-owned unlike claude-telegram above: the odyssey-watch unit
-          # runs as a DynamicUser, so there is no stable uid to chown to.
-          # systemd reads EnvironmentFile as root before dropping privileges,
-          # so the unit still gets it. See odyssey-watch/watch.nix.
-          odyssey-telegram = {
-            source = config.age.secrets.odyssey-telegram.path;
-            host = "server";
-            path = "/var/lib/odyssey-watch-secrets/telegram.env";
-            owner = "root";
-            group = "root";
             mode = "0400";
           };
         };
