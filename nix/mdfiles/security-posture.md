@@ -1,185 +1,155 @@
 # Security Posture
 
-Hardware-backed key management using YubiKeys on interactive workstations. Private keys never touch disk; cryptographic operations require physical hardware. Headless nodes (the server) can't use a hardware key — they're handled separately (see Keyless Nodes).
+How the machines and accounts behind this repo are meant to be secured, and why. This is the target: not every piece is in place at any given moment, and the list of gaps is kept privately, not here.
 
-**Assumed baseline:** Full disk encryption (FileVault on macOS, LUKS on Linux) on all devices.
+Rewritten 2026-11 from first principles. The earlier version centred on secrets and SSH keys held in YubiKeys; "Not doing" records what was dropped.
 
-## Threat Model
+## Threat model
 
-**The model is wide-net, untargeted compromise — not a targeted attacker.** We optimize against generic malware (compromised npm/pypi/cargo/nix packages, drive-by credential stealers) that runs as our user and scans *standard* locations. We do **not** optimize against an adversary who has studied this specific setup. This distinction drives every decision below.
+> Assume any box will at some point run hostile code as me, through a bad package or a misled agent. That should cost one box and an afternoon of rotation. It should never cost a root account, never reach work, and never lock me out.
 
-### Threats Addressed
+**Defend against**
 
-| Threat | Likelihood | Mitigation |
-|--------|------------|------------|
-| **Supply chain — key theft** | Medium | Private keys live in the YubiKey, not on disk. Generic stealers scan `~/.ssh/id_*`, `~/.aws/credentials`, `.env` — and find nothing usable. A transient compromise can't walk away with reusable keys. |
-| **Supply chain — secret theft** | Medium | *The hardware key does nothing here.* Decrypted API keys in active use are readable by any code running as us. Real mitigation is **isolation** — run untrusted dev work behind a sandbox boundary so it never shares the process space that holds the secrets (see Dev-Package Isolation). Fallbacks: rotation + non-standard paths. |
-| **Phishing** | Medium-High | WebAuthn credentials are origin-bound — fake sites can't use them. Independent of supply chain. |
-| **Device theft** | Low-Medium | Disk encryption + YubiKey PIN/touch required. |
+- Untargeted malware in a package, extension or MCP server.
+- An agent misled by something it read, or simply wrong.
+- Phishing of a root account.
+- Loss or theft of a device or key.
 
-### Out of Scope
+**Accept**
 
-- **Targeted attack** — An adversary who knows our custom secret paths, waits for a touch, or scrapes plaintext from a live process. By definition outside the wide-net model. Non-standard locations give marginal protection against scanners but zero against a targeted attacker.
-- **Live secret confidentiality** — Once an API key is decrypted for use, code running as our user can read it. Unavoidable for any secret that actually gets used. Mitigation is rotation, not the hardware key.
-- **Zero-day / RAT** — Sophisticated persistent compromise. Low likelihood, not worth optimizing for.
-- **Irreplaceable secrets** — Physical-access attacks for rotatable secrets, and archival key storage. Handled separately if ever needed (see Backup Strategy).
+- A compromised box loses everything on it. The fix is rotation, not prevention.
+- The server is me, and an agent on a box is me on that box.
+- A targeted attacker who has studied this setup is out of scope.
 
-### What the YubiKey Actually Buys You
+**Rules everything else follows from**
 
-Against the wide-net model, the hardware key's real value is narrow but genuine:
+1. Changing a root account's security takes a physical approval from me. Nothing on a box can do it alone.
+2. A compromised box doesn't reach other boxes, or work, without me acting.
+3. A lost device or key costs only a replacement.
+4. Phishing can't take a root.
 
-1. **No permanent key theft.** A transient compromise cannot exfiltrate the SSH/signing private key — it isn't on disk. After cleanup, the attacker holds no reusable credential. This is blast-radius / persistence reduction, not confidentiality.
-2. **Phishing resistance.** Origin-bound WebAuthn. Real and supply-chain-independent.
-3. **Device-theft protection.** PIN + touch gate at rest.
+## Roots
 
-### What the YubiKey Does NOT Do
+A root is an account that can take over other things while nothing else can recover it. An API key is not a root: lose it and you rotate it from the provider. Lose the provider account and there is nothing above it to rotate from.
 
-- It does **not** protect decrypted secrets during a live compromise. PIN+touch gates *when* decryption happens, not what happens to the plaintext afterward — the API key still lands in an env var / file / process, readable by malicious code running as us.
-- Git signing is configured **no-touch** (frequent commits, low-value threat), so it can be abused silently while the key is plugged in. Accepted tradeoff.
-- Therefore the actual defense for API-key confidentiality is **isolation** (below), not the hardware. The hardware keeps the *keys* safe, not the *secrets they unlock*.
+| Root | What falls with it |
+|---|---|
+| Email, and the registrar of its domain | Password resets for most other accounts; Tailscale signs in through it |
+| GitHub | The repos every machine builds from |
+| Password manager | Every login stored in it |
+| claude.ai | Remote-control sessions on the server, plus the mail, calendar and Drive connectors |
+| Apple account | The phone, which is itself a root factor |
 
-## Dev-Package Isolation
+| Tier | Guarded by |
+|---|---|
+| Roots | A hardware key or the phone. Never a passkey stored in the password manager. |
+| Everything else | Passkeys and passwords in the password manager |
 
-The dominant wide-net supply-chain vector is **arbitrary code execution at install/build time** in language ecosystems: npm `postinstall`, pip `setup.py`, cargo `build.rs`, gems, plus editor extensions and `curl | bash` installers. The defining trait is "untrusted code runs as our user during a routine dev action" — at which point it can read decrypted secrets, `~/.ssh`, env, anything we can. The YubiKey is irrelevant to this; the only real defense is to deny that code our process space.
+The password manager is unlocked on the boxes, so anything in it counts as being on a box, and a root whose passkey lived there would fall with the box. A hardware key's secret is never on any box. The phone runs neither packages nor coding agents, and it shows what is being approved.
 
-**Nix is already sandboxed; the gap is everything Nix doesn't cover.** `nix build` runs with no network and an isolated filesystem, so nixpkgs is comparatively low-risk. But the moment we `npm install` inside a `nix develop` / devenv shell, Nix protects us not at all — that process runs as us.
+Sites an agent signs in to are the exception to passkeys: they keep a password plus a one-time code, because an agent can't use a passkey stored in the password manager.
 
-**devenv is reproducibility, not isolation.** A `devenv shell` pins packages but runs as our user with full access to keys and secrets. It does not constitute a sandbox. Isolation (the boundary) and reproducibility (the toolchain) are orthogonal — devenv can run *inside* a boundary, but never replaces one.
+Each root has several independent factors, so losing any one thing still leaves a way in. Paper recovery codes cover losing everything at once.
 
-**The boundary:**
+## Hardware keys
 
-| Layer | Mechanism | Notes |
-|-------|-----------|-------|
-| Local (now) | Rootless container (Podman) / dev container | On macOS, containers already run inside a Linux VM (Colima/OrbStack/Docker Desktop) → VM-grade isolation for free. Container escape is a targeted-attacker concern, out of scope. |
-| Future (endgame) | Ephemeral cloud agent sandboxes | Untrusted execution moves off the key-holding laptop entirely; the laptop becomes a thin client. Blast radius collapses to a disposable remote box. |
+Hardware keys do one job: logging in to roots, plus SSH from the boxes I sit at. They no longer decrypt secrets.
 
-**Mount discipline is the whole game.** A boundary only holds if the sandbox *cannot* see host secrets. Bind-mounting `~/.ssh` or forwarding the SSH agent "for convenience" hands the boundary straight back. Sandboxes must not have our keys, decrypted agenix secrets, or broader home directory.
+| Key | Lives |
+|---|---|
+| USB-A security key | Desktop |
+| Nano | Macbook |
+| USB-C | Safe |
+| Nano | A second laptop |
 
-**Cloud agents move the secret problem, they don't erase it.** A cloud sandbox still needs scoped credentials (git push, deploy, API keys) to do real work, and those are readable inside the sandbox — the same live-secret exposure that's out of scope above. The win is laptop isolation, which is real and worth it. The required hygiene is **per-sandbox, narrowly-scoped, short-lived credentials** — not the broad personal keys.
+- **What a touch proves:** that I am physically there. It doesn't prove what I'm approving, so it stops silent, automatic abuse and not a trick aimed at me.
+- **A lost key** is removed from the roots using another key, then replaced. It holds a handful of logins and nothing else.
+- **A key stolen along with its box** is still only half a login. Every root also needs a password or the key's PIN, and the disk has its own passphrase.
 
-## YubiKey Inventory
+## Disk encryption
 
-| Key | Location | Purpose |
-|-----|----------|---------|
-| Desktop YubiKey | Desktop workstation | Full setup |
-| MacBook YubiKey | MacBook | Full setup |
-| Wallet NFC | Wallet | Phone 2FA + 2FA backup |
+Unencrypted, a stolen box is a breached box. The unlock method follows one rule: a box holding logged-in root sessions needs a secret only I know at boot, and a box holding only rotatable things may unlock itself.
 
-No agenix backup key. Agenix secrets are recoverable from provider dashboards (which require 2FA — see Backup Strategy).
+| Box | Unlock | Why |
+|---|---|---|
+| Macbook | FileVault | Holds browser sessions |
+| Desktop | Passphrase, at the keyboard or over SSH in early boot | Holds browser sessions; SSH entry allows remote wake |
+| Server | TPM auto-unlock for the OS drive; the data pool has its own passphrase | Must boot unattended and holds only rotatable things |
+| Macmini | FileVault, no auto-login | Holds a signed-in Apple account |
 
-## Per-Device YubiKey Configuration
+TPM unlock without Secure Boot stops a pulled or discarded drive and a casual thief. It doesn't stop a skilled thief who takes the whole server. That is accepted: a stolen server is treated as breached and rotated.
 
-Each workstation YubiKey (desktop, macbook) has identical configuration across two applets.
+The disk passphrase is deliberately separate from the hardware key, so stealing a box together with its key opens nothing.
 
-### FIDO2 Applet
+## SSH
 
-| Credential | Type | Policy | Rationale |
-|------------|------|--------|-----------|
-| SSH auth | `ed25519-sk` resident | Touch required | Protect server access |
-| Git signing | `ed25519-sk` resident | No touch | Frequent commits, low-value threat |
-| Web 2FA | WebAuthn | Site-controlled | Not our choice |
+| From | To | Credential |
+|---|---|---|
+| Macbook | Desktop, server, macmini | Hardware key |
+| Desktop | Server | Hardware key |
+| Phone | Desktop, server, macmini | Software key |
+| Server | Itself and GitHub | File key |
+| Macmini | Nothing | None |
 
-Two separate FIDO2 credentials because SSH auth and git signing have different friction tolerances.
+1. **Downhill only.** Macbook, then desktop, then server. Nothing lower reaches back up. If the server ever needs the desktop's GPU, that goes through a purpose-built service with its own auth, not SSH.
+2. **Hardware where I sit, files where I don't.** A file key can be copied once and used from anywhere until someone notices. A hardware key only works while the attacker is still on the box, which shrinks how much depends on detection.
+3. **The list lives in nix** (`secrets/_pubkeys.nix`). Hand-added keys are stopgaps.
 
-### PIV Applet
+One touch opens a connection that is reused for a few hours. That is fine because access only flows downhill: whoever owns the higher box already has the better prize.
 
-| Slot | Purpose | Policy | Rationale |
-|------|---------|--------|-----------|
-| 82 (retired key management) | Age identity (agenix) | PIN + touch | High-value API keys, low frequency (~1x/day) |
+## GitHub and tokens
 
-`age-plugin-yubikey` uses PIV retired key management slots (82-95), not standard PIV slots like 9a.
+- Every box pushes as me, the server included. No bot account and no deploy keys.
+- Tokens on boxes carry no account-admin scopes, such as adding SSH or signing keys. Account admin happens in the browser, where the hardware key gates login and sensitive actions.
+- Machines rebuild from the dotfiles repo only when I run the rebuild, so a bad push needs me to act before it lands anywhere.
 
-PIN and PUK changed from defaults on setup. Three wrong PIN attempts locks the slot (PUK to reset). Three wrong PUK attempts bricks the slot.
+## Agents
 
-## Wallet NFC Key
+An agent on a box is me on that box. What matters is where agents reach beyond it.
 
-Dual purpose:
-- **Phone 2FA** — WebAuthn credentials for mobile authentication
-- **2FA backup** — Survives an overnight disaster that takes both workstation keys
+| Kind | Needs | Doesn't need |
+|---|---|---|
+| Lifestyle, on the vault | Vault read and write, mail, calendar, Drive | sudo, `gh`, SSH keys, repos |
+| Coding | Worktrees, a shared repo area, `gh` push, vault read | Mail, calendar, Drive, vault write |
 
-NOT an agenix recipient. If lost, deregister from web accounts (still have workstation keys).
+Each kind handles one sort of untrusted input and lacks the other's power. The one that reads strangers' text can't push code, and the one that runs strangers' packages can't read mail.
 
-## Keyless Nodes (Server)
+The split is a guard rail enforced through agent settings, not a wall. It stops a misled agent. Hostile code on the same box runs as me regardless.
 
-**The structural problem:** a YubiKey requires interactive physical presence — PIN entry and touch. The server is headless and boots unattended (remote reboots). There is no human and no key at boot time. So the server **cannot** be a YubiKey-backed agenix recipient: nothing can perform the PIN+touch decryption.
+- **Outward mail actions** (send, forward, trash) are denied unless a job needs them.
+- **Connectors follow the account.** Anything attached to claude.ai is available on every box signed in to it, which is one more reason claude.ai is a root.
+- **The vault must stay data.** Obsidian runs plugin code, so its `.obsidian` folder syncs as a separate Syncthing folder that the server is not part of, and no plugin that executes note content is installed. Agents in the vault run on the server only.
+- **Package-heavy work belongs on the server**, which has no browser sessions.
 
-**The two options for a keyless node both end with plaintext-equivalent on disk:**
+## Secrets
 
-| Approach | Where the decryption authority lives | Server in recipient set? |
-|----------|--------------------------------------|--------------------------|
-| Standard agenix on server | Server's SSH host key — an unattended key sitting on the server's disk | Yes (must rekey on changes) |
-| **Push-over-SSH (chosen pattern)** | MacBook YubiKey only — never on the server | No |
+- **Server:** agenix, decrypted with the server's SSH host key. The server must boot unattended, so its secrets are readable on the box by design. They are all rotatable.
+- **Hardware keys are out of this path.** Decrypting with a key added a touch and a failure mode without protecting the plaintext afterwards.
+- **Agent website logins:** on trial, see [the proposal](agent-website-logins-proposal.md). The agent asks for a login, I approve it in the password manager's app, and it is filled straight into a hosted browser for the next 30 days. Neither the server nor the model ever holds the password.
+  - Roots, and anything that can reset one, sit in a separate vault that can't be asked for.
+  - If adopted, this is a deliberate exception to "a breach costs one box": a breached server can also use the logins I approved in the last 30 days.
+  - Fallback if the trial fails: a service account scoped to one dedicated vault of low-value logins.
+- **Open:** how workstation API keys are delivered, by agenix with a host key or straight from the password manager.
 
-Both expose secrets to anything running on the server (a host-key on disk decrypts everything; deposited plaintext is readable). At-rest cold-theft is covered by LUKS either way. The push-over-SSH approach is preferred because:
+## Noticing
 
-- The **master decryption authority (YubiKey) never lives on the always-on, most-exposed box.** Re-provisioning requires the operator + key to be physically present.
-- The server stays **out of the agenix recipient set entirely** — no host-key recipient to manage or rekey.
-- Secrets are deposited at a **non-standard location**, which (per the wide-net threat model) dodges generic credential scanners. Marginal, honest, consistent with the rest of the model.
+Watch at the accounts, not on the boxes. A breached box can't be trusted to report on itself, and the damage that matters happens when stolen things are used somewhere else, where the providers already watch.
 
-**Mechanism:** a script run from the macbook decrypts the needed secrets locally (YubiKey PIN+touch), then deposits the plaintext over SSH into a chosen location on the server for the consuming service to read.
+1. Sign-in, new-device and new-key alerts on every root, arriving as mail on the phone.
+2. Spend caps and alerts on API keys.
+3. A decoy credential on each box that nothing legitimate uses. Any use raises an alert naming the box.
 
-> **Current status:** No server-side secret consumer exists today (moltbot, the previous consumer, is retired). The deposit script and target path are therefore not yet wired into this repo. The standard-agenix remnants for moltbot (`keys.server` in `withServer`, the `moltbot-*.age` secrets, and `moltbot/default.nix`'s `age.secrets`) are **dead code pending cleanup**. The `# TODO: figure out the secrets story for server` in `hosts/server.nix` resolves to: use push-over-SSH when a consumer reappears; the server is not an agenix recipient.
+Nothing here catches an agent quietly reading what it is allowed to read. The rules bound that; detection doesn't.
 
-## Agenix Configuration
+Rotation is worked out on the day. Roots are what everything else is rotated from, which is why they must survive losing any box.
 
-**Recipients:** workstation age public keys only (desktop + macbook YubiKey PIV). The server is **not** a recipient — keyless nodes receive plaintext via push-over-SSH, not `.age` files.
+## Not doing, and why
 
-```nix
-# secrets/_pubkeys.nix (age identities)
-{
-  desktop.age = "age1yubikey1q...";  # Desktop YubiKey PIV
-  macbook.age = "age1yubikey1q...";  # MacBook YubiKey PIV
-}
-```
-
-**Identity:** Each device uses its own YubiKey PIV identity for decryption.
-
-**Secret classification:** Only recoverable secrets (API keys, service credentials). See Backup Strategy for irreplaceable secrets.
-
-## Backup Strategy
-
-**N+1 terminology:** If N devices need to decrypt secrets, an N+1 setup adds one extra backup key stored offline, used only if all N primary keys are lost.
-
-### 2FA Backup
-
-Critical: without 2FA, can't access dashboards to rotate API keys.
-
-**Strategy:** Register all three YubiKeys (desktop, macbook, wallet) with critical services. Wallet key is geographically separate, survives a home disaster.
-
-**Additionally:** Save backup codes offered by services.
-
-### Agenix: No Backup Key
-
-Agenix secrets are operational (daily system ops), not archival:
-- API keys can be rotated from provider dashboards
-- Database passwords can be reset
-- Service credentials can be regenerated
-
-If all YubiKeys are lost (catastrophic overnight disaster), recovery is:
-1. Get new YubiKeys
-2. Log into each service dashboard
-3. Rotate/regenerate credentials
-4. Rebuild nix config
-
-Annoying, not catastrophic. N+1 backup not justified for recoverable secrets.
-
-### Agenix: Future Irreplaceable Secrets
-
-If ever storing secrets that cannot be regenerated (crypto keys, archival encryption), add N+1 backup:
-- Additional YubiKey stored offsite (bank safe deposit box)
-- Added as agenix recipient alongside primary keys
-- Those `.age` files stored privately, not in public dotfiles
-
-The tooling supports this; it's an operational choice, not a technical limitation.
-
-## Protocol Reference
-
-| Operation | Protocol | Applet | Can Exfiltrate Key? |
-|-----------|----------|--------|---------------------|
-| SSH auth | FIDO2 | FIDO2 | No |
-| Git signing | FIDO2 | FIDO2 | No |
-| Web 2FA | WebAuthn/FIDO2 | FIDO2 | No |
-| Age encrypt | - | - | Uses public key only |
-| Age decrypt | PIV | PIV | No |
-
-FIDO2 supports auth/signing but not encryption (protocol limitation). PIV supports encryption. Hence two applets.
+| Idea | Why not |
+|---|---|
+| Secrets decrypted by a hardware key | It guards rotatable keys whose plaintext is readable anyway, and it was the part that broke when a key was lost |
+| Containers for dev work | The rules hold without them, and the server already is the place with no browser sessions |
+| Bot account or deploy keys for the server | The server being me is accepted |
+| Secure Boot for the TPM unlock | Extra machinery against an attacker who is out of scope |
+| On-box intrusion monitoring | Noisy, and it runs on the box that isn't trusted |
+| Separate users per agent kind | The guard rail is enough for now |
