@@ -115,7 +115,6 @@ fp @ {
         # (signStable neovide) # Neovim GUI
         (signStable obsidian) # Note taking; also provides the official `obsidian-cli`
       ];
-      xdg.configFile."kitty/auto_pad.py".source = ./_kitty-auto-pad.py;
       xdg.configFile."kitty/url_hints.py".source = ./_kitty-url-hints.py;
       # Overlay on the clicked window: `:q` returns to it. --cwd=current
       # resolves relative paths against its foreground process.
@@ -149,8 +148,6 @@ fp @ {
             tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
             window_alert_on_bell = true;
             window_padding_width = 8;
-            # Auto-centers wide single windows; see _kitty-auto-pad.py
-            watcher = "auto_pad.py";
             allow_remote_control = "yes";
             listen_on = "unix:/tmp/kitty";
             repaint_delay = 5;
@@ -244,6 +241,7 @@ fp @ {
       ];
 
       home.packages = [smart-open-url];
+      xdg.configFile."kitty/auto_pad.py".source = ./_kitty-auto-pad.py;
 
       programs = {
         hammerspoon = {
@@ -256,6 +254,8 @@ fp @ {
         # These are darwin specific because NixOS relies on the WM for splits.
         kitty = {
           settings = {
+            # Auto-centers wide single windows; see _kitty-auto-pad.py
+            watcher = "auto_pad.py";
             macos_option_as_alt = true;
             macos_titlebar_color = "background";
             # macOS GUI apps don't inherit shell PATH, so tell kitty where to find nvim
