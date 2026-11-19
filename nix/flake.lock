@@ -504,6 +504,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-ailab": {
+      "locked": {
+        "lastModified": 1794285365,
+        "narHash": "sha256-wZbTou+ANeUoN7ojuMBOPU9D4qMZ96MLxcDp2BzmIUY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9ac0edc06bfb33e6c0000be79d98ef8d89e26503",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9ac0edc06bfb33e6c0000be79d98ef8d89e26503",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1793504054,
@@ -665,6 +681,7 @@
         "nix-homebrew": "nix-homebrew",
         "nix-openclaw": "nix-openclaw",
         "nixpkgs": "nixpkgs_2",
+        "nixpkgs-ailab": "nixpkgs-ailab",
         "pyproject-build-systems": "pyproject-build-systems",
         "pyproject-nix": "pyproject-nix",
         "reddit-easy-post": "reddit-easy-post",

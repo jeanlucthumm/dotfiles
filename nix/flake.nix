@@ -98,6 +98,12 @@
 
     # Installs Homebrew itself; nix-darwin's `homebrew` module only drives it.
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    # Separate pin for the desktop's AI lab (autoimport/modules/ailab.nix).
+    # Deliberately does not follow `nixpkgs`: ROCm PyTorch is only in the binary
+    # cache at some revisions and takes hours to compile at the others, so a
+    # system update must not be able to move it.
+    nixpkgs-ailab.url = "github:NixOS/nixpkgs/9ac0edc06bfb33e6c0000be79d98ef8d89e26503";
   };
 
   outputs = inputs: let

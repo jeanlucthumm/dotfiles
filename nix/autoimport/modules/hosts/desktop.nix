@@ -8,6 +8,7 @@ fp: {
       # secrets
       theme
       amdGpu
+      ailab
       syncthing
       ({
         pkgs,

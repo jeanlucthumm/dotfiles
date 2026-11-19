@@ -129,6 +129,10 @@ fp @ {jlib, ...}: {
         kitty.enable = false;
         starship.enable = false;
         nushell.enable = false;
+        # Maps one polarity too, and fakes the other by swapping shades: with a
+        # light scheme its "light" variant is dark. opencode follows kitty
+        # instead (see ailab.nix).
+        opencode.enable = false;
       };
 
       # Stylix's kitty target is off, so set the font here.
