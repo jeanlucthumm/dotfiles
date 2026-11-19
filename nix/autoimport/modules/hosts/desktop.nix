@@ -21,6 +21,7 @@ fp: {
 
         networking.hostName = "desktop";
         networking.hostId = "17646629";
+        networking.wireless.iwd.enable = true;
         jl.system = "x86_64-linux";
         theme = {
           name = "rose-pine";
