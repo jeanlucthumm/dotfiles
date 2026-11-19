@@ -8,6 +8,7 @@ fp: {
       # secrets
       theme
       amdGpu
+      syncthing
       ({
         pkgs,
         lib,
@@ -76,12 +77,6 @@ fp: {
           # ];
 
           programs.git.signing.signByDefault = lib.mkForce false;
-
-          # Runs as me out of ~/.local/state/syncthing, which holds the device
-          # identity the server is already paired with. Deliberately no
-          # `settings` — folders and peers stay owned by the running instance
-          # rather than being declared here.
-          services.syncthing.enable = true;
 
           home.stateVersion = "24.05";
 
