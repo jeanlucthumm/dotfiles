@@ -371,6 +371,13 @@ fp: {
             "Fetch"
             "WebSearch"
             "WebFetch(domain:github.com)"
+            # Cross-session messaging between remote-control sessions and hubs.
+            "mcp__claude-code-remote__send_message"
+            "mcp__claude-code-remote__list_sessions"
+            "mcp__claude-code-remote__get_session"
+            "mcp__claude-code-remote__list_events"
+            "mcp__claude-code-remote__get_event"
+            "mcp__claude-code-remote__list_environments"
           ];
         };
       };
