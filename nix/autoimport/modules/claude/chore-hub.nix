@@ -16,9 +16,10 @@ _: {
       pkgs,
       ...
     }: let
+      vault = "/home/jeanluc/obsidian/vault";
       # Nothing else may run Claude Code here: --continue resumes whichever
       # conversation in this directory is newest.
-      dir = "/home/jeanluc/obsidian/vault/chore/hub";
+      dir = "${vault}/chore/hub";
       stateDir = "${config.xdg.stateHome}/chore-hub/telegram";
       tmuxCmd = "${pkgs.tmux}/bin/tmux -L chore-hub";
       claude = "${config.jl.claude.package}/bin/claude";
@@ -68,6 +69,7 @@ _: {
             --remote-control chore-hub \
             --channels plugin:${plugin} \
             --permission-mode auto \
+            --add-dir ${vault} \
             --settings ${settings} || true
           echo
           echo "claude exited. Session kept for inspection."
