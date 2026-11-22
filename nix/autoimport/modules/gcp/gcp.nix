@@ -26,11 +26,11 @@ _: {
         google-cloud-sdk
         opentofu
 
-        # Google Maps ratings and reviews for agents. Places API is enabled in
-        # infra/gcp/sandbox/.
+        # Google Maps places, reviews and routes for agents. Places and Routes
+        # APIs are enabled in infra/gcp/sandbox/.
         (writeShellApplication {
           name = "places";
-          runtimeInputs = [curl jq google-cloud-sdk];
+          runtimeInputs = [coreutils curl jq google-cloud-sdk];
           text = "places_jq=${./places.jq}\n" + builtins.readFile ./places.sh;
         })
       ];
