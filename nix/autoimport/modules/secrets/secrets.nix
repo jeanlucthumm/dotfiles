@@ -60,6 +60,10 @@ fp @ {jlib, ...}: {
           file = ./_age/chore-telegram.age;
           mode = "400";
         };
+        system-telegram = {
+          file = ./_age/system-telegram.age;
+          mode = "400";
+        };
       };
 
       home.packages = let
