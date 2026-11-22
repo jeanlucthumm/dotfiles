@@ -1,9 +1,8 @@
-# Chore hub: a Telegram agent that dispatches chores, as jeanluc in the vault.
-# Same tmux-in-a-oneshot shape as claude-agent.nix; instructions are the
-# vault's chore/hub/CLAUDE.md. Attach: tmux -L chore-hub attach
+# Chore hub: Telegram agent that dispatches chores, same shape as claude-agent.nix.
+# Instructions: vault chore/hub/CLAUDE.md. Attach: tmux -L chore-hub attach
 _: {
   flake.modules.nixos.homeServer = {config, ...}: let
-    # Env file: TELEGRAM_BOT_TOKEN and TELEGRAM_ALLOWED_USERS.
+    # TELEGRAM_BOT_TOKEN, TELEGRAM_ALLOWED_USERS.
     envFile = config.age.secrets.chore-telegram.path;
   in {
     age.secrets.chore-telegram = {
@@ -16,9 +15,9 @@ _: {
       pkgs,
       ...
     }: let
-      # Nothing else may run Claude Code here: --continue resumes whichever
-      # conversation in this directory is newest.
-      dir = "/home/jeanluc/obsidian/vault/chore/hub";
+      vault = "/home/jeanluc/obsidian/vault";
+      # Hub only: --continue resumes this dir's newest conversation.
+      dir = "${vault}/chore/hub";
       stateDir = "${config.xdg.stateHome}/chore-hub/telegram";
       tmuxCmd = "${pkgs.tmux}/bin/tmux -L chore-hub";
       claude = "${config.jl.claude.package}/bin/claude";
@@ -27,21 +26,20 @@ _: {
       plugin = "telegram@${marketplace}";
       settings = pkgs.writeText "chore-hub-settings.json" (builtins.toJSON {
         enabledPlugins.${plugin} = true;
+        permissions.additionalDirectories = [vault "/home/jeanluc/dotfiles"];
       });
 
-      # Channel plugins are Bun scripts, and nothing else of jeanluc's needs
-      # bun on PATH.
+      # Channel plugins run on Bun.
       path = "export PATH=${pkgs.bun}/bin:$PATH";
 
-      # Nothing here may fail the unit: a user unit that does not start fails
-      # the Home Manager activation, and with it the deploy.
+      # Must not fail: a failed user unit fails the activation, and the deploy.
       bootstrap = pkgs.writeShellScript "chore-hub-bootstrap" ''
         set -uo pipefail
         umask 077
         ${path}
         mkdir -p ${stateDir}
 
-        # A static allowlist the plugin reads once at boot; see claude-agent.nix.
+        # Static allowlist, read once at boot.
         if [ -z "''${TELEGRAM_ALLOWED_USERS:-}" ]; then
           echo "chore-hub: TELEGRAM_ALLOWED_USERS is unset in ${envFile};" >&2
           echo "  the bot drops every inbound message until it is set." >&2
@@ -54,12 +52,11 @@ _: {
           }' > ${stateDir}/access.json
         fi
 
-        # The plugin is cached from this clone on first use, and a clone that
-        # predates the plugin does not list it.
+        # A marketplace clone older than the plugin doesn't list it.
         ${claude} plugin marketplace update ${marketplace} || true
       '';
 
-      # Ends in a shell either way, so there is always something to attach to.
+      # Ends in a shell so there's always something to attach to.
       runHub = pkgs.writeShellScript "chore-hub-run" ''
         ${path}
         if cd ${dir}; then
@@ -77,6 +74,17 @@ _: {
         exec ${pkgs.bashInteractive}/bin/bash -i
       '';
     in {
+      # Hub-spawned sessions can't answer prompts. The store path is what
+      # claude-jj-git-rewrite turns `jj git push -b X` into in workspaces.
+      jl.claude.settings.permissions.allow = [
+        "Bash(jj git push -b *)"
+        "Bash(jj git push --bookmark *)"
+        "Bash(/nix/store/*-jj-push/bin/jj-push *)"
+        "Bash(gh pr create --draft:*)"
+        "Bash(gh pr create * --draft*)"
+        "Bash(claude-worktree-remove:*)"
+      ];
+
       systemd.user.services.claude-chore-hub = {
         Unit.Description = "Claude Code chore hub (tmux session)";
         Service = {
