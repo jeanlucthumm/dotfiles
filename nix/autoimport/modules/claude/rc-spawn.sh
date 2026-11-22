@@ -19,6 +19,7 @@ permission mode, and prints its session ID. The service writes the session's
 title from the prompt, so lead with what the session is for.
 
 MODEL is an alias (opus, sonnet, fable) or a full model name. Default: opus.
+Opus models run at xhigh effort; others at their own default.
 
 Names: ${!rc_dirs[*]}
 
@@ -38,6 +39,8 @@ case "${1:-}" in
     shift
     ;;
 esac
+effort=
+if [[ $model == *opus* ]]; then effort=xhigh; fi
 
 name=${1:-}
 shift || true
@@ -68,7 +71,7 @@ EOF
 fi
 
 export RC_SPAWN_PROMPT=$prompt
-export RC_SPAWN_MODEL=$model
+export RC_SPAWN_MODEL=$model RC_SPAWN_EFFORT=$effort
 RC_SPAWN_SETTINGS=$(jq -nc --arg id "$(<"$id_file")" '{remote: {defaultEnvironmentId: $id}}')
 export RC_SPAWN_SETTINGS
 

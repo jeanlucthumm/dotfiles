@@ -107,6 +107,7 @@ _: {
           rc_spawn_inner=${pkgs.writeShellScript "rc-spawn-inner" ''
             exec ${config.jl.claude.package}/bin/claude --cloud "$RC_SPAWN_PROMPT" \
               --permission-mode auto --model "$RC_SPAWN_MODEL" \
+              ''${RC_SPAWN_EFFORT:+--effort "$RC_SPAWN_EFFORT"} \
               --settings "$RC_SPAWN_SETTINGS"
           ''}
         ''
