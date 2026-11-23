@@ -29,3 +29,10 @@ resource "google_project_service" "places" {
   service            = "places.googleapis.com"
   disable_on_destroy = false
 }
+
+# Routes API, for travel times with live traffic and transit directions. Same
+# OAuth auth as Places.
+resource "google_project_service" "routes" {
+  service            = "routes.googleapis.com"
+  disable_on_destroy = false
+}
