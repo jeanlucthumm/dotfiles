@@ -11,12 +11,15 @@
 
 usage() {
   cat <<EOF
-Usage: rc-spawn NAME PROMPT...
-       rc-spawn NAME < prompt.txt
+Usage: rc-spawn [--model MODEL] NAME PROMPT...
+       rc-spawn [--model MODEL] NAME < prompt.txt
 
 Starts a Remote Control session under the claude-rc-NAME unit, in auto
 permission mode, and prints its session ID. The service writes the session's
 title from the prompt, so lead with what the session is for.
+
+MODEL is an alias (opus, sonnet, fable) or a full model name. Default: opus.
+Opus models run at xhigh effort; others at their own default.
 
 Names: ${!rc_dirs[*]}
 
@@ -24,11 +27,26 @@ Message the session afterwards with: claude -p "MESSAGE" --cloud SESSION_ID
 EOF
 }
 
+model=opus
+case "${1:-}" in
+  --model)
+    [[ -n ${2:-} ]] || { usage >&2; exit 2; }
+    model=$2
+    shift 2
+    ;;
+  --model=?*)
+    model=${1#--model=}
+    shift
+    ;;
+esac
+effort=
+if [[ $model == *opus* ]]; then effort=xhigh; fi
+
 name=${1:-}
 shift || true
 case "$name" in
   -h|--help) usage; exit ;;
-  "") usage >&2; exit 2 ;;
+  ""|-*) usage >&2; exit 2 ;;
 esac
 dir=${rc_dirs[$name]:-}
 if [[ -z $dir ]]; then
@@ -53,6 +71,7 @@ EOF
 fi
 
 export RC_SPAWN_PROMPT=$prompt
+export RC_SPAWN_MODEL=$model RC_SPAWN_EFFORT=$effort
 RC_SPAWN_SETTINGS=$(jq -nc --arg id "$(<"$id_file")" '{remote: {defaultEnvironmentId: $id}}')
 export RC_SPAWN_SETTINGS
 
