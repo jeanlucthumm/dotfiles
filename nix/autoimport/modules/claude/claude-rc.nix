@@ -114,6 +114,19 @@ _: {
         + builtins.readFile ./rc-spawn.sh;
     };
 
+    # Switches leave the units on their old claude and environment (see
+    # X-SwitchMethod), so this is how they move to the new ones. Run it from
+    # outside the units, e.g. over ssh: a session inside one dies with it.
+    restartRc = pkgs.writeShellApplication {
+      name = "restart-claude-rc";
+      text = ''
+        units=(${lib.escapeShellArgs (map (name: "claude-rc-${name}") (lib.attrNames cfg.dirs))})
+        if [[ $# -gt 0 ]]; then units=("''${@/#/claude-rc-}"); fi
+        systemctl --user restart "''${units[@]}"
+        echo "restarted ''${units[*]}"
+      '';
+    };
+
     rcDir = lib.types.submodule {
       options = {
         dir = lib.mkOption {
@@ -150,7 +163,7 @@ _: {
 
     config = {
       systemd.user.services = lib.mapAttrs' mkUnit cfg.dirs;
-      home.packages = [rcSpawn];
+      home.packages = [rcSpawn restartRc];
     };
   };
 }
