@@ -11,7 +11,12 @@
 #   --no-create-session-in-dir    otherwise every restart leaves an empty
 #                                 session behind in the app;
 #   --permission-mode auto        classifier-gated; degrades to prompts rather
-#                                 than wedging, unlike skip-permissions.
+#                                 than wedging, unlike skip-permissions;
+#   --debug-file                  the only local record of the environment ID
+#                                 the unit registers on each start (see
+#                                 rc-env.sh). rc derives a debug log and a
+#                                 transcript copy per session from it in the
+#                                 same directory; a tmpfiles rule ages those out.
 # On restart rc reconnects the sessions it had; no --continue needed.
 #
 # rc takes no --add-dir/--mcp-config/--settings, so everything that scopes a
@@ -39,6 +44,21 @@ _: {
   }: let
     cfg = config.jl.claude.rc;
     jq = "${pkgs.jq}/bin/jq";
+    stateDir = "${config.xdg.stateHome}/claude-rc";
+    rcEnv = ''
+      rc_state=${lib.escapeShellArg stateDir}
+    ''
+    + builtins.readFile ./rc-env.sh;
+
+    # A fresh debug log per start, so a registration in it is this start's.
+    rotateLog = name: let
+      dir = lib.escapeShellArg "${stateDir}/${name}";
+    in
+      pkgs.writeShellScript "claude-rc-rotate-log" ''
+        set -eu
+        mkdir -p ${dir}
+        if [ -e ${dir}/rc.log ]; then mv -f ${dir}/rc.log ${dir}/rc.log.old; fi
+      '';
 
     seedTrust = dir:
       pkgs.writeShellScript "claude-rc-seed-trust" ''
@@ -72,7 +92,7 @@ _: {
         Service = {
           WorkingDirectory = dir;
           EnvironmentFile = "-${dir}/.env";
-          ExecStartPre = "${seedTrust dir}";
+          ExecStartPre = ["${seedTrust dir}" "${rotateLog name}"];
           ExecStart = lib.escapeShellArgs [
             "${config.jl.claude.package}/bin/claude"
             "rc"
@@ -83,6 +103,8 @@ _: {
             "--no-create-session-in-dir"
             "--name"
             name
+            "--debug-file"
+            "${stateDir}/${name}/rc.log"
           ];
           Restart = "always";
           RestartSec = 10;
@@ -99,7 +121,8 @@ _: {
       name = "rc-spawn";
       runtimeInputs = with pkgs; [coreutils gnugrep gnused jq util-linux];
       text =
-        ''
+        rcEnv
+        + ''
           declare -A rc_dirs=(${lib.concatMapAttrsStringSep " " (
               name: {dir, ...}: "[${lib.escapeShellArg name}]=${lib.escapeShellArg dir}"
             )
@@ -108,7 +131,7 @@ _: {
             exec ${config.jl.claude.package}/bin/claude --cloud "$RC_SPAWN_PROMPT" \
               --permission-mode auto --model "$RC_SPAWN_MODEL" \
               ''${RC_SPAWN_EFFORT:+--effort "$RC_SPAWN_EFFORT"} \
-              --settings "$RC_SPAWN_SETTINGS"
+              --settings "$RC_SPAWN_SETTINGS" --debug-file "$RC_SPAWN_DEBUG"
           ''}
         ''
         + builtins.readFile ./rc-spawn.sh;
@@ -117,14 +140,33 @@ _: {
     # Switches leave the units on their old claude and environment (see
     # X-SwitchMethod), so this is how they move to the new ones. Run it from
     # outside the units, e.g. over ssh: a session inside one dies with it.
+    # Each restart registers a new environment ID; this waits for every unit
+    # to log it and records it for rc-spawn.
     restartRc = pkgs.writeShellApplication {
       name = "restart-claude-rc";
-      text = ''
-        units=(${lib.escapeShellArgs (map (name: "claude-rc-${name}") (lib.attrNames cfg.dirs))})
-        if [[ $# -gt 0 ]]; then units=("''${@/#/claude-rc-}"); fi
-        systemctl --user restart "''${units[@]}"
-        echo "restarted ''${units[*]}"
-      '';
+      runtimeInputs = with pkgs; [coreutils gnugrep];
+      text =
+        rcEnv
+        + ''
+          names=(${lib.escapeShellArgs (lib.attrNames cfg.dirs)})
+          if [[ $# -gt 0 ]]; then names=("$@"); fi
+          systemctl --user restart "''${names[@]/#/claude-rc-}"
+          status=0
+          for name in "''${names[@]}"; do
+            id=
+            for _ in $(seq 60); do
+              id=$(rc_record_id "$name") && break
+              sleep 1
+            done
+            if [[ -n $id ]]; then
+              echo "claude-rc-$name: $id"
+            else
+              echo "claude-rc-$name: no registration logged in 60s; rc-spawn $name refuses until it is" >&2
+              status=1
+            fi
+          done
+          exit "$status"
+        '';
     };
 
     rcDir = lib.types.submodule {
@@ -163,6 +205,12 @@ _: {
 
     config = {
       systemd.user.services = lib.mapAttrs' mkUnit cfg.dirs;
+      # Per-session debug logs and transcript copies; rc.log stays while its
+      # unit runs.
+      systemd.user.tmpfiles.rules = [
+        "e ${stateDir} - - - 3d"
+        "x ${stateDir}/*/rc.log"
+      ];
       home.packages = [rcSpawn restartRc];
     };
   };
