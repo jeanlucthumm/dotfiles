@@ -7,6 +7,7 @@ allowed-tools: Bash(places:*)
 ```
 Usage: places search [-n N] [--reviews] [--near WHERE] QUERY...
        places get PLACE_ID
+       places nearby [-n N] [--radius M] WHERE
        places route [--mode MODE] [--depart TIME | --arrive TIME] FROM TO
 
 Google Maps places, reviews and routes. Prints JSON lines.
@@ -18,6 +19,9 @@ Google Maps places, reviews and routes. Prints JSON lines.
            with no distance cutoff.
   get      One place by id: summary, 5 reviews, hours, food/service
            features, phone, website.
+  nearby   What's at WHERE: up to N places (default 5, max 20) within M
+           meters (default 100), nearest first. Name, type and address
+           only, so it's a cheaper call than search.
   route    Up to 3 routes from FROM to TO. MODE is drive (default, with
            live traffic; no_traffic is the same trip on empty roads), walk,
            bike or transit (lines, stops and departure times). TIME is

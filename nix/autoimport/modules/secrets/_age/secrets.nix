@@ -13,4 +13,5 @@ in {
   "claude-telegram.age".publicKeys = workstations;
   "chore-telegram.age".publicKeys = withServer;
   "zwave-js-keys.age".publicKeys = withServer;
+  "ha-location-token.age".publicKeys = withServer;
 }

@@ -16,6 +16,7 @@ usage() {
   cat <<'EOF'
 Usage: places search [-n N] [--reviews] [--near WHERE] QUERY...
        places get PLACE_ID
+       places nearby [-n N] [--radius M] WHERE
        places route [--mode MODE] [--depart TIME | --arrive TIME] FROM TO
 
 Google Maps places, reviews and routes. Prints JSON lines.
@@ -27,6 +28,9 @@ Google Maps places, reviews and routes. Prints JSON lines.
            with no distance cutoff.
   get      One place by id: summary, 5 reviews, hours, food/service
            features, phone, website.
+  nearby   What's at WHERE: up to N places (default 5, max 20) within M
+           meters (default 100), nearest first. Name, type and address
+           only, so it's a cheaper call than search.
   route    Up to 3 routes from FROM to TO. MODE is drive (default, with
            live traffic; no_traffic is the same trip on empty roads), walk,
            bike or transit (lines, stops and departure times). TIME is
@@ -65,6 +69,13 @@ find_place() {
         else .places[0][$f] // ("places: nothing found for \($q)\n" | halt_error(1)) end'
 }
 
+# WHERE as {latitude, longitude}.
+point() {
+  local ll
+  ll=$(latlng "$1")
+  if [[ $ll != null ]]; then echo "$ll"; else find_place location "$1"; fi
+}
+
 # FROM or TO as a Routes API waypoint.
 waypoint() {
   local ll id
@@ -90,10 +101,7 @@ case "$cmd" in
       esac
     done
     [[ $# -ge 1 ]] || { usage >&2; exit 2; }
-    if [[ -n $near ]]; then
-      center=$(latlng "$near")
-      if [[ $center == null ]]; then center=$(find_place location "$near"); fi
-    fi
+    if [[ -n $near ]]; then center=$(point "$near"); fi
     # With DISTANCE ranking the bias radius barely matters: 100m and 50km
     # return nearly the same places.
     body=$(jq -nc --arg q "$*" --argjson n "$n" --argjson center "$center" '
@@ -102,6 +110,26 @@ case "$cmd" in
         else {} end')
     call -H "X-Goog-FieldMask: places.${fields//,/,places.}" -d "$body" \
       https://places.googleapis.com/v1/places:searchText \
+      | jq -c --arg mode search -f "$places_jq"
+    ;;
+  nearby)
+    n=5 radius=100
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        -n) n=$2; shift 2 ;;
+        --radius) radius=$2; shift 2 ;;
+        -*) usage >&2; exit 2 ;;
+        *) break ;;
+      esac
+    done
+    [[ $# -eq 1 ]] || { usage >&2; exit 2; }
+    center=$(point "$1")
+    body=$(jq -nc --argjson n "$n" --argjson r "$radius" --argjson center "$center" '
+      {locationRestriction: {circle: {center: $center, radius: $r}}, maxResultCount: $n,
+       rankPreference: "DISTANCE", languageCode: "en"}')
+    # Pro SKU fields only: rating and anything after it cost more.
+    call -H "X-Goog-FieldMask: places.id,places.displayName,places.primaryTypeDisplayName,places.shortFormattedAddress" \
+      -d "$body" https://places.googleapis.com/v1/places:searchNearby \
       | jq -c --arg mode search -f "$places_jq"
     ;;
   get)
