@@ -1,2 +1,8 @@
 __pycache__/
 *.pyc
+# Old copies of the worktree hooks, from before they moved into nix
+# (nix/autoimport/modules/claude/_worktree-*.sh). claude-worktree-create copies
+# the main checkout's .claude/hooks into every new workspace, so any copy left
+# there shows up as an untracked add in each workspace.
+/.claude/hooks/worktree-create.sh
+/.claude/hooks/worktree-remove.sh
