@@ -1,6 +1,6 @@
 # Trims Places and Routes API responses down to what an agent needs; the raw
 # JSON is ~10KB per place and ~7KB per transit route. $mode is "search", "get"
-# or "route".
+# or "route" (nearby uses "search").
 
 def compact: with_entries(select(.value | . != null and . != [] and . != ""));
 
